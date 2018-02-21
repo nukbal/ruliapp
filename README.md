@@ -1,2 +1,6 @@
 # ruliapp
-unofficial app for ruliweb, one of the biggest korean gamaing community
+심심해서 만들어보는 루리웹
+
+`react-native` 공부겸사 루리웹html파싱해서 정리합니다
+
+일단은 개인취미용도로 만들고 있으므로, 릴리즈는 미정 필요하면 이슈 주세요
