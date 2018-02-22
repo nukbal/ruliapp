@@ -11,6 +11,7 @@ yarn.lock
 # production
 /dist
 /.expo
+/ios/build
 
 # misc
 .DS_Store

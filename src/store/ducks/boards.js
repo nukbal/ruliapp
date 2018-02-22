@@ -32,15 +32,18 @@ async function getListData(prefix, boardId) {
     }
   };
 
+  console.log('sssss');
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
+
+  console.log('2222');
 
   const $ = cheerio.load(htmlString);
 
   const title = $('head title').text().replace('루리웹', '').replace('|', '').trim()
 
   const items =  $('table.board_list_table tbody tr').map((_, row) => ({
-    id: $('td.id', row).text().trim(),
+    key: $('td.id', row).text().trim(),
     type: $('td.divsn a', row).text().trim(),
     title: $('td.subject a.deco', row).text().trim(),
     comments: $('td.subject span.num_reply span.num', row).text().trim(),
