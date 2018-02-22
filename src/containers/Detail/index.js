@@ -1,32 +1,25 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar } from 'react-native';
-import { getBoardList } from '../../store/ducks/boards';
-import BoardItem from '../../components/BoardItem';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { getDetail, requestDetail } from '../../store/ducks/detail';
 
 export class Home extends PureComponent {
   static defaultProps = {
-    list: [],
+    detail: {},
   }
 
   componentWillMount() {
-
-  }
-
-  renderItem = ({ item }) => {
-    return (
-      <BoardItem {...item} />
-    );
+    this.props.requestDetail();
   }
 
   render() {
+    const { detail } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        <FlatList
-          data={this.props.list}
-          renderItem={this.renderItem}
-        />
+        <View>
+            <Text>{detail.title}</Text>
+        </View>
       </SafeAreaView>
     );
   }
@@ -41,9 +34,15 @@ const styles = StyleSheet.create({
   },
 });
 
+function mapDispatchToProps(dispatch) {
+  return {
+    requestDetail: bindActionCreators(requestDetail, dispatch),
+  };
+}
+
 function mapStateToProps(state) {
   return {
-    list: getBoardList(state),
+    detail: getDetail(state),
   };
 }
 
