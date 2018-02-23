@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar, Alert } from 'react-native';
 import { getBoardList } from '../../store/ducks/boards';
 import BoardItem from '../../components/BoardItem';
 
@@ -14,9 +14,13 @@ export class Home extends PureComponent {
 
   }
 
+  pressItem = (id) => {
+    Alert.alert(`${id} 누름`);
+  }
+
   renderItem = ({ item }) => {
     return (
-      <BoardItem {...item} />
+      <BoardItem {...item} onPress={this.pressItem} />
     );
   }
 

@@ -23,10 +23,17 @@ const styles = StyleSheet.create({
 });
 
 export default class BoardItem extends Component {
+  onPress = () => {
+    const { onPress, id } = this.props;
+    if (!onPress) return;
+
+    onPress(id);
+  }
+
   render() {
     const { title, comments, author, like, views, times, likes } = this.props;
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={this.onPress}>
         <View style={styles.container}>
           <Text>{title}</Text>
           <View style={styles.info}>
