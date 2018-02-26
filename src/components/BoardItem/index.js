@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { listItem, labelText, border } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
@@ -8,13 +9,17 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 8,
     marginBottom: 8,
-    backgroundColor: 'white',
+    borderRadius: 3,
+    backgroundColor: listItem,
     alignItems: 'baseline',
     justifyContent: 'center',
+    borderBottomColor: border,
+    borderBottomWidth: 1,
   },
   info: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   item: {
     flex: 1,
@@ -23,8 +28,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  titleText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
   itemText: {
     marginLeft: 8,
+    fontWeight: 'bold',
+    color: labelText,
   }
 });
 
@@ -41,18 +52,18 @@ export default class BoardItem extends Component {
     return (
       <TouchableOpacity onPress={this.onPress}>
         <View style={styles.container}>
-          <Text>{title}</Text>
+          <Text style={styles.titleText}>{title}</Text>
           <View style={styles.info}>
             <View style={styles.item}>
-              <Ionicons name="ios-text-outline" size={25} color="grey" />
+              <Ionicons name="ios-text-outline" size={25} color={labelText} />
               <Text style={styles.itemText}>{comments || 0}</Text>
             </View>
             <View style={styles.item}>
-              <Ionicons name="ios-thumbs-up-outline" size={25} color="grey" />
+              <Ionicons name="ios-thumbs-up-outline" size={25} color={labelText} />
               <Text style={styles.itemText}>{likes || 0}</Text>
             </View>
             <View style={styles.item}>
-              <Ionicons name="ios-eye-outline" size={25} color="grey" />
+              <Ionicons name="ios-eye-outline" size={25} color={labelText} />
               <Text style={styles.itemText}>{views || 0}</Text>
             </View>
           </View>

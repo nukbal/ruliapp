@@ -6,6 +6,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar } from 'r
 import { getBoardList, requestBoardList, getBoardInfo } from '../../store/ducks/boards';
 import BoardItem from '../../components/BoardItem';
 import DetailScreen from '../Detail';
+import { darkBarkground } from '../../styles/color';
 
 export class Board extends PureComponent {
   static defaultProps = {
@@ -42,7 +43,7 @@ export class Board extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eee',
+    backgroundColor: darkBarkground,
     alignItems: 'center',
     justifyContent: 'center',
   },

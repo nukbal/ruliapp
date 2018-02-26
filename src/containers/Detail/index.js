@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import { View, Text, StyleSheet, StatusBar, Image } from 'react-native';
 import { getDetailContent, getDetailTitle, requestDetail } from '../../store/ducks/detail';
+import { background, border } from '../../styles/color';
 
 export class Detail extends PureComponent {
   static defaultProps = {
@@ -24,6 +25,7 @@ export class Detail extends PureComponent {
         return (
           <Image
             key={item.key}
+            resizeMode="cover"
             style={styles.ImageContent}
             source={{ uri: item.content }}
           />
@@ -39,7 +41,7 @@ export class Detail extends PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.title}>
-          <Text>{title}</Text>
+          <Text style={styles.titleText}>{title}</Text>
         </View>
         <View style={styles.content}>
           {content.length > 0 && content.map(this.renderContentRow)}
@@ -52,22 +54,29 @@ export class Detail extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eee',
-    alignItems: 'center',
+    backgroundColor: background,
+    alignItems: 'stretch',
     justifyContent: 'center',
   },
   title: {
-    marginBottom: 3,
-    backgroundColor: 'white',
+    marginBottom: 6,
+    borderRadius: 3,
+    borderBottomColor: border,
+    borderBottomWidth: 1,
+  },
+  titleText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   content: {
     flex: 1,
     padding: 8,
+    borderRadius: 3,
     backgroundColor: 'white',
     justifyContent: 'flex-start',
   },
   TextContent: {
-    marginBottom: 3,
+    marginBottom: 6,
   },
   ImageContent: {
     marginBottom: 8,
