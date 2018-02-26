@@ -50,6 +50,15 @@
 				<true/>
 			</dict>
 		</dict>
+		<dict>
+			<key>ruliweb.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
 	<key>UIAppFonts</key>
 	<array>
