@@ -36,7 +36,6 @@ export class Detail extends PureComponent {
 
   render() {
     const { content, title } = this.props;
-    console.log(content);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.title}>
@@ -72,6 +71,9 @@ const styles = StyleSheet.create({
   },
   ImageContent: {
     marginBottom: 8,
+    flex: 1,
+    width: null,
+    height: null,
   }
 });
 
