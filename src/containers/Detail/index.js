@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import { View, Text, StyleSheet, StatusBar, Image } from 'react-native';
 import { getDetailContent, getDetailTitle, requestDetail } from '../../store/ducks/detail';
-import { background, border } from '../../styles/color';
+import { darkBarkground, border, listItem } from '../../styles/color';
 
 export class Detail extends PureComponent {
   static defaultProps = {
@@ -54,13 +54,14 @@ export class Detail extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: background,
+    backgroundColor: darkBarkground,
     alignItems: 'stretch',
     justifyContent: 'center',
   },
   title: {
     marginBottom: 6,
     borderRadius: 3,
+    backgroundColor: listItem,
     borderBottomColor: border,
     borderBottomWidth: 1,
   },
@@ -72,11 +73,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 8,
     borderRadius: 3,
-    backgroundColor: 'white',
+    backgroundColor: listItem,
     justifyContent: 'flex-start',
   },
   TextContent: {
     marginBottom: 6,
+    color: 'white',
   },
   ImageContent: {
     marginBottom: 8,

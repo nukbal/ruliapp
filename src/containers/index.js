@@ -3,6 +3,7 @@ import { TabNavigator, TabBarBottom } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BoardScreen from './Board';
 import SettingsScreen from './Settings';
+import { darkBarkground, labelText, primary, border } from '../styles/color';
 
 export default TabNavigator(
   {
@@ -32,8 +33,13 @@ export default TabNavigator(
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     tabBarOptions: {
-      activeTintColor: '#4174F4',
-      inactiveTintColor: 'gray',
+      activeTintColor: primary,
+      inactiveTintColor: labelText,
+      style: {
+        backgroundColor: darkBarkground,
+        borderTopColor: border,
+        borderTopWidth: 1,
+      },
       showLabel: false,
     },
     animationEnabled: false,
