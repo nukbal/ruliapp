@@ -18,7 +18,13 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
+    flexWrap:'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  itemText: {
+    marginLeft: 8,
   }
 });
 
@@ -39,15 +45,15 @@ export default class BoardItem extends Component {
           <View style={styles.info}>
             <View style={styles.item}>
               <Ionicons name="ios-text-outline" size={25} color="grey" />
-              <Text>{comments || 0}</Text>
+              <Text style={styles.itemText}>{comments || 0}</Text>
             </View>
             <View style={styles.item}>
               <Ionicons name="ios-thumbs-up-outline" size={25} color="grey" />
-              <Text>{likes || 0}</Text>
+              <Text style={styles.itemText}>{likes || 0}</Text>
             </View>
             <View style={styles.item}>
               <Ionicons name="ios-eye-outline" size={25} color="grey" />
-              <Text>{views || 0}</Text>
+              <Text style={styles.itemText}>{views || 0}</Text>
             </View>
           </View>
         </View>

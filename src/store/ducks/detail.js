@@ -26,7 +26,7 @@ export function requestDetail(prefix, boardId, articleId) {
 }
 
 async function getDetailData(prefix, boardId, articleId) {
-  const targetUrl = `https://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${id}`;
+  const targetUrl = `https://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}`;
 
   const config = {
     method: 'GET',
@@ -44,15 +44,42 @@ async function getDetailData(prefix, boardId, articleId) {
 
   const $ = cheerio.load(htmlString);
 
-  const title = $('head title').text().replace('루리웹', '').replace('|', '').trim();
+  const title = $('span.subject_text').text().trim().replace('  ', '');
 
   const reference = $('div.source_url a').attr('href');
-  const contents = $('div.board_main_view .view_content').text().trim();
+  const contents = $('div.board_main_view .view_content p').map((i, item) => {
+    const _$ = $(item);
+    const text = _$.text().trim();
+    const isImg = _$.has('img').length === 1;
+    const isEmbeded = _$.has('iframe').length === 1;
+    if ((!isImg && !isEmbeded) && (text === '<br />' || text === '' || text === '&nbsp;')) return;
+
+    let content;
+    let type;
+    if (isEmbeded) {
+      type = 'object';
+      content = $('iframe', item).attr('src');
+    } else if (isImg) {
+      type = 'image';
+      content = $('img', item).attr('src');
+    } else {
+      type = 'text';
+      content = text;
+    }
+    return {
+      type,
+      key: i,
+      content,
+    };
+  }).get();
   const likes = $('span.like_value').text();
+  const comments = $('strong.reply_count').text().trim();
 
   return {
     title,
+    contents,
     reference,
+    comments,
     likes,
   }
 }
@@ -77,15 +104,26 @@ export const detailSaga = [
 
 export const getDetail = state => state.detail;
 
+export const getDetailTitle = createSelector(
+  [getDetail],
+  detail => detail.title,
+);
+
+export const getDetailContent = createSelector(
+  [getDetail],
+  detail => detail.contents,
+);
+
 const initState = {};
 
 const actionHandler = {
-  [actionType.REQUEST_BOARD_LIST]: (state, { payload }) => {
+  [actionType.REQUEST_DETAIL]: (state, { payload }) => {
     const { prefix, boardId, articleId } = payload;
     return { boardId, prefix, articleId };
   },
-  [actionType.REQUEST_BOARD_LIST_DONE]: (state, { payload }) => {
-    return Object.assign(state, { ...payload });
+  [actionType.REQUEST_DETAIL_DONE]: (state, { payload }) => {
+    const { boardId, prefix, articleId } = state;
+    return { boardId, prefix, articleId, ...payload };
   }
 };
 

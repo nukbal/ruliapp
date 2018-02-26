@@ -1,13 +1,12 @@
 import React from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeScreen from './Home';
+import BoardScreen from './Board';
 import SettingsScreen from './Settings';
 
 export default TabNavigator(
   {
-    Home: { screen: HomeScreen },
-    Popular: { screen: HomeScreen },
+    Board: { screen: BoardScreen },
     Settings: { screen: SettingsScreen },
   },
   {
@@ -16,12 +15,12 @@ export default TabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         switch(routeName) {
-          case 'Home':
-            iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+          case 'Board':
+            iconName = `ios-list-box${focused ? '' : '-outline'}`;
             break;
-          case 'Popular':
-            iconName = `ios-happy${focused ? '' : '-outline'}`;
-            break;
+          // case 'Popular':
+          //   iconName = `ios-happy${focused ? '' : '-outline'}`;
+          //   break;
           case 'Settings':
             iconName = `ios-options${focused ? '' : '-outline'}`;
           default:

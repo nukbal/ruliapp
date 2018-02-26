@@ -11,12 +11,13 @@ import FullLoading from './components/FullLoading';
 
 export class RootRouter extends PureComponent {
   componentDidMount() {
-    this.props.loadInitBoard('news', '1004');
+    // this.props.loadInitBoard('news', '1004');
   }
 
   render() {
-    const { isFullLoading } = this.props;
-    return isFullLoading ? (<FullLoading />) : (<MainRouter />);
+    // const { isFullLoading } = this.props;
+    // return isFullLoading ? (<FullLoading />) : (<MainRouter />);
+    return (<MainRouter />);
   }
 }
 

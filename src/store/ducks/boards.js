@@ -83,6 +83,14 @@ export const getBoardList = createSelector(
   boards =>  boards.items,
 );
 
+export const getBoardInfo = createSelector(
+  [getBoardState],
+  ({ boardId, prefix }) => ({
+    boardId,
+    prefix,
+  }),
+);
+
 const initState = {};
 
 const actionHandler = {
@@ -91,7 +99,9 @@ const actionHandler = {
     return { boardId, prefix };
   },
   [actionType.REQUEST_BOARD_LIST_DONE]: (state, { payload }) => {
-    return Object.assign(state, { ...payload });
+    const { prefix, boardId } = state;
+    const { title, items } = payload;
+    return { boardId, prefix, title, items };
   }
 };
 
