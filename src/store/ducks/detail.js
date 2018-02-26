@@ -57,7 +57,7 @@ async function getDetailData(prefix, boardId, articleId) {
     let content;
     let type;
     if (isEmbeded) {
-      type = 'object';
+      type = 'embeded';
       content = $('iframe', item).attr('src');
     } else if (isImg) {
       type = 'image';
