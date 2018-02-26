@@ -44,7 +44,8 @@ async function getDetailData(prefix, boardId, articleId) {
 
   const $ = cheerio.load(htmlString);
 
-  const title = $('span.subject_text').text().trim().replace('  ', '');
+  let title = $('head title').text();
+  title = title.substring(0, title.indexOf(' | '));
 
   const reference = $('div.source_url a').attr('href');
   const contents = $('div.board_main_view .view_content p').map((i, item) => {
