@@ -96,7 +96,7 @@ const initState = {};
 const actionHandler = {
   [actionType.REQUEST_BOARD_LIST]: (state, { payload }) => {
     const { prefix, boardId } = payload;
-    return { boardId, prefix };
+    return { boardId, prefix, loading: true };
   },
   [actionType.REQUEST_BOARD_LIST_DONE]: (state, { payload }) => {
     const { prefix, boardId } = state;

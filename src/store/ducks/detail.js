@@ -119,7 +119,7 @@ const initState = {};
 const actionHandler = {
   [actionType.REQUEST_DETAIL]: (state, { payload }) => {
     const { prefix, boardId, articleId } = payload;
-    return { boardId, prefix, articleId };
+    return { boardId, prefix, articleId, loading: true };
   },
   [actionType.REQUEST_DETAIL_DONE]: (state, { payload }) => {
     const { boardId, prefix, articleId } = state;
