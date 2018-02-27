@@ -26,8 +26,6 @@ export class Detail extends PureComponent {
         return (
           <LazyImage
             key={item.key}
-            resizeMode="cover"
-            style={styles.ImageContent}
             source={{ uri: item.content }}
           />
         );
@@ -41,7 +39,7 @@ export class Detail extends PureComponent {
     const { content, title } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView>
+        <ScrollView style={styles.scrollView}>
           <View style={styles.title}>
             <Text style={styles.titleText}>{title}</Text>
           </View>
@@ -62,6 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
+    flex: 1,
     marginBottom: 6,
     borderRadius: 3,
     padding: 8,
@@ -74,22 +73,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   content: {
-    flex: 1,
+    flex: 4,
     padding: 8,
     borderRadius: 3,
+    minHeight: 250,
     backgroundColor: listItem,
     justifyContent: 'flex-start',
   },
   TextContent: {
     marginBottom: 6,
     color: 'white',
-  },
-  ImageContent: {
-    marginBottom: 8,
-    flex: 1,
-    backgroundColor: darkBarkground,
-    width: null,
-    height: null,
   }
 });
 

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
+
+import Indicator from './ImageLoadingIndicator';
 import { darkBarkground } from '../../styles/color';
 
 const styles = StyleSheet.create({
   ImageContent: {
-    marginBottom: 8,
     flex: 1,
+    borderRadius: 3,
     backgroundColor: darkBarkground,
     width: null,
     height: null,
@@ -14,18 +16,19 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     flex: 1,
     backgroundColor: darkBarkground,
-    height: 150,
-  }
+    justifyContent: 'center',
+  },
 });
 
 export default class LazyImage extends Component {
   state = {
     isReady: false,
+    progress: 0,
   }
 
-  // shouldComponentUpdate(props, state) {
-  //   return this.state.isReady !== state.isReady;
-  // }
+  shouldComponentUpdate(props, state) {
+    return this.state.isReady !== state.isReady;
+  }
 
   onLoadEnd = () => {
     this.setState({
@@ -36,12 +39,18 @@ export default class LazyImage extends Component {
   image = null
 
   render() {
+    const { source, resizeMode } = this.props;
+    const { isReady } = this.state;
     return (
-      <Image
-        style={styles.ImageContent}
-        onLoadEnd={this.onLoadEnd}
-        {...this.props}
-      />
+      <View style={styles.ImagePlaceholder}>
+        {isReady === false && <Indicator />}
+        <Image
+          style={styles.ImageContent}
+          onLoadEnd={this.onLoadEnd}
+          source={source}
+          resizeMode="cover"
+        />
+      </View>
     );
   }
 }
