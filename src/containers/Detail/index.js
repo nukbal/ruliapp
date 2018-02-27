@@ -2,9 +2,10 @@ import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
-import { View, Text, StyleSheet, StatusBar, Image } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import { getDetailContent, getDetailTitle, requestDetail } from '../../store/ducks/detail';
 import { darkBarkground, border, listItem } from '../../styles/color';
+import LazyImage from '../../components/LazyImage';
 
 export class Detail extends PureComponent {
   static defaultProps = {
@@ -23,7 +24,7 @@ export class Detail extends PureComponent {
         return (<Text style={styles.TextContent} key={item.key}>{item.content}</Text>);
       case 'image':
         return (
-          <Image
+          <LazyImage
             key={item.key}
             resizeMode="cover"
             style={styles.ImageContent}
@@ -40,12 +41,14 @@ export class Detail extends PureComponent {
     const { content, title } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>{title}</Text>
-        </View>
-        <View style={styles.content}>
-          {content.length > 0 && content.map(this.renderContentRow)}
-        </View>
+        <ScrollView>
+          <View style={styles.title}>
+            <Text style={styles.titleText}>{title}</Text>
+          </View>
+          <View style={styles.content}>
+            {content.length > 0 && content.map(this.renderContentRow)}
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -61,6 +64,7 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 6,
     borderRadius: 3,
+    padding: 8,
     backgroundColor: listItem,
     borderBottomColor: border,
     borderBottomWidth: 1,
@@ -83,6 +87,7 @@ const styles = StyleSheet.create({
   ImageContent: {
     marginBottom: 8,
     flex: 1,
+    backgroundColor: darkBarkground,
     width: null,
     height: null,
   }

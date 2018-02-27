@@ -35,6 +35,7 @@ export class Board extends PureComponent {
           data={this.props.list}
           renderItem={this.renderItem}
         />
+        <StatusBar barStyle="light-content" />
       </SafeAreaView>
     );
   }

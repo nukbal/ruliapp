@@ -4,11 +4,11 @@ export const background = '#404040';
 
 export const primary = '#4174F4';
 
-export const border = '#3d404c';
+export const border = '#3d3d3d';
 
-export const darkBarkground = '#24262d';
+export const darkBarkground = '#222222';
 
-export const listItem = 'rgba(68, 70, 79, 0.5)';
+export const listItem = '#333333';
 
 export const labelText = '#949ba2';
 
