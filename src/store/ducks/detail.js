@@ -48,31 +48,54 @@ async function getDetailData(prefix, boardId, articleId) {
   title = title.substring(0, title.indexOf(' | '));
 
   const reference = $('div.source_url a').attr('href');
-  const contents = $('div.board_main_view .view_content p').map((i, item) => {
-    const _$ = $(item);
-    const text = _$.text().trim();
-    const isImg = _$.has('img').length === 1;
-    const isEmbeded = _$.has('iframe').length === 1;
-    if ((!isImg && !isEmbeded) && (text === '<br />' || text === '' || text === '&nbsp;')) return;
+  const contents = $('div.board_main_view .view_content')[0].childNodes.map((item, i) => {
+    if (item.type === 'tag' && item.name === 'br') return;
 
     let content;
     let type;
-    if (isEmbeded) {
-      type = 'embeded';
-      content = $('iframe', item).attr('src');
-    } else if (isImg) {
+    if (item.type === 'tag' && (item.name === 'p' || item.name === 'div')) {
+      const _$ = $(item);
+      const text = _$.text().trim();
+      const isImg = _$.has('img').length === 1;
+      const isEmbeded = _$.has('iframe').length === 1;
+      if ((!isImg && !isEmbeded) && (text === '<br />' || text === '' || text === '&nbsp;')) return;
+  
+      if (isEmbeded) {
+        type = 'embeded';
+        content = $('iframe', item).attr('src');
+      } else if (isImg) {
+        type = 'image';
+        content = $('img', item).attr('src');
+      } else {
+        type = 'text';
+        content = text;
+      }
+    } else if (item.type === 'tag' && item.name == 'img'){
       type = 'image';
-      content = $('img', item).attr('src');
-    } else {
+      content = item.attribs.src;
+    } else if (item.type === 'tag' && item.name == 'iframe') {
+      type = 'embeded';
+      content = item.attribs.src;
+    } else if (item.type === 'tag') {
       type = 'text';
-      content = text;
+      content = $(item).text().trim();
+    } else if (item.type === 'text') {
+      const text = item.data.trim();
+      if (text) {
+        type = 'text';
+        content = item.data.trim();
+      } else {
+        return;
+      }
     }
+
     return {
       type,
       key: i,
       content,
     };
-  }).get();
+  }).filter(item => item);
+
   const likes = $('span.like_value').text();
   const comments = $('strong.reply_count').text().trim();
 
