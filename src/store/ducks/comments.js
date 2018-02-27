@@ -20,6 +20,29 @@ export function requestComments(prefix, boardId, articleId, page) {
   }
 }
 
+export function parseComments($) {
+  return $('table.comment_table:not(.best) tr').map((_, item) => {
+    const userElem = $('td.user', item);
+    const user = {
+      author: userElem.find('.nick').text().trim(),
+      id: userElem.find('span.member_srl').text().trim(),
+      ip: userElem.find('p.ip').text(),
+    };
+    const like = $('button.btn_like', item).text().trim();
+    const dislike = $('button.btn_dislike', item).text().trim();
+    const time = $('span.time', item).text();
+    const comment = $('td.comment span.text', item).text().trim();
+
+    return {
+      user,
+      like,
+      dislike,
+      time,
+      comment
+    };
+  }).get();
+}
+
 async function getComments({ prefix, boardId, articleId, page }) {
   const params = {
     page,
@@ -46,28 +69,6 @@ async function getComments({ prefix, boardId, articleId, page }) {
   if (!json.success) return;
 
   const $ = cheerio.load(json.view);
-
-  const title = $('head title').text().replace('루리웹', '').replace('|', '').trim()
-
-  const items = $('table.board_list_table tbody tr').map((_, row) => {
-    const id = $('td.id', row).text().trim();
-    return {
-      id,
-      key: id,
-      type: $('td.divsn a', row).text().trim(),
-      title: $('td.subject a.deco', row).text().trim(),
-      comments: $('td.subject span.num_reply span.num', row).text().trim(),
-      author: $('td.writer a', row).text().trim(),
-      likes: $('td.recomd', row).text().trim(),
-      views: $('td.hit', row).text().trim(),
-      times: $('td.time', row).text().trim(),
-    };
-  }).get();
-
-  return {
-    title,
-    items,
-  }
 }
 
 export function* requestBoard({ payload }) {
@@ -101,14 +102,14 @@ export const getBoardInfo = createSelector(
 const initState = {};
 
 const actionHandler = {
-  [actionType.REQUEST_BOARD_LIST]: (state, { payload }) => {
-    const { prefix, boardId } = payload;
-    return { boardId, prefix, loading: true };
+  [actionType.REQUEST_COMMENTS]: (state, { payload }) => {
+    const { prefix, boardId, articleId } = payload;
+    return { boardId, prefix, articleId, loading: true };
   },
-  [actionType.REQUEST_BOARD_LIST_DONE]: (state, { payload }) => {
-    const { prefix, boardId } = state;
+  [actionType.REQUEST_COMMENTS_DONE]: (state, { payload }) => {
+    const { prefix, boardId, articleId } = state;
     const { title, items } = payload;
-    return { boardId, prefix, title, items };
+    return { boardId, prefix, articleId, title, items };
   }
 };
 

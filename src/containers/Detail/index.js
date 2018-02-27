@@ -3,13 +3,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import { View, Text, StyleSheet, StatusBar, ScrollView } from 'react-native';
-import { getDetailContent, getDetailTitle, requestDetail } from '../../store/ducks/detail';
+import { requestDetail, getDetailInfo } from '../../store/ducks/detail';
 import { darkBarkground, border, listItem } from '../../styles/color';
 import LazyImage from '../../components/LazyImage';
+import Comments from '../../components/Comments';
 
 export class Detail extends PureComponent {
   static defaultProps = {
-    content: [],
+    contents: [],
   }
 
   componentWillMount() {
@@ -36,7 +37,7 @@ export class Detail extends PureComponent {
   }
 
   render() {
-    const { content, title } = this.props;
+    const { contents, title, commentList } = this.props;
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrollView}>
@@ -44,8 +45,9 @@ export class Detail extends PureComponent {
             <Text style={styles.titleText}>{title}</Text>
           </View>
           <View style={styles.content}>
-            {content.length > 0 && content.map(this.renderContentRow)}
+            {contents.length > 0 && contents.map(this.renderContentRow)}
           </View>
+          <Comments comments={commentList} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -93,10 +95,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
-  return {
-    title: getDetailTitle(state),
-    content: getDetailContent(state),
-  };
+  return getDetailInfo(state);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Detail);

@@ -9,14 +9,14 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 3,
     backgroundColor: darkBarkground,
-    width: null,
-    height: null,
   },
   ImagePlaceholder: {
     marginBottom: 8,
     flex: 1,
     backgroundColor: darkBarkground,
     justifyContent: 'center',
+    width: null,
+    height: null,
   },
 });
 

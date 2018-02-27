@@ -9,6 +9,8 @@ import { createSelector } from 'reselect';
 import { showLoading, hideLoading } from './loading';
 import cheerio from 'cheerio-without-node-native';
 
+import { parseComments } from './comments';
+
 export const actionType = {
   REQUEST_DETAIL: 'REQUEST_DETAIL',
   REQUEST_DETAIL_DONE: 'REQUEST_DETAIL_DONE',
@@ -99,12 +101,15 @@ async function getDetailData(prefix, boardId, articleId) {
   const likes = $('span.like_value').text();
   const comments = $('strong.reply_count').text().trim();
 
+  const commentList = parseComments($);
+
   return {
     title,
     contents,
     reference,
     comments,
     likes,
+    commentList,
   }
 }
 
@@ -128,14 +133,9 @@ export const detailSaga = [
 
 export const getDetail = state => state.detail;
 
-export const getDetailTitle = createSelector(
+export const getDetailInfo = createSelector(
   [getDetail],
-  detail => detail.title,
-);
-
-export const getDetailContent = createSelector(
-  [getDetail],
-  detail => detail.contents,
+  detail => detail,
 );
 
 const initState = {};
