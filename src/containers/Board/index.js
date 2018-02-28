@@ -9,17 +9,27 @@ import DetailScreen from '../Detail';
 import { darkBarkground, background, titleText, border } from '../../styles/color';
 
 export class Board extends PureComponent {
+  static navigationOptions = ({ navigation }) => ({
+    title: `${navigation.state.params ? navigation.state.params.title : ''}`,
+   });
+
   static defaultProps = {
     list: [],
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.props.info.title !== props.info.title) {
+      this.props.navigation.setParams({ title: props.info.title });
+    }
   }
 
   componentWillMount() {
     this.props.requestBoard('news', '1004');
   }
 
-  pressItem = (id) => {
+  pressItem = (id, title) => {
     const { navigate } = this.props.navigation;
-    navigate('Detail', { id, board: this.props.info });
+    navigate('Detail', { id, board: this.props.info, title });
   }
 
   renderItem = ({ item }) => {
