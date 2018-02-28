@@ -1,85 +1,42 @@
 import React, { PureComponent } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { SafeAreaView, StackNavigator } from 'react-navigation';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar } from 'react-native';
-import { getBoardList, requestBoardList, getBoardInfo } from '../../store/ducks/boards';
-import BoardItem from '../../components/BoardItem';
-import DetailScreen from '../Detail';
+import { StackNavigator, DrawerNavigator } from 'react-navigation';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { StyleSheet } from 'react-native';
+
 import { darkBarkground, background, titleText, border } from '../../styles/color';
-
-export class Board extends PureComponent {
-  static navigationOptions = ({ navigation }) => ({
-    title: `${navigation.state.params ? navigation.state.params.title : ''}`,
-   });
-
-  static defaultProps = {
-    list: [],
-  }
-
-  componentWillReceiveProps(props) {
-    if (this.props.info.title !== props.info.title) {
-      this.props.navigation.setParams({ title: props.info.title });
-    }
-  }
-
-  componentWillMount() {
-    this.props.requestBoard('news', '1004');
-  }
-
-  pressItem = (id, title) => {
-    const { navigate } = this.props.navigation;
-    navigate('Detail', { id, board: this.props.info, title });
-  }
-
-  renderItem = ({ item }) => {
-    return (
-      <BoardItem {...item} onPress={this.pressItem} />
-    );
-  }
-
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={this.props.list}
-          renderItem={this.renderItem}
-        />
-        <StatusBar barStyle="light-content" />
-      </SafeAreaView>
-    );
-  }
-}
+import Board from './Board';
+import DetailScreen from '../Detail';
+import BoardList from '../../config/BoardList';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: darkBarkground,
-    alignItems: 'center',
-    justifyContent: 'center',
+  header: {
+    marginLeft: 12,
   },
 });
 
-function mapDispatchToProps(dispatch) {
-  return {
-    requestBoard: bindActionCreators(requestBoardList, dispatch),
-  };
+const BoardRoutes = {};
+const setScreen = (params) => (props) => <Board {...props} {...params} />
+Object.keys(BoardList).map(key => {
+  const { title, params } = BoardList[key];
+  BoardRoutes[key] = { screen: setScreen(params), navigationOptions: { title } };
+});
+
+const drawerConfig = {
+  initialRouteName: 'ConsoleBoard',
+  navigationOptions: {
+    drawerStyle: {
+      backgroundColor: darkBarkground,
+    }
+  },
 }
 
-function mapStateToProps(state) {
-  return {
-    info: getBoardInfo(state),
-    list: getBoardList(state),
-  };
-}
-
-const BoardScreen = connect(mapStateToProps, mapDispatchToProps)(Board);
+const BoardDrawer = DrawerNavigator(BoardRoutes, drawerConfig);
 
 export default StackNavigator({
-  Board: { screen: BoardScreen },
+  Board: { screen: BoardDrawer },
   Detail: { screen: DetailScreen },
 }, {
-  navigationOptions: {
+  navigationOptions: ({ navigation }) => ({
     headerStyle: {
       backgroundColor: darkBarkground,
       borderBottomColor: border,
@@ -91,5 +48,14 @@ export default StackNavigator({
     cardStyle: {
       opacity: 1,
     },
-  },
+    // headerLeft: (
+    //   <Ionicons
+    //     style={styles.header}
+    //     name="ios-list"
+    //     size={28}
+    //     color="white"
+    //     onPress={() => navigation.navigate('DrawerToggle')}
+    //   />
+    // ),
+  }),
 });

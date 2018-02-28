@@ -19,7 +19,7 @@ export function requestBoardList(prefix, boardId) {
 }
 
 async function getListData(prefix, boardId) {
-  const targetUrl = `https://bbs.ruliweb.com/${prefix}/board/${boardId}`;
+  const targetUrl = `https://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}`;
 
   const config = {
     method: 'GET',
