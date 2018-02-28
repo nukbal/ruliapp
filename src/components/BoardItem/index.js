@@ -6,7 +6,6 @@ import { listItem, labelText, border } from '../../styles/color';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
     padding: 8,
     marginBottom: 8,
     borderRadius: 3,
@@ -41,10 +40,10 @@ const styles = StyleSheet.create({
 
 export default class BoardItem extends Component {
   onPress = () => {
-    const { onPress, id, title } = this.props;
+    const { onPress, id, title, prefix, boardId } = this.props;
     if (!onPress) return;
 
-    onPress(id, title);
+    onPress(id, title, prefix, boardId);
   }
 
   render() {

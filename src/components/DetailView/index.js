@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     flex: 4,
     padding: 8,
     borderRadius: 3,
-    minHeight: 250,
+    minHeight: 85,
     backgroundColor: listItem,
     justifyContent: 'flex-start',
   },
@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
     backgroundColor: primary,
     flexDirection: 'row',
     justifyContent: 'space-around',
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
   },
   infoItem: {
     flex: 1,

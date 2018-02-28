@@ -28,7 +28,7 @@ export default class LazyImage extends Component {
     progress: 0,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const CURRENT_SCREEN_SIZE = Dimensions.get('window');
     Image.getSize(this.props.source.uri, (w, h) => {
       const ratio = CURRENT_SCREEN_SIZE.width / w;

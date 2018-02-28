@@ -22,7 +22,7 @@ Object.keys(BoardList).map(key => {
 });
 
 const drawerConfig = {
-  initialRouteName: 'ConsoleBoard',
+  initialRouteName: 'BestBoard',
   navigationOptions: {
     drawerStyle: {
       backgroundColor: darkBarkground,

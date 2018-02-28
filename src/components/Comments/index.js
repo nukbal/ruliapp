@@ -20,7 +20,6 @@ export default class Comments extends PureComponent {
 
   render() {
     const { comments } = this.props;
-    console.log(comments);
     return (
       <View style={styles.container}>
         {comments.length > 0 && comments.map((item, i) => <CommentItem {...item} />)}

@@ -40,12 +40,17 @@ async function getListData(prefix, boardId) {
   const title = $('head title').text().replace('루리웹', '').replace('|', '').trim()
 
   const items = $('table.board_list_table tbody tr').map((_, row) => {
-    const id = $('td.id', row).text().trim();
+    const link = $('td.subject a' ,row).attr('href').replace('http://bbs.ruliweb.com/', '');
+    const id = link.substring(link.lastIndexOf('/'), link.length);
+    const prefix = link.substring(0, link.indexOf('/'));
+    const boardId = link.substring(link.indexOf('board/') + 6, link.indexOf('/read'));
     return {
       id,
-      key: id,
+      key: `prefix_${boardId}_${id}`,
+      prefix,
+      boardId,
       type: $('td.divsn a', row).text().trim(),
-      title: $('td.subject a.deco', row).text().trim(),
+      title: $('td.subject a', row).text().trim(),
       comments: $('td.subject span.num_reply span.num', row).text().trim(),
       author: $('td.writer a', row).text().trim(),
       likes: $('td.recomd', row).text().trim(),

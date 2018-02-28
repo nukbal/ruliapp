@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: darkBarkground,
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center',
   },
 });
@@ -38,9 +38,9 @@ export class Board extends PureComponent {
     this.props.requestBoard(prefix, boardId);
   }
 
-  pressItem = (id, title) => {
+  pressItem = (id, title, prefix, boardId) => {
     const { navigate } = this.props.navigation;
-    navigate('Detail', { id, board: this.props.info, title });
+    navigate('Detail', { id, board: { prefix, boardId }, title });
   }
 
   renderItem = ({ item }) => {
@@ -50,6 +50,7 @@ export class Board extends PureComponent {
   }
 
   render() {
+    console.log(this.props.list);
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
