@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { SafeAreaView } from 'react-navigation';
-import { StyleSheet, FlatList, StatusBar } from 'react-native';
+import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
 
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, requestBoardList, getBoardInfo } from '../../store/ducks/boards';
@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
     backgroundColor: darkBarkground,
     alignItems: 'stretch',
     justifyContent: 'center',
+  },
+  infoPanel: {
+    flexDirection: 'row',
   },
 });
 
@@ -34,8 +37,14 @@ export class Board extends PureComponent {
   }
 
   componentWillMount() {
+    this.requestList();
+  }
+
+  requestList = (page = 1) => {
     const { prefix, boardId } = this.props;
-    this.props.requestBoard(prefix, boardId);
+    if (page >= 1) {
+      this.props.requestBoard(prefix, boardId, page);
+    }
   }
 
   pressItem = (id, title, prefix, boardId) => {
@@ -50,11 +59,16 @@ export class Board extends PureComponent {
   }
 
   render() {
-    console.log(this.props.list);
+    const { list, info } = this.props;
     return (
       <SafeAreaView style={styles.container}>
+        <View style={styles.infoPanel}>
+          <Button onPress={() => this.requestList(info.page - 1)} title="Prev" />
+          <Button onPress={() => this.requestList(info.page + 1)} title="Next" />
+          <Button onPress={() => this.requestList(info.page)} title="Refresh" />
+        </View>
         <FlatList
-          data={this.props.list}
+          data={list}
           renderItem={this.renderItem}
         />
         <StatusBar barStyle="light-content" />

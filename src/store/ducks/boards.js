@@ -8,18 +8,19 @@ export const actionType = {
   REQUEST_BOARD_LIST_DONE: 'REQUEST_BOARD_LIST_DONE',
 };
 
-export function requestBoardList(prefix, boardId) {
+export function requestBoardList(prefix, boardId, page) {
   return {
     type: actionType.REQUEST_BOARD_LIST,
     payload: {
       prefix,
       boardId,
+      page,
     },
   }
 }
 
-async function getListData(prefix, boardId) {
-  const targetUrl = `https://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}`;
+async function getListData(prefix, boardId, page) {
+  const targetUrl = `https://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}`;
 
   const config = {
     method: 'GET',
@@ -62,12 +63,13 @@ async function getListData(prefix, boardId) {
   return {
     title,
     items,
+    page,
   }
 }
 
 export function* requestBoard({ payload }) {
-  const { prefix, boardId } = payload;
-  const json = yield call(getListData, prefix, boardId);
+  const { prefix, boardId, page } = payload;
+  const json = yield call(getListData, prefix, boardId, page);
 
   yield put({
     type: actionType.REQUEST_BOARD_LIST_DONE,
@@ -90,10 +92,11 @@ export const getBoardList = createSelector(
 
 export const getBoardInfo = createSelector(
   [getBoardState],
-  ({ boardId, prefix, title }) => ({
+  ({ boardId, prefix, title, page }) => ({
     boardId,
     prefix,
     title,
+    page,
   }),
 );
 
@@ -101,13 +104,13 @@ const initState = {};
 
 const actionHandler = {
   [actionType.REQUEST_BOARD_LIST]: (state, { payload }) => {
-    const { prefix, boardId } = payload;
-    return { boardId, prefix, loading: true };
+    const { prefix, boardId, page } = payload;
+    return { boardId, prefix, page, loading: true };
   },
   [actionType.REQUEST_BOARD_LIST_DONE]: (state, { payload }) => {
-    const { prefix, boardId } = state;
+    const { prefix, boardId, page } = state;
     const { title, items } = payload;
-    return { boardId, prefix, title, items };
+    return { boardId, prefix, page, title, items };
   }
 };
 
