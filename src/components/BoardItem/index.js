@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { listItem, labelText, border } from '../../styles/color';
 
 const styles = StyleSheet.create({
@@ -41,10 +41,10 @@ const styles = StyleSheet.create({
 
 export default class BoardItem extends Component {
   onPress = () => {
-    const { onPress, id } = this.props;
+    const { onPress, id, title } = this.props;
     if (!onPress) return;
 
-    onPress(id);
+    onPress(id, title);
   }
 
   render() {
@@ -55,15 +55,15 @@ export default class BoardItem extends Component {
           <Text style={styles.titleText}>{title}</Text>
           <View style={styles.info}>
             <View style={styles.item}>
-              <FontAwesome name="comment-o" size={20} color={labelText} />
+              <Ionicons name="ios-chatboxes-outline" size={20} color={labelText} />
               <Text style={styles.itemText}>{comments || 0}</Text>
             </View>
             <View style={styles.item}>
-              <FontAwesome name="thumbs-o-up" size={20} color={labelText} />
+              <Ionicons name="ios-heart-outline" size={20} color={labelText} />
               <Text style={styles.itemText}>{likes || 0}</Text>
             </View>
             <View style={styles.item}>
-              <FontAwesome name="eye" size={20} color={labelText} />
+              <Ionicons name="ios-person-outline" size={20} color={labelText} />
               <Text style={styles.itemText}>{views || 0}</Text>
             </View>
           </View>

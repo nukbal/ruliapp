@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
+import CommentItem from './CommentItem';
 import { background, listItem } from '../../styles/color';
 
 const styles = StyleSheet.create({
@@ -12,19 +13,17 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class Comments extends Component {
+export default class Comments extends PureComponent {
   static defaultProps = {
     comments: [],
   }
 
   render() {
     const { comments } = this.props;
+    console.log(comments);
     return (
       <View style={styles.container}>
-        {comments.length > 0 && comments.map((item, i) => {
-          console.log(item);
-          return (<Text key={`comment_${i}`}>{item.comment}</Text>);
-        })}
+        {comments.length > 0 && comments.map((item, i) => <CommentItem {...item} />)}
       </View>
     );
   }

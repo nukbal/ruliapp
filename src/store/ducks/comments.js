@@ -1,11 +1,14 @@
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
-import { showLoading, hideLoading } from './loading';
 import cheerio from 'cheerio-without-node-native';
+
+import { showLoading, hideLoading } from './loading';
+import { arrayToObject } from '../../utils/commonUtils';
 
 export const actionType = {
   REQUEST_COMMENTS: 'REQUEST_COMMENTS',
   REQUEST_COMMENTS_DONE: 'REQUEST_COMMENTS_DONE',
+  UPDATE_COMMENTS: 'UPDATE_COMMENTS',
 };
 
 export function requestComments(prefix, boardId, articleId, page) {
@@ -22,9 +25,10 @@ export function requestComments(prefix, boardId, articleId, page) {
 
 export function parseComments($) {
   return $('table.comment_table:not(.best) tr').map((_, item) => {
+    const id = item.attribs.id.replace('ct_', '');
     const userElem = $('td.user', item);
     const user = {
-      author: userElem.find('.nick').text().trim(),
+      name: userElem.find('.nick').text().trim(),
       id: userElem.find('span.member_srl').text().trim(),
       ip: userElem.find('p.ip').text(),
     };
@@ -32,12 +36,16 @@ export function parseComments($) {
     const dislike = $('button.btn_dislike', item).text().trim();
     const time = $('span.time', item).text();
     const comment = $('td.comment span.text', item).text().trim();
+    const isChild = $(item).hasClass('child');
 
     return {
+      id,
+      key: id,
       user,
       like,
       dislike,
       time,
+      isChild,
       comment
     };
   }).get();
@@ -108,8 +116,17 @@ const actionHandler = {
   },
   [actionType.REQUEST_COMMENTS_DONE]: (state, { payload }) => {
     const { prefix, boardId, articleId } = state;
-    const { title, items } = payload;
-    return { boardId, prefix, articleId, title, items };
+    const order = payload.map(item => item.id);
+    const comments = arrayToObject(payload);
+    return { boardId, prefix, articleId, comments, order };
+  },
+  [actionType.UPDATE_COMMENTS]: (state, { payload }) => {
+    const { prefix, boardId, articleId, comments, order } = state;
+    const listOrder = payload.map(item => item.id);
+    const commentList = arrayToObject(payload);
+    const newOrder = order.concat(listOrder);
+
+    return { boardId, prefix, articleId, comments: Object.assign(comments, commentList), newOrder };
   }
 };
 

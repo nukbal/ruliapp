@@ -85,9 +85,10 @@ export const getBoardList = createSelector(
 
 export const getBoardInfo = createSelector(
   [getBoardState],
-  ({ boardId, prefix }) => ({
+  ({ boardId, prefix, title }) => ({
     boardId,
     prefix,
+    title,
   }),
 );
 
