@@ -34,7 +34,8 @@ export default class LazyImage extends Component {
 
   shouldComponentUpdate(props, state) {
     return this.state.isReady !== state.isReady
-      || this.state.height !== state.height;
+      || this.state.height !== state.height
+      || this.state.width !== state.width;
   }
 
   onLoad = (e) => {
@@ -45,13 +46,13 @@ export default class LazyImage extends Component {
     const CURRENT_SCREEN_SIZE = Dimensions.get('window');
     let height;
     let width = undefined;
-    if (!fitScreen) {
-      const ratio = CURRENT_SCREEN_SIZE < w ? 1 : (CURRENT_SCREEN_SIZE.width / w);
-      height = Math.floor(h * ratio);
-      width = CURRENT_SCREEN_SIZE < w ? CURRENT_SCREEN_SIZE : w;
-    } else {
+    if (fitScreen) {
       const ratio = CURRENT_SCREEN_SIZE.width / w;
       height = Math.floor(h * ratio);
+    } else {
+      const ratio = CURRENT_SCREEN_SIZE.width > w ? 1 : (CURRENT_SCREEN_SIZE.width / w);
+      height = Math.floor(h * ratio);
+      width = CURRENT_SCREEN_SIZE.width < w ? CURRENT_SCREEN_SIZE.width : w;
     }
     this.setState({ height, width });
   }
