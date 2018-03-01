@@ -35,7 +35,8 @@ export function updateComment(prefix, boardId, articleId) {
 }
 
 async function getDetailData(prefix, boardId, articleId) {
-  const targetUrl = `https://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}`;
+  const targetUrl =
+    `https://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}?search_type=name&search_key=%24%24`;
 
   const config = {
     method: 'GET',
@@ -107,6 +108,7 @@ async function getDetailData(prefix, boardId, articleId) {
   }).filter(item => item);
 
   const likes = $('span.like_value').text();
+  const dislikes = $('span.dislike_value').text();
   const comments = $('div.comment_count strong.reply_count').text().trim();
 
   const commentList = parseComments($);
@@ -118,6 +120,7 @@ async function getDetailData(prefix, boardId, articleId) {
     reference,
     comments,
     likes,
+    dislikes,
     commentList,
     bestCommentList,
   }
