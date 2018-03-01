@@ -1,19 +1,15 @@
-// https://api.ruliweb.com/commentView
-// formData
-// page:1
-// article_id:2149929
-// board_id:300007
-// cmtimg:0
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { showLoading, hideLoading } from './loading';
 import cheerio from 'cheerio-without-node-native';
 
-import { parseComments, parseBestComments } from './comments';
+import { parseComments, parseBestComments, getComments } from './comments';
 
 export const actionType = {
   REQUEST_DETAIL: 'REQUEST_DETAIL',
   REQUEST_DETAIL_DONE: 'REQUEST_DETAIL_DONE',
+  UPDATE_COMMENT: 'UPDATE_COMMENT',
+  UPDATE_COMMENT_DONE: 'UPDATE_COMMENT_DONE',
 };
 
 export function requestDetail(prefix, boardId, articleId) {
@@ -27,18 +23,30 @@ export function requestDetail(prefix, boardId, articleId) {
   }
 }
 
+export function updateComment(prefix, boardId, articleId) {
+  return {
+    type: actionType.UPDATE_COMMENT,
+    payload: {
+      prefix,
+      boardId,
+      articleId,
+    },
+  }
+}
+
 async function getDetailData(prefix, boardId, articleId) {
-  const targetUrl = `https://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}`;
+  const targetUrl = `https://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}`;
 
   const config = {
     method: 'GET',
+    credentials: 'include',
     headers: {
       Accept: 'text/html',
       'Content-Type': 'text/html',
       'Accept-Encoding': 'gzip, deflate',
       Referer: targetUrl,
       'User-Agent': 'Mozilla/5.0',
-    }
+    },
   };
 
   const response = await fetch(targetUrl, config);
@@ -117,7 +125,7 @@ async function getDetailData(prefix, boardId, articleId) {
 
 export function* requestDetailSaga({ payload }) {
   const { prefix, boardId, articleId } = payload;
-  yield put(showLoading());
+  // yield put(showLoading());
 
   const json = yield call(getDetailData, prefix, boardId, articleId);
 
@@ -126,11 +134,21 @@ export function* requestDetailSaga({ payload }) {
     payload: json,
   });
 
-  yield put(hideLoading());
+  // yield put(hideLoading());
+}
+
+export function* updateCommentSaga({ payload }) {
+  const json = yield call(getComments, payload);
+
+  yield put({
+    type: actionType.UPDATE_COMMENT_DONE,
+    payload: json,
+  });
 }
 
 export const detailSaga = [
   takeLatest(actionType.REQUEST_DETAIL, requestDetailSaga),
+  takeLatest(actionType.UPDATE_COMMENT, updateCommentSaga),
 ];
 
 export const getDetail = state => state.detail;
@@ -150,6 +168,13 @@ const actionHandler = {
   [actionType.REQUEST_DETAIL_DONE]: (state, { payload }) => {
     const { boardId, prefix, articleId } = state;
     return { boardId, prefix, articleId, ...payload };
+  },
+  [actionType.UPDATE_COMMENT]: (state, { payload }) => {
+    return { ...state, loading: true };
+  },
+  [actionType.UPDATE_COMMENT_DONE]: (state, { payload }) => {
+    const { commentList, bestCommentList, loading, ...rest } = state;
+    return { commentList: payload.commentList, bestCommentList: payload.bestCommentList, ...rest };
   }
 };
 

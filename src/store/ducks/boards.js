@@ -42,7 +42,7 @@ async function getListData(prefix, boardId, page) {
 
   const items = $('table.board_list_table tbody tr').map((_, row) => {
     const link = $('td.subject a' ,row).attr('href').replace('http://bbs.ruliweb.com/', '');
-    const id = link.substring(link.lastIndexOf('/'), link.length);
+    const id = link.substring(link.lastIndexOf('/') + 1, link.length);
     const prefix = link.substring(0, link.indexOf('/'));
     const boardId = link.substring(link.indexOf('board/') + 6, link.indexOf('/read'));
     return {

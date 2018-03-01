@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, Text, StyleSheet, Share, FlatList } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Share, FlatList, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { darkBarkground, border, listItem, primary } from '../../styles/color';
@@ -60,9 +60,11 @@ export default class DetailView extends PureComponent {
   }
 
   render() {
-    const { title, contents, commentList, bestCommentList, comments } = this.props;
+    const { title, contents, commentList, bestCommentList, comments, loading } = this.props;
     return (
-      <ScrollView>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.props.refresh} />}
+      >
         <FlatList
           data={contents}
           renderItem={({ item }) => <Contents {...item} />}

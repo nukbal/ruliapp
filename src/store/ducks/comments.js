@@ -25,15 +25,14 @@ export function requestComments(prefix, boardId, articleId, page) {
 
 const parseCommentRow = ($) => (_, item) => {
   const id = item.attribs.id.replace('ct_', '');
-  const userElem = $('td.user', item);
+  const userElem = $('.user', item);
   const user = {
     name: userElem.find('.nick').text().trim(),
-    id: userElem.find('span.member_srl').text().trim(),
-    ip: userElem.find('p.ip').text(),
+    id: userElem.find('span.member_srl').text().trim().replace('|', ''),
   };
   const like = $('button.btn_like', item).text().trim();
   const dislike = $('button.btn_dislike', item).text().trim();
-  const time = $('span.time', item).text();
+  const time = $('span.time', item).text().replace(' |', '');
   const comment = $('td.comment span.text', item).text().trim();
   const isChild = $(item).hasClass('child');
   const isBest = $(item).has('.icon_best').length > 0;
@@ -61,22 +60,29 @@ export function parseComments($) {
   return $('table.comment_table:not(.best) tr').map(parseCommentRow($)).get();
 }
 
-async function getComments({ prefix, boardId, articleId, page }) {
+export async function getComments({ prefix, boardId, articleId }) {
   const params = {
-    page,
+    page: 1,
     article_id: articleId,
     board_id: boardId,
     cmtimg: 1,
   };
 
+  const form = new FormData();
+  form.append('page', 1);
+  form.append('article_id', articleId);
+  form.append('board_id', boardId);
+  form.append('cmtimg', 1);
+
   const config = {
-    method: 'GET',
-    body: JSON.stringify(params),
+    method: 'POST',
+    body: form,
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded',
       'Accept-Encoding': 'gzip, deflate',
-      Referer: targetUrl,
+      referer: `https://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}`,
       'User-Agent': 'Mozilla/5.0',
     }
   };
@@ -84,9 +90,19 @@ async function getComments({ prefix, boardId, articleId, page }) {
   const response = await fetch('https://api.ruliweb.com/commentView', config);
   const json = await response.json();
 
-  if (!json.success) return;
+  if (!json.success) {
+    return {
+      commentList: [],
+      bestCommentList: [],
+    }
+  }
 
   const $ = cheerio.load(json.view);
+
+  return {
+    commentList: parseComments($),
+    bestCommentList: parseBestComments($),
+  }
 }
 
 export function* requestBoard({ payload }) {

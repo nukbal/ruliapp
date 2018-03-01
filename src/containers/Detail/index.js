@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import { StyleSheet, StatusBar } from 'react-native';
-import { requestDetail, getDetailInfo } from '../../store/ducks/detail';
+import { requestDetail, getDetailInfo, updateComment } from '../../store/ducks/detail';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
 
@@ -30,11 +30,17 @@ export class Detail extends PureComponent {
     this.props.request(prefix, boardId, params.id);
   }
 
+  onRefresh = () => {
+    const { prefix, boardId, articleId } = this.props;
+    console.log(articleId);
+    this.props.updateComment(prefix, boardId, articleId);
+  }
+
   render() {
-    const { navigation, request, screenProps, ...rest } = this.props;
+    const { navigation, request, screenProps, updateComment, ...rest } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        <DetailView {...rest} />
+        <DetailView {...rest} refresh={this.onRefresh} />
       </SafeAreaView>
     );
   }
@@ -43,6 +49,7 @@ export class Detail extends PureComponent {
 function mapDispatchToProps(dispatch) {
   return {
     request: bindActionCreators(requestDetail, dispatch),
+    updateComment: bindActionCreators(updateComment, dispatch),
   };
 }
 
