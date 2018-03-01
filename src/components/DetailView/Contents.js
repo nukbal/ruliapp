@@ -24,7 +24,7 @@ export default class ContentItem extends PureComponent {
     if (type === 'embeded') {
       return <Text style={styles.text}>{content}</Text>;
     } else if (type === 'image') {
-      return <LazyImage source={{ uri: content }} />
+      return <LazyImage source={{ uri: content }} fitScreen />
     } else {
       return <Text style={styles.text}>{content}</Text>;
     }

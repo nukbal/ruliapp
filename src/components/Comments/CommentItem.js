@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import LazyImage from '../LazyImage';
 import { border, primary } from '../../styles/color';
 
 const styles = StyleSheet.create({
@@ -51,12 +52,20 @@ const styles = StyleSheet.create({
     padding: 6,
     flexDirection: 'row',
     justifyContent: 'flex-end',
+  },
+  bestIcon: {
+    backgroundColor: primary,
+    color: 'white',
+    padding: 6,
+    paddingTop: 2,
+    paddingBottom: 2,
+    borderRadius: 6,
   }
 });
 
 export default class CommentItem extends PureComponent {
   render() {
-    const { user, comment, isChild, time, isBest, like, dislike } = this.props;
+    const { user, comment, isChild, time, isBest, like, dislike, image } = this.props;
     return (
       <View style={isChild ? styles.childContainer : styles.container}>
         <View style={styles.UserContainer}>
@@ -64,13 +73,14 @@ export default class CommentItem extends PureComponent {
             <Text style={styles.UserText}>
               {user.name}
             </Text>
-            {isBest && (<Ionicons name="ios-bus" size={20} color={primary} />)}
+            {isBest && (<Text style={styles.bestIcon}>BEST</Text>)}
           </View>
           <Text style={styles.UserText}>
             {time}
           </Text>
         </View>
         <View style={styles.CommentContainer}>
+          {image && (<LazyImage source={{ uri: image }} />)}
           <Text style={styles.CommentText}>{comment}</Text>
         </View>
         <View style={styles.infoContainer}>

@@ -37,6 +37,7 @@ const parseCommentRow = ($) => (_, item) => {
   const comment = $('td.comment span.text', item).text().trim();
   const isChild = $(item).hasClass('child');
   const isBest = $(item).has('.icon_best').length > 0;
+  const image = $('td.comment img', item).length > 0 ? $('td.comment img', item).attr('src') : null;
 
   return {
     id,
@@ -47,6 +48,7 @@ const parseCommentRow = ($) => (_, item) => {
     time,
     isChild,
     comment,
+    image,
     isBest
   }
 }

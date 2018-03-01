@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
 
+import FullLoading from '../../components/FullLoading';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading } from '../../store/ducks/boards';
 import { darkBarkground, background, titleText, border } from '../../styles/color';
@@ -71,6 +72,7 @@ export class Board extends PureComponent {
         <FlatList
           data={list}
           renderItem={this.renderItem}
+          ListEmptyComponent={(<View style={{ flex: 1 }}><FullLoading /></View>)}
           ListHeaderComponent={(
             <View style={styles.infoPanel}>
               <Button onPress={() => this.requestList(info.page - 1)} title="Prev" />

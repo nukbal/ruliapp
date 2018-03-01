@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 export default class LazyImage extends Component {
   state = {
     isReady: false,
+    width: undefined,
     height: 150,
     progress: 0,
   }
@@ -37,13 +38,22 @@ export default class LazyImage extends Component {
   }
 
   onLoad = (e) => {
+    const { fitScreen } = this.props;
     const w = e.nativeEvent.source.width;
     const h = e.nativeEvent.source.height;
 
     const CURRENT_SCREEN_SIZE = Dimensions.get('window');
-    const ratio = CURRENT_SCREEN_SIZE.width / w;
-    const height = Math.floor(h * ratio);
-    this.setState({ height });
+    let height;
+    let width = undefined;
+    if (!fitScreen) {
+      const ratio = CURRENT_SCREEN_SIZE < w ? 1 : (CURRENT_SCREEN_SIZE.width / w);
+      height = Math.floor(h * ratio);
+      width = CURRENT_SCREEN_SIZE < w ? CURRENT_SCREEN_SIZE : w;
+    } else {
+      const ratio = CURRENT_SCREEN_SIZE.width / w;
+      height = Math.floor(h * ratio);
+    }
+    this.setState({ height, width });
   }
 
   onLoadEnd = () => {
@@ -54,10 +64,10 @@ export default class LazyImage extends Component {
 
   render() {
     const { source, resizeMode } = this.props;
-    const { isReady, height } = this.state;
+    const { isReady, height, width } = this.state;
     return (
-      <View style={[styles.ImagePlaceholder, { height }]}>
-        {isReady === false && <Indicator />}
+      <View style={[styles.ImagePlaceholder, { height, width }]}>
+        {/* {isReady === false && <Indicator />} */}
         <Image
           style={styles.ImageContent}
           onLoad={this.onLoad}

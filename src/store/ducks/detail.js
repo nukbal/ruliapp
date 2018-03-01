@@ -99,7 +99,7 @@ async function getDetailData(prefix, boardId, articleId) {
   }).filter(item => item);
 
   const likes = $('span.like_value').text();
-  const comments = $('strong.reply_count').text().trim();
+  const comments = $('div.comment_count strong.reply_count').text().trim();
 
   const commentList = parseComments($);
   const bestCommentList = parseBestComments($);
