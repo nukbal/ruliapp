@@ -43,6 +43,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  infoText: {
+    marginLeft: 6,
+    fontWeight: 'bold',
+    color: 'white'
+  }
 });
 
 
@@ -56,11 +61,20 @@ export default class DetailView extends PureComponent {
 
   onPressShare = () => {
     const { boardId, articleId, prefix } = this.props;
-    Share.share({ url: `http://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}` });
+    Share.share({ url: `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}` });
   }
 
   render() {
-    const { title, contents, commentList, bestCommentList, comments, loading } = this.props;
+    const {
+      title,
+      contents,
+      commentList,
+      bestCommentList,
+      comments,
+      loading,
+      likes,
+      dislikes,
+    } = this.props;
     return (
       <ScrollView
         refreshControl={<RefreshControl refreshing={loading} onRefresh={this.props.refresh} />}
@@ -76,8 +90,16 @@ export default class DetailView extends PureComponent {
           ListFooterComponent={(
             <View style={styles.infoPanel}>
               <View style={styles.infoItem}>
+                <Ionicons name="ios-thumbs-up-outline" size={25} color="white" />
+                <Text style={styles.infoText}>{likes}</Text>
+              </View>
+              <View style={styles.infoItem}>
+                <Ionicons name="ios-thumbs-down-outline" size={25} color="white" />
+                <Text style={styles.infoText}>{dislikes}</Text>
+              </View>
+              <View style={styles.infoItem}>
                 <Ionicons name="ios-chatboxes-outline" size={25} color="white" />
-                <Text>{comments}</Text>
+                <Text style={styles.infoText}>{comments}</Text>
               </View>
               <View style={styles.infoItem}>
                 <Ionicons name="ios-share-outline" size={25} color="white" onPress={this.onPressShare} />

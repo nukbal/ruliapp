@@ -32,7 +32,6 @@ export class Detail extends PureComponent {
 
   onRefresh = () => {
     const { prefix, boardId, articleId } = this.props;
-    console.log(articleId);
     this.props.updateComment(prefix, boardId, articleId);
   }
 
