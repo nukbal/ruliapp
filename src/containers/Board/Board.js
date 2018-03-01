@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-navigation';
 import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
 
 import BoardItem from '../../components/BoardItem';
-import { getBoardList, requestBoardList, getBoardInfo } from '../../store/ducks/boards';
+import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading } from '../../store/ducks/boards';
 import { darkBarkground, background, titleText, border } from '../../styles/color';
 
 const styles = StyleSheet.create({
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   },
   infoPanel: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 
@@ -28,6 +29,7 @@ export class Board extends PureComponent {
 
   static defaultProps = {
     list: [],
+    refreshing: false,
   }
 
   componentWillReceiveProps(props) {
@@ -58,18 +60,25 @@ export class Board extends PureComponent {
     );
   }
 
+  onRefresh = () => {
+    this.requestList(this.props.info.page);
+  }
+
   render() {
-    const { list, info } = this.props;
+    const { list, info, refreshing } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.infoPanel}>
-          <Button onPress={() => this.requestList(info.page - 1)} title="Prev" />
-          <Button onPress={() => this.requestList(info.page + 1)} title="Next" />
-          <Button onPress={() => this.requestList(info.page)} title="Refresh" />
-        </View>
         <FlatList
           data={list}
           renderItem={this.renderItem}
+          ListHeaderComponent={(
+            <View style={styles.infoPanel}>
+              <Button onPress={() => this.requestList(info.page - 1)} title="Prev" />
+              <Button onPress={() => this.requestList(info.page + 1)} title="Next" />
+            </View>
+          )}
+          refreshing={refreshing}
+          onRefresh={this.onRefresh}
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>
@@ -87,6 +96,7 @@ function mapStateToProps(state) {
   return {
     info: getBoardInfo(state),
     list: getBoardList(state),
+    refreshing: isBoardLoading(state),
   };
 }
 

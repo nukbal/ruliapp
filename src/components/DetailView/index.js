@@ -1,37 +1,32 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Share, FlatList } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { darkBarkground, border, listItem, primary } from '../../styles/color';
 
+import Contents from './Contents';
 import Comments from '../Comments';
 import LazyImage from '../LazyImage';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
   title: {
     flex: 1,
+    marginTop: 6,
     marginBottom: 6,
     borderRadius: 3,
     padding: 8,
     backgroundColor: listItem,
     borderBottomColor: border,
     borderBottomWidth: 1,
+    justifyContent: 'flex-start',
   },
   titleText: {
     color: 'white',
     fontWeight: 'bold',
-  },
-  content: {
-    flex: 4,
-    padding: 8,
-    borderRadius: 3,
-    minHeight: 85,
-    backgroundColor: listItem,
-    justifyContent: 'flex-start',
-  },
-  TextContent: {
-    marginBottom: 6,
-    color: 'white',
   },
   infoPanel: {
     flex: 1,
@@ -43,8 +38,10 @@ const styles = StyleSheet.create({
   },
   infoItem: {
     flex: 1,
+    padding: 6,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -53,46 +50,42 @@ export default class DetailView extends PureComponent {
   static defaultProps = {
     contents: [],
     commentList: [],
+    bestCommentList: [],
+    loading: false,
   }
 
-  renderContentRow = (item) => {
-    switch(item.type) {
-      case 'embeded':
-        return (<Text style={styles.TextContent} key={item.key}>{item.content}</Text>);
-      case 'image':
-        return (
-          <LazyImage
-            key={item.key}
-            source={{ uri: item.content }}
-          />
-        );
-      default:
-        return (<Text style={styles.TextContent} key={item.key}>{item.content}</Text>);
-        break;
-    }
+  onPressShare = () => {
+    const { boardId, articleId, prefix } = this.props;
+    Share.share({ url: `http://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}` });
   }
 
   render() {
-    const { title, contents, commentList } = this.props;
+    const { title, contents, commentList, bestCommentList, comments } = this.props;
     return (
       <ScrollView>
-      <View style={styles.title}>
-        <Text style={styles.titleText}>{title}</Text>
-      </View>
-      <View style={styles.content}>
-        {contents.length > 0 && contents.map(this.renderContentRow)}
-      </View>
-      <View style={styles.infoPanel}>
-        <View style={styles.infoItem}>
-          <Text>1</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Ionicons name="ios-chatboxes-outline" size={20} color="white" />
-          <Text>2</Text>
-        </View>
-      </View>
-      <Comments comments={commentList} />
-    </ScrollView>
+        <FlatList
+          data={contents}
+          renderItem={({ item }) => <Contents {...item} />}
+          ListHeaderComponent={(
+            <View style={styles.title}>
+              <Text style={styles.titleText}>{title}</Text>
+            </View>
+          )}
+          ListFooterComponent={(
+            <View style={styles.infoPanel}>
+              <View style={styles.infoItem}>
+                <Ionicons name="ios-chatboxes-outline" size={25} color="white" />
+                <Text>{comments}</Text>
+              </View>
+              <View style={styles.infoItem}>
+                <Ionicons name="ios-share-outline" size={25} color="white" onPress={this.onPressShare} />
+              </View>
+            </View>
+          )}
+        />
+        {bestCommentList.length > 0 && (<Comments comments={bestCommentList} best />)}
+        <Comments comments={commentList} />
+      </ScrollView>
     );
   }
 }

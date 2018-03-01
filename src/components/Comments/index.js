@@ -1,14 +1,20 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, FlatList } from 'react-native';
 
 import CommentItem from './CommentItem';
-import { background, listItem } from '../../styles/color';
+import { background, listItem, primaryOpacity } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderRadius: 3,
     backgroundColor: listItem,
+    marginTop: 8,
+  },
+  bestContainer: {
+    flex: 1,
+    borderRadius: 3,
+    backgroundColor: primaryOpacity,
     marginTop: 8,
   }
 });
@@ -19,11 +25,13 @@ export default class Comments extends PureComponent {
   }
 
   render() {
-    const { comments } = this.props;
+    const { comments, best } = this.props;
     return (
-      <View style={styles.container}>
-        {comments.length > 0 && comments.map((item, i) => <CommentItem {...item} />)}
-      </View>
+      <FlatList
+        style={best ? styles.bestContainer : styles.container}
+        data={comments}
+        renderItem={({ item }) => <CommentItem {...item} />}
+      />
     );
   }
 }

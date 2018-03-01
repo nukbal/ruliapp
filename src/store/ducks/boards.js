@@ -100,6 +100,11 @@ export const getBoardInfo = createSelector(
   }),
 );
 
+export const isBoardLoading = createSelector(
+  [getBoardState],
+  ({ loading }) => loading || false,
+);
+
 const initState = {};
 
 const actionHandler = {

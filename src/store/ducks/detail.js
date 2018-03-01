@@ -9,7 +9,7 @@ import { createSelector } from 'reselect';
 import { showLoading, hideLoading } from './loading';
 import cheerio from 'cheerio-without-node-native';
 
-import { parseComments } from './comments';
+import { parseComments, parseBestComments } from './comments';
 
 export const actionType = {
   REQUEST_DETAIL: 'REQUEST_DETAIL',
@@ -93,7 +93,7 @@ async function getDetailData(prefix, boardId, articleId) {
 
     return {
       type,
-      key: i,
+      key: `${i}`,
       content,
     };
   }).filter(item => item);
@@ -102,6 +102,7 @@ async function getDetailData(prefix, boardId, articleId) {
   const comments = $('strong.reply_count').text().trim();
 
   const commentList = parseComments($);
+  const bestCommentList = parseBestComments($);
 
   return {
     title,
@@ -110,6 +111,7 @@ async function getDetailData(prefix, boardId, articleId) {
     comments,
     likes,
     commentList,
+    bestCommentList,
   }
 }
 

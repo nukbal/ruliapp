@@ -7,6 +7,14 @@ import { requestDetail, getDetailInfo } from '../../store/ducks/detail';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: darkBarkground,
+    justifyContent: 'flex-start',
+  },
+});
+
 export class Detail extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.title}`,
@@ -23,27 +31,14 @@ export class Detail extends PureComponent {
   }
 
   render() {
-    const { contents, title, commentList } = this.props;
+    const { navigation, request, screenProps, ...rest } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        <DetailView
-          contents={contents}
-          title={title}
-          commentList={commentList}
-        />
+        <DetailView {...rest} />
       </SafeAreaView>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: darkBarkground,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-});
 
 function mapDispatchToProps(dispatch) {
   return {

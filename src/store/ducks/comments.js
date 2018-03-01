@@ -23,32 +23,40 @@ export function requestComments(prefix, boardId, articleId, page) {
   }
 }
 
-export function parseComments($) {
-  return $('table.comment_table:not(.best) tr').map((_, item) => {
-    const id = item.attribs.id.replace('ct_', '');
-    const userElem = $('td.user', item);
-    const user = {
-      name: userElem.find('.nick').text().trim(),
-      id: userElem.find('span.member_srl').text().trim(),
-      ip: userElem.find('p.ip').text(),
-    };
-    const like = $('button.btn_like', item).text().trim();
-    const dislike = $('button.btn_dislike', item).text().trim();
-    const time = $('span.time', item).text();
-    const comment = $('td.comment span.text', item).text().trim();
-    const isChild = $(item).hasClass('child');
+const parseCommentRow = ($) => (_, item) => {
+  const id = item.attribs.id.replace('ct_', '');
+  const userElem = $('td.user', item);
+  const user = {
+    name: userElem.find('.nick').text().trim(),
+    id: userElem.find('span.member_srl').text().trim(),
+    ip: userElem.find('p.ip').text(),
+  };
+  const like = $('button.btn_like', item).text().trim();
+  const dislike = $('button.btn_dislike', item).text().trim();
+  const time = $('span.time', item).text();
+  const comment = $('td.comment span.text', item).text().trim();
+  const isChild = $(item).hasClass('child');
+  const isBest = $(item).has('.icon_best').length > 0;
 
-    return {
-      id,
-      key: id,
-      user,
-      like,
-      dislike,
-      time,
-      isChild,
-      comment
-    };
-  }).get();
+  return {
+    id,
+    key: id,
+    user,
+    like,
+    dislike,
+    time,
+    isChild,
+    comment,
+    isBest
+  }
+}
+
+export function parseBestComments($) {
+  return $('table.comment_table.best tr').map(parseCommentRow($)).get();
+}
+
+export function parseComments($) {
+  return $('table.comment_table:not(.best) tr').map(parseCommentRow($)).get();
 }
 
 async function getComments({ prefix, boardId, articleId, page }) {

@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     height: null,
   },
   ImagePlaceholder: {
-    marginBottom: 8,
     borderRadius: 6,
     flex: 1,
     backgroundColor: darkBarkground,
@@ -28,17 +27,23 @@ export default class LazyImage extends Component {
     progress: 0,
   }
 
-  componentDidMount() {
-    const CURRENT_SCREEN_SIZE = Dimensions.get('window');
-    Image.getSize(this.props.source.uri, (w, h) => {
-      const ratio = CURRENT_SCREEN_SIZE.width / w;
-      const height = Math.floor(h * ratio) - 4;
-      this.setState({ height });
-    });
+  componentWillMount() {
+    Image.prefetch(this.props.source);
   }
 
   shouldComponentUpdate(props, state) {
-    return this.state.isReady !== state.isReady;
+    return this.state.isReady !== state.isReady
+      || this.state.height !== state.height;
+  }
+
+  onLoad = (e) => {
+    const w = e.nativeEvent.source.width;
+    const h = e.nativeEvent.source.height;
+
+    const CURRENT_SCREEN_SIZE = Dimensions.get('window');
+    const ratio = CURRENT_SCREEN_SIZE.width / w;
+    const height = Math.floor(h * ratio);
+    this.setState({ height });
   }
 
   onLoadEnd = () => {
@@ -47,8 +52,6 @@ export default class LazyImage extends Component {
     });
   }
 
-  image = null
-
   render() {
     const { source, resizeMode } = this.props;
     const { isReady, height } = this.state;
@@ -56,8 +59,8 @@ export default class LazyImage extends Component {
       <View style={[styles.ImagePlaceholder, { height }]}>
         {isReady === false && <Indicator />}
         <Image
-          ref={(ref) => { this.image = ref; }}
           style={styles.ImageContent}
+          onLoad={this.onLoad}
           onLoadEnd={this.onLoadEnd}
           source={source}
         />

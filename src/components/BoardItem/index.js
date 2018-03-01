@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableHighlight, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { listItem, labelText, border } from '../../styles/color';
+import { listItem, labelText, border, primaryOpacity } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 8,
     marginBottom: 8,
+  },
+  itemContainer: {
+    flex: 1,
+    padding: 8,
     borderRadius: 3,
     backgroundColor: listItem,
     alignItems: 'baseline',
@@ -49,8 +52,8 @@ export default class BoardItem extends Component {
   render() {
     const { title, comments, author, like, views, times, likes } = this.props;
     return (
-      <TouchableOpacity onPress={this.onPress}>
-        <View style={styles.container}>
+      <TouchableHighlight style={styles.container} onPress={this.onPress} activeOpacity={0.7}>
+        <View style={styles.itemContainer}>
           <Text style={styles.titleText}>{title}</Text>
           <View style={styles.info}>
             <View style={styles.item}>
@@ -67,7 +70,7 @@ export default class BoardItem extends Component {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   }
 }

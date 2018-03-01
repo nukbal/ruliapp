@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { darkBarkground, background, titleText, border } from '../../styles/color';
 import Board from './Board';
@@ -28,6 +28,15 @@ const drawerConfig = {
       backgroundColor: darkBarkground,
     }
   },
+  headerLeft: (
+    <Ionicons
+      style={styles.header}
+      name="ios-list"
+      size={28}
+      color="white"
+      onPress={() => navigation.navigate('DrawerToggle')}
+    />
+  ),
 }
 
 const BoardDrawer = DrawerNavigator(BoardRoutes, drawerConfig);
@@ -48,14 +57,5 @@ export default StackNavigator({
     cardStyle: {
       opacity: 1,
     },
-    // headerLeft: (
-    //   <Ionicons
-    //     style={styles.header}
-    //     name="ios-list"
-    //     size={28}
-    //     color="white"
-    //     onPress={() => navigation.navigate('DrawerToggle')}
-    //   />
-    // ),
   }),
 });
