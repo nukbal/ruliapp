@@ -5,10 +5,12 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
 
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import FullLoading from '../../components/FullLoading';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading } from '../../store/ducks/boards';
-import { darkBarkground, background, titleText, border } from '../../styles/color';
+import { darkBarkground, background, titleText, border, primary } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,6 +20,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   infoPanel: {
+    paddingLeft: 8,
+    paddingRight: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -65,6 +69,14 @@ export class Board extends PureComponent {
     this.requestList(this.props.info.page);
   }
 
+  prevPage = () => {
+    this.requestList(this.props.info.page - 1);
+  }
+
+  nextPage = () => {
+    this.requestList(this.props.info.page + 1);
+  }
+
   render() {
     const { list, info, refreshing } = this.props;
     return (
@@ -75,12 +87,16 @@ export class Board extends PureComponent {
           ListEmptyComponent={(<View style={{ flex: 1 }}><FullLoading /></View>)}
           ListHeaderComponent={(
             <View style={styles.infoPanel}>
-              <Button onPress={() => this.requestList(info.page - 1)} title="Prev" />
-              <Button onPress={() => this.requestList(info.page + 1)} title="Next" />
+              <Ionicons name="ios-arrow-back" size={25} color={primary} onPress={this.prevPage} />
+              <Ionicons name="ios-arrow-forward" size={25} color={primary} onPress={this.nextPage} />
             </View>
           )}
           refreshing={refreshing}
           onRefresh={this.onRefresh}
+          getItemLayout={(data, index) => (
+            {length: 54, offset: 54 * index, index}
+          )}
+          onEndReachedThreshold={30}
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>
