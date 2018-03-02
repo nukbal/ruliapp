@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
 });
 
 export default class ContentItem extends PureComponent {
+  state = {
+    visible: false,
+  }
+
   getElement = () => {
     const { type, content } = this.props;
     if (type === 'embeded') {
@@ -30,7 +34,15 @@ export default class ContentItem extends PureComponent {
     }
   }
 
+  setVisible = (visible) => {
+    if (this.state.visible !== visible) {
+      this.setState({ visible });
+    }
+  }
+
   render() {
+    const { visible } = this.state;
+    if (!visible) return <View style={[styles.container, { width: 0, height: 0, padding: 0 }]} />;
     return (
       <View style={styles.container}>
         {this.getElement()}

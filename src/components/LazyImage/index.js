@@ -63,6 +63,10 @@ export default class LazyImage extends Component {
     });
   }
 
+  onError = () => {
+    console.log(this.props.source.uri);
+  }
+
   render() {
     const { source, resizeMode } = this.props;
     const { isReady, height, width } = this.state;
@@ -70,9 +74,10 @@ export default class LazyImage extends Component {
       <View style={[styles.ImagePlaceholder, { height, width }]}>
         {/* {isReady === false && <Indicator />} */}
         <Image
-          style={styles.ImageContent}
+          style={[styles.ImageContent, { height, width }]}
           onLoad={this.onLoad}
           onLoadEnd={this.onLoadEnd}
+          onError={this.onError}
           source={source}
         />
       </View>

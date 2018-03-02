@@ -63,8 +63,20 @@ const styles = StyleSheet.create({
 });
 
 export default class CommentItem extends PureComponent {
+  state = {
+    visible: false,
+  }
+
+  setVisible = (visible) => {
+    if (this.state.visible !== visible) {
+      this.setState({ visible });
+    }
+  }
+
   render() {
     const { user, comment, isChild, time, isBest, like, dislike, image } = this.props;
+    const { visible } = this.state;
+    if (!visible) return <View style={[styles.container, { width: 0, height: 0, padding: 0 }]} />
     return (
       <View style={isChild ? styles.childContainer : styles.container}>
         <View style={styles.UserContainer}>

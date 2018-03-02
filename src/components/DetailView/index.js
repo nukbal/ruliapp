@@ -59,10 +59,39 @@ export default class DetailView extends PureComponent {
     loading: false,
   }
 
+  componentWillMount() {
+    this.refs = {};
+  }
+
   onPressShare = () => {
     const { boardId, articleId, prefix } = this.props;
     Share.share({ url: `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}` });
   }
+
+  renderItem = (row) => {
+    const { item } = row;
+    return (
+      <Contents
+        ref={(ref) => { this.addRefs(ref, row); }}
+        {...item}
+      />
+    );
+  }
+
+  addRefs = (ref, { item, index }) => {
+    this.refs[item.key] = { ref, item, index };
+  }
+
+  updateItem = (key, isViewable) => {
+    if (!this.refs[key].ref) return;
+    this.refs[key].ref.setVisible(isViewable);
+  }
+
+  onViewItemChanged = (info) => {
+    info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
+  }
+
+  refs = {};
 
   render() {
     const {
@@ -81,7 +110,7 @@ export default class DetailView extends PureComponent {
       >
         <FlatList
           data={contents}
-          renderItem={({ item }) => <Contents {...item} />}
+          renderItem={this.renderItem}
           ListHeaderComponent={(
             <View style={styles.title}>
               <Text style={styles.titleText}>{title}</Text>
@@ -106,6 +135,8 @@ export default class DetailView extends PureComponent {
               </View>
             </View>
           )}
+          onViewableItemsChanged={this.onViewItemChanged}
+          removeClippedSubviews
         />
         {bestCommentList.length > 0 && (<Comments comments={bestCommentList} best />)}
         <Comments comments={commentList} />
