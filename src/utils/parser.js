@@ -106,9 +106,6 @@ export const parseDetail = (htmlString) => {
   const commentEndIndex = htmlString.indexOf('<!-- board_bottom end');
   const commentHtml = htmlString.substring(commentStartIndex, commentEndIndex);
   const { commentList, bestCommentList } = parseComment(commentHtml);
-  const end = performance.now();
-
-  console.log(`detail parse: ${Math.round(end - start)}ms`);
 
   return {
     title,
