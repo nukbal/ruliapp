@@ -41,7 +41,10 @@ export const parseComment = (htmlString) => {
 }
 
 export const parseDetail = (htmlString) => {
-  const $ = loadHtml(htmlString);
+  const contentStartIndex = htmlString.indexOf('<div class="board_main"');
+  const contentEndIndex = htmlString.indexOf('<!-- board_main end');
+  const html = htmlString.substring(contentStartIndex, contentEndIndex);
+  const $ = loadHtml(html);
 
   let title = $('head title').text();
   title = title.substring(0, title.indexOf(' | '));
@@ -99,8 +102,13 @@ export const parseDetail = (htmlString) => {
   const dislikes = $('span.dislike_value').text();
   const comments = $('div.comment_count strong.reply_count').text().trim();
 
-  const commentList = $('table.comment_table:not(.best) tr').map(parseCommentRow($)).get();
-  const bestCommentList = $('table.comment_table.best tr').map(parseCommentRow($)).get();
+  const commentStartIndex = htmlString.indexOf('<div class="board_bottom"');
+  const commentEndIndex = htmlString.indexOf('<!-- board_bottom end');
+  const commentHtml = htmlString.substring(commentStartIndex, commentEndIndex);
+  const { commentList, bestCommentList } = parseComment(commentHtml);
+  const end = performance.now();
+
+  console.log(`detail parse: ${Math.round(end - start)}ms`);
 
   return {
     title,
@@ -116,7 +124,10 @@ export const parseDetail = (htmlString) => {
 
 
 export const parseBoardList = (htmlString, page) => {
-  const $ = loadHtml(htmlString);
+  const startIndex = htmlString.indexOf('<table class="board_list_table"');
+  const endIndex = htmlString.indexOf('</table>');
+  const html = htmlString.substring(startIndex, endIndex);
+  const $ = loadHtml(html);
 
   const title = $('head title').text().replace('루리웹', '').replace('|', '').trim()
 
