@@ -48,11 +48,9 @@ async function getDetailData(prefix, boardId, articleId) {
       'User-Agent': 'Mozilla/5.0',
     },
   };
-  const start = performance.now();
+  
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
-  const end = performance.now();
-  console.log(`fetch : ${Math.rount(end - start)}ms`);
 
   return parseDetail(htmlString);
 }
