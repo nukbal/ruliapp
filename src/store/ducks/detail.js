@@ -1,9 +1,8 @@
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { showLoading, hideLoading } from './loading';
-import cheerio from 'cheerio-without-node-native';
-
-import { parseComments, parseBestComments, getComments } from './comments';
+import { getComments } from './comments';
+import { parseDetail } from '../../utils/parser';
 
 export const actionType = {
   REQUEST_DETAIL: 'REQUEST_DETAIL',
@@ -49,81 +48,13 @@ async function getDetailData(prefix, boardId, articleId) {
       'User-Agent': 'Mozilla/5.0',
     },
   };
-
+  const start = performance.now();
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
+  const end = performance.now();
+  console.log(`fetch : ${Math.rount(end - start)}ms`);
 
-  const $ = cheerio.load(htmlString);
-
-  let title = $('head title').text();
-  title = title.substring(0, title.indexOf(' | '));
-
-  const reference = $('div.source_url a').attr('href');
-  const contents = $('div.board_main_view .view_content')[0].childNodes.map((item, i) => {
-    if (item.type === 'tag' && item.name === 'br') return;
-
-    let content;
-    let type;
-    if (item.type === 'tag' && (item.name === 'p' || item.name === 'div')) {
-      const _$ = $(item);
-      const text = _$.text().trim();
-      const isImg = _$.has('img').length === 1;
-      const isEmbeded = _$.has('iframe').length === 1;
-      if ((!isImg && !isEmbeded) && (text === '<br />' || text === '' || text === '&nbsp;')) return;
-  
-      if (isEmbeded) {
-        type = 'embeded';
-        content = $('iframe', item).attr('src');
-      } else if (isImg) {
-        type = 'image';
-        content = $('img', item).attr('src');
-      } else {
-        type = 'text';
-        content = text;
-      }
-    } else if (item.type === 'tag' && item.name == 'img'){
-      type = 'image';
-      content = item.attribs.src;
-    } else if (item.type === 'tag' && item.name == 'iframe') {
-      type = 'embeded';
-      content = item.attribs.src;
-    } else if (item.type === 'tag') {
-      type = 'text';
-      content = $(item).text().trim();
-    } else if (item.type === 'text') {
-      const text = item.data.trim();
-      if (text) {
-        type = 'text';
-        content = item.data.trim();
-      } else {
-        return;
-      }
-    }
-
-    return {
-      type,
-      key: `${i}`,
-      content,
-    };
-  }).filter(item => item);
-
-  const likes = $('span.like_value').text();
-  const dislikes = $('span.dislike_value').text();
-  const comments = $('div.comment_count strong.reply_count').text().trim();
-
-  const commentList = parseComments($);
-  const bestCommentList = parseBestComments($);
-
-  return {
-    title,
-    contents,
-    reference,
-    comments,
-    likes,
-    dislikes,
-    commentList,
-    bestCommentList,
-  }
+  return parseDetail(htmlString);
 }
 
 export function* requestDetailSaga({ payload }) {

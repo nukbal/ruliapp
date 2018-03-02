@@ -1,9 +1,9 @@
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
-import cheerio from 'cheerio-without-node-native';
 
 import { showLoading, hideLoading } from './loading';
 import { arrayToObject } from '../../utils/commonUtils';
+import { parseComment } from '../../utils/parser';
 
 export const actionType = {
   REQUEST_COMMENTS: 'REQUEST_COMMENTS',
@@ -23,51 +23,7 @@ export function requestComments(prefix, boardId, articleId, page) {
   }
 }
 
-const parseCommentRow = ($) => (_, item) => {
-  const id = item.attribs.id.replace('ct_', '');
-  const userElem = $('.user', item);
-  const user = {
-    name: userElem.find('.nick').text().trim(),
-    id: userElem.find('span.member_srl').text().trim().replace('|', ''),
-  };
-  const like = $('button.btn_like', item).text().trim();
-  const dislike = $('button.btn_dislike', item).text().trim();
-  const time = $('span.time', item).text().replace(' |', '');
-  const comment = $('td.comment span.text', item).text().trim();
-  const isChild = $(item).hasClass('child');
-  const isBest = $(item).has('.icon_best').length > 0;
-  const image = $('td.comment img', item).length > 0 ? $('td.comment img', item).attr('src') : null;
-
-  return {
-    id,
-    key: id,
-    user,
-    like,
-    dislike,
-    time,
-    isChild,
-    comment,
-    image,
-    isBest
-  }
-}
-
-export function parseBestComments($) {
-  return $('table.comment_table.best tr').map(parseCommentRow($)).get();
-}
-
-export function parseComments($) {
-  return $('table.comment_table:not(.best) tr').map(parseCommentRow($)).get();
-}
-
 export async function getComments({ prefix, boardId, articleId }) {
-  const params = {
-    page: 1,
-    article_id: articleId,
-    board_id: boardId,
-    cmtimg: 1,
-  };
-
   const form = new FormData();
   form.append('page', 1);
   form.append('article_id', articleId);
@@ -97,12 +53,7 @@ export async function getComments({ prefix, boardId, articleId }) {
     }
   }
 
-  const $ = cheerio.load(json.view);
-
-  return {
-    commentList: parseComments($),
-    bestCommentList: parseBestComments($),
-  }
+  return parseComment(json.view);
 }
 
 export function* requestBoard({ payload }) {

@@ -97,6 +97,8 @@ export class Board extends PureComponent {
             {length: 54, offset: 54 * index, index}
           )}
           onEndReachedThreshold={30}
+          initialNumToRender={10}
+          removeClippedSubviews
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>

@@ -1,7 +1,7 @@
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { hideFullLoading } from './loading';
-import cheerio from 'cheerio-without-node-native';
+import { parseBoardList } from '../../utils/parser';
 
 export const actionType = {
   REQUEST_BOARD_LIST: 'REQUEST_BOARD_LIST',
@@ -36,35 +36,7 @@ async function getListData(prefix, boardId, page) {
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
 
-  const $ = cheerio.load(htmlString);
-
-  const title = $('head title').text().replace('루리웹', '').replace('|', '').trim()
-
-  const items = $('table.board_list_table tbody tr').map((_, row) => {
-    const link = $('td.subject a' ,row).attr('href').replace('http://bbs.ruliweb.com/', '');
-    const id = link.substring(link.lastIndexOf('/') + 1, link.length);
-    const prefix = link.substring(0, link.indexOf('/'));
-    const boardId = link.substring(link.indexOf('board/') + 6, link.indexOf('/read'));
-    return {
-      id,
-      key: `prefix_${boardId}_${id}`,
-      prefix,
-      boardId,
-      type: $('td.divsn a', row).text().trim(),
-      title: $('td.subject a', row).text().trim(),
-      comments: $('td.subject span.num_reply span.num', row).text().trim(),
-      author: $('td.writer a', row).text().trim(),
-      likes: $('td.recomd', row).text().trim(),
-      views: $('td.hit', row).text().trim(),
-      times: $('td.time', row).text().trim(),
-    };
-  }).get();
-
-  return {
-    title,
-    items,
-    page,
-  }
+  return parseBoardList(htmlString, page);
 }
 
 export function* requestBoard({ payload }) {
