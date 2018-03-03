@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, Text, StyleSheet, Share, SectionList, RefreshControl } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Share, SectionList, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { darkBarkground, border, listItem, primary } from '../../styles/color';
@@ -135,9 +135,9 @@ export default class DetailView extends PureComponent {
           <Ionicons name="ios-chatboxes-outline" size={25} color="white" />
           <Text style={styles.infoText}>{comments}</Text>
         </View>
-        <View style={styles.infoItem}>
-          <Ionicons name="ios-share-outline" size={25} color="white" onPress={this.onPressShare} />
-        </View>
+        <TouchableOpacity style={styles.infoItem} onPress={this.onPressShare}>
+          <Ionicons name="ios-share-outline" size={25} color="white" />
+        </TouchableOpacity>
       </View>
     );
   }
