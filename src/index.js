@@ -2,35 +2,28 @@ import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { StackNavigator, addNavigationHelpers } from 'react-navigation';
-
-import { isFullLoading } from './store/ducks/loading';
-import { requestBoardList } from './store/ducks/boards';
+import {
+  createReduxBoundAddListener,
+} from 'react-navigation-redux-helpers';
 
 import MainRouter from './containers';
-import FullLoading from './components/FullLoading';
+
+const addListener = createReduxBoundAddListener("root");
 
 export class RootRouter extends PureComponent {
-  componentDidMount() {
-    // this.props.loadInitBoard('news', '1004');
-  }
-
   render() {
-    // const { isFullLoading } = this.props;
-    // return isFullLoading ? (<FullLoading />) : (<MainRouter />);
-    return (<MainRouter />);
+    const { dispatch, router } = this.props;
+    return (
+      <MainRouter
+        navigation={addNavigationHelpers({ dispatch, state: router, addListener })}
+      />);
   }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    loadInitBoard: bindActionCreators(requestBoardList, dispatch),
-  };
 }
 
 function mapStateToProps(state) {
   return {
-    isFullLoading: isFullLoading(state),
+    router: state.router,
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RootRouter);
+export default connect(mapStateToProps)(RootRouter);

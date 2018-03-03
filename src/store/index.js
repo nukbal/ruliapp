@@ -1,14 +1,21 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 
 import rootSaga from './sagas';
 import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
 
+const routerMiddleware = createReactNavigationReduxMiddleware(
+  "root",
+  state => state.router,
+);
+
 export default function createStores(initialState = {}) {
   const middlewares = [
     sagaMiddleware,
+    routerMiddleware,
   ];
 
   const store = createStore(
