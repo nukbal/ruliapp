@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import FullLoading from '../../components/FullLoading';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading, updateBoardList } from '../../store/ducks/boards';
@@ -64,24 +62,25 @@ export class Board extends PureComponent {
     const { item } = row;
     return (
       <BoardItem
+        ref={(ref) => { this.addRefs(ref, row); }}
         onPress={this.pressItem}
         {...item}
       />
     );
   }
 
-  // addRefs = (ref, { item, index }) => {
-  //   this.refs[item.key] = { ref, item, index };
-  // }
+  addRefs = (ref, { item, index }) => {
+    this.refs[item.key] = { ref, item, index };
+  }
 
-  // updateItem = (key, isViewable) => {
-  //   if (!this.refs[key].ref) return;
-  //   this.refs[key].ref.setVisible(isViewable);
-  // }
+  updateItem = (key, isViewable) => {
+    if (!this.refs[key].ref) return;
+    this.refs[key].ref.setVisible(isViewable);
+  }
 
-  // onViewItemChanged = (info) => {
-  //   info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
-  // }
+  onViewItemChanged = (info) => {
+    info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
+  }
 
   onEndReached = () => {
     const { prefix, boardId, info, refreshing } = this.props;
@@ -89,8 +88,6 @@ export class Board extends PureComponent {
       this.props.updateBoard(prefix, boardId, info.page + 1);
     }
   }
-
-  // refs = {};
 
   onRefresh = () => {
     this.requestList();
@@ -109,6 +106,8 @@ export class Board extends PureComponent {
           getItemLayout={(data, index) => (
             {length: 64, offset: 64 * index, index}
           )}
+          onViewItemChanged={this.onViewItemChanged}
+          initialNumToRender={10}
           onEndReached={this.onEndReached}
           onEndReachedThreshold={0.5}
         />

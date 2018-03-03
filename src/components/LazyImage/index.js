@@ -29,6 +29,7 @@ export default class LazyImage extends Component {
   }
 
   componentDidMount() {
+    this.layout = { width: 0, height: 150 };
     Image.prefetch(this.props.source);
   }
 
@@ -38,21 +39,31 @@ export default class LazyImage extends Component {
       || this.state.width !== state.width;
   }
 
-  onLoad = (e) => {
-    const { fitScreen } = this.props;
-    const w = e.nativeEvent.source.width;
-    const h = e.nativeEvent.source.height;
+  onLayout = ({ nativeEvent }) => {
+    this.layout.width = nativeEvent.layout.width;
+    this.layout.height = nativeEvent.layout.height;
+  }
 
-    const CURRENT_SCREEN_SIZE = Dimensions.get('window');
+  onLoad = ({ nativeEvent }) => {
+    const { fitScreen } = this.props;
+    const w = nativeEvent.source.width;
+    const h = nativeEvent.source.height;
+
     let height;
     let width = undefined;
     if (fitScreen) {
-      const ratio = CURRENT_SCREEN_SIZE.width / w;
+      const ratio = this.layout.width / w;
       height = Math.floor(h * ratio);
     } else {
-      const ratio = CURRENT_SCREEN_SIZE.width > w ? 1 : (CURRENT_SCREEN_SIZE.width / w);
+      let ratio;
+      if (this.layout.width > w) {
+        const half = this.layout.width / 2;
+        ratio = half > w ? (half / w) : 1;
+      } else {
+        ratio = this.layout.width / w;
+      }
       height = Math.floor(h * ratio);
-      width = CURRENT_SCREEN_SIZE.width < w ? CURRENT_SCREEN_SIZE.width : w;
+      width = this.layout.width < w ? this.layout.width : w;
     }
     this.setState({ height, width });
   }
@@ -67,14 +78,15 @@ export default class LazyImage extends Component {
     console.log(this.props.source.uri);
   }
 
+  layout = { width: 0, height: 150 };
+
   render() {
     const { source, resizeMode } = this.props;
     const { isReady, height, width } = this.state;
     return (
-      <View style={[styles.ImagePlaceholder, { height, width }]}>
-        {/* {isReady === false && <Indicator />} */}
+      <View onLayout={this.onLayout} style={[styles.ImagePlaceholder, { height, width }]}>
         <Image
-          style={[styles.ImageContent, { height, width }]}
+          style={styles.ImageContent}
           onLoad={this.onLoad}
           onLoadEnd={this.onLoadEnd}
           onError={this.onError}

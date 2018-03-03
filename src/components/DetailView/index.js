@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, Text, StyleSheet, Share, FlatList, RefreshControl } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Share, SectionList, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { darkBarkground, border, listItem, primary } from '../../styles/color';
 
 import Contents from './Contents';
-import Comments from '../Comments';
+import CommentItem from '../Comments/CommentItem';
 import LazyImage from '../LazyImage';
 
 const styles = StyleSheet.create({
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
+    marginBottom: 12,
   },
   infoItem: {
     flex: 1,
@@ -83,12 +84,62 @@ export default class DetailView extends PureComponent {
   }
 
   updateItem = (key, isViewable) => {
+    if (!this.refs[key]) return;
     if (!this.refs[key].ref) return;
     this.refs[key].ref.setVisible(isViewable);
   }
 
   onViewItemChanged = (info) => {
     info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
+  }
+
+  renderComment = (isBest) => (row) => {
+    const { item } = row;
+    return (
+      <CommentItem
+        ref={(ref) => { this.addRefs(ref, row); }}
+        {...item}
+        bestOnly={isBest}
+      />
+    );
+  }
+
+  renderSectionHeader = ({ section }) => {
+    if (section.index !== 0) return;
+
+    return (
+      <View style={styles.title}>
+        <Text style={styles.titleText}>{section.title}</Text>
+      </View>
+    );
+  }
+
+  renderSectionFooter = ({ section }) => {
+    if (section.index !== 0) {
+      return <View style={{ marginBottom: 12 }} />
+    }
+
+    const { likes, dislikes, comments } = this.props;
+
+    return (
+      <View style={styles.infoPanel}>
+        <View style={styles.infoItem}>
+          <Ionicons name="ios-thumbs-up-outline" size={25} color="white" />
+          <Text style={styles.infoText}>{likes}</Text>
+        </View>
+        <View style={styles.infoItem}>
+          <Ionicons name="ios-thumbs-down-outline" size={25} color="white" />
+          <Text style={styles.infoText}>{dislikes}</Text>
+        </View>
+        <View style={styles.infoItem}>
+          <Ionicons name="ios-chatboxes-outline" size={25} color="white" />
+          <Text style={styles.infoText}>{comments}</Text>
+        </View>
+        <View style={styles.infoItem}>
+          <Ionicons name="ios-share-outline" size={25} color="white" onPress={this.onPressShare} />
+        </View>
+      </View>
+    );
   }
 
   refs = {};
@@ -99,48 +150,22 @@ export default class DetailView extends PureComponent {
       contents,
       commentList,
       bestCommentList,
-      comments,
       loading,
-      likes,
-      dislikes,
     } = this.props;
     return (
-      <ScrollView
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.props.refresh} />}
-      >
-        <FlatList
-          data={contents}
-          renderItem={this.renderItem}
-          ListHeaderComponent={(
-            <View style={styles.title}>
-              <Text style={styles.titleText}>{title}</Text>
-            </View>
-          )}
-          ListFooterComponent={(
-            <View style={styles.infoPanel}>
-              <View style={styles.infoItem}>
-                <Ionicons name="ios-thumbs-up-outline" size={25} color="white" />
-                <Text style={styles.infoText}>{likes}</Text>
-              </View>
-              <View style={styles.infoItem}>
-                <Ionicons name="ios-thumbs-down-outline" size={25} color="white" />
-                <Text style={styles.infoText}>{dislikes}</Text>
-              </View>
-              <View style={styles.infoItem}>
-                <Ionicons name="ios-chatboxes-outline" size={25} color="white" />
-                <Text style={styles.infoText}>{comments}</Text>
-              </View>
-              <View style={styles.infoItem}>
-                <Ionicons name="ios-share-outline" size={25} color="white" onPress={this.onPressShare} />
-              </View>
-            </View>
-          )}
-          onViewableItemsChanged={this.onViewItemChanged}
-          removeClippedSubviews
-        />
-        {bestCommentList.length > 0 && (<Comments comments={bestCommentList} best />)}
-        <Comments comments={commentList} />
-      </ScrollView>
+      <SectionList
+        refreshing={loading}
+        onRefresh={this.props.refresh}
+        renderSectionHeader={this.renderSectionHeader}
+        renderSectionFooter={this.renderSectionFooter}
+        sections={[
+          { index: 0, data: contents, title, renderItem: this.renderItem },
+          { index: 1, data: bestCommentList, renderItem: this.renderComment(true) },
+          { index: 2, data: commentList, renderItem: this.renderComment() },
+        ]}
+        onViewableItemsChanged={this.onViewItemChanged}
+        stickySectionHeadersEnabled={false}
+      />
     );
   }
 }

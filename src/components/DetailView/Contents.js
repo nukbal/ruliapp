@@ -23,6 +23,15 @@ export default class ContentItem extends PureComponent {
     visible: false,
   }
 
+  componentDidMount() {
+    this.layout = { width: 0, height: 0 };
+  }
+
+  onLayout = ({ nativeEvent }) => {
+    this.layout.width = nativeEvent.layout.width;
+    this.layout.height = nativeEvent.layout.height;
+  }
+
   getElement = () => {
     const { type, content } = this.props;
     if (type === 'embeded') {
@@ -43,8 +52,8 @@ export default class ContentItem extends PureComponent {
   render() {
     const { visible } = this.state;
     return (
-      <View style={styles.container}>
-        {visible && this.getElement()}
+      <View onLayout={this.onLayout} style={styles.container}>
+        {this.getElement()}
       </View>
     );
   }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text, TouchableHighlight, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { listItem, labelText, border, primaryOpacity } from '../../styles/color';
@@ -41,15 +41,24 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class BoardItem extends Component {
+export default class BoardItem extends PureComponent {
   state = {
-    visible: false,
+    visible: true,
+  }
+
+  componentDidMount() {
+    this.layout = { width: 0, height: 0 };
   }
 
   setVisible = (visible) => {
     if (this.state.visible !== visible) {
       this.setState({ visible });
     }
+  }
+
+  onLayout = ({ nativeEvent }) => {
+    this.layout.width = nativeEvent.layout.width;
+    this.layout.height = nativeEvent.layout.height;
   }
 
   onPress = () => {
@@ -59,10 +68,18 @@ export default class BoardItem extends Component {
     onPress(id, title, prefix, boardId);
   }
 
+  layout = { width: 0, height: 0 };
+
   render() {
     const { title, comments, author, like, views, times, likes } = this.props;
+
+    if (this.state.visibility === false) {
+      const { width, height } = this.layout;
+      return ( <View style={{ width, height }} /> )
+    }
+
     return (
-      <TouchableHighlight style={styles.container} onPress={this.onPress} activeOpacity={0.7}>
+      <TouchableHighlight onLayout={this.onLayout} style={styles.container} onPress={this.onPress} activeOpacity={0.7}>
         <View style={styles.itemContainer}>
           <Text style={styles.titleText}>{title}</Text>
           <View style={styles.info}>

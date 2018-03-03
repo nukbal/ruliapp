@@ -3,23 +3,24 @@ import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import LazyImage from '../LazyImage';
-import { border, primary } from '../../styles/color';
+import { border, primary, listItem, primaryOpacity } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderBottomColor: border,
-    borderBottomWidth: 1,
     marginBottom: 3,
     justifyContent: 'center',
+    backgroundColor: listItem,
   },
   childContainer: {
     flex: 1,
     paddingLeft: 25,
-    borderBottomColor: border,
-    borderBottomWidth: 1,
     marginBottom: 3,
     justifyContent: 'center',
+    backgroundColor: listItem,
+  },
+  bestContainer: {
+    backgroundColor: primaryOpacity,
   },
   UserContainer: {
     flex: 1,
@@ -67,18 +68,30 @@ export default class CommentItem extends PureComponent {
     visible: false,
   }
 
+  componentDidMount() {
+    this.layout = { width: 0, height: 0 };
+  }
+
   setVisible = (visible) => {
     if (this.state.visible !== visible) {
       this.setState({ visible });
     }
   }
 
+  onLayout = ({ nativeEvent }) => {
+    this.layout.width = nativeEvent.layout.width;
+    this.layout.height = nativeEvent.layout.height;
+  }
+
+  layout = { width: 0, height: 0 };
+
   render() {
-    const { user, comment, isChild, time, isBest, like, dislike, image } = this.props;
+    const { user, comment, isChild, time, isBest, like, dislike, image, bestOnly } = this.props;
     const { visible } = this.state;
-    if (!visible) return <View style={[styles.container]} />
+    const containerStyle = [isChild ? styles.childContainer : styles.container];
+    if (bestOnly) containerStyle[1] = styles.bestContainer;
     return (
-      <View style={isChild ? styles.childContainer : styles.container}>
+      <View onLayout={this.onLayout} style={containerStyle}>
         <View style={styles.UserContainer}>
           <View style={styles.horizontal}>
             <Text style={styles.UserText}>
