@@ -9,7 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import FullLoading from '../../components/FullLoading';
 import BoardItem from '../../components/BoardItem';
-import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading } from '../../store/ducks/boards';
+import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading, updateBoardList } from '../../store/ducks/boards';
 import { darkBarkground, background, titleText, border, primary } from '../../styles/color';
 
 const styles = StyleSheet.create({
@@ -37,14 +37,15 @@ export class Board extends PureComponent {
     refreshing: false,
   }
 
-  componentWillReceiveProps(props) {
+  componentDidMount() {
+    this.refs = {};
+    this.requestList();
+  }
+
+  componentDidUpdate(props) {
     if (this.props.info.title !== props.info.title) {
       this.props.navigation.setParams({ title: props.info.title });
     }
-  }
-
-  componentWillMount() {
-    this.requestList();
   }
 
   requestList = (page = 1) => {
@@ -59,22 +60,41 @@ export class Board extends PureComponent {
     navigate('Detail', { id, board: { prefix, boardId }, title });
   }
 
-  renderItem = ({ item }) => {
+  renderItem = (row) => {
+    const { item } = row;
     return (
-      <BoardItem {...item} onPress={this.pressItem} />
+      <BoardItem
+        ref={(ref) => { this.addRefs(ref, row); }}
+        onPress={this.pressItem}
+        {...item}
+      />
     );
   }
 
+  addRefs = (ref, { item, index }) => {
+    this.refs[item.key] = { ref, item, index };
+  }
+
+  updateItem = (key, isViewable) => {
+    if (!this.refs[key].ref) return;
+    this.refs[key].ref.setVisible(isViewable);
+  }
+
+  onViewItemChanged = (info) => {
+    info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
+  }
+
+  onEndReached = () => {
+    const { prefix, boardId, info, refreshing } = this.props;
+    if (!refreshing) {
+      this.props.updateBoard(prefix, boardId, info.page + 1);
+    }
+  }
+
+  refs = {};
+
   onRefresh = () => {
-    this.requestList(this.props.info.page);
-  }
-
-  prevPage = () => {
-    this.requestList(this.props.info.page - 1);
-  }
-
-  nextPage = () => {
-    this.requestList(this.props.info.page + 1);
+    this.requestList();
   }
 
   render() {
@@ -84,21 +104,15 @@ export class Board extends PureComponent {
         <FlatList
           data={list}
           renderItem={this.renderItem}
-          ListEmptyComponent={(<View style={{ flex: 1 }}><FullLoading /></View>)}
-          ListHeaderComponent={(
-            <View style={styles.infoPanel}>
-              <Ionicons name="ios-arrow-back" size={25} color={primary} onPress={this.prevPage} />
-              <Ionicons name="ios-arrow-forward" size={25} color={primary} onPress={this.nextPage} />
-            </View>
-          )}
+          ListEmptyComponent={(<View style={{ flex: 1, height: 350 }}><FullLoading /></View>)}
           refreshing={refreshing}
           onRefresh={this.onRefresh}
           getItemLayout={(data, index) => (
-            {length: 54, offset: 54 * index, index}
+            {length: 64, offset: 64 * index, index}
           )}
-          onEndReachedThreshold={30}
-          initialNumToRender={10}
-          removeClippedSubviews
+          onViewableItemsChanged={this.onViewItemChanged}
+          onEndReached={this.onEndReached}
+          onEndReachedThreshold={0.01}
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>
@@ -109,6 +123,7 @@ export class Board extends PureComponent {
 function mapDispatchToProps(dispatch) {
   return {
     requestBoard: bindActionCreators(requestBoardList, dispatch),
+    updateBoard: bindActionCreators(updateBoardList, dispatch),
   };
 }
 
