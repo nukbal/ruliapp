@@ -24,7 +24,7 @@ export class Detail extends PureComponent {
     contents: [],
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { params } = this.props.navigation.state;
     const { prefix, boardId } = params.board;
     this.props.request(prefix, boardId, params.id);
@@ -39,7 +39,7 @@ export class Detail extends PureComponent {
     const { navigation, request, screenProps, updateComment, ...rest } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        <DetailView {...rest} refresh={this.onRefresh} />
+        <DetailView {...rest} refresh={this.onRefresh} title={navigation.state.params.title} />
       </SafeAreaView>
     );
   }

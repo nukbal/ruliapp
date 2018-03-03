@@ -64,25 +64,24 @@ export class Board extends PureComponent {
     const { item } = row;
     return (
       <BoardItem
-        ref={(ref) => { this.addRefs(ref, row); }}
         onPress={this.pressItem}
         {...item}
       />
     );
   }
 
-  addRefs = (ref, { item, index }) => {
-    this.refs[item.key] = { ref, item, index };
-  }
+  // addRefs = (ref, { item, index }) => {
+  //   this.refs[item.key] = { ref, item, index };
+  // }
 
-  updateItem = (key, isViewable) => {
-    if (!this.refs[key].ref) return;
-    this.refs[key].ref.setVisible(isViewable);
-  }
+  // updateItem = (key, isViewable) => {
+  //   if (!this.refs[key].ref) return;
+  //   this.refs[key].ref.setVisible(isViewable);
+  // }
 
-  onViewItemChanged = (info) => {
-    info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
-  }
+  // onViewItemChanged = (info) => {
+  //   info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
+  // }
 
   onEndReached = () => {
     const { prefix, boardId, info, refreshing } = this.props;
@@ -91,7 +90,7 @@ export class Board extends PureComponent {
     }
   }
 
-  refs = {};
+  // refs = {};
 
   onRefresh = () => {
     this.requestList();
@@ -110,9 +109,8 @@ export class Board extends PureComponent {
           getItemLayout={(data, index) => (
             {length: 64, offset: 64 * index, index}
           )}
-          onViewableItemsChanged={this.onViewItemChanged}
           onEndReached={this.onEndReached}
-          onEndReachedThreshold={0.01}
+          onEndReachedThreshold={0.5}
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>

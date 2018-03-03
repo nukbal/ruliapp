@@ -31,8 +31,8 @@ const parseCommentRow = ($) => (_, item) => {
 
 export const parseComment = (htmlString) => {
   const $ = loadHtml(htmlString);
-  const commentList = $('table.comment_table.best tr').map(parseCommentRow($)).get();
-  const bestCommentList = $('table.comment_table:not(.best) tr').map(parseCommentRow($)).get();
+  const bestCommentList = $('table.comment_table.best tr').map(parseCommentRow($)).get();
+  const commentList = $('table.comment_table:not(.best) tr').map(parseCommentRow($)).get();
 
   return {
     commentList,
@@ -45,9 +45,6 @@ export const parseDetail = (htmlString) => {
   const contentEndIndex = htmlString.indexOf('<!-- board_main end');
   const html = htmlString.substring(contentStartIndex, contentEndIndex);
   const $ = loadHtml(html);
-
-  let title = $('head title').text();
-  title = title.substring(0, title.indexOf(' | '));
 
   const reference = $('div.source_url a').attr('href');
   const contents = $('div.board_main_view .view_content')[0].childNodes.map((item, i) => {
@@ -108,7 +105,6 @@ export const parseDetail = (htmlString) => {
   const { commentList, bestCommentList } = parseComment(commentHtml);
 
   return {
-    title,
     contents,
     reference,
     comments,
@@ -135,7 +131,7 @@ export const parseBoardList = (htmlString, page) => {
     const boardId = link.substring(link.indexOf('board/') + 6, link.indexOf('/read'));
     return {
       id,
-      key: `prefix_${boardId}_${id}`,
+      key: `${prefix}_${boardId}_${id}`,
       prefix,
       boardId,
       type: $('td.divsn a', row).text().trim(),

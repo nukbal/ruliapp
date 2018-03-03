@@ -24,7 +24,7 @@ export default class Comments extends PureComponent {
     comments: [],
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refs = {};
   }
 
@@ -43,6 +43,7 @@ export default class Comments extends PureComponent {
   }
 
   updateItem = (key, isViewable) => {
+    if (!this.refs[key]) return;
     if (!this.refs[key].ref) return;
     this.refs[key].ref.setVisible(isViewable);
   }

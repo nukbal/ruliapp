@@ -42,10 +42,9 @@ export default class ContentItem extends PureComponent {
 
   render() {
     const { visible } = this.state;
-    if (!visible) return <View style={[styles.container, { width: 0, height: 0, padding: 0 }]} />;
     return (
       <View style={styles.container}>
-        {this.getElement()}
+        {visible && this.getElement()}
       </View>
     );
   }

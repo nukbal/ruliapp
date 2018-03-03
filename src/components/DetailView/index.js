@@ -59,7 +59,7 @@ export default class DetailView extends PureComponent {
     loading: false,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refs = {};
   }
 

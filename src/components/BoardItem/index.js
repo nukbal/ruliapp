@@ -42,6 +42,16 @@ const styles = StyleSheet.create({
 });
 
 export default class BoardItem extends Component {
+  state = {
+    visible: false,
+  }
+
+  setVisible = (visible) => {
+    if (this.state.visible !== visible) {
+      this.setState({ visible });
+    }
+  }
+
   onPress = () => {
     const { onPress, id, title, prefix, boardId } = this.props;
     if (!onPress) return;

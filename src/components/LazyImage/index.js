@@ -28,7 +28,7 @@ export default class LazyImage extends Component {
     progress: 0,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Image.prefetch(this.props.source);
   }
 

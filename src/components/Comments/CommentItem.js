@@ -76,7 +76,7 @@ export default class CommentItem extends PureComponent {
   render() {
     const { user, comment, isChild, time, isBest, like, dislike, image } = this.props;
     const { visible } = this.state;
-    if (!visible) return <View style={[styles.container, { width: 0, height: 0, padding: 0 }]} />
+    if (!visible) return <View style={[styles.container]} />
     return (
       <View style={isChild ? styles.childContainer : styles.container}>
         <View style={styles.UserContainer}>
