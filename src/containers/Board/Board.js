@@ -100,7 +100,7 @@ export class Board extends PureComponent {
         <FlatList
           data={list}
           renderItem={this.renderItem}
-          ListEmptyComponent={(<View style={{ flex: 1, height: 350 }}><FullLoading /></View>)}
+          ListEmptyComponent={(<FullLoading />)}
           refreshing={refreshing}
           onRefresh={this.onRefresh}
           getItemLayout={(data, index) => (

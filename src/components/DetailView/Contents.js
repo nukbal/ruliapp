@@ -7,6 +7,7 @@ import LazyImage from '../LazyImage';
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: listItem,
     padding: 3,
     margin: 0,
