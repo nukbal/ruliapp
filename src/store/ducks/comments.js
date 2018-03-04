@@ -38,7 +38,7 @@ export async function getComments({ prefix, boardId, articleId }) {
       Accept: 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded',
       'Accept-Encoding': 'gzip, deflate',
-      referer: `https://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}`,
+      referer: `https://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}`,
       'User-Agent': 'Mozilla/5.0',
     }
   };
