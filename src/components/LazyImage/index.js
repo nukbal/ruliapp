@@ -33,32 +33,36 @@ export default class LazyImage extends Component {
 
     this.state = {
       width: undefined,
-      height: 150,
+      height: 250,
       progress: null,
     };
-    const { fitScreen } = props;
+  }
 
-    Image.getSize(props.source, (w, h) => {
-      const SCREEN_SIZE = Dimensions.get('window')
-  
-      let height;
-      let width = undefined;
-      if (fitScreen) {
-        const ratio = SCREEN_SIZE.width / w;
-        height = Math.floor(h * ratio);
-      } else {
-        let ratio;
-        if (SCREEN_SIZE.width > w) {
-          const half = SCREEN_SIZE.width / 2;
-          ratio = half > w ? (half / w) : 1;
+  componentDidMount() {
+    setTimeout(() => {
+      const { fitScreen } = this.props;
+      Image.getSize(this.props.source, (w, h) => {
+        const SCREEN_SIZE = Dimensions.get('window')
+    
+        let height;
+        let width = undefined;
+        if (fitScreen) {
+          const ratio = SCREEN_SIZE.width / w;
+          height = Math.floor(h * ratio);
         } else {
-          ratio = SCREEN_SIZE.width / w;
+          let ratio;
+          if (SCREEN_SIZE.width > w) {
+            const half = SCREEN_SIZE.width / 2;
+            ratio = half > w ? (half / w) : 1;
+          } else {
+            ratio = SCREEN_SIZE.width / w;
+          }
+          height = Math.floor(h * ratio);
+          width = SCREEN_SIZE.width < w ? SCREEN_SIZE.width : w;
         }
-        height = Math.floor(h * ratio);
-        width = SCREEN_SIZE.width < w ? SCREEN_SIZE.width : w;
-      }
-      this.setState({ height, width });
-    });
+        this.setState({ height, width });
+      });
+    }, 0);
   }
 
   shouldComponentUpdate(props, state) {
