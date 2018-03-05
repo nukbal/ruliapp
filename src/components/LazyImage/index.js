@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import Image from 'react-native-fast-image';
+import { View, StyleSheet, Dimensions, Image, Text } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
-import Indicator from './ImageLoadingIndicator';
-import { debounce } from '../../utils/commonUtils';
+import { throttle } from '../../utils/commonUtils';
 import { darkBarkground } from '../../styles/color';
 
 const styles = StyleSheet.create({
@@ -20,6 +19,12 @@ const styles = StyleSheet.create({
     backgroundColor: darkBarkground,
     justifyContent: 'center',
   },
+  overlay: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.15)',
+    ...StyleSheet.absoluteFillObject,
+  },
 });
 
 export default class LazyImage extends Component {
@@ -27,77 +32,73 @@ export default class LazyImage extends Component {
     super(props);
 
     this.state = {
-      isReady: false,
       width: undefined,
-      height: 300,
-      progress: 0,
+      height: 150,
+      progress: null,
     };
+    const { fitScreen } = props;
+
+    Image.getSize(props.source, (w, h) => {
+      const SCREEN_SIZE = Dimensions.get('window')
+  
+      let height;
+      let width = undefined;
+      if (fitScreen) {
+        const ratio = SCREEN_SIZE.width / w;
+        height = Math.floor(h * ratio);
+      } else {
+        let ratio;
+        if (SCREEN_SIZE.width > w) {
+          const half = SCREEN_SIZE.width / 2;
+          ratio = half > w ? (half / w) : 1;
+        } else {
+          ratio = SCREEN_SIZE.width / w;
+        }
+        height = Math.floor(h * ratio);
+        width = SCREEN_SIZE.width < w ? SCREEN_SIZE.width : w;
+      }
+      this.setState({ height, width });
+    });
   }
 
   shouldComponentUpdate(props, state) {
-    return this.state.isReady !== state.isReady
-      || this.state.height !== state.height
-      || this.state.width !== state.width;
-  }
-
-  onLayout = ({ nativeEvent }) => {
-    const { fitScreen } = this.props;
-    const w = nativeEvent.layout.width;
-    const h = nativeEvent.layout.height;
-
-    const SCREEN_SIZE = Dimensions.get('window')
-
-    let height;
-    let width = undefined;
-    if (fitScreen) {
-      const ratio = SCREEN_SIZE.width / w;
-      height = Math.floor(h * ratio);
-    } else {
-      let ratio;
-      if (SCREEN_SIZE.width > w) {
-        const half = SCREEN_SIZE.width / 2;
-        ratio = half > w ? (half / w) : 1;
-      } else {
-        ratio = SCREEN_SIZE.width / w;
-      }
-      height = Math.floor(h * ratio);
-      width = SCREEN_SIZE.width < w ? SCREEN_SIZE.width : w;
-    }
-    this.setState({ height, width });
+    return this.state.height !== state.height
+      || this.state.width !== state.width
+      || this.state.progress !== state.progress;
   }
 
   onProgress = ({ nativeEvent }) => {
     const { loaded, total } = nativeEvent;
-    debounce(() => {
-      const progress = Math.round((loaded / total) * 100);
-      console.log(`${this.props.source.uri} : ${progress}%`);
-      this.setState({ progress }); 
-    }, 1000);
+    this.updateProgress(loaded, total);
   }
 
-  onLoadEnd = () => {
-    this.setState({
-      progress: 100,
-      isReady: true,
-    });
-  }
-
-  onError = () => {
+  onError = (err) => {
     console.log(this.props.source.uri);
+    console.error(err);
   }
+
+  updateProgress = throttle((loaded, total) => {
+    const progress = Math.round((loaded / total) * 100);
+    this.setState({ progress }); 
+  }, 200);
 
   render() {
     const { source, resizeMode } = this.props;
-    const { isReady, height, width } = this.state;
+    const { height, width, progress } = this.state;
     return (
       <View style={[styles.ImagePlaceholder, { height, width }]}>
-        <Image
+        <FastImage
           style={styles.ImageContent}
           onLoadEnd={this.onLoadEnd}
           onProgress={this.onProgress}
           onError={this.onError}
           source={source}
         />
+        {progress !== null && progress !== 100 && (
+          <View style={styles.overlay}>
+            <Text style={{ color: 'white', fontSize: 24 }}>{progress}</Text>
+          </View>
+        )}
       </View>
     );
   }
