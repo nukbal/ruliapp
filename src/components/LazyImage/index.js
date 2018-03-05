@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import Image from 'react-native-fast-image';
 
 import Indicator from './ImageLoadingIndicator';
+import { debounce } from '../../utils/commonUtils';
 import { darkBarkground } from '../../styles/color';
 
 const styles = StyleSheet.create({
@@ -21,16 +23,15 @@ const styles = StyleSheet.create({
 });
 
 export default class LazyImage extends Component {
-  state = {
-    isReady: false,
-    width: undefined,
-    height: 150,
-    progress: 0,
-  }
+  constructor(props) {
+    super(props);
 
-  componentDidMount() {
-    this.layout = { width: 0, height: 150 };
-    Image.prefetch(this.props.source);
+    this.state = {
+      isReady: false,
+      width: undefined,
+      height: 300,
+      progress: 0,
+    };
   }
 
   shouldComponentUpdate(props, state) {
@@ -40,36 +41,43 @@ export default class LazyImage extends Component {
   }
 
   onLayout = ({ nativeEvent }) => {
-    this.layout.width = nativeEvent.layout.width;
-    this.layout.height = nativeEvent.layout.height;
-  }
-
-  onLoad = ({ nativeEvent }) => {
     const { fitScreen } = this.props;
-    const w = nativeEvent.source.width;
-    const h = nativeEvent.source.height;
+    const w = nativeEvent.layout.width;
+    const h = nativeEvent.layout.height;
+
+    const SCREEN_SIZE = Dimensions.get('window')
 
     let height;
     let width = undefined;
     if (fitScreen) {
-      const ratio = this.layout.width / w;
+      const ratio = SCREEN_SIZE.width / w;
       height = Math.floor(h * ratio);
     } else {
       let ratio;
-      if (this.layout.width > w) {
-        const half = this.layout.width / 2;
+      if (SCREEN_SIZE.width > w) {
+        const half = SCREEN_SIZE.width / 2;
         ratio = half > w ? (half / w) : 1;
       } else {
-        ratio = this.layout.width / w;
+        ratio = SCREEN_SIZE.width / w;
       }
       height = Math.floor(h * ratio);
-      width = this.layout.width < w ? this.layout.width : w;
+      width = SCREEN_SIZE.width < w ? SCREEN_SIZE.width : w;
     }
     this.setState({ height, width });
   }
 
+  onProgress = ({ nativeEvent }) => {
+    const { loaded, total } = nativeEvent;
+    debounce(() => {
+      const progress = Math.round((loaded / total) * 100);
+      console.log(`${this.props.source.uri} : ${progress}%`);
+      this.setState({ progress }); 
+    }, 1000);
+  }
+
   onLoadEnd = () => {
     this.setState({
+      progress: 100,
       isReady: true,
     });
   }
@@ -78,17 +86,15 @@ export default class LazyImage extends Component {
     console.log(this.props.source.uri);
   }
 
-  layout = { width: 0, height: 150 };
-
   render() {
     const { source, resizeMode } = this.props;
     const { isReady, height, width } = this.state;
     return (
-      <View onLayout={this.onLayout} style={[styles.ImagePlaceholder, { height, width }]}>
+      <View style={[styles.ImagePlaceholder, { height, width }]}>
         <Image
           style={styles.ImageContent}
-          onLoad={this.onLoad}
           onLoadEnd={this.onLoadEnd}
+          onProgress={this.onProgress}
           onError={this.onError}
           source={source}
         />
