@@ -47,8 +47,6 @@ async function getListData(prefix, boardId, page) {
     }
   };
 
-  console.log(targetUrl);
-
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
 
