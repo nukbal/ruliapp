@@ -1,5 +1,11 @@
 import { loadHtml } from './commonUtils';
 
+const extractTitle = (html) => {
+  const regex = /<title>(.*?)<\/title>/g
+  const str = html.match(regex).map(val => val.replace(/<\/?title>/g,''));
+  return str.length ? str[0].substring(0, str[0].indexOf(' | ')) : '';
+}
+
 const parseCommentRow = (nodes) => {
   const result = [];
   for (let i = 0, len = nodes.length; i < len; i++) {
@@ -69,6 +75,15 @@ const formatContentNode = (item, key) => {
     } else if (item.name === 'a' && item.children[0].name === 'img') {
       type = 'image';
       content = item.children[0].attribs.src;
+    } else if (item.name === 'a') {
+      type = 'link';
+      content = item.attribs.href;
+    } else if (['b', 'strong', 'span'].indexOf(item.name) !== -1 && item.children.length) {
+      const text = item.children[0].data.trim();
+      if (text) {
+        type = 'text';
+        content = text;
+      }
     }
   } else if (item.type === 'text') {
     const text = item.data.trim();
@@ -94,12 +109,20 @@ export const parseComment = (htmlString) => {
 }
 
 export const parseDetail = (htmlString) => {
-  const contentStartIndex = htmlString.indexOf('<div class="board_main"');
-  const contentEndIndex = htmlString.indexOf('<!-- board_main end');
-  const html = htmlString.substring(contentStartIndex, contentEndIndex);
+  const title = extractTitle(htmlString);
+  const contentStartIndex = htmlString.indexOf('<div class="view_content"');
+  const contentEndIndex = htmlString.indexOf('<div class="notice_read_bottom');
+  let html = htmlString.substring(contentStartIndex, contentEndIndex);
+  html = html.replace('&nbsp;', '').replace('<p></p>', '');
   const $ = loadHtml(html);
 
-  const contentsNodes = $('div.board_main_view .view_content')[0].childNodes;
+  let _node = $('.view_content');
+
+  if (_node.find('.view_content').length > 0) {
+    _node = _node.find('.view_content');
+  }
+
+  const contentsNodes = _node[0].childNodes;
   const contentsLength = contentsNodes.length;
 
   const contents = [];
@@ -136,6 +159,7 @@ export const parseDetail = (htmlString) => {
   const { commentList, bestCommentList } = parseComment(commentHtml);
 
   return {
+    title,
     contents,
     reference,
     comments,
