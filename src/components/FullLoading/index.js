@@ -5,8 +5,8 @@ import AnimatedJson from '../../assets/empty_status.json';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    minHeight: 350,
+    height: 400,
+    ...StyleSheet.absoluteFillObject,
   }
 });
 

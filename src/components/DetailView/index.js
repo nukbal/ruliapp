@@ -7,6 +7,7 @@ import { darkBarkground, border, listItem, primary } from '../../styles/color';
 import Contents from './Contents';
 import CommentItem from '../Comments/CommentItem';
 import LazyImage from '../LazyImage';
+import FullLoading from '../FullLoading';
 
 const styles = StyleSheet.create({
   container: {
@@ -152,17 +153,19 @@ export default class DetailView extends PureComponent {
       bestCommentList,
       loading,
     } = this.props;
+    const sections = (loading === false ? ([
+      { index: 0, data: contents, title, renderItem: this.renderItem },
+      { index: 1, data: bestCommentList, renderItem: this.renderComment(true) },
+      { index: 2, data: commentList, renderItem: this.renderComment() },
+    ]) : []);
     return (
       <SectionList
         refreshing={loading}
         onRefresh={this.props.refresh}
+        ListEmptyComponent={(<FullLoading />)}
         renderSectionHeader={this.renderSectionHeader}
         renderSectionFooter={this.renderSectionFooter}
-        sections={[
-          { index: 0, data: contents, title, renderItem: this.renderItem },
-          { index: 1, data: bestCommentList, renderItem: this.renderComment(true) },
-          { index: 2, data: commentList, renderItem: this.renderComment() },
-        ]}
+        sections={sections}
         onViewableItemsChanged={this.onViewItemChanged}
         stickySectionHeadersEnabled={false}
       />
