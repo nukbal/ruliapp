@@ -79,10 +79,19 @@ const formatContentNode = (item, key) => {
       type = 'link';
       content = item.attribs.href;
     } else if (['b', 'strong', 'span'].indexOf(item.name) !== -1 && item.children.length) {
-      const text = item.children[0].data.trim();
-      if (text) {
-        type = 'text';
-        content = text;
+      const child = item.children[0];
+      if (child.type === 'text') {
+        const text = child.data && child.data.trim();
+        if (text) {
+          type = 'text';
+          content = text;
+        }
+      } else if (child.children.length && child.children[0].type === 'text') {
+        const text = child.children[0].data && child.children[0].data.trim();
+        if (text) {
+          type = 'text';
+          content = text;
+        }
       }
     }
   } else if (item.type === 'text') {
