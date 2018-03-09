@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import { listItem, primary } from '../../styles/color';
 
-import LazyImage from '../LazyImage';
+import LazyImage from '../../containers/LazyImage';
 
 const styles = StyleSheet.create({
   container: {
