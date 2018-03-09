@@ -46,17 +46,17 @@ export class LazyImage extends PureComponent {
     const { isReady, path, progress, width, height } = this.props;
     return (
       <View onLayout={this.onLayout} style={[styles.ImagePlaceholder, { height: this.layout.height }]}>
-        {progress !== null && progress !== 100 && (
-          <View style={styles.overlay}>
-            <Text style={{ color: 'white', fontSize: 24 }}>{progress}</Text>
-          </View>
-        )}
         {isReady && (
           <Image
             style={styles.ImageContent}
             source={{ uri: path, isStatic: true }}
             resizeMode="contain"
           />
+        )}
+        {progress !== null && progress !== 100 && (
+          <View style={styles.overlay}>
+            <Text style={{ color: 'white', fontSize: 24 }}>{progress}</Text>
+          </View>
         )}
       </View>
     );
