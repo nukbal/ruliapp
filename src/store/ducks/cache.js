@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { select, put, takeEvery, call, take } from 'redux-saga/effects';
 import { eventChannel, buffers, END } from 'redux-saga';
+import { Image } from 'react-native';
 import fs from 'react-native-fs';
 import SHA1 from "crypto-js/sha1";
 
@@ -13,10 +14,13 @@ export const actionType = {
   REMOVE_IMAGE_CACHE: 'REMOVE_IMAGE_CACHE',
 }
 
-export function addImageCache(url) {
+export function addImageCache(url, sha) {
   return {
     type: actionType.REQUEST_IMAGE_CACHE,
-    payload: url,
+    payload: {
+      url,
+      sha,
+    },
   };
 }
 
@@ -25,6 +29,27 @@ export const getCache = state => state.cache;
 export const getImageConfig = (sha) => createSelector(
   [getCache],
   cache => cache[sha] || null
+);
+
+export const getImageUrl = (sha) => createSelector(
+  [getImageConfig(sha)],
+  config => config ? config.path : null,
+);
+
+export const getImageProgress = (sha) => createSelector(
+  [getImageConfig(sha)],
+  config => config ? config.progress : 0,
+);
+
+export const getImageSize = (sha) => createSelector(
+  [getImageConfig(sha)],
+  config => config ?
+    { width: config.width, height: config.height } : { width: null, height: null },
+);
+
+export const isImageReady = (sha) => createSelector(
+  [getImageConfig(sha)],
+  config => config ? config.isReady : false,
 );
 
 export const getImageConfigByUrl = (url) => createSelector(
@@ -54,7 +79,7 @@ function createDownloadChannel(url, path) {
       } else {
         emitter({ progress: 100 });
       }
-    }
+    };
 
     const { jobId, promise } = fs.downloadFile({
       fromUrl: url,
@@ -64,33 +89,41 @@ function createDownloadChannel(url, path) {
     });
     emitter({ jobId });
 
-    promise.then((result) => {
-      emitter({ path, isReady: true });
-      emitter(END);
+    promise.then(({ statusCode }) => {
+      if (statusCode === 200) {
+        Image.getSize(path, (width, height) => {
+          emitter({ width, height, path, isReady: true });
+          emitter(END);
+        });
+      } else {
+        emitter(END);
+      }
     });
 
-    return () => {};
-  }, buffers.sliding(2));
+    return () => {
+      emitter({ isReady: true });
+    };
+  });
 }
 
 
 export function* cacheImage({ payload }) {
-  const sha = SHA1(payload) + "";
+  const { url, sha } = payload;
   const config = yield select(getImageConfig(sha));
 
   if (!config) {
     const filename =
-      payload.substring(payload.lastIndexOf("/"), payload.indexOf("?") === -1 ? payload.length : uri.indexOf("?"));
+    url.substring(url.lastIndexOf("/"), url.indexOf("?") === -1 ? url.length : url.indexOf("?"));
     const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
     const path = CACHE_DIR + sha + ext;
 
-    const channel = yield call(createDownloadChannel, payload, path);
+    const channel = yield call(createDownloadChannel, url, path);
     yield put({
       type: actionType.ADD_IMAGE_CACHE,
       payload: {
         sha,
         path,
-        url: payload,
+        url,
       },
     });
 
@@ -108,7 +141,7 @@ export function* cacheImage({ payload }) {
       if (emit.isReady) return;
     }
   } else if (!config.isReady && config.jobId) {
-    const isResumable = yield call(fs.isResumable(config.jobId));
+    const isResumable = yield call(fs.isResumable, config.jobId);
   }
 }
 
@@ -121,12 +154,10 @@ const initState = {};
 const actionHandler = {
   [actionType.ADD_IMAGE_CACHE]: (state, { payload }) => {
     const { sha, url, path } = payload;
-    return { [sha]: { url, path, width: 0, height: 0, isReady: false }, ...state };
+    return { [sha]: { url, path, isReady: false }, ...state };
   },
   [actionType.UPDATE_IMAGE_CACHE]: (state, { payload }) => {
     const { sha, ...rest } = payload;
-    console.log(state[sha]);
-    console.log(payload);
     const mergedObj = Object.assign(state[sha], rest);
     return { [sha]: mergedObj, ...state };
   },

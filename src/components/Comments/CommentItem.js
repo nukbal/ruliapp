@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import LazyImage from '../LazyImage';
+import LazyImage from '../../containers/LazyImage';
 import { border, primary, listItem, primaryOpacity } from '../../styles/color';
 
 const styles = StyleSheet.create({
