@@ -106,6 +106,15 @@ function createDownloadChannel(url, path) {
   });
 }
 
+function imageSizeChannel(path) {
+  return eventChannel((emitter) => {
+    Image.getSize(path, (width, height) => {
+      emitter({ width, height, path, isReady: true });
+      emitter(END);
+    });
+  });
+}
+
 
 export function* cacheImage({ payload }) {
   const { url, sha } = payload;
@@ -142,6 +151,20 @@ export function* cacheImage({ payload }) {
     }
   } else if (!config.isReady && config.jobId) {
     const isResumable = yield call(fs.isResumable, config.jobId);
+    const channel = yield call(imageSizeChannel, path);
+    while(true) {
+      const emit = yield take(channel);
+
+      yield put({
+        type: actionType.UPDATE_IMAGE_CACHE,
+        payload: {
+          sha,
+          ...emit
+        },
+      });
+
+      if (emit.isReady) return;
+    }
   }
 }
 

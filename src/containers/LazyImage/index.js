@@ -42,6 +42,12 @@ export class LazyImage extends PureComponent {
     this.props.request(source.uri, id);
   }
 
+  componentDidUpdate(props) {
+    if (this.props.width !== props.width && this.props.height !== props.height) {
+      this.getSize();
+    }
+  }
+
   onLayout = ({ nativeEvent }) => {
     const { width, height } = nativeEvent.layout;
     if (!height) {
@@ -53,30 +59,30 @@ export class LazyImage extends PureComponent {
 
   getSize = () => {
     const SCREEN_SIZE = this.state;
-    // const w = this.props.width;
-    // const h = this.props.height;
-    // if (!(w && h)) {
-    //   return;
-    // }
+    const w = this.props.width;
+    const h = this.props.height;
+    if (!(w && h)) {
+      return;
+    }
   
-    // let height;
-    // let width = undefined;
-    // if (this.props.fitScreen) {
-    //   const ratio = SCREEN_SIZE.width / w;
-    //   height = Math.floor(h * ratio);
-    //   width = SCREEN_SIZE.width;
-    // } else {
-    //   let ratio;
-    //   if (SCREEN_SIZE.width > w) {
-    //     const half = SCREEN_SIZE.width / 2;
-    //     ratio = half > w ? (half / w) : 1;
-    //   } else {
-    //     ratio = SCREEN_SIZE.width / w;
-    //   }
-    //   height = Math.floor(h * ratio);
-    //   width = SCREEN_SIZE.width < w ? SCREEN_SIZE.width : w;
-    // }
-    // this.setState({ width, height });
+    let height;
+    let width = undefined;
+    if (this.props.fitScreen) {
+      const ratio = SCREEN_SIZE.width / w;
+      height = Math.floor(h * ratio);
+      width = SCREEN_SIZE.width;
+    } else {
+      let ratio;
+      if (SCREEN_SIZE.width > w) {
+        const half = SCREEN_SIZE.width / 2;
+        ratio = half > w ? (half / w) : 1;
+      } else {
+        ratio = SCREEN_SIZE.width / w;
+      }
+      height = Math.floor(h * ratio);
+      width = SCREEN_SIZE.width < w ? SCREEN_SIZE.width : w;
+    }
+    this.setState({ width, height });
   }
 
   render() {
