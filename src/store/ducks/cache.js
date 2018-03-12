@@ -86,6 +86,7 @@ function createDownloadChannel(url, path) {
       toFile: path,
       progress: onProgress,
       discretionary: true,
+      progressDivider: 3,
     });
     emitter({ jobId });
 
@@ -109,12 +110,45 @@ function createDownloadChannel(url, path) {
 function imageSizeChannel(path) {
   return eventChannel((emitter) => {
     Image.getSize(path, (width, height) => {
-      emitter({ width, height, path, isReady: true });
+      emitter({ width, height, path });
       emitter(END);
     });
+
+    return () => {
+      emitter({ isReady: true });
+    };
   });
 }
 
+function resumeImageDownload(jobId, path) {
+  return eventChannel((emitter) => {
+    fs.resumeDownload(jobId);
+    Image.getSize(path, (width, height) => {
+      emitter({ width, height, path });
+      emitter(END);
+    });
+
+    return () => {
+      emitter({ isReady: true });
+    };
+  });
+}
+
+function* channelPooling(channel, sha) {
+  while (true) {
+    const emit = yield take(channel);
+
+    yield put({
+      type: actionType.UPDATE_IMAGE_CACHE,
+      payload: {
+        sha,
+        ...emit
+      },
+    });
+
+    if (emit.isReady) return;
+  }
+}
 
 export function* cacheImage({ payload }) {
   const { url, sha } = payload;
@@ -136,34 +170,16 @@ export function* cacheImage({ payload }) {
       },
     });
 
-    while (true) {
-      const emit = yield take(channel);
+    yield* channelPooling(channel, sha);
 
-      yield put({
-        type: actionType.UPDATE_IMAGE_CACHE,
-        payload: {
-          sha,
-          ...emit
-        },
-      });
-
-      if (emit.isReady) return;
-    }
   } else if (!config.isReady && config.jobId) {
     const isResumable = yield call(fs.isResumable, config.jobId);
-    const channel = yield call(imageSizeChannel, path);
-    while(true) {
-      const emit = yield take(channel);
-
-      yield put({
-        type: actionType.UPDATE_IMAGE_CACHE,
-        payload: {
-          sha,
-          ...emit
-        },
-      });
-
-      if (emit.isReady) return;
+    if (isResumable) {
+      const channel = yield call(resumeImageDownload, config.jobId, path);
+      yield* channelPooling(channel, sha);
+    } else {
+      const channel = yield call(imageSizeChannel, path);
+      yield* channelPooling(channel, sha);
     }
   }
 }
