@@ -28,66 +28,50 @@ const styles = StyleSheet.create({
 });
 
 export default class LazyImage extends PureComponent {
+  static getDerivedStateFromProps (nextProps, prevState) {
+    const w = nextProps.width;
+    const h = nextProps.height;
+    const { maxWidth } = nextProps;
+    if (!(w && h)) {
+      return prevState;
+    }
+  
+    let height;
+    let width = undefined;
+    if (nextProps.fitScreen || maxWidth <= w) {
+      const ratio = maxWidth / w;
+      height = Math.floor(h * ratio);
+      width = maxWidth;
+    } else {
+      let ratio;
+      const half = maxWidth / 2;
+      if (half > w) {
+        ratio = half / w;
+        width = half;
+      } else {
+        ratio = 1;
+        width = w;
+      }
+      height = Math.floor(h * ratio);
+    }
+    return { width, height };
+  }
 
-  state = { width: null, height: null };
+  state = { width: null, height: 250 };
 
   componentDidMount() {
     const { source, id } = this.props;
     this.props.request(source.uri, id);
   }
 
-  componentDidUpdate(props) {
-    if (this.props.width !== props.width && this.props.height !== props.height) {
-      this.getSize();
-    }
-  }
-
-  onLayout = ({ nativeEvent }) => {
-    const { width, height } = nativeEvent.layout;
-    if (!height) {
-      this.setState({ width, height: 250 });
-    } else {
-      this.setState({ width, height });
-    }
-  }
-
-  getSize = () => {
-    const SCREEN_SIZE = this.state;
-    const w = this.props.width;
-    const h = this.props.height;
-    if (!(w && h)) {
-      return;
-    }
-  
-    let height;
-    let width = undefined;
-    if (this.props.fitScreen) {
-      const ratio = SCREEN_SIZE.width / w;
-      height = Math.floor(h * ratio);
-      width = SCREEN_SIZE.width;
-    } else {
-      let ratio;
-      if (SCREEN_SIZE.width > w) {
-        const half = SCREEN_SIZE.width / 2;
-        ratio = half > w ? (half / w) : 1;
-      } else {
-        ratio = SCREEN_SIZE.width / w;
-      }
-      height = Math.floor(h * ratio);
-      width = SCREEN_SIZE.width < w ? SCREEN_SIZE.width : w;
-    }
-    this.setState({ width, height });
-  }
-
   render() {
     const { isReady, path, progress } = this.props;
     return (
-      <View onLayout={this.onLayout} style={[styles.ImagePlaceholder, this.state]}>
+      <View style={[styles.ImagePlaceholder, this.state]}>
         {isReady ? (
           <Image
             style={styles.ImageContent}
             source={{ uri: path, isStatic: true }}
-            resizeMode="contain"
           />
         ) : (
           <View style={styles.overlay}>

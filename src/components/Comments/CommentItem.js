@@ -65,6 +65,8 @@ const styles = StyleSheet.create({
 
 export default class CommentItem extends PureComponent {
   state = {
+    height: 0,
+    width: 0,
     visible: false,
   }
 
@@ -79,15 +81,18 @@ export default class CommentItem extends PureComponent {
   }
 
   onLayout = ({ nativeEvent }) => {
-    this.layout.width = nativeEvent.layout.width;
-    this.layout.height = nativeEvent.layout.height;
+    const { width, height } = nativeEvent.layout;
+    this.layout.width = width;
+    this.layout.height = height;
+    this.setState({ width, height });
   }
 
   layout = { width: 0, height: 0 };
 
   render() {
     const { user, comment, isChild, time, isBest, like, dislike, image, bestOnly } = this.props;
-    const { visible } = this.state;
+    const { visible, width } = this.state;
+    const maxWidth = width - 16;
     const containerStyle = [isChild ? styles.childContainer : styles.container];
     if (bestOnly) containerStyle[1] = styles.bestContainer;
     return (
@@ -104,7 +109,7 @@ export default class CommentItem extends PureComponent {
           </Text>
         </View>
         <View style={styles.CommentContainer}>
-          {image && (<LazyImage source={{ uri: image }} />)}
+          {image && (<LazyImage source={{ uri: image }} maxWidth={maxWidth} />)}
           <Text style={styles.CommentText}>{comment}</Text>
         </View>
         <View style={styles.infoContainer}>

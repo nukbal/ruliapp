@@ -4,6 +4,7 @@ import { eventChannel, buffers, END } from 'redux-saga';
 import { Image } from 'react-native';
 import fs from 'react-native-fs';
 import SHA1 from "crypto-js/sha1";
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 const CACHE_DIR = fs.CachesDirectoryPath + '/';
 
@@ -112,7 +113,7 @@ function imageSizeChannel(path) {
     Image.getSize(path, (width, height) => {
       emitter({ width, height, path });
       emitter(END);
-    });
+    }, (err) => { console.log(err); });
 
     return () => {
       emitter({ isReady: true });
@@ -126,7 +127,7 @@ function resumeImageDownload(jobId, path) {
     Image.getSize(path, (width, height) => {
       emitter({ width, height, path });
       emitter(END);
-    });
+    }, (err) => { console.log(err); });
 
     return () => {
       emitter({ isReady: true });
@@ -153,13 +154,12 @@ function* channelPooling(channel, sha) {
 export function* cacheImage({ payload }) {
   const { url, sha } = payload;
   const config = yield select(getImageConfig(sha));
+  const filename =
+  url.substring(url.lastIndexOf("/"), url.indexOf("?") === -1 ? url.length : url.indexOf("?"));
+  const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
+  const path = CACHE_DIR + sha + ext;
 
   if (!config) {
-    const filename =
-    url.substring(url.lastIndexOf("/"), url.indexOf("?") === -1 ? url.length : url.indexOf("?"));
-    const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
-    const path = CACHE_DIR + sha + ext;
-
     const channel = yield call(createDownloadChannel, url, path);
     yield put({
       type: actionType.ADD_IMAGE_CACHE,
@@ -176,9 +176,6 @@ export function* cacheImage({ payload }) {
     const isResumable = yield call(fs.isResumable, config.jobId);
     if (isResumable) {
       const channel = yield call(resumeImageDownload, config.jobId, path);
-      yield* channelPooling(channel, sha);
-    } else {
-      const channel = yield call(imageSizeChannel, path);
       yield* channelPooling(channel, sha);
     }
   }
