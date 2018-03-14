@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, StyleSheet, Text, Image, Platform } from 'react-native';
 import { darkBarkground } from '../../styles/color';
+import Loading from './Loading';
 
 const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 
@@ -18,12 +19,6 @@ const styles = StyleSheet.create({
     height: 250,
     backgroundColor: darkBarkground,
     justifyContent: 'center',
-  },
-  overlay: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.15)',
-    ...StyleSheet.absoluteFillObject,
   },
 });
 
@@ -74,9 +69,7 @@ export default class LazyImage extends PureComponent {
             source={{ uri: path, isStatic: true }}
           />
         ) : (
-          <View style={styles.overlay}>
-            <Text style={{ color: 'white', fontSize: 24 }}>{progress}</Text>
-          </View>
+          <Loading progress={progress} />
         )}
       </View>
     );
