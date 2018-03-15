@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -36,6 +37,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* ruliappTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ruliappTests.m */; };
 		398A5B7162584D0F8E95A60A /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CA4656753B22490487C94DF6 /* EvilIcons.ttf */; };
+		4909D119CAD34EF9A87A5D3F /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C789FA78241C47F1AB31544A /* libRNFS.a */; };
 		5BF59C6FDCDD4653ADEA918E /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF1FB48CEF7E477E89E38EF9 /* FontAwesome.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		61C2FFF2A76B436484FC33F2 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AD22D9EA9E844CCA7676EE2 /* Ionicons.ttf */; };
@@ -45,7 +47,6 @@
 		99E22520A4374910AEE792F7 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8754E765CCEC45338798C1FD /* SimpleLineIcons.ttf */; };
 		9F3506843E324EBA888DE5F6 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0CBC4C476DB4EDAB2E83DC8 /* MaterialCommunityIcons.ttf */; };
 		A97005A4AF5A46349439858B /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 333DA34C874A46649AFC61CA /* libRNVectorIcons.a */; };
-		AB3ADF5772064B7C90E910D5 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8001D38AA0BD4A14B5D158D0 /* libFastImage.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		E3BF1006398C474284C63206 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 346E28412EA74DFEBDECEA0E /* MaterialIcons.ttf */; };
 		E9836E5148BB4CB2AEF7B48D /* libLottie.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B664E63740443AC879E09DB /* libLottie.a */; };
@@ -306,12 +307,19 @@
 			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
 			remoteInfo = RNVectorIcons;
 		};
-		A7A06903204D53620086A1B7 /* PBXContainerItemProxy */ = {
+		A72076692050F89300185ACA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2947FB981F8E4E319A764D39 /* FastImage.xcodeproj */;
+			containerPortal = 89E1B540B009437EB0F01941 /* RNFS.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = A287971D1DE0C0A60081BDFA;
-			remoteInfo = FastImage;
+			remoteGlobalIDString = F12AFB9B1ADAF8F800E0535D;
+			remoteInfo = RNFS;
+		};
+		A720766B2050F89300185ACA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 89E1B540B009437EB0F01941 /* RNFS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6456441F1EB8DA9100672408;
+			remoteInfo = "RNFS-tvOS";
 		};
 		A7ADA92C204415F900B63711 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -401,7 +409,6 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1B664E63740443AC879E09DB /* libLottie.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libLottie.a; sourceTree = "<group>"; };
 		2003C48F1D2E44CAA63A3145 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
-		2947FB981F8E4E319A764D39 /* FastImage.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* ruliapp-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ruliapp-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* ruliapp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ruliapp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -414,10 +421,11 @@
 		6DA0A19CC8534D96BD790732 /* Lottie.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = Lottie.xcodeproj; path = "../node_modules/lottie-ios/Lottie.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7E78F5D1EF5740A39F07452A /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		8001D38AA0BD4A14B5D158D0 /* libFastImage.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libFastImage.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8754E765CCEC45338798C1FD /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		89E1B540B009437EB0F01941 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
+		C789FA78241C47F1AB31544A /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		C8622CC20C85469ABB8BE4F4 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		CA4656753B22490487C94DF6 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		CEED26FFA0264094B6F492AD /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -455,8 +463,7 @@
 				E9836E5148BB4CB2AEF7B48D /* libLottie.a in Frameworks */,
 				1DC1092C72BC422D9441F159 /* libLottieReactNative.a in Frameworks */,
 				A97005A4AF5A46349439858B /* libRNVectorIcons.a in Frameworks */,
-				69A64336726745588395F851 /* libRNFetchBlob.a in Frameworks */,
-				AB3ADF5772064B7C90E910D5 /* libFastImage.a in Frameworks */,
+				4909D119CAD34EF9A87A5D3F /* libRNFS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,7 +652,7 @@
 				6DA0A19CC8534D96BD790732 /* Lottie.xcodeproj */,
 				4FA808F486034E59BDF318F9 /* LottieReactNative.xcodeproj */,
 				350657C8324A4FC48C9289B3 /* RNVectorIcons.xcodeproj */,
-				2947FB981F8E4E319A764D39 /* FastImage.xcodeproj */,
+				89E1B540B009437EB0F01941 /* RNFS.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -710,8 +717,7 @@
 				1B664E63740443AC879E09DB /* libLottie.a */,
 				0F77BFA3210D49BCB63D01C1 /* libLottieReactNative.a */,
 				333DA34C874A46649AFC61CA /* libRNVectorIcons.a */,
-				5EB194A07EE44DE6BCB7BD10 /* libRNFetchBlob.a */,
-				8001D38AA0BD4A14B5D158D0 /* libFastImage.a */,
+				C789FA78241C47F1AB31544A /* libRNFS.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -743,26 +749,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A7A068FE204D53620086A1B7 /* Products */ = {
+		A72076652050F89300185ACA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A7A06907204D53620086A1B7 /* libRNFetchBlob.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		A7A06900204D53620086A1B7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A7A06904204D53620086A1B7 /* libFastImage.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		A7A0691B204D584A0086A1B7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A7A0694A204D584A0086A1B7 /* libRNFetchBlob.a */,
+				A720766A2050F89300185ACA /* libRNFS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -892,10 +882,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = A7A06900204D53620086A1B7 /* Products */;
-					ProjectRef = 2947FB981F8E4E319A764D39 /* FastImage.xcodeproj */;
-				},
-				{
 					ProductGroup = A713FE6420441DAF007B280A /* Products */;
 					ProjectRef = 6DA0A19CC8534D96BD790732 /* Lottie.xcodeproj */;
 				},
@@ -952,12 +938,8 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = A7A0691B204D584A0086A1B7 /* Products */;
-					ProjectRef = 83CA3D69C938451CA6A59537 /* RNFetchBlob.xcodeproj */;
-				},
-				{
-					ProductGroup = A7A068FE204D53620086A1B7 /* Products */;
-					ProjectRef = 6F891A8D3F96409BAD3FB23D /* RNFetchBlob.xcodeproj */;
+					ProductGroup = A72076652050F89300185ACA /* Products */;
+					ProjectRef = 89E1B540B009437EB0F01941 /* RNFS.xcodeproj */;
 				},
 				{
 					ProductGroup = A713FE6620441DAF007B280A /* Products */;
@@ -1213,11 +1195,18 @@
 			remoteRef = A713FE7820441DAF007B280A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		A7A06904204D53620086A1B7 /* libFastImage.a */ = {
+		A720766A2050F89300185ACA /* libRNFS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libFastImage.a;
-			remoteRef = A7A06903204D53620086A1B7 /* PBXContainerItemProxy */;
+			path = libRNFS.a;
+			remoteRef = A72076692050F89300185ACA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A720766C2050F89300185ACA /* libRNFS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFS.a;
+			remoteRef = A720766B2050F89300185ACA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		A7ADA92D204415F900B63711 /* libjsinspector.a */ = {
@@ -1437,14 +1426,13 @@
 					"$(SRCROOT)/../node_modules/lottie-ios/lottie-ios/Classes/**",
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				INFOPLIST_FILE = ruliappTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1469,14 +1457,13 @@
 					"$(SRCROOT)/../node_modules/lottie-ios/lottie-ios/Classes/**",
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				INFOPLIST_FILE = ruliappTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1505,7 +1492,7 @@
 					"$(SRCROOT)/../node_modules/lottie-ios/lottie-ios/Classes/**",
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				INFOPLIST_FILE = ruliapp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
@@ -1533,8 +1520,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/lottie-ios/lottie-ios/Classes/**",
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
-					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				INFOPLIST_FILE = ruliapp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
@@ -1567,13 +1553,12 @@
 					"$(SRCROOT)/../node_modules/lottie-ios/lottie-ios/Classes/**",
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				INFOPLIST_FILE = "ruliapp-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1608,13 +1593,12 @@
 					"$(SRCROOT)/../node_modules/lottie-ios/lottie-ios/Classes/**",
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
 				);
 				INFOPLIST_FILE = "ruliapp-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1651,7 +1635,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.ruliapp-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1676,7 +1659,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

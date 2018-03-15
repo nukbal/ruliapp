@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import { listItem, primary } from '../../styles/color';
 
-import LazyImage from '../LazyImage';
+import LazyImage from '../../containers/LazyImage';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,6 +21,8 @@ const styles = StyleSheet.create({
 
 export default class ContentItem extends PureComponent {
   state = {
+    width: 0,
+    height: 0,
     visible: false,
   }
 
@@ -29,16 +31,19 @@ export default class ContentItem extends PureComponent {
   }
 
   onLayout = ({ nativeEvent }) => {
-    this.layout.width = nativeEvent.layout.width;
-    this.layout.height = nativeEvent.layout.height;
+    const { width, height } = nativeEvent.layout;
+    this.layout.width = width;
+    this.layout.height = height;
+    this.setState({ width, height });
   }
 
   getElement = () => {
     const { type, content } = this.props;
+    const width = this.state.width - 6;
     if (type === 'embeded') {
       return <Text style={styles.text}>{content}</Text>;
     } else if (type === 'image') {
-      return <LazyImage source={{ uri: content }} fitScreen />
+      return <LazyImage source={{ uri: content }} fitScreen maxWidth={width} />
     } else {
       return <Text style={styles.text}>{content}</Text>;
     }
