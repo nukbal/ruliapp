@@ -8,7 +8,7 @@ import { border, primary, listItem, primaryOpacity } from '../../styles/color';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 3,
+    marginBottom: 1,
     justifyContent: 'center',
     backgroundColor: listItem,
   },
@@ -92,7 +92,7 @@ export default class CommentItem extends PureComponent {
   render() {
     const { user, comment, isChild, time, isBest, like, dislike, image, bestOnly } = this.props;
     const { visible, width } = this.state;
-    const maxWidth = width - 16;
+    const maxWidth = isChild ? width - 22 : width - 16;
     const containerStyle = [isChild ? styles.childContainer : styles.container];
     if (bestOnly) containerStyle[1] = styles.bestContainer;
     return (

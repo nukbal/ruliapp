@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { View, StyleSheet, Text, Image, Platform } from 'react-native';
+import Lightbox from 'react-native-lightbox';
 import { darkBarkground } from '../../styles/color';
 import Loading from './Loading';
 
@@ -8,13 +9,13 @@ const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
-    borderRadius: 6,
+    borderRadius: 3,
     backgroundColor: darkBarkground,
     width: null,
     height: null,
   },
   ImagePlaceholder: {
-    borderRadius: 6,
+    borderRadius: 3,
     flex: 1,
     height: 250,
     backgroundColor: darkBarkground,
@@ -60,18 +61,18 @@ export default class LazyImage extends PureComponent {
   }
 
   render() {
-    const { isReady, path, progress } = this.props;
+    const { isReady, path, progress, navigator } = this.props;
     return (
-      <View style={[styles.ImagePlaceholder, this.state]}>
+      <Lightbox navigator={navigator}>
         {isReady ? (
           <Image
-            style={styles.ImageContent}
+            style={[styles.ImageContent, this.state]}
             source={{ uri: path, isStatic: true }}
           />
         ) : (
           <Loading progress={progress} />
         )}
-      </View>
+      </Lightbox>
     );
   }
 }
