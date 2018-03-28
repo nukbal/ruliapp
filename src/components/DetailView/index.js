@@ -16,12 +16,15 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    padding: 16,
+    paddingTop: 24,
+    paddingBottom: 20,
+    paddingRight: 16,
+    paddingLeft: 16,
     justifyContent: 'flex-start',
   },
   titleText: {
     color: 'black',
-    fontWeight: 'bold',
+    fontSize: 18,
   },
   infoPanel: {
     flex: 1,
