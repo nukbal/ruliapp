@@ -4,7 +4,7 @@ export const background = 'white';
 
 export const primary = '#1A70DC';
 
-export const primaryOpacity = 'rgba(68, 74, 88, 0.7)';
+export const primaryOpacity = '#F6FBFE';
 
 export const border = '#3d3d3d';
 

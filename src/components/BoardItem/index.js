@@ -6,17 +6,17 @@ import { listItem, labelText, border, primaryOpacity } from '../../styles/color'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 8,
+    marginBottom: 2,
   },
   itemContainer: {
     flex: 1,
-    padding: 8,
-    borderRadius: 3,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
     backgroundColor: listItem,
     alignItems: 'baseline',
     justifyContent: 'center',
-    borderBottomColor: border,
-    borderBottomWidth: 1,
   },
   info: {
     flex: 1,
@@ -31,12 +31,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   titleText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: 'black',
   },
   itemText: {
     marginLeft: 8,
-    fontWeight: 'bold',
     color: labelText,
   }
 });

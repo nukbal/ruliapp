@@ -9,12 +9,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: listItem,
-    padding: 3,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
     margin: 0,
   },
   text: {
     marginBottom: 6,
-    color: 'white',
+    color: 'black',
     justifyContent: 'flex-start',
   },
 });
@@ -39,7 +42,7 @@ export default class ContentItem extends PureComponent {
 
   getElement = () => {
     const { type, content } = this.props;
-    const width = this.state.width - 6;
+    const width = this.state.width - 32;
     if (type === 'embeded') {
       return <Text style={styles.text}>{content}</Text>;
     } else if (type === 'image') {

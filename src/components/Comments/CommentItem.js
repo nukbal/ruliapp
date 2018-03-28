@@ -29,8 +29,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   UserText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: 'black',
     justifyContent: 'flex-start',
   },
   CommentContainer: {
@@ -39,7 +38,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   CommentText: {
-    color: 'white',
+    color: 'black',
     justifyContent: 'flex-start',
   },
   horizontal: {
@@ -114,11 +113,11 @@ export default class CommentItem extends PureComponent {
         </View>
         <View style={styles.infoContainer}>
           <View style={[styles.horizontal, { marginRight: 6 }]}>
-            <Ionicons name="ios-thumbs-up-outline" size={20} color="white" />
+            <Ionicons name="ios-thumbs-up-outline" size={20} color="black" />
             <Text style={[styles.UserText, { marginLeft: 6 }]}>{like}</Text>
           </View>
           <View style={[styles.horizontal, { marginRight: 6 }]}>
-            <Ionicons name="ios-thumbs-down-outline" size={20} color="white" />
+            <Ionicons name="ios-thumbs-down-outline" size={20} color="black" />
             <Text style={[styles.UserText, { marginLeft: 6 }]}>{dislike}</Text>
           </View>
         </View>

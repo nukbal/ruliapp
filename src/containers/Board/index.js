@@ -3,7 +3,7 @@ import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import { StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { darkBarkground, background, titleText, border } from '../../styles/color';
+import { darkBarkground, background, titleText, primary, white } from '../../styles/color';
 import Board from './Board';
 import DetailScreen from '../Detail';
 import BoardList from '../../config/BoardList';
@@ -47,12 +47,10 @@ export default StackNavigator({
 }, {
   navigationOptions: ({ navigation }) => ({
     headerStyle: {
-      backgroundColor: darkBarkground,
-      borderBottomColor: border,
-      borderBottomWidth: 1,
+      backgroundColor: primary,
     },
     headerTitleStyle: {
-      color: titleText,
+      color: 'white',
     },
     cardStyle: {
       opacity: 1,

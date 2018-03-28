@@ -16,17 +16,11 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    marginTop: 6,
-    marginBottom: 6,
-    borderRadius: 3,
-    padding: 8,
-    backgroundColor: listItem,
-    borderBottomColor: border,
-    borderBottomWidth: 1,
+    padding: 16,
     justifyContent: 'flex-start',
   },
   titleText: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
   },
   infoPanel: {
@@ -116,31 +110,7 @@ export default class DetailView extends PureComponent {
   }
 
   renderSectionFooter = ({ section }) => {
-    if (section.index !== 0) {
-      return <View style={{ marginBottom: 12 }} />
-    }
-
-    const { likes, dislikes, comments } = this.props;
-
-    return (
-      <View style={styles.infoPanel}>
-        <View style={styles.infoItem}>
-          <Ionicons name="ios-thumbs-up-outline" size={25} color="white" />
-          <Text style={styles.infoText}>{likes}</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Ionicons name="ios-thumbs-down-outline" size={25} color="white" />
-          <Text style={styles.infoText}>{dislikes}</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Ionicons name="ios-chatboxes-outline" size={25} color="white" />
-          <Text style={styles.infoText}>{comments}</Text>
-        </View>
-        <TouchableOpacity style={styles.infoItem} onPress={this.onPressShare}>
-          <Ionicons name="ios-share-outline" size={25} color="white" />
-        </TouchableOpacity>
-      </View>
-    );
+    return <View style={{ marginBottom: 24 }} />
   }
 
   refs = {};
