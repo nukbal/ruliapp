@@ -42,7 +42,12 @@ const drawerConfig = {
 const BoardDrawer = DrawerNavigator(BoardRoutes, drawerConfig);
 
 export default StackNavigator({
-  Board: { screen: BoardDrawer },
+  Board: {
+    screen: BoardDrawer,
+    navigationOptions: {
+      headerBackTitle: null,
+    },
+  },
   Detail: { screen: DetailScreen },
 }, {
   navigationOptions: ({ navigation }) => ({

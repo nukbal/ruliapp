@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
 export class Detail extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.title}`,
+    headerTintColor: 'white',
    });
 
   static defaultProps = {
