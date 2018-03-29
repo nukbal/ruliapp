@@ -9,7 +9,6 @@ const FILE_PREFIX = Platform.OS === "ios" ? "" : "file://";
 const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
-    borderRadius: 3,
     backgroundColor: darkBarkground,
     width: null,
     height: null,
