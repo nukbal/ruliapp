@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
-import { StyleSheet, StatusBar } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { requestDetail, getDetailInfo, updateComment } from '../../store/ducks/detail';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
@@ -13,12 +14,22 @@ const styles = StyleSheet.create({
     backgroundColor: darkBarkground,
     justifyContent: 'flex-start',
   },
+  headerIcon: {
+    paddingRight: 12,
+    paddingLeft: 12,
+    marginRight: 8,
+  }
 });
 
 export class Detail extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.title}`,
     headerTintColor: 'white',
+    headerRight: (
+      <TouchableOpacity style={styles.headerIcon}>
+        <FontAwesome name="ellipsis-v" size={20} color="white" />
+      </TouchableOpacity>
+    ),
    });
 
   static defaultProps = {
