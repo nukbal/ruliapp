@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import LazyImage from '../../containers/LazyImage';
+import LazyImage from '../LazyImage';
 import { border, primary, labelText, listItem, primaryOpacity, commentHeader } from '../../styles/color';
 
 const styles = StyleSheet.create({
@@ -68,6 +68,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
+  bestText: {
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 8,
+    paddingRight: 8,
+    fontSize: 12,
+    backgroundColor: primary,
+    color: 'white',
+  },
 });
 
 export default class CommentItem extends PureComponent {
@@ -109,7 +118,7 @@ export default class CommentItem extends PureComponent {
             <Text style={styles.UserText}>
               {user.name}
             </Text>
-            {isBest && (<FontAwesome name="certificate" size={20} color={primary} />)}
+            {isBest && (<Text style={styles.bestText}>BEST</Text>)}
           </View>
           <Text style={styles.timeText}>
             {time}
