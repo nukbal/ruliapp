@@ -1,16 +1,14 @@
-import { StackNavigator } from 'react-navigation';
+import React from 'react';
+import { DrawerNavigator } from 'react-navigation';
 import BoardScreen from './Board';
-import SettingsScreen from './Settings';
+import Drawer from './Drawer';
 
-export default StackNavigator(
+export default DrawerNavigator(
   {
-    Board: { screen: BoardScreen },
-    Settings: { screen: SettingsScreen },
+    Main: { screen: BoardScreen },
   },
   {
-    headerMode: 'none',
-    navigationOptions: {
-      headerVisible: false,
-    }
+    contentComponent: Drawer,
+    drawerWidth: 300,
   }
 );

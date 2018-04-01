@@ -30,6 +30,11 @@ export class Detail extends PureComponent {
         <FontAwesome name="ellipsis-v" size={20} color="white" />
       </TouchableOpacity>
     ),
+    headerLeft: (
+      <TouchableOpacity style={styles.headerIcon} onPress={() => { navigation.goBack(); }}>
+        <FontAwesome name="chevron-left" size={20} color="white" />
+      </TouchableOpacity>
+    ),
    });
 
   static defaultProps = {

@@ -34,7 +34,7 @@ export function updateBoardList(prefix, boardId, page) {
 }
 
 async function getListData(prefix, boardId, page) {
-  const targetUrl = `https://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?type=default&page=${page}`;
+  const targetUrl = `https://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}`;
 
   const config = {
     method: 'GET',

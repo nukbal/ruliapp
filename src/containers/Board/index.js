@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
-import { StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import { darkBarkground, background, titleText, primary, white } from '../../styles/color';
 import Board from './Board';
@@ -14,36 +14,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const BoardRoutes = {};
-const setScreen = (params) => (props) => <Board {...props} {...params} />
-Object.keys(BoardList).map(key => {
-  const { title, params } = BoardList[key];
-  BoardRoutes[key] = { screen: setScreen(params), navigationOptions: { title } };
-});
-
-const drawerConfig = {
-  initialRouteName: 'BestHumorBoard',
-  navigationOptions: {
-    drawerStyle: {
-      backgroundColor: darkBarkground,
-    }
-  },
-  headerLeft: (
-    <Ionicons
-      style={styles.header}
-      name="ios-list"
-      size={28}
-      color="white"
-      onPress={() => navigation.navigate('DrawerToggle')}
-    />
-  ),
-}
-
-const BoardDrawer = DrawerNavigator(BoardRoutes, drawerConfig);
-
 export default StackNavigator({
   Board: {
-    screen: BoardDrawer,
+    screen: Board,
     navigationOptions: {
       headerBackTitle: null,
     },
@@ -60,5 +33,10 @@ export default StackNavigator({
     cardStyle: {
       opacity: 1,
     },
+    headerLeft: (
+      <TouchableOpacity onPress={() => navigation.navigate('DrawerToggle')}>
+        <FontAwesome style={styles.header} name="navicon" size={28} color="white" />
+      </TouchableOpacity>
+    ),
   }),
 });

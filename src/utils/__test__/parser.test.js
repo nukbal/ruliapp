@@ -1,14 +1,29 @@
 import fs from 'fs';
 import { parseDetail } from '../parser';
 
-describe('[ util parser ]', () => {
+describe('[ util parser ] board', () => {
+  it('', () => {
+
+  });
+});
+
+describe('[ util parser ] detail', () => {
   it('힛갤 내용 적은것', () => {
-    const html = fs.readFileSync('./src/utils/__test__/hit_sample.html', 'utf-8');
+    const html = fs.readFileSync('./src/utils/__test__/html/hit_sample.html', 'utf-8');
     const start = process.hrtime();
     const json = parseDetail(html);
     const end = process.hrtime(start);
+    const processTime = Math.round((end[0] * 1000) + (end[1] / 1000000));
 
-    expect(end[0] - start[0]).toBeLessThan(1);
+    // 50ms이내에 처리를 끝낼것
+    expect(processTime).toBeLessThan(50);
+
+    expect(json.commentList).toHaveLength(6);
+    expect(json.bestCommentList).toHaveLength(4);
+
+    delete json.commentList;
+    delete json.bestCommentList;
+
     expect(json).toEqual({
       contents: [
         {
