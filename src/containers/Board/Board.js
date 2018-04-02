@@ -33,7 +33,7 @@ export class Board extends PureComponent {
     const title = navigation.getParam('title', BoardList.BestHumorBoard.title);
     return {
       title: title || '',
-   };
+    };
   };
 
   static defaultProps = {
@@ -44,12 +44,6 @@ export class Board extends PureComponent {
   componentDidMount() {
     this.refs = {};
     this.requestList();
-  }
-
-  componentDidUpdate(props) {
-    if (this.props.info.title !== props.info.title) {
-      this.props.navigation.setParams({ title: props.info.title });
-    }
   }
 
   requestList = (page = 1) => {
@@ -92,9 +86,10 @@ export class Board extends PureComponent {
   }
 
   onEndReached = () => {
-    const { prefix, boardId, info, refreshing } = this.props;
+    const { info, refreshing } = this.props;
+    const { prefix, boardId, page } = info;
     if (!refreshing) {
-      this.props.updateBoard(prefix, boardId, info.page + 1);
+      this.props.updateBoard(prefix, boardId, page + 1);
     }
   }
 
