@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
 export class Detail extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.title}`,
+    drawerLockMode: 'locked-closed',
     headerTintColor: 'white',
     headerRight: (
       <TouchableOpacity style={styles.headerIcon}>

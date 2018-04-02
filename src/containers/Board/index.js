@@ -9,9 +9,12 @@ import DetailScreen from '../Detail';
 import BoardList from '../../config/BoardList';
 
 const styles = StyleSheet.create({
-  header: {
+  headerLeft: {
     marginLeft: 12,
   },
+  headerRight: {
+    marginRight: 12,
+  }
 });
 
 export default StackNavigator({
@@ -35,7 +38,12 @@ export default StackNavigator({
     },
     headerLeft: (
       <TouchableOpacity onPress={() => navigation.navigate('DrawerToggle')}>
-        <FontAwesome style={styles.header} name="navicon" size={28} color="white" />
+        <FontAwesome style={styles.headerLeft} name="navicon" size={20} color="white" />
+      </TouchableOpacity>
+    ),
+    headerRight: (
+      <TouchableOpacity>
+        <FontAwesome style={styles.headerRight} name="pencil-square-o" size={20} color="white" />
       </TouchableOpacity>
     ),
   }),

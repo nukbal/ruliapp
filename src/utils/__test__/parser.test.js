@@ -1,9 +1,22 @@
 import fs from 'fs';
-import { parseDetail } from '../parser';
+import { parseDetail, parseBoardList } from '../parser';
 
 describe('[ util parser ] board', () => {
   it('', () => {
+    const html = fs.readFileSync('./src/utils/__test__/html/hit_board.html', 'utf-8');
+    const start = process.hrtime();
+    const json = parseBoardList(html);
+    const end = process.hrtime(start);
+    const processTime = Math.round((end[0] * 1000) + (end[1] / 1000000));
 
+    // 50ms이내에 처리를 끝낼것
+    // expect(processTime).toBeLessThan(50);
+
+    expect(json.items).toHaveLength(30);
+
+    expect(json).toEqual({
+      title: 'BEST - 일반유머',
+    });
   });
 });
 

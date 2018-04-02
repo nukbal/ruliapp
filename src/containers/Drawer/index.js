@@ -18,7 +18,7 @@ export default class Drawer extends PureComponent {
     const { replace } = NavigationActions;
     const { title, params } = config;
     this.props.navigation
-      .dispatch(replace({ routeName: 'Main', params: { title, ...params }}));
+      .dispatch(replace({ routeName: 'Board', params: { title, ...params }}));
   }
 
   render() {
