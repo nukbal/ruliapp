@@ -15,10 +15,14 @@ const styles = StyleSheet.create({
 
 export default class Drawer extends PureComponent {
   onPressBoard = (config) => () => {
-    const { replace } = NavigationActions;
     const { title, params } = config;
-    this.props.navigation
-      .dispatch(replace({ routeName: 'Board', params: { title, ...params }}));
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Board', params: { title, ...params }})
+      ]
+    });
+    this.props.navigation.dispatch(resetAction);
   }
 
   render() {
