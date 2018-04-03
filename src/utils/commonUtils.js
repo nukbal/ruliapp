@@ -1,4 +1,4 @@
-import cheerio from 'cheerio-without-node-native';
+import HTMLParser from 'fast-html-parser';
 
 export function arrayToObject(array, key) {
   return array.reduce((prev, item, index) => {
@@ -58,5 +58,5 @@ export function mergeArray(arr1, arr2) {
 }
 
 export function loadHtml(htmlString) {
-  return cheerio.load(htmlString, { normalizeWhitespace: true, });
+  return HTMLParser.parse(htmlString).removeWhitespace();
 }
