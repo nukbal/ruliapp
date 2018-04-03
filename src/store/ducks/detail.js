@@ -43,7 +43,7 @@ async function getDetailData(prefix, boardId, articleId) {
     headers: {
       Accept: 'text/html',
       'Content-Type': 'text/html',
-      'Accept-Encoding': 'gzip, deflate',
+      // 'Accept-Encoding': 'gzip, deflate',
       Referer: targetUrl,
       'User-Agent': 'Mozilla/5.0',
     },
