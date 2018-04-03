@@ -70,7 +70,7 @@ const formatContentNode = (item, key) => {
       type = 'image';
       content = item.attribs.src;
     } else if (item.name === 'iframe') {
-      type = 'embeded';
+      type = 'embed';
       content = item.attribs.src;
     } else if (item.name === 'a' && item.children[0].name === 'img') {
       type = 'image';

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, WebView } from 'react-native';
 
 import { listItem, primary } from '../../styles/color';
 
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     color: 'black',
     justifyContent: 'flex-start',
   },
+
 });
 
 export default class ContentItem extends PureComponent {
@@ -42,10 +43,10 @@ export default class ContentItem extends PureComponent {
 
   getElement = () => {
     const { type, content } = this.props;
-    if (type === 'embeded') {
-      return <Text style={styles.text}>{content}</Text>;
+    if (type === 'embed') {
+      return <WebView style={{ flex: 1, height: 200 }} source={{ uri: content }} javaScriptEnabled />;
     } else if (type === 'image') {
-      return <LazyImage source={{ uri: content }} fitScreen />
+      return <LazyImage source={{ uri: content }} fitScreen />;
     } else {
       return <Text style={styles.text}>{content}</Text>;
     }
