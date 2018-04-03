@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import LazyImage from '../../containers/LazyImage';
-import { border, primary, listItem, primaryOpacity } from '../../styles/color';
+import LazyImage from '../LazyImage';
+import { border, primary, labelText, listItem, primaryOpacity, commentHeader } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,21 +25,33 @@ const styles = StyleSheet.create({
   UserContainer: {
     flex: 1,
     padding: 8,
+    paddingRight: 16,
+    paddingLeft: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   UserText: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     justifyContent: 'flex-start',
+    paddingRight: 6,
+  },
+  timeText: {
+    fontSize: 12,
+    color: labelText,
+    fontWeight: 'bold',
+    justifyContent: 'flex-start',
+    paddingRight: 6,
   },
   CommentContainer: {
     flex: 1,
     padding: 8,
+    paddingRight: 16,
+    paddingLeft: 16,
     justifyContent: 'flex-start',
   },
   CommentText: {
-    color: 'white',
+    color: 'black',
     justifyContent: 'flex-start',
   },
   horizontal: {
@@ -49,18 +61,22 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 1,
-    padding: 3,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingTop: 8,
+    paddingBottom: 16,
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  bestIcon: {
+  bestText: {
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 8,
+    paddingRight: 8,
+    fontSize: 12,
     backgroundColor: primary,
     color: 'white',
-    padding: 6,
-    paddingTop: 2,
-    paddingBottom: 2,
-    marginLeft: 6,
-  }
+  },
 });
 
 export default class CommentItem extends PureComponent {
@@ -92,7 +108,7 @@ export default class CommentItem extends PureComponent {
   render() {
     const { user, comment, isChild, time, isBest, like, dislike, image, bestOnly } = this.props;
     const { visible, width } = this.state;
-    const maxWidth = isChild ? width - 22 : width - 16;
+    const maxWidth = isChild ? width - 32 : width - 24;
     const containerStyle = [isChild ? styles.childContainer : styles.container];
     if (bestOnly) containerStyle[1] = styles.bestContainer;
     return (
@@ -102,9 +118,9 @@ export default class CommentItem extends PureComponent {
             <Text style={styles.UserText}>
               {user.name}
             </Text>
-            {isBest && (<Text style={styles.bestIcon}>BEST</Text>)}
+            {isBest && (<Text style={styles.bestText}>BEST</Text>)}
           </View>
-          <Text style={styles.UserText}>
+          <Text style={styles.timeText}>
             {time}
           </Text>
         </View>
@@ -114,11 +130,11 @@ export default class CommentItem extends PureComponent {
         </View>
         <View style={styles.infoContainer}>
           <View style={[styles.horizontal, { marginRight: 6 }]}>
-            <Ionicons name="ios-thumbs-up-outline" size={20} color="white" />
+            <FontAwesome name="thumbs-o-up" size={20} color={primary}/>
             <Text style={[styles.UserText, { marginLeft: 6 }]}>{like}</Text>
           </View>
           <View style={[styles.horizontal, { marginRight: 6 }]}>
-            <Ionicons name="ios-thumbs-down-outline" size={20} color="white" />
+            <FontAwesome name="thumbs-o-down" size={20} color={primary}/>
             <Text style={[styles.UserText, { marginLeft: 6 }]}>{dislike}</Text>
           </View>
         </View>

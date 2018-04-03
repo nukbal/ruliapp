@@ -1,61 +1,50 @@
 import React, { PureComponent } from 'react';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
-import { StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { darkBarkground, background, titleText, border } from '../../styles/color';
+import { darkBarkground, background, titleText, primary, white } from '../../styles/color';
 import Board from './Board';
 import DetailScreen from '../Detail';
 import BoardList from '../../config/BoardList';
 
 const styles = StyleSheet.create({
-  header: {
+  headerLeft: {
     marginLeft: 12,
   },
+  headerRight: {
+    marginRight: 12,
+  }
 });
-
-const BoardRoutes = {};
-const setScreen = (params) => (props) => <Board {...props} {...params} />
-Object.keys(BoardList).map(key => {
-  const { title, params } = BoardList[key];
-  BoardRoutes[key] = { screen: setScreen(params), navigationOptions: { title } };
-});
-
-const drawerConfig = {
-  initialRouteName: 'BestHumorBoard',
-  navigationOptions: {
-    drawerStyle: {
-      backgroundColor: darkBarkground,
-    }
-  },
-  headerLeft: (
-    <Ionicons
-      style={styles.header}
-      name="ios-list"
-      size={28}
-      color="white"
-      onPress={() => navigation.navigate('DrawerToggle')}
-    />
-  ),
-}
-
-const BoardDrawer = DrawerNavigator(BoardRoutes, drawerConfig);
 
 export default StackNavigator({
-  Board: { screen: BoardDrawer },
+  Board: {
+    screen: Board,
+    navigationOptions: {
+      headerBackTitle: null,
+    },
+  },
   Detail: { screen: DetailScreen },
 }, {
   navigationOptions: ({ navigation }) => ({
     headerStyle: {
-      backgroundColor: darkBarkground,
-      borderBottomColor: border,
-      borderBottomWidth: 1,
+      backgroundColor: primary,
     },
     headerTitleStyle: {
-      color: titleText,
+      color: 'white',
     },
     cardStyle: {
       opacity: 1,
     },
+    headerLeft: (
+      <TouchableOpacity onPress={() => navigation.navigate('DrawerToggle')}>
+        <FontAwesome style={styles.headerLeft} name="navicon" size={20} color="white" />
+      </TouchableOpacity>
+    ),
+    headerRight: (
+      <TouchableOpacity>
+        <FontAwesome style={styles.headerRight} name="pencil-square-o" size={20} color="white" />
+      </TouchableOpacity>
+    ),
   }),
 });

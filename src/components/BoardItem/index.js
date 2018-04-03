@@ -6,17 +6,17 @@ import { listItem, labelText, border, primaryOpacity } from '../../styles/color'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 8,
+    marginBottom: 2,
   },
   itemContainer: {
     flex: 1,
-    padding: 8,
-    borderRadius: 3,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingTop: 12,
+    paddingBottom: 12,
     backgroundColor: listItem,
     alignItems: 'baseline',
     justifyContent: 'center',
-    borderBottomColor: border,
-    borderBottomWidth: 1,
   },
   info: {
     flex: 1,
@@ -31,14 +31,18 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   titleText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: 'black',
+    marginBottom: 2,
   },
   itemText: {
-    marginLeft: 8,
-    fontWeight: 'bold',
+    marginLeft: 3,
+    fontSize: 12,
     color: labelText,
-  }
+  },
+  authorText: {
+    fontSize: 12,
+    color: labelText,
+  },
 });
 
 export default class BoardItem extends PureComponent {
@@ -83,17 +87,22 @@ export default class BoardItem extends PureComponent {
         <View style={styles.itemContainer}>
           <Text style={styles.titleText}>{title}</Text>
           <View style={styles.info}>
-            <View style={styles.item}>
-              <Ionicons name="ios-chatboxes-outline" size={20} color={labelText} />
-              <Text style={styles.itemText}>{comments || 0}</Text>
+            <View style={styles.info}>
+              <Text style={styles.authorText}>{author}</Text>
             </View>
-            <View style={styles.item}>
-              <Ionicons name="ios-heart-outline" size={20} color={labelText} />
-              <Text style={styles.itemText}>{likes || 0}</Text>
-            </View>
-            <View style={styles.item}>
-              <Ionicons name="ios-person-outline" size={20} color={labelText} />
-              <Text style={styles.itemText}>{views || 0}</Text>
+            <View style={styles.info}>
+              <View style={styles.item}>
+                <Ionicons name="ios-chatboxes-outline" size={16} color={labelText} />
+                <Text style={styles.itemText}>{comments || 0}</Text>
+              </View>
+              <View style={styles.item}>
+                <Ionicons name="ios-heart-outline" size={16} color={labelText} />
+                <Text style={styles.itemText}>{likes || 0}</Text>
+              </View>
+              <View style={styles.item}>
+                <Ionicons name="ios-person-outline" size={16} color={labelText} />
+                <Text style={styles.itemText}>{views || 0}</Text>
+              </View>
             </View>
           </View>
         </View>

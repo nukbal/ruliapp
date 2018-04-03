@@ -10,6 +10,9 @@ import BoardItem from '../../components/BoardItem';
 import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading, updateBoardList } from '../../store/ducks/boards';
 import { darkBarkground, background, titleText, border, primary } from '../../styles/color';
 
+import BoardList from '../../config/BoardList';
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -26,9 +29,12 @@ const styles = StyleSheet.create({
 });
 
 export class Board extends PureComponent {
-  static navigationOptions = ({ navigation }) => ({
-    title: `${navigation.state.params ? navigation.state.params.title : ''}`,
-   });
+  static navigationOptions = ({ navigation }) => {
+    const title = navigation.getParam('title', BoardList.BestHumorBoard.title);
+    return {
+      title: title || '',
+    };
+  };
 
   static defaultProps = {
     list: [],
@@ -40,14 +46,11 @@ export class Board extends PureComponent {
     this.requestList();
   }
 
-  componentDidUpdate(props) {
-    if (this.props.info.title !== props.info.title) {
-      this.props.navigation.setParams({ title: props.info.title });
-    }
-  }
-
   requestList = (page = 1) => {
-    const { prefix, boardId } = this.props;
+    const { getParam } = this.props.navigation;
+    const params = BoardList.BestHumorBoard.params;
+    const prefix = getParam('prefix', params.prefix);
+    const boardId = getParam('boardId', params.boardId);
     if (page >= 1) {
       this.props.requestBoard(prefix, boardId, page);
     }
@@ -83,9 +86,10 @@ export class Board extends PureComponent {
   }
 
   onEndReached = () => {
-    const { prefix, boardId, info, refreshing } = this.props;
+    const { info, refreshing } = this.props;
+    const { prefix, boardId, page } = info;
     if (!refreshing) {
-      this.props.updateBoard(prefix, boardId, info.page + 1);
+      this.props.updateBoard(prefix, boardId, page + 1);
     }
   }
 

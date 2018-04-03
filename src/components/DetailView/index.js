@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { ScrollView, View, Text, StyleSheet, Share, SectionList, TouchableOpacity } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import { darkBarkground, border, listItem, primary } from '../../styles/color';
 
@@ -16,31 +16,25 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    marginTop: 6,
-    marginBottom: 6,
-    borderRadius: 3,
-    padding: 8,
-    backgroundColor: listItem,
-    borderBottomColor: border,
-    borderBottomWidth: 1,
+    paddingTop: 24,
+    paddingBottom: 20,
+    paddingRight: 16,
+    paddingLeft: 16,
     justifyContent: 'flex-start',
   },
   titleText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 18,
   },
   infoPanel: {
     flex: 1,
-    backgroundColor: primary,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderBottomLeftRadius: 6,
-    borderBottomRightRadius: 6,
-    marginBottom: 12,
+    justifyContent: 'center',
+    backgroundColor: primary,
   },
   infoItem: {
     flex: 1,
-    padding: 6,
+    padding: 8,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -49,7 +43,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontWeight: 'bold',
     color: 'white'
-  }
+  },
 });
 
 
@@ -116,31 +110,31 @@ export default class DetailView extends PureComponent {
   }
 
   renderSectionFooter = ({ section }) => {
-    if (section.index !== 0) {
-      return <View style={{ marginBottom: 12 }} />
+    if (section.index === 0) {
+      return (
+        <View style={styles.infoPanel}>
+          <View style={styles.infoItem}>
+            <FontAwesome name="reply" size={20} color="white"/>
+          </View>
+          <View style={styles.infoItem}>
+            <FontAwesome name="thumbs-o-up" size={20} color="white"/>
+          </View>
+          <View style={styles.infoItem}>
+            <FontAwesome name="thumbs-o-down" size={20} color="white"/>
+          </View>
+          <TouchableOpacity style={styles.infoItem} onPress={this.onPressShare}>
+            <FontAwesome name="share-square-o" size={20} color="white"/>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (section.index === 1){
+      const { comments, commentList } = this.props;
+      return (
+        <View style={styles.infoItem}>
+          <Text>덧글 {comments || commentList.length}개</Text>
+        </View>
+      );
     }
-
-    const { likes, dislikes, comments } = this.props;
-
-    return (
-      <View style={styles.infoPanel}>
-        <View style={styles.infoItem}>
-          <Ionicons name="ios-thumbs-up-outline" size={25} color="white" />
-          <Text style={styles.infoText}>{likes}</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Ionicons name="ios-thumbs-down-outline" size={25} color="white" />
-          <Text style={styles.infoText}>{dislikes}</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Ionicons name="ios-chatboxes-outline" size={25} color="white" />
-          <Text style={styles.infoText}>{comments}</Text>
-        </View>
-        <TouchableOpacity style={styles.infoItem} onPress={this.onPressShare}>
-          <Ionicons name="ios-share-outline" size={25} color="white" />
-        </TouchableOpacity>
-      </View>
-    );
   }
 
   refs = {};

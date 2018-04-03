@@ -70,7 +70,7 @@ const formatContentNode = (item, key) => {
       type = 'image';
       content = item.attribs.src;
     } else if (item.name === 'iframe') {
-      type = 'embeded';
+      type = 'embed';
       content = item.attribs.src;
     } else if (item.name === 'a' && item.children[0].name === 'img') {
       type = 'image';
@@ -237,12 +237,11 @@ const formatBoardRow = (nodes) => {
 
 
 export const parseBoardList = (htmlString, page) => {
+  const title = extractTitle(htmlString);
   const startIndex = htmlString.indexOf('<table class="board_list_table"');
   const endIndex = htmlString.indexOf('</table>');
   const html = htmlString.substring(startIndex, endIndex);
   const $ = loadHtml(html);
-
-  const title = $('head title').text().replace('루리웹', '').replace('|', '').trim()
 
   const boardNodes = $('table.board_list_table tbody tr:not(.notice)');
   const length = boardNodes.length;

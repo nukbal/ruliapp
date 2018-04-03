@@ -41,7 +41,7 @@ async function getListData(prefix, boardId, page) {
     headers: {
       Accept: 'text/html',
       'Content-Type': 'text/html',
-      'Accept-Encoding': 'gzip, deflate',
+      // 'Accept-Encoding': 'gzip, deflate',      
       Referer: targetUrl,
       'User-Agent': 'Mozilla/5.0',
     }
