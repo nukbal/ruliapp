@@ -67,15 +67,13 @@ export default class LazyImage extends PureComponent {
   render() {
     const { navigator, source } = this.props;
     return (
-      <Lightbox navigator={navigator}>
-        <FastImage
-          style={[styles.ImageContent, this.state]}
-          source={source}
-          onLoad={this.onLoad}
-          onLayout={this.onLayout}
-          resizeMode="contain"
-        />
-      </Lightbox>
+      <FastImage
+        style={[styles.ImageContent, this.state]}
+        source={source}
+        onLoad={this.onLoad}
+        onLayout={this.onLayout}
+        resizeMode="contain"
+      />
     );
   }
 }

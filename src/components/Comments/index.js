@@ -24,35 +24,12 @@ export default class Comments extends PureComponent {
     comments: [],
   }
 
-  componentDidMount() {
-    this.refs = {};
-  }
-
   renderItem = (row) => {
     const { item } = row;
     return (
-      <CommentItem
-        ref={(ref) => { this.addRefs(ref, row); }}
-        {...item}
-      />
+      <CommentItem {...item} />
     );
   }
-
-  addRefs = (ref, { item, index }) => {
-    this.refs[item.key] = { ref, item, index };
-  }
-
-  updateItem = (key, isViewable) => {
-    if (!this.refs[key]) return;
-    if (!this.refs[key].ref) return;
-    this.refs[key].ref.setVisible(isViewable);
-  }
-
-  onViewItemChanged = (info) => {
-    info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
-  }
-  
-  refs = {}
 
   render() {
     const { comments, best } = this.props;
@@ -61,8 +38,8 @@ export default class Comments extends PureComponent {
         style={best ? styles.bestContainer : styles.container}
         data={comments}
         renderItem={this.renderItem}
-        onViewableItemsChanged={this.onViewItemChanged}
         onEndReachedThreshold={30}
+        removeClippedSubviews
       />
     );
   }

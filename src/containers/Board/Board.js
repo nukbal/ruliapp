@@ -42,7 +42,6 @@ export class Board extends PureComponent {
   }
 
   componentDidMount() {
-    this.refs = {};
     this.requestList();
   }
 
@@ -65,24 +64,10 @@ export class Board extends PureComponent {
     const { item } = row;
     return (
       <BoardItem
-        ref={(ref) => { this.addRefs(ref, row); }}
         onPress={this.pressItem}
         {...item}
       />
     );
-  }
-
-  addRefs = (ref, { item, index }) => {
-    this.refs[item.key] = { ref, item, index };
-  }
-
-  updateItem = (key, isViewable) => {
-    if (!this.refs[key].ref) return;
-    this.refs[key].ref.setVisible(isViewable);
-  }
-
-  onViewItemChanged = (info) => {
-    info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
   }
 
   onEndReached = () => {
@@ -110,10 +95,10 @@ export class Board extends PureComponent {
           getItemLayout={(data, index) => (
             {length: 64, offset: 64 * index, index}
           )}
-          onViewItemChanged={this.onViewItemChanged}
           initialNumToRender={10}
           onEndReached={this.onEndReached}
           onEndReachedThreshold={0.5}
+          removeClippedSubviews
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>

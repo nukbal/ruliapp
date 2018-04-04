@@ -83,31 +83,16 @@ export default class CommentItem extends PureComponent {
   state = {
     height: 0,
     width: 0,
-    visible: false,
-  }
-
-  componentDidMount() {
-    this.layout = { width: 0, height: 0 };
-  }
-
-  setVisible = (visible) => {
-    if (this.state.visible !== visible) {
-      this.setState({ visible });
-    }
   }
 
   onLayout = ({ nativeEvent }) => {
     const { width, height } = nativeEvent.layout;
-    this.layout.width = width;
-    this.layout.height = height;
     this.setState({ width, height });
   }
 
-  layout = { width: 0, height: 0 };
-
   render() {
     const { user, comment, isChild, time, isBest, like, dislike, image, bestOnly } = this.props;
-    const { visible, width } = this.state;
+    const { width } = this.state;
     const maxWidth = isChild ? width - 32 : width - 24;
     const containerStyle = [isChild ? styles.childContainer : styles.container];
     if (bestOnly) containerStyle[1] = styles.bestContainer;
