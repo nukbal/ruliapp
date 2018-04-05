@@ -1,5 +1,6 @@
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
+import { Alert } from 'react-native';
 import { showLoading, hideLoading } from './loading';
 import { getComments } from './comments';
 import { parseDetail } from '../../utils/parser';
@@ -52,7 +53,11 @@ async function getDetailData(prefix, boardId, articleId) {
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
 
-  return parseDetail(htmlString);
+  try {
+    return parseDetail(htmlString);
+  } catch (e) {
+    Alert.alert('error', e.message);
+  }
 }
 
 export function* requestDetailSaga({ payload }) {
