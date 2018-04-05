@@ -95,8 +95,8 @@ export const parseComment = (htmlString) => {
 
 export const parseDetail = (htmlString) => {
   const title = extractTitle(htmlString);
-  const contentStartIndex = htmlString.indexOf('<div class="view_content"');
-  const contentEndIndex = htmlString.indexOf('<div class="notice_read_bottom');
+  const contentStartIndex = htmlString.lastIndexOf('<div class="view_content"');
+  const contentEndIndex = htmlString.lastIndexOf('<div class="notice_read_bottom');
   let html = htmlString.substring(contentStartIndex, contentEndIndex);
   const $ = loadHtml(html);
 
