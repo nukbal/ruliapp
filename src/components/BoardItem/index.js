@@ -6,7 +6,10 @@ import { listItem, labelText, border, primaryOpacity } from '../../styles/color'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: 75,
     marginBottom: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   itemContainer: {
     flex: 1,

@@ -93,7 +93,7 @@ export class Board extends PureComponent {
           refreshing={refreshing}
           onRefresh={this.onRefresh}
           getItemLayout={(data, index) => (
-            {length: 64, offset: 64 * index, index}
+            {length: 75, offset: 75 * index, index}
           )}
           initialNumToRender={10}
           onEndReached={this.onEndReached}
