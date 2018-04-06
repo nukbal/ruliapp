@@ -62,10 +62,10 @@ export default class BoardItem extends PureComponent {
     return (
       <TouchableOpacity style={styles.container} onPress={this.onPress} >
         <View style={styles.itemContainer}>
-          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.titleText} numberOfLines={1}>{title}</Text>
           <View style={styles.info}>
             <View style={styles.info}>
-              <Text style={styles.authorText}>{author}</Text>
+              <Text style={styles.authorText} numberOfLines={1}>{author}</Text>
             </View>
             <View style={styles.info}>
               <View style={styles.item}>
