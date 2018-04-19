@@ -10,12 +10,22 @@ describe('[ util parser ] board', () => {
     const processTime = Math.round((end[0] * 1000) + (end[1] / 1000000));
 
     // 50ms이내에 처리를 끝낼것
-    // expect(processTime).toBeLessThan(50);
+    expect(processTime).toBeLessThan(50);
 
     expect(json.items).toHaveLength(30);
 
-    expect(json).toEqual({
-      title: 'BEST - 일반유머',
+    expect(json.title).toEqual('BEST - 일반유머');
+    expect(json.items[0]).toEqual({
+      author: "팟타이꿍",
+      boardId: "300143",
+      comments: "36",
+      id: "37050529",
+      key: "best_300143_37050529",
+      likes: "23",
+      prefix: "best",
+      times: "22:29",
+      title: "넥슨, 넷마블 근황.jpg",
+      views: "4977",
     });
   });
 });
@@ -54,7 +64,7 @@ describe('[ util parser ] detail', () => {
       likes: '46',
       dislikes: '0',
       title: '컨셉러',
-      reference: undefined,
+      reference: null,
     });
   });
 
@@ -86,7 +96,14 @@ describe('[ util parser ] detail', () => {
       likes: '46',
       dislikes: '0',
       title: '밀덕이라도 덕밍아웃을 조심해야하는 썰.',
-      reference: undefined,
+      reference: null,
     });
+  });
+
+  it('삭제된 계시물', () => {
+    const html = fs.readFileSync('./src/utils/__test__/html/delete_detail.html', 'utf-8');
+    try {
+      const json = parseDetail(html);
+    } catch (e) {}
   });
 });
