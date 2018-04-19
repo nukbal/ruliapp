@@ -92,9 +92,9 @@ describe('[ util parser ] detail', () => {
           type: 'image',
         },
       ],
-      comments: '6',
-      likes: '46',
-      dislikes: '0',
+      comments: '21',
+      likes: '71',
+      dislikes: '2',
       title: '밀덕이라도 덕밍아웃을 조심해야하는 썰.',
       reference: null,
     });

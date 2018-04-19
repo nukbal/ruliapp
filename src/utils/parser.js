@@ -129,9 +129,14 @@ export const parseDetail = (htmlString) => {
   const reference = $.querySelector('div.source_url a');
   if (reference) contents.unshift({ type: 'reference', key: 'ref', content: reference });
 
-  const likes = null;
-  const dislikes = null;
-  const comments = null;
+  const likeIdx = htmlString.indexOf('class="like_value">');
+  const likes = htmlString.substring(likeIdx + 19, htmlString.indexOf('<', likeIdx));
+
+  const disIdx = htmlString.indexOf('class="dislike_value">', likeIdx);
+  const dislikes = disIdx > 0 ? htmlString.substring(disIdx + 22, htmlString.indexOf('<', disIdx)) : null;
+
+  const commentIdx = htmlString.indexOf('class="reply_count">', disIdx);
+  const comments = commentIdx > 0 ? htmlString.substring(commentIdx + 20, htmlString.indexOf('<', commentIdx)) : null;
 
   const commentStartIndex = htmlString.indexOf('<div class="board_bottom"');
   const commentEndIndex = htmlString.indexOf('<!-- board_bottom end');
