@@ -39,7 +39,7 @@ export async function getComments({ prefix, boardId, articleId }) {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Accept-Encoding': 'gzip, deflate',
       referer: `https://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}`,
-      'User-Agent': 'Mozilla/5.0',
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     }
   };
 

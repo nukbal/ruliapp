@@ -29,12 +29,6 @@ export default class LazyImage extends PureComponent {
   }
 
   onLoad = ({ nativeEvent }) => {
-    if (!nativeEvent.width || !nativeEvent.height) {
-      Image.getSize(this.props.source.uri, (width, height) => {
-        this.setImageSize({ width, height });
-      });
-      return;
-    }
     this.setImageSize(nativeEvent);
   }
 
@@ -67,15 +61,13 @@ export default class LazyImage extends PureComponent {
   render() {
     const { navigator, source } = this.props;
     return (
-      <Lightbox navigator={navigator}>
-        <FastImage
-          style={[styles.ImageContent, this.state]}
-          source={source}
-          onLoad={this.onLoad}
-          onLayout={this.onLayout}
-          resizeMode="contain"
-        />
-      </Lightbox>
+      <FastImage
+        style={[styles.ImageContent, this.state]}
+        source={source}
+        onLoad={this.onLoad}
+        onLayout={this.onLayout}
+        resizeMode="contain"
+      />
     );
   }
 }

@@ -6,7 +6,10 @@ import { listItem, labelText, border, primaryOpacity } from '../../styles/color'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: 75,
     marginBottom: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   itemContainer: {
     flex: 1,
@@ -46,25 +49,6 @@ const styles = StyleSheet.create({
 });
 
 export default class BoardItem extends PureComponent {
-  state = {
-    visible: true,
-  }
-
-  componentDidMount() {
-    this.layout = { width: 0, height: 0 };
-  }
-
-  setVisible = (visible) => {
-    if (this.state.visible !== visible) {
-      this.setState({ visible });
-    }
-  }
-
-  onLayout = ({ nativeEvent }) => {
-    this.layout.width = nativeEvent.layout.width;
-    this.layout.height = nativeEvent.layout.height;
-  }
-
   onPress = () => {
     const { onPress, id, title, prefix, boardId } = this.props;
     if (!onPress) return;
@@ -72,23 +56,16 @@ export default class BoardItem extends PureComponent {
     onPress(id, title, prefix, boardId);
   }
 
-  layout = { width: 0, height: 0 };
-
   render() {
     const { title, comments, author, like, views, times, likes } = this.props;
 
-    if (this.state.visibility === false) {
-      const { width, height } = this.layout;
-      return ( <View style={{ width, height }} /> )
-    }
-
     return (
-      <TouchableOpacity onLayout={this.onLayout} style={styles.container} onPress={this.onPress} >
+      <TouchableOpacity style={styles.container} onPress={this.onPress} >
         <View style={styles.itemContainer}>
-          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.titleText} numberOfLines={1}>{title}</Text>
           <View style={styles.info}>
             <View style={styles.info}>
-              <Text style={styles.authorText}>{author}</Text>
+              <Text style={styles.authorText} numberOfLines={1}>{author}</Text>
             </View>
             <View style={styles.info}>
               <View style={styles.item}>

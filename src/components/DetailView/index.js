@@ -55,10 +55,6 @@ export default class DetailView extends PureComponent {
     loading: false,
   }
 
-  componentDidMount() {
-    this.refs = {};
-  }
-
   onPressShare = () => {
     const { boardId, articleId, prefix } = this.props;
     Share.share({ url: `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}` });
@@ -67,35 +63,14 @@ export default class DetailView extends PureComponent {
   renderItem = (row) => {
     const { item } = row;
     return (
-      <Contents
-        ref={(ref) => { this.addRefs(ref, row); }}
-        {...item}
-      />
+      <Contents {...item} />
     );
-  }
-
-  addRefs = (ref, { item, index }) => {
-    this.refs[item.key] = { ref, item, index };
-  }
-
-  updateItem = (key, isViewable) => {
-    if (!this.refs[key]) return;
-    if (!this.refs[key].ref) return;
-    this.refs[key].ref.setVisible(isViewable);
-  }
-
-  onViewItemChanged = (info) => {
-    info.changed.map(({ key, isViewable }) => { this.updateItem(key, isViewable); });
   }
 
   renderComment = (isBest) => (row) => {
     const { item } = row;
     return (
-      <CommentItem
-        ref={(ref) => { this.addRefs(ref, row); }}
-        {...item}
-        bestOnly={isBest}
-      />
+      <CommentItem {...item} bestOnly={isBest} />
     );
   }
 
@@ -137,8 +112,6 @@ export default class DetailView extends PureComponent {
     }
   }
 
-  refs = {};
-
   render() {
     const {
       title,
@@ -160,8 +133,8 @@ export default class DetailView extends PureComponent {
         renderSectionHeader={this.renderSectionHeader}
         renderSectionFooter={this.renderSectionFooter}
         sections={sections}
-        onViewableItemsChanged={this.onViewItemChanged}
         stickySectionHeadersEnabled={false}
+        removeClippedSubviews
       />
     );
   }

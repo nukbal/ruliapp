@@ -12,49 +12,31 @@ const parseCommentRow = (nodes) => {
     const item = nodes[i];
     const row = {};
 
-    const userNode = item.children[1].children[1];
-    const commentNode = item.children[3];
+    const userNode = item.childNodes[1].childNodes[1];
+    const commentNode = item.childNodes[3];
   
-    row.id = item.attribs.id.replace('ct_', '');
-    row.isChild = item.attribs.class.indexOf('child') !== -1;
+    row.id = item.attributes.id.replace('ct_', '');
+    row.isChild = item.attributes.class.indexOf('child') !== -1;
 
-    for (let j = 0, clen = commentNode.children[1].children.length; j < clen; j++) {
-      const cItem = commentNode.children[1].children[j];
-      if (cItem.name === 'span' && cItem.attribs.class === 'text' && cItem.children.length) {
-        if (cItem.children[0].type === 'text') {
-          row.comment = cItem.children[0].data.trim();
-        } else {
-          row.comment = cItem.children[0].children[0].data;
-        }
-      } else if (cItem.name === 'img') {
-        row.image = cItem.attribs.src;
-      } else if (cItem.name === 'span' && cItem.attribs.class === 'icon_best') {
-        row.isBest = true;
-      }
-    }
-    
-    if (row.isChild) {
-      row.user = {
-        name: userNode.children[3].children[1].children[0].children[0].data.trim(),
-        id: userNode.children[5].attribs.value,
-      };
-      const infoNode = commentNode.children[1].children[commentNode.children[1].children.length - 2];
-      row.time = infoNode.children[3].children[0].data.trim();
-      row.like = infoNode.children[11].children[5].children[0].data.trim();
-      row.dislike = infoNode.children[15].children[5].children[0].data.trim();
+    row.user = {
+      name: item.querySelector('div.nick').text.trim(),
+      id: item.querySelector('input.member_srl').attributes.value,
+    };
 
-    } else {
-      row.user = {
-        name: userNode.children[1].children[1].children[0].children[0].data.trim(),
-        id: userNode.children[3].attribs.value,
-      };
+    row.comment = item.querySelector('span.text').text;
 
-      const infoNode = item.children[5].children[1];
-      row.time = infoNode.children[1].children[0].data.trim();
-      row.like = infoNode.children[3].children[3].children[0].data.trim();
-      row.dislike = infoNode.children[5].children[3].children[0].data.trim();
+    const image = item.querySelector('img');
+    if (image) {
+      row.image = image.attributes.src;
     }
 
+    if (item.querySelector('span.icon_best')) {
+      row.isBest = true;
+    }
+
+    row.time = item.querySelector('span.time').text.trim();
+    row.like = item.querySelector('button.btn_like').text.trim();
+    row.dislike = item.querySelector('button.btn_dislike').text.trim();
     row.key = row.id;
   
     result.push(row);
@@ -65,41 +47,35 @@ const parseCommentRow = (nodes) => {
 const formatContentNode = (item, key) => {
   let type;
   let content;
-  if (item.type === 'tag') {
-    if (item.name === 'img') {
+  if (item.tagName) {
+    if (item.tagName === 'img') {
       type = 'image';
-      content = item.attribs.src;
-    } else if (item.name === 'iframe') {
+      content = item.attributes.src;
+    } else if (item.tagName === 'iframe') {
       type = 'embed';
-      content = item.attribs.src;
-    } else if (item.name === 'a' && item.children[0].name === 'img') {
+      content = item.attributes.src;
+    } else if (item.tagName === 'a' && item.childNodes.length && item.childNodes[0].tagName === 'img') {
       type = 'image';
-      content = item.children[0].attribs.src;
-    } else if (item.name === 'a') {
+      content = item.childNodes[0].attributes.src;
+    } else if (item.tagName === 'a') {
       type = 'link';
-      content = item.attribs.href;
-    } else if (['b', 'strong', 'span'].indexOf(item.name) !== -1 && item.children.length) {
-      const child = item.children[0];
-      if (child.type === 'text') {
+      content = item.attributes.href;
+    } else if (['b', 'strong', 'span'].indexOf(item.tagName) !== -1 && item.childNodes.length) {
+      const child = item.childNodes[0];
+      if (child.tagName === 'text') {
         const text = child.data && child.data.trim();
         if (text) {
           type = 'text';
           content = text;
         }
-      } else if (child.children.length && child.children[0].type === 'text') {
-        const text = child.children[0].data && child.children[0].data.trim();
-        if (text) {
-          type = 'text';
-          content = text;
-        }
+      } else if (child.rawText) {
+        type = 'text';
+        content = child.rawText.replace('&nbsp;', '');
       }
     }
-  } else if (item.type === 'text') {
-    const text = item.data.trim();
-    if (text) {
-      type = 'text';
-      content = text;
-    }
+  } else if (item.rawText) {
+    type = 'text';
+    content = item.rawText.replace('&nbsp;', '');
   }
 
   if (type && content) {
@@ -109,8 +85,8 @@ const formatContentNode = (item, key) => {
 
 export const parseComment = (htmlString) => {
   const $ = loadHtml(htmlString);
-  const bestCommentList = parseCommentRow($('table.comment_table.best tr'));
-  const commentList = parseCommentRow($('table.comment_table:not(.best) tr'));
+  const bestCommentList = parseCommentRow($.querySelectorAll('table.comment_table.best tr'));
+  const commentList = parseCommentRow($.querySelectorAll('.comment_view.normal tr'));
   return {
     commentList,
     bestCommentList,
@@ -119,31 +95,26 @@ export const parseComment = (htmlString) => {
 
 export const parseDetail = (htmlString) => {
   const title = extractTitle(htmlString);
-  const contentStartIndex = htmlString.indexOf('<div class="view_content"');
-  const contentEndIndex = htmlString.indexOf('<div class="notice_read_bottom');
+  const contentStartIndex = htmlString.lastIndexOf('<div class="view_content"');
+  const contentEndIndex = htmlString.lastIndexOf('<div class="notice_read_bottom');
   let html = htmlString.substring(contentStartIndex, contentEndIndex);
-  html = html.replace('&nbsp;', '').replace('<p></p>', '');
   const $ = loadHtml(html);
 
-  let _node = $('.view_content');
+  let _node = $.querySelector('.view_content').removeWhitespace();
 
-  if (_node.find('.view_content').length > 0) {
-    _node = _node.find('.view_content');
-  }
-
-  const contentsNodes = _node[0].childNodes;
+  const contentsNodes = _node.childNodes;
   const contentsLength = contentsNodes.length;
 
   const contents = [];
   for (let i = 0; i < contentsLength; i++) {
     const item = contentsNodes[i];
     let result;
-    if (item.type === 'tag' && item.name === 'br') continue;
+    if (item.tagName === 'br') continue;
 
-    if (item.type === 'tag' && (item.name === 'p' || item.name === 'div')) {
-      for (let j = 0, len = item.children.length; j < len; j++) {
-        const child = item.children[j];
-        if (child.type === 'tag' && child.name === 'br') continue;
+    if (item.tagName === 'p' || item.tagName === 'div') {
+      for (let j = 0, len = item.childNodes.length; j < len; j++) {
+        const child = item.childNodes[j];
+        if (child.tagName === 'br') continue;
 
         let childResult = formatContentNode(child, `${i}_${j}`);
         if (childResult) contents.push(childResult);
@@ -155,12 +126,17 @@ export const parseDetail = (htmlString) => {
     if (result) contents.push(result);
   }
 
-  const reference = $('div.source_url a').attr('href');
+  const reference = $.querySelector('div.source_url a');
   if (reference) contents.unshift({ type: 'reference', key: 'ref', content: reference });
 
-  const likes = $('span.like_value').text();
-  const dislikes = $('span.dislike_value').text();
-  const comments = $('div.comment_count strong.reply_count').text().trim();
+  const likeIdx = htmlString.indexOf('class="like_value">');
+  const likes = htmlString.substring(likeIdx + 19, htmlString.indexOf('<', likeIdx));
+
+  const disIdx = htmlString.indexOf('class="dislike_value">', likeIdx);
+  const dislikes = disIdx > 0 ? htmlString.substring(disIdx + 22, htmlString.indexOf('<', disIdx)) : null;
+
+  const commentIdx = htmlString.indexOf('class="reply_count">', disIdx);
+  const comments = commentIdx > 0 ? htmlString.substring(commentIdx + 20, htmlString.indexOf('<', commentIdx)) : null;
 
   const commentStartIndex = htmlString.indexOf('<div class="board_bottom"');
   const commentEndIndex = htmlString.indexOf('<!-- board_bottom end');
@@ -181,55 +157,22 @@ export const parseDetail = (htmlString) => {
 
 
 const formatBoardRow = (nodes) => {
-  const length = nodes.children.length;
+  const length = nodes.childNodes.length;
   const result = {};
-  for (let i = 0; i < length; i++) {
-    const item = nodes.children[i];
-    if (item.type !== 'tag') continue;
+  const subject = nodes.querySelector('td.subject a');
+  const link = subject.attributes.href.replace('http://bbs.ruliweb.com/', '');
 
-    if (['board_name', 'divsn'].indexOf(item.attribs.class) !== -1) {
-      result.type = item.children[0].data;
-    } else if (item.attribs.class.indexOf('subject') !== -1) {
-      let subject = item.children[1];
-      let comment = item.children[3];
-      if (subject.attribs.class === 'relative') {
-        subject = item.children[1].children[1];
-        let flag = true;
-        for (let j = 0, len = item.children[1].children.length; j < len; j++) {
-          if (item.children[1].children[j].name === 'span') {
-            comment = item.children[1].children[j];
-            flag = false;
-            break;
-          }
-        }
-        if (flag) comment = null;
-      }
-      const link = subject.attribs.href.replace('http://bbs.ruliweb.com/', '');
-      const id = link.substring(link.lastIndexOf('/') + 1, link.length);
-      const prefix = link.substring(0, link.indexOf('/'));
-      const boardId = link.substring(link.indexOf('board/') + 6, link.indexOf('/read'));
-  
-      result.title = subject.children[0].data;
-      if (comment) {
-        result.comments = comment.children[1].children[0].data;
-      } else {
-        result.comments = 0;
-      }
-      result.prefix = prefix;
-      result.boardId = boardId;
-      result.id = id;
-    } else if (item.attribs.class.indexOf('writer') !== -1) {
-      result.author = item.children[0].data.trim();
-    } else if (item.attribs.class.indexOf('recomd') !== -1) {
-      result.likes = item.children[0].data.trim();
-    } else if (item.attribs.class.indexOf('hit') !== -1) {
-      result.views = item.children[0].data.trim();
-    } else if (item.attribs.class.indexOf('time') !== -1) {
-      result.times = item.children[0].data.trim();
-    } else if (item.attribs.class.indexOf('id') !== -1) {
-      result.id = item.children[0].data.trim();
-    }
-  }
+  result.id = link.substring(link.lastIndexOf('/') + 1, link.length);
+  result.title = subject.rawText.trim();
+  result.prefix = link.substring(0, link.indexOf('/'));
+  result.boardId = link.substring(link.indexOf('board/') + 6, link.indexOf('/read'));
+
+  const comments = nodes.querySelector('span.num');
+  if (comments) result.comments = comments.text;
+  result.author = nodes.querySelector('td.writer').text;
+  result.likes = nodes.querySelector('td.recomd').text;
+  result.views = nodes.querySelector('td.hit').text;
+  result.times = nodes.querySelector('td.time').text;
 
   result.key = `${result.prefix}_${result.boardId}_${result.id}`;
   return result;
@@ -243,7 +186,7 @@ export const parseBoardList = (htmlString, page) => {
   const html = htmlString.substring(startIndex, endIndex);
   const $ = loadHtml(html);
 
-  const boardNodes = $('table.board_list_table tbody tr:not(.notice)');
+  const boardNodes = $.querySelectorAll('table.board_list_table tbody tr');
   const length = boardNodes.length;
   const items = [];
   for(let i = 0; i < length; i++) {

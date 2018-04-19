@@ -1,5 +1,6 @@
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
+import { Alert } from 'react-native';
 import { showLoading, hideLoading } from './loading';
 import { getComments } from './comments';
 import { parseDetail } from '../../utils/parser';
@@ -43,16 +44,20 @@ async function getDetailData(prefix, boardId, articleId) {
     headers: {
       Accept: 'text/html',
       'Content-Type': 'text/html',
-      // 'Accept-Encoding': 'gzip, deflate',
+      'Accept-Encoding': 'gzip, deflate',
       Referer: targetUrl,
-      'User-Agent': 'Mozilla/5.0',
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     },
   };
   
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
 
-  return parseDetail(htmlString);
+  try {
+    return parseDetail(htmlString);
+  } catch (e) {
+    Alert.alert('error', '해당 글이 존재하지 않습니다.');
+  }
 }
 
 export function* requestDetailSaga({ payload }) {
