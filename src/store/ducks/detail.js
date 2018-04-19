@@ -56,7 +56,7 @@ async function getDetailData(prefix, boardId, articleId) {
   try {
     return parseDetail(htmlString);
   } catch (e) {
-    Alert.alert('error', e.message);
+    Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
 }
 
