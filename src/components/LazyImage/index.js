@@ -29,12 +29,6 @@ export default class LazyImage extends PureComponent {
   }
 
   onLoad = ({ nativeEvent }) => {
-    if (!nativeEvent.width || !nativeEvent.height) {
-      Image.getSize(this.props.source.uri, (width, height) => {
-        this.setImageSize({ width, height });
-      });
-      return;
-    }
     this.setImageSize(nativeEvent);
   }
 
