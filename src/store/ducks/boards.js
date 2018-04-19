@@ -41,9 +41,9 @@ async function getListData(prefix, boardId, page) {
     headers: {
       Accept: 'text/html',
       'Content-Type': 'text/html',
-      // 'Accept-Encoding': 'gzip, deflate',      
+      'Accept-Encoding': 'gzip, deflate',      
       Referer: targetUrl,
-      'User-Agent': 'Mozilla/5.0',
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     }
   };
 
