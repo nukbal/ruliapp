@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-navigation';
 import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
 
 import FullLoading from '../../components/FullLoading';
+import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading, updateBoardList } from '../../store/ducks/boards';
 import { darkBarkground, background, titleText, border, primary } from '../../styles/color';
@@ -79,16 +80,26 @@ export class Board extends PureComponent {
   }
 
   onRefresh = () => {
+    this.element.scrollToIndex({ index: 0, viewOffset: 0 });
     this.requestList();
   }
 
+  onSearch = (value) => {
+
+  }
+
+  element = null
+
   render() {
     const { list, info, refreshing } = this.props;
+    const header = refreshing ? null : (<SearchBar />);
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
+          ref={(ref) => { this.element = ref; }}
           data={list}
           renderItem={this.renderItem}
+          ListHeaderComponent={header}
           ListEmptyComponent={(<FullLoading />)}
           refreshing={refreshing}
           onRefresh={this.onRefresh}
