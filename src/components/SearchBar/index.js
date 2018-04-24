@@ -85,13 +85,14 @@ export default class SearchInput extends PureComponent {
   }
 
   onBlur = () => {
-    Animated.timing(this.inputAnimated, {
-      toValue: this.width,
-      duration: 200,
-    }).start(() => this.setState({ isFocused: false }));
+    this.dismiss(() => this.setState({ isFocused: false }));
   }
 
   onCancel = () => {
+    this.dismiss(() => this.setState({ isFocused: false, value: '' }));
+  }
+
+  dismiss = (callback) => {
     Animated.parallel([
       Animated.timing(this.inputAnimated, {
         toValue: this.width,
@@ -100,8 +101,15 @@ export default class SearchInput extends PureComponent {
       Animated.timing(this.cancelAnimated, {
         toValue: this.cancelWidth,
         duration: 200,
-      }).start(() => this.setState({ isFocused: false, value: '' })),
+      }).start(callback),
     ]);
+  }
+
+  onSubmit = ({ nativeEvent }) => {
+    if (this.props.onSubmit) {
+      this.props.onSubmit(this.state.value);
+    }
+    this.onBlur();
   }
   
   onClear = () => {
@@ -125,11 +133,12 @@ export default class SearchInput extends PureComponent {
             ref={(ref) => { this.element = ref; }}
             style={[styles.textInput, { width: this.inputAnimated }]}
             placeholder="검색하기"
-            placeholderColoe="#8E8E93"
+            placeholderTextColor="#8E8E93"
             autoCapitalize="none"
             clearButtonMode="while-editing"
             value={value}
             onChangeText={this.onChangeText}
+            onSubmitEditing={this.onSubmit}
             onFocus={this.onFocus}
             returnKeyType={this.props.returnKeyType || 'search'}
             keyboardType={this.props.keyboardType || 'default'}
