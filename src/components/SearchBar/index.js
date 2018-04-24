@@ -1,6 +1,17 @@
 import React, { PureComponent } from 'react';
-import { TextInput, View, StyleSheet, TouchableOpacity, Text, Animated } from 'react-native';
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Animated,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import { primary } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,39 +23,47 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   inputWrapper: {
-    flex: 10,
     flexWrap: 'wrap', 
     alignItems: 'flex-start',
     flexDirection:'row',
     padding: 8,
     borderRadius: 8,
-    backgroundColor: '#ccc',
+    backgroundColor: '#e5e5e5',
   },
   textInput: {
     flex: 1,
     paddingLeft: 8,
   },
   filter: {
-    flex: 2,
-    paddingTop: 8,
-    paddingBottom: 8,
     flexWrap: 'wrap', 
     alignItems: 'flex-start',
     flexDirection:'row',
     justifyContent: 'center',
+  },
+  cancelText: {
+    color: primary,
+    width: 65,
+    fontSize: 17,
+    padding: 8,
+    textAlign: 'center',
   }
 });
 
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+
 export default class SearchInput extends PureComponent {
   state = {
-    width: null,
     value : '',
     isFocused: false,
   }
 
-  onLayout = ({ nativeEvent }) => {
-    this.width = nativeEvent.layout.width - 16;
-    this.setState({width: new Animated.Value(this.width) });
+  componentDidMount() {
+    const { width } = Dimensions.get('window');
+    this.width = width - 16;
+    this.inputAnimated = new Animated.Value(this.width);
+
+    this.cancelWidth = 65;
+    this.cancelAnimated = new Animated.Value(this.cancelWidth);
   }
 
   onChangeText = (value) => {
@@ -53,26 +72,36 @@ export default class SearchInput extends PureComponent {
   }
 
   onFocus = () => {
-    Animated.timing(this.state.width, {
-      toValue: 0.8 * this.width,
-      duration: 500,
-    }).start(() => this.setState({ isFocused: true }));
+    Animated.parallel([
+      Animated.timing(this.inputAnimated, {
+        toValue: this.width - this.cancelWidth - 4,
+        duration: 200,
+      }).start(),
+      Animated.timing(this.cancelAnimated, {
+        toValue: 0,
+        duration: 200,
+      }).start(() => this.setState({ isFocused: true })),
+    ]);
   }
 
   onBlur = () => {
-    Animated.timing(this.state.width, {
+    Animated.timing(this.inputAnimated, {
       toValue: this.width,
-      duration: 500,
+      duration: 200,
     }).start(() => this.setState({ isFocused: false }));
   }
 
   onCancel = () => {
-    Animated.timing(this.state.width, {
-      toValue: this.width,
-      duration: 500,
-    }).start(() => {
-      this.setState({ isFocused: false, value: '' }); }
-    );
+    Animated.parallel([
+      Animated.timing(this.inputAnimated, {
+        toValue: this.width,
+        duration: 200,
+      }).start(),
+      Animated.timing(this.cancelAnimated, {
+        toValue: this.cancelWidth,
+        duration: 200,
+      }).start(() => this.setState({ isFocused: false, value: '' })),
+    ]);
   }
   
   onClear = () => {
@@ -81,29 +110,38 @@ export default class SearchInput extends PureComponent {
 
   element = null
   width = null
+  cancelWidth = null
+
+  inputAnimated = null
+  cancelAnimated = null
 
   render() {
-    const { value, isFocused, width } = this.state;
+    const { value, isFocused } = this.state;
     return(
-      <View style={styles.container} onLayout={this.onLayout}>
-        <Animated.View style={[styles.inputWrapper, { width }]}>
-          <Ionicons name="ios-search" size={17} />
-          <TextInput
+      <View style={styles.container}>
+        <Animated.View style={[styles.inputWrapper, { width: this.inputAnimated }]}>
+          <Ionicons name="ios-search" size={17} color="#8E8E93" />
+          <AnimatedTextInput
             ref={(ref) => { this.element = ref; }}
-            style={styles.textInput}
+            style={[styles.textInput, { width: this.inputAnimated }]}
             placeholder="검색하기"
+            placeholderColoe="#8E8E93"
             autoCapitalize="none"
             clearButtonMode="while-editing"
             value={value}
             onChangeText={this.onChangeText}
             onFocus={this.onFocus}
+            returnKeyType={this.props.returnKeyType || 'search'}
+            keyboardType={this.props.keyboardType || 'default'}
           />
         </Animated.View>
-        {isFocused && (
-          <TouchableOpacity style={styles.filter} onPress={this.onCancel}>
-            <Text>Cancel</Text>
-          </TouchableOpacity>
-        )}
+        { isFocused && (
+          <Animated.View style={{ left: this.cancelAnimated }}>
+            <TouchableOpacity style={styles.filter} onPress={this.onCancel}>
+              <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        ) }
       </View>
     );
   }

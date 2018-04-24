@@ -8,7 +8,7 @@ export const primaryOpacity = '#F6FBFE';
 
 export const border = '#3d3d3d';
 
-export const darkBarkground = '#eeeeee';
+export const darkBarkground = '#F8F8F8';
 
 export const listItem = 'white';
 
