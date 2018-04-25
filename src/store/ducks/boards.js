@@ -11,13 +11,14 @@ export const actionType = {
   UPDATE_BOARD_LIST_DONE: 'UPDATE_BOARD_LIST_DONE',
 };
 
-export function requestBoardList(prefix, boardId, page) {
+export function requestBoardList(prefix, boardId, page, keyword) {
   return {
     type: actionType.REQUEST_BOARD_LIST,
     payload: {
       prefix,
       boardId,
       page,
+      keyword,
     },
   }
 }
@@ -33,8 +34,8 @@ export function updateBoardList(prefix, boardId, page) {
   }
 }
 
-async function getListData(prefix, boardId, page) {
-  const targetUrl = `https://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}`;
+async function getListData({ prefix, boardId, page, keyword }) {
+  const targetUrl = `https://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}${keyword ? `&search_type=subject&search_key=${keyword}` : ''}`;
 
   const config = {
     method: 'GET',
@@ -54,8 +55,7 @@ async function getListData(prefix, boardId, page) {
 }
 
 export function* updateBoard({ payload }) {
-  const { prefix, boardId, page } = payload;
-  const json = yield call(getListData, prefix, boardId, page);
+  const json = yield call(getListData, payload);
 
   yield put({
     type: actionType.UPDATE_BOARD_LIST_DONE,
@@ -64,8 +64,7 @@ export function* updateBoard({ payload }) {
 }
 
 export function* requestBoard({ payload }) {
-  const { prefix, boardId, page } = payload;
-  const json = yield call(getListData, prefix, boardId, page);
+  const json = yield call(getListData, payload);
 
   yield put({
     type: actionType.REQUEST_BOARD_LIST_DONE,
@@ -86,7 +85,7 @@ export const getBoardList = createSelector(
     if (order && data) {
       return order.map(key => data[key]);
     }
-    return [];
+    return undefined;
   }
 );
 
@@ -109,8 +108,8 @@ const initState = {};
 
 const actionHandler = {
   [actionType.REQUEST_BOARD_LIST]: (state, { payload }) => {
-    const { prefix, boardId, page } = payload;
-    return { boardId, prefix, page, loading: true };
+    const { prefix, boardId, page, keyword } = payload;
+    return { boardId, prefix, page, keyword, loading: true };
   },
   [actionType.REQUEST_BOARD_LIST_DONE]: (state, { payload }) => {
     const { prefix, boardId, page } = state;

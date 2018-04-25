@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableHighlight, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { listItem, labelText, border, primaryOpacity } from '../../styles/color';
 
@@ -60,7 +60,7 @@ export default class BoardItem extends PureComponent {
     const { title, comments, author, like, views, times, likes } = this.props;
 
     return (
-      <TouchableOpacity style={styles.container} onPress={this.onPress} >
+      <TouchableHighlight style={styles.container} onPress={this.onPress} >
         <View style={styles.itemContainer}>
           <Text style={styles.titleText} numberOfLines={1}>{title}</Text>
           <View style={styles.info}>
@@ -83,7 +83,7 @@ export default class BoardItem extends PureComponent {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   }
 }
