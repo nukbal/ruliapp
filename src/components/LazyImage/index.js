@@ -7,6 +7,7 @@ import { darkBarkground } from '../../styles/color';
 const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
+    backgroundColor: '#EEEEEE',
   },
   placeholder: {
     height: 250,
@@ -66,7 +67,6 @@ export default class LazyImage extends PureComponent {
         source={source}
         onLoad={this.onLoad}
         onLayout={this.onLayout}
-        resizeMode="contain"
       />
     );
   }

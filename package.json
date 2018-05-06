@@ -9,7 +9,7 @@
     "lottie-react-native": "^2.3.2",
     "react": "^16.3.2",
     "react-native": "^0.55.3",
-    "react-native-fast-image": "^4.0.2",
+    "react-native-fast-image": "^4.0.12",
     "react-native-lightbox": "^0.7.0",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^1.5.11",

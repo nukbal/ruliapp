@@ -1,6 +1,7 @@
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { Alert } from 'react-native';
+import { actionType as boardAction } from './boards';
 import { showLoading, hideLoading } from './loading';
 import { getComments } from './comments';
 import { parseDetail } from '../../utils/parser';
@@ -66,10 +67,17 @@ export function* requestDetailSaga({ payload }) {
 
   const json = yield call(getDetailData, prefix, boardId, articleId);
 
-  yield put({
-    type: actionType.REQUEST_DETAIL_DONE,
-    payload: json,
-  });
+  if (json) {
+    yield put({
+      type: actionType.REQUEST_DETAIL_DONE,
+      payload: json,
+    });
+  } else {
+    yield put({
+      type: boardAction.DELETE_BOARD_ITEM,
+      payload: `${prefix}_${boardId}_${articleId}`,
+    });
+  }
 
   // yield put(hideLoading());
 }

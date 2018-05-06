@@ -9,6 +9,7 @@ export const actionType = {
   REQUEST_BOARD_LIST_DONE: 'REQUEST_BOARD_LIST_DONE',
   UPDATE_BOARD_LIST: 'UPDATE_BOARD_LIST',
   UPDATE_BOARD_LIST_DONE: 'UPDATE_BOARD_LIST_DONE',
+  DELETE_BOARD_ITEM: 'DELETE_BOARD_ITEM',
 };
 
 export function requestBoardList(prefix, boardId, page, keyword) {
@@ -130,7 +131,12 @@ const actionHandler = {
     const newOrder = mergeArray(order, items.map(item => item.key));
     const newData = Object.assign(data, arrayToObject(items, 'key'));
     return { data: newData, order: newOrder, ...rest };
-  }
+  },
+  // [actionType.DELETE_BOARD_ITEM]: (state, { payload }) => {
+  //   const { data, order, ...rest } = state;
+  //   delete data[payload];
+  //   const newOrder = 
+  // },
 };
 
 export default function reducer(state = initState, action = {}) {
