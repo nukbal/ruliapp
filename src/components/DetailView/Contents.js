@@ -24,23 +24,6 @@ const styles = StyleSheet.create({
 });
 
 export default class ContentItem extends PureComponent {
-  state = {
-    width: 0,
-    height: 0,
-    visible: false,
-  }
-
-  componentDidMount() {
-    this.layout = { width: 0, height: 0 };
-  }
-
-  onLayout = ({ nativeEvent }) => {
-    const { width, height } = nativeEvent.layout;
-    this.layout.width = width;
-    this.layout.height = height;
-    this.setState({ width, height });
-  }
-
   getElement = () => {
     const { type, content } = this.props;
     if (type === 'embed') {
@@ -52,15 +35,9 @@ export default class ContentItem extends PureComponent {
     }
   }
 
-  setVisible = (visible) => {
-    if (this.state.visible !== visible) {
-      this.setState({ visible });
-    }
-  }
-
   render() {
     return (
-      <View onLayout={this.onLayout} style={styles.container}>
+      <View style={styles.container}>
         {this.getElement()}
       </View>
     );

@@ -8,16 +8,12 @@ const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
     backgroundColor: '#EEEEEE',
-  },
-  placeholder: {
-    height: 250,
-    ...StyleSheet.absoluteFillObject,
   }
 });
 
 export default class LazyImage extends PureComponent {
 
-  state = { width: null, height: 250 };
+  state = { width: null, height: 200 };
 
   componentDidMount() {
     this.layout = { width: 0, height: 0 };
