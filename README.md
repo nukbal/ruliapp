@@ -1,6 +1,6 @@
 # ruliapp
 
-![게시판](image/board.png)
+<img src="image/board.png" height="350px">
 
 심심해서 만들어보는 루리웹
 
