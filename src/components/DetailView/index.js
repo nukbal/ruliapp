@@ -47,11 +47,24 @@ const styles = StyleSheet.create({
   },
 });
 
+const defaultContents = [
+  { type: 'placeholder', content: 'image' },
+  { type: 'placeholder', content: '85%' },
+  { type: 'placeholder', content: '78%' },
+  { type: 'placeholder', content: '50%' },
+];
+
+const defaultCommentList = [
+  { placeholder: true },
+  { placeholder: true },
+  { placeholder: true },
+  { placeholder: true },
+]
 
 export default class DetailView extends PureComponent {
   static defaultProps = {
-    contents: [],
-    commentList: [],
+    contents: defaultContents,
+    commentList: defaultCommentList,
     bestCommentList: [],
     loading: false,
   }
@@ -61,10 +74,21 @@ export default class DetailView extends PureComponent {
     Share.share({ url: `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}` });
   }
 
-  renderItem = (row) => {
-    const { item } = row;
+  renderItem = ({ item, index }) => {
+    const newStyle = []
+
+    if (item.style) {
+      newStyle.push(item.style);
+    }
+
+    if (index === 0) {
+      newStyle.push({ paddingTop: 16 });
+    } else if (index === this.props.contents.length - 1) {
+      newStyle.push({ paddingBottom: 16 });
+    }
+
     return (
-      <Contents {...item} />
+      <Contents {...item} style={newStyle} />
     );
   }
 
@@ -105,7 +129,7 @@ export default class DetailView extends PureComponent {
           </TouchableOpacity>
         </View>
       );
-    } else if (section.index === 1){
+    } else if (section.index === 1 && this.props.comments){
       const { comments } = this.props;
       return (
         <View style={styles.infoItem}>

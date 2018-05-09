@@ -81,16 +81,22 @@ const styles = StyleSheet.create({
 
 export default class CommentItem extends PureComponent {
   state = {
-    height: 0,
     width: 0,
   }
 
   onLayout = ({ nativeEvent }) => {
-    const { width, height } = nativeEvent.layout;
-    this.setState({ width, height });
+    const { width } = nativeEvent.layout;
+    this.setState({ width });
   }
 
   render() {
+    if (this.props.placeholder) {
+      return (
+        <View style={containerStyle}>
+        </View>
+      );
+    }
+
     const { user, comment, isChild, time, isBest, like, dislike, image, bestOnly } = this.props;
     const { width } = this.state;
     const maxWidth = isChild ? width - 32 : width - 24;

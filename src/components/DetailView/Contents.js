@@ -20,12 +20,24 @@ const styles = StyleSheet.create({
     color: 'black',
     justifyContent: 'flex-start',
   },
-
+  placeholder: {
+    width: '85%',
+    backgroundColor: '#EEEEEE',
+    height: 16,
+  },
+  placeholderImage: {
+    flex: 1,
+    height: 200,
+    backgroundColor: '#EEEEEE',
+  },
 });
 
 export default class ContentItem extends PureComponent {
   getElement = () => {
     const { type, content } = this.props;
+    if (type === 'placeholder') {
+      return <View style={content === 'image' ? styles.placeholderImage : [styles.placeholder, { width: content }]} />
+    }
     if (type === 'embed') {
       return <WebView style={{ flex: 1, height: 200 }} source={{ uri: content }} javaScriptEnabled />;
     } else if (type === 'image') {
@@ -36,8 +48,9 @@ export default class ContentItem extends PureComponent {
   }
 
   render() {
+    const { style } = this.props;
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, ...style]}>
         {this.getElement()}
       </View>
     );

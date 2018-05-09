@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
 
-import FullLoading from '../../components/FullLoading';
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading, updateBoardList } from '../../store/ducks/boards';
@@ -38,7 +37,7 @@ export class Board extends PureComponent {
   };
 
   static defaultProps = {
-    list: [{}],
+    list: [],
     refreshing: false,
   }
 
@@ -99,7 +98,6 @@ export class Board extends PureComponent {
           data={list}
           renderItem={this.renderItem}
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
-          ListEmptyComponent={(<FullLoading />)}
           refreshing={refreshing}
           onRefresh={this.onRefresh}
           getItemLayout={(data, index) => (
