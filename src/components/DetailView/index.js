@@ -76,7 +76,7 @@ export default class DetailView extends PureComponent {
 
   onRefresh = () => {
     const { commentList } = this.props;
-    if (commentList.filter(({ placeholder }) => !placeholder).length > 0) {
+    if (this.props.comments && commentList.length < this.props.comments) {
       this.props.refresh();
     }
   }
