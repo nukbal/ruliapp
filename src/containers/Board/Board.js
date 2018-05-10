@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { SafeAreaView } from 'react-navigation';
-import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
+import { StyleSheet, FlatList, StatusBar, View, RefreshControl } from 'react-native';
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
@@ -70,14 +70,14 @@ export class Board extends PureComponent {
 
   onEndReached = () => {
     const { list } = this.props;
-    if (list.filter(({ item }) => item).length > 0) {
-      this.updateList(this.props.info.page + 1);
+    if (list.filter(({ id }) => id).length > 0) {
+      this.updateList(this.props.info.page + 1, true);
     }
   }
 
   onRefresh = () => {
-    this.element.scrollToIndex({ index: 1, viewOffset: 0 });
-    this.updateList(1);
+    this.element.scrollToIndex({ index: 0, viewOffset: 0 });
+    this.updateList(1, false);
   }
 
   onSearch = (value) => {
@@ -86,11 +86,11 @@ export class Board extends PureComponent {
     this.props.requestBoard(prefix, boardId, 1, value);
   }
 
-  updateList = (page) => {
+  updateList = (page, isEnd) => {
     const { info, refreshing } = this.props;
     const { prefix, boardId } = info;
     if (!refreshing) {
-      this.props.updateBoard(prefix, boardId, page);
+      this.props.updateBoard(prefix, boardId, page, isEnd);
     }
   }
 
@@ -105,8 +105,13 @@ export class Board extends PureComponent {
           data={list}
           renderItem={this.renderItem}
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
-          refreshing={refreshing}
-          onRefresh={this.onRefresh}
+          refreshControl={
+            <RefreshControl
+              colors={["#9Bd35A", "#689F38"]}
+              refreshing={refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
           getItemLayout={(data, index) => (
             {length: 75, offset: 75 * index, index}
           )}
