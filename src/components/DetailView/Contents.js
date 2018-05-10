@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   text: {
     marginBottom: 6,
     color: 'black',
+    lineHeight: 21,
     justifyContent: 'flex-start',
   },
   placeholder: {

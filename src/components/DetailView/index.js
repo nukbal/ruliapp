@@ -74,6 +74,13 @@ export default class DetailView extends PureComponent {
     Share.share({ url: `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}` });
   }
 
+  onRefresh = () => {
+    const { commentList } = this.props;
+    if (commentList.filter(({ placeholder }) => !placeholder).length > 0) {
+      this.props.refresh();
+    }
+  }
+
   renderItem = ({ item, index }) => {
     const newStyle = []
 
@@ -156,7 +163,7 @@ export default class DetailView extends PureComponent {
     return (
       <SectionList
         refreshing={loading}
-        onRefresh={this.props.refresh}
+        onRefresh={this.onRefresh}
         renderSectionHeader={this.renderSectionHeader}
         renderSectionFooter={this.renderSectionFooter}
         sections={sections}
