@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   placeholder: {
-    width: '85%',
     backgroundColor: '#EEEEEE',
     height: 16,
   },

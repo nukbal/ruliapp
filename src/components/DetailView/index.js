@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
 
 const defaultContents = [
   { type: 'placeholder', content: 'image' },
-  { type: 'placeholder', content: '85%' },
-  { type: 'placeholder', content: '78%' },
+  { type: 'placeholder', content: '100%' },
+  { type: 'placeholder', content: '100%' },
   { type: 'placeholder', content: '50%' },
 ];
 
@@ -83,7 +83,8 @@ export default class DetailView extends PureComponent {
 
     if (index === 0) {
       newStyle.push({ paddingTop: 16 });
-    } else if (index === this.props.contents.length - 1) {
+    }
+    if (index === this.props.contents.length - 1) {
       newStyle.push({ paddingBottom: 16 });
     }
 

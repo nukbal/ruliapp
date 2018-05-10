@@ -24,13 +24,14 @@ export function requestBoardList(prefix, boardId, page, keyword) {
   }
 }
 
-export function updateBoardList(prefix, boardId, page) {
+export function updateBoardList(prefix, boardId, page, append) {
   return {
     type: actionType.UPDATE_BOARD_LIST,
     payload: {
       prefix,
       boardId,
       page,
+      append,
     },
   }
 }
@@ -61,6 +62,9 @@ export function* updateBoard({ payload }) {
   yield put({
     type: actionType.UPDATE_BOARD_LIST_DONE,
     payload: json,
+    meta: {
+      isAppend: payload.append,
+    },
   });
 }
 
@@ -110,7 +114,7 @@ const initState = {};
 const actionHandler = {
   [actionType.REQUEST_BOARD_LIST]: (state, { payload }) => {
     const { prefix, boardId, page, keyword } = payload;
-    return { boardId, prefix, page, keyword, loading: true };
+    return { boardId, prefix, page, keyword };
   },
   [actionType.REQUEST_BOARD_LIST_DONE]: (state, { payload }) => {
     const { prefix, boardId, page } = state;
@@ -124,12 +128,21 @@ const actionHandler = {
     const { page, ...rest } = state;
     return { page: payload.page, loading: true, ...rest };
   },
-  [actionType.UPDATE_BOARD_LIST_DONE]: (state, { payload }) => {
+  [actionType.UPDATE_BOARD_LIST_DONE]: (state, { payload, meta }) => {
     const { data, order, loading, ...rest } = state;
     const { items } = payload;
+  
+    let newOrder = mergeArray(order, items.map(item => item.key));
+    let newData = Object.assign(data, arrayToObject(items, 'key'));
 
-    const newOrder = mergeArray(order, items.map(item => item.key));
-    const newData = Object.assign(data, arrayToObject(items, 'key'));
+    if (meta.isAppend) {
+      newOrder = mergeArray(order, items.map(item => item.key));
+      newData = Object.assign(data, arrayToObject(items, 'key'));
+    } else {
+      newOrder = mergeArray(items.map(item => item.key), order);
+      newData = Object.assign(data, arrayToObject(items, 'key'));
+    }
+
     return { data: newData, order: newOrder, ...rest };
   },
   // [actionType.DELETE_BOARD_ITEM]: (state, { payload }) => {

@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
   },
 });
 
+const listPlaceholder = [];
+
+Array.from(Array(10), () => { listPlaceholder.push({ placeholder: true }); });
+
 export class Board extends PureComponent {
   static navigationOptions = ({ navigation }) => {
     const title = navigation.getParam('title', BoardList.BestHumorBoard.title);
@@ -37,7 +41,7 @@ export class Board extends PureComponent {
   };
 
   static defaultProps = {
-    list: [],
+    list: listPlaceholder,
     refreshing: false,
   }
 
@@ -65,11 +69,14 @@ export class Board extends PureComponent {
   }
 
   onEndReached = () => {
-    this.updateList(this.props.info.page + 1);
+    const { list } = this.props;
+    if (list.filter(({ item }) => item).length > 0) {
+      this.updateList(this.props.info.page + 1);
+    }
   }
 
   onRefresh = () => {
-    this.element.scrollToIndex({ index: 0, viewOffset: 0 });
+    this.element.scrollToIndex({ index: 1, viewOffset: 0 });
     this.updateList(1);
   }
 
