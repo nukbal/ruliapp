@@ -39,7 +39,7 @@ export default class ContentItem extends PureComponent {
       return <View style={content === 'image' ? styles.placeholderImage : [styles.placeholder, { width: content }]} />
     }
     if (type === 'embed') {
-      return <WebView style={{ flex: 1, height: 200 }} source={{ uri: content }} javaScriptEnabled />;
+      return <WebView style={styles.placeholderImage} source={{ uri: content }} javaScriptEnabled />;
     } else if (type === 'image') {
       return <LazyImage source={{ uri: content }} fitScreen />;
     } else {

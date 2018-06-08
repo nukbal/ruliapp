@@ -37,8 +37,7 @@ export function updateComment(prefix, boardId, articleId) {
 
 async function getDetailData(prefix, boardId, articleId) {
   const targetUrl =
-    `https://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}?search_type=name&search_key=%24%24`;
-
+    `http://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}?search_type=name&search_key=%2F%2F%2F`;
   const config = {
     method: 'GET',
     credentials: 'include',
@@ -50,11 +49,13 @@ async function getDetailData(prefix, boardId, articleId) {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     },
   };
-  
-  const response = await fetch(targetUrl, config);
-  const htmlString = await response.text();
+
+  console.log(targetUrl);
 
   try {
+    const response = await fetch(targetUrl, config);
+    const htmlString = await response.text();
+
     return parseDetail(htmlString);
   } catch (e) {
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
@@ -84,6 +85,7 @@ export function* requestDetailSaga({ payload }) {
 
 export function* updateCommentSaga({ payload }) {
   const json = yield call(getComments, payload);
+  if (!json) return;
 
   yield put({
     type: actionType.UPDATE_COMMENT_DONE,

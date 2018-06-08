@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { NavigationActions, SafeAreaView } from 'react-navigation';
 import BoardList from '../../config/BoardList';
 
@@ -30,11 +30,11 @@ export default class Drawer extends PureComponent {
       <SafeAreaView style={styles.wrapper}>
         <ScrollView>
           {Object.keys(BoardList).map(key => (
-            <TouchableOpacity key={key} onPress={this.onPressBoard(BoardList[key])}>
+            <TouchableWithoutFeedback key={key} onPress={this.onPressBoard(BoardList[key])}>
               <View style={styles.listItem}>
                 <Text>{BoardList[key].title}</Text>
               </View>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
           ))}
         </ScrollView>
       </SafeAreaView>

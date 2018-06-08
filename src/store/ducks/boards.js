@@ -37,7 +37,7 @@ export function updateBoardList(prefix, boardId, page, append) {
 }
 
 async function getListData({ prefix, boardId, page, keyword }) {
-  const targetUrl = `https://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}${keyword ? `&search_type=subject&search_key=${keyword}` : ''}`;
+  const targetUrl = `http://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}${keyword ? `&search_type=subject&search_key=${keyword}` : ''}`;
 
   const config = {
     method: 'GET',
@@ -50,14 +50,19 @@ async function getListData({ prefix, boardId, page, keyword }) {
     }
   };
 
-  const response = await fetch(targetUrl, config);
-  const htmlString = await response.text();
-
-  return parseBoardList(htmlString, page);
+  try {
+    const response = await fetch(targetUrl, config);
+    const htmlString = await response.text();
+  
+    return parseBoardList(htmlString, page);
+  } catch(e) {
+    return null;
+  }
 }
 
 export function* updateBoard({ payload }) {
   const json = yield call(getListData, payload);
+  if (!json) return;
 
   yield put({
     type: actionType.UPDATE_BOARD_LIST_DONE,
@@ -70,6 +75,7 @@ export function* updateBoard({ payload }) {
 
 export function* requestBoard({ payload }) {
   const json = yield call(getListData, payload);
+  if (!json) return;
 
   yield put({
     type: actionType.REQUEST_BOARD_LIST_DONE,

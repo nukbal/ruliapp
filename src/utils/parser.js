@@ -57,6 +57,7 @@ const formatContentNode = (item, key) => {
     } else if (item.tagName === 'a' && item.childNodes.length && item.childNodes[0].tagName === 'img') {
       type = 'image';
       content = item.childNodes[0].attributes.src;
+      content = content.indexOf('//') === 0 ? content.replace('//', 'http://') : content;
     } else if (item.tagName === 'a') {
       type = 'link';
       content = item.attributes.href;

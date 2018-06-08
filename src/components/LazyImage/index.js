@@ -1,21 +1,22 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, Image, View, Text } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import Lightbox from 'react-native-lightbox';
+import { StyleSheet, Image, View } from 'react-native';
+// import FastImage from 'react-native-fast-image';
 import { darkBarkground } from '../../styles/color';
 
 const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
     backgroundColor: '#EEEEEE',
+    height: 200,
   }
 });
 
 export default class LazyImage extends PureComponent {
 
-  state = { width: null, height: 200 };
+  state = { width: null, height: null };
 
   componentDidMount() {
+    Image.prefetch(this.props.source.uri);
     this.layout = { width: 0, height: 0 };
   }
 
@@ -23,16 +24,10 @@ export default class LazyImage extends PureComponent {
     const { width, height } = nativeEvent.layout;
     this.layout.width = width;
     this.layout.height = height;
+    Image.getSize(this.props.source.uri, this.setImageSize);
   }
 
-  onLoad = ({ nativeEvent }) => {
-    this.setImageSize(nativeEvent);
-  }
-
-  setImageSize = (layout) => {
-    const w = layout.width;
-    const h = layout.height;
-
+  setImageSize = (w, h) => {
     let { height, width } = this.layout;
 
     if (this.props.fitScreen) {
@@ -56,13 +51,16 @@ export default class LazyImage extends PureComponent {
   }  
 
   render() {
-    const { navigator, source } = this.props;
+    const { source } = this.props;
+    if (this.state.width === null) {
+      return <View style={styles.ImageContent} onLayout={this.onLayout} />;
+    }
     return (
-      <FastImage
-        style={[styles.ImageContent, this.state]}
+      <Image
+        style={this.state}
         source={source}
-        onLoad={this.onLoad}
-        onLayout={this.onLayout}
+        onPartialLoad={(e) => { console.log(e); }}
+        resizeMode="contain"
       />
     );
   }
