@@ -18,33 +18,28 @@ const styles = StyleSheet.create({
   text: {
     marginBottom: 6,
     color: 'black',
+    lineHeight: 21,
     justifyContent: 'flex-start',
   },
-
+  placeholder: {
+    backgroundColor: '#EEEEEE',
+    height: 16,
+  },
+  placeholderImage: {
+    flex: 1,
+    height: 200,
+    backgroundColor: '#EEEEEE',
+  },
 });
 
 export default class ContentItem extends PureComponent {
-  state = {
-    width: 0,
-    height: 0,
-    visible: false,
-  }
-
-  componentDidMount() {
-    this.layout = { width: 0, height: 0 };
-  }
-
-  onLayout = ({ nativeEvent }) => {
-    const { width, height } = nativeEvent.layout;
-    this.layout.width = width;
-    this.layout.height = height;
-    this.setState({ width, height });
-  }
-
   getElement = () => {
     const { type, content } = this.props;
+    if (type === 'placeholder') {
+      return <View style={content === 'image' ? styles.placeholderImage : [styles.placeholder, { width: content }]} />
+    }
     if (type === 'embed') {
-      return <WebView style={{ flex: 1, height: 200 }} source={{ uri: content }} javaScriptEnabled />;
+      return <WebView style={styles.placeholderImage} source={{ uri: content }} javaScriptEnabled />;
     } else if (type === 'image') {
       return <LazyImage source={{ uri: content }} fitScreen />;
     } else {
@@ -52,15 +47,10 @@ export default class ContentItem extends PureComponent {
     }
   }
 
-  setVisible = (visible) => {
-    if (this.state.visible !== visible) {
-      this.setState({ visible });
-    }
-  }
-
   render() {
+    const { style } = this.props;
     return (
-      <View onLayout={this.onLayout} style={styles.container}>
+      <View style={[styles.container, ...style]}>
         {this.getElement()}
       </View>
     );

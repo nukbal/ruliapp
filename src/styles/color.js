@@ -4,6 +4,8 @@ export const background = 'white';
 
 export const primary = '#1A70DC';
 
+export const primaryLight = '#2772DF';
+
 export const primaryOpacity = '#F6FBFE';
 
 export const border = '#3d3d3d';

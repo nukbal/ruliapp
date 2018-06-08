@@ -3,9 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { SafeAreaView } from 'react-navigation';
-import { StyleSheet, FlatList, StatusBar, View, Button } from 'react-native';
+import { StyleSheet, FlatList, StatusBar, View, RefreshControl } from 'react-native';
 
-import FullLoading from '../../components/FullLoading';
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading, updateBoardList } from '../../store/ducks/boards';
@@ -29,6 +28,10 @@ const styles = StyleSheet.create({
   },
 });
 
+const listPlaceholder = [];
+
+Array.from(Array(10), () => { listPlaceholder.push({ placeholder: true }); });
+
 export class Board extends PureComponent {
   static navigationOptions = ({ navigation }) => {
     const title = navigation.getParam('title', BoardList.BestHumorBoard.title);
@@ -38,7 +41,7 @@ export class Board extends PureComponent {
   };
 
   static defaultProps = {
-    list: [{}],
+    list: listPlaceholder,
     refreshing: false,
   }
 
@@ -66,12 +69,15 @@ export class Board extends PureComponent {
   }
 
   onEndReached = () => {
-    this.updateList(this.props.info.page + 1);
+    const { list } = this.props;
+    if (list.filter(({ id }) => id).length > 0) {
+      this.updateList(this.props.info.page + 1, true);
+    }
   }
 
   onRefresh = () => {
     this.element.scrollToIndex({ index: 0, viewOffset: 0 });
-    this.updateList(1);
+    this.updateList(1, false);
   }
 
   onSearch = (value) => {
@@ -80,11 +86,11 @@ export class Board extends PureComponent {
     this.props.requestBoard(prefix, boardId, 1, value);
   }
 
-  updateList = (page) => {
+  updateList = (page, isEnd) => {
     const { info, refreshing } = this.props;
     const { prefix, boardId } = info;
     if (!refreshing) {
-      this.props.updateBoard(prefix, boardId, page);
+      this.props.updateBoard(prefix, boardId, page, isEnd);
     }
   }
 
@@ -99,9 +105,13 @@ export class Board extends PureComponent {
           data={list}
           renderItem={this.renderItem}
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
-          ListEmptyComponent={(<FullLoading />)}
-          refreshing={refreshing}
-          onRefresh={this.onRefresh}
+          refreshControl={
+            <RefreshControl
+              colors={["#9Bd35A", "#689F38"]}
+              refreshing={refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
           getItemLayout={(data, index) => (
             {length: 75, offset: 75 * index, index}
           )}

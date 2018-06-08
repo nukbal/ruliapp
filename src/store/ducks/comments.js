@@ -42,18 +42,17 @@ export async function getComments({ prefix, boardId, articleId }) {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     }
   };
-
-  const response = await fetch('https://api.ruliweb.com/commentView', config);
-  const json = await response.json();
-
-  if (!json.success) {
-    return {
-      commentList: [],
-      bestCommentList: [],
+  try {
+    const response = await fetch('http://api.ruliweb.com/commentView', config);
+    const json = await response.json();
+  
+    if (!json.success) {
+      return null;
     }
+    return parseComment(json.view);
+  } catch(e) {
+    return null;
   }
-
-  return parseComment(json.view);
 }
 
 export function* requestBoard({ payload }) {

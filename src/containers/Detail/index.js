@@ -38,10 +38,6 @@ export class Detail extends PureComponent {
     ),
    });
 
-  static defaultProps = {
-    contents: [],
-  }
-
   componentDidMount() {
     const { params } = this.props.navigation.state;
     const { prefix, boardId } = params.board;
