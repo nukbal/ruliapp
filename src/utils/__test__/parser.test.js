@@ -3,7 +3,7 @@ import { parseDetail, parseBoardList } from '../parser';
 
 describe('[ util parser ] board', () => {
   it('', () => {
-    const html = fs.readFileSync('./src/utils/__test__/html/hit_board.html', 'utf-8');
+    const html = fs.readFileSync('./src/utils/__test__/html/hit_board.txt', 'utf-8');
     const start = process.hrtime();
     const json = parseBoardList(html);
     const end = process.hrtime(start);
@@ -32,7 +32,7 @@ describe('[ util parser ] board', () => {
 
 describe('[ util parser ] detail', () => {
   it('힛갤 1', () => {
-    const html = fs.readFileSync('./src/utils/__test__/html/hit_sample.html', 'utf-8');
+    const html = fs.readFileSync('./src/utils/__test__/html/hit_sample.txt', 'utf-8');
     const start = process.hrtime();
     const json = parseDetail(html);
     const end = process.hrtime(start);
@@ -69,7 +69,7 @@ describe('[ util parser ] detail', () => {
   });
 
   it('힛갤 2', () => {
-    const html = fs.readFileSync('./src/utils/__test__/html/hit_sample2.html', 'utf-8');
+    const html = fs.readFileSync('./src/utils/__test__/html/hit_sample2.txt', 'utf-8');
     const start = process.hrtime();
     const json = parseDetail(html);
     const end = process.hrtime(start);
@@ -101,7 +101,7 @@ describe('[ util parser ] detail', () => {
   });
 
   it('삭제된 계시물', () => {
-    const html = fs.readFileSync('./src/utils/__test__/html/delete_detail.html', 'utf-8');
+    const html = fs.readFileSync('./src/utils/__test__/html/delete_detail.txt', 'utf-8');
     try {
       const json = parseDetail(html);
     } catch (e) {}
