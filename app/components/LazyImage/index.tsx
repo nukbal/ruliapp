@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
-// import FastImage from 'react-native-fast-image';
-import { darkBarkground } from '../../styles/color';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -11,7 +9,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class LazyImage extends PureComponent {
+interface Props {
+  source: { uri: string };
+  fitScreen?: boolean;
+}
+
+export default class LazyImage extends PureComponent<Props> {
 
   state = { width: null, height: null };
 
@@ -24,7 +27,7 @@ export default class LazyImage extends PureComponent {
     const { width, height } = nativeEvent.layout;
     this.layout.width = width;
     this.layout.height = height;
-    Image.getSize(this.props.source.uri, this.setImageSize);
+    Image.getSize(this.props.source.uri, this.setImageSize, null);
   }
 
   setImageSize = (w, h) => {
@@ -48,7 +51,9 @@ export default class LazyImage extends PureComponent {
       height = Math.floor(h * ratio);
     }
     this.setState({ width, height });
-  }  
+  }
+
+  layout = { width: 0, height: 0 };
 
   render() {
     const { source } = this.props;
@@ -59,7 +64,6 @@ export default class LazyImage extends PureComponent {
       <Image
         style={this.state}
         source={source}
-        onPartialLoad={(e) => { console.log(e); }}
         resizeMode="contain"
       />
     );
