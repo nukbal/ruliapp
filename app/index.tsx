@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import createStores from './src/store';
-import Router from './src';
+import createStores from './store';
+import Router from './containers';
 
 let initialState = {};
 const store = createStores(initialState);

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "noEmit": true,
+    "strict": true,
+    "pretty": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "lib": [ "dom", "es2015", "es2016" ],
+    "types": ["node_modules/@types", "app/types"],
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "./node_modules/**",
+    "ios",
+    "android"
+  ]
+}
