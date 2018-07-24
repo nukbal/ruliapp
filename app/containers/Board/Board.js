@@ -7,8 +7,8 @@ import { StyleSheet, FlatList, StatusBar, View, RefreshControl } from 'react-nat
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
-import { getBoardList, requestBoardList, getBoardInfo, isBoardLoading, updateBoardList } from '../../store/ducks/boards';
-import { darkBarkground, background, titleText, border, primary } from '../../styles/color';
+import { getBoardList, getBoardInfo, isBoardLoading, Actions } from '../../store/ducks/boards';
+import { darkBarkground } from '../../styles/color';
 
 import BoardList from '../../config/BoardList';
 
@@ -128,8 +128,7 @@ export class Board extends PureComponent {
 
 function mapDispatchToProps(dispatch) {
   return {
-    requestBoard: bindActionCreators(requestBoardList, dispatch),
-    updateBoard: bindActionCreators(updateBoardList, dispatch),
+    requestBoard: bindActionCreators(Actions.request, dispatch),
   };
 }
 

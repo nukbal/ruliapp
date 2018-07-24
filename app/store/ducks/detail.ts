@@ -1,7 +1,7 @@
-import { put, call, takeLatest, take, race } from 'redux-saga/effects';
+import { put, call, takeLatest } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { Alert } from 'react-native';
-import { Actions as boardAction } from './boards';
+// import { Actions as boardAction } from './boards';
 // import { Actions as LoadingAction } from './loading';
 import { createAction, ActionsUnion } from '../helpers';
 import { getComments } from './comments';
@@ -9,26 +9,20 @@ import { parseDetail } from '../../utils/parser';
 
 /* Actions */
 
-export const REQUEST_DETAIL = 'REQUEST_DETAIL';
-export const REQUEST_DETAIL_DONE = 'REQUEST_DETAIL_DONE';
-export const UPDATE_COMMENT = 'UPDATE_COMMENT';
-export const UPDATE_COMMENT_DONE = 'UPDATE_COMMENT_DONE';
+export const REQUEST = 'detail/REQUEST';
+export const ADD = 'detail/ADD';
 
 export const Actions = {
-  requestDetail: (prefix: string, boardId: string, articleId: string) =>
-    createAction(REQUEST_DETAIL, { prefix, boardId, articleId }),
+  request: (prefix: string, boardId: string, articleId: string) =>
+    createAction(REQUEST, { prefix, boardId, articleId }),
 
-  updateComment: (prefix: string, boardId: string, articleId: string) =>
-    createAction(UPDATE_COMMENT, { prefix, boardId, articleId }),
-
-  requestDetailDone: (payload: any) => createAction(REQUEST_DETAIL_DONE, payload),
-  updateCommentDone: (payload: any) => createAction(UPDATE_COMMENT_DONE, payload),
+  add: (payload: any) => createAction(ADD, payload),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
 /* Selectors */
 
-export const getDetail = state => state.detail;
+export const getDetail = (state: any): DetailState => state.detail;
 
 export const getDetailInfo = createSelector(
   [getDetail],
@@ -37,7 +31,7 @@ export const getDetailInfo = createSelector(
 
 /* Sagas */
 
-async function getDetailData(prefix, boardId, articleId) {
+async function getDetailData(prefix: string, boardId: string, articleId: string) {
   const targetUrl =
     `http://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}?search_type=name&search_key=%2F%2F%2F`;
   const config = {
@@ -63,14 +57,14 @@ async function getDetailData(prefix, boardId, articleId) {
   }
 }
 
-export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.requestDetail>) {
+export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.request>) {
   const { prefix, boardId, articleId } = payload;
   // yield put(showLoading());
 
   const json = yield call(getDetailData, prefix, boardId, articleId);
 
   if (json) {
-    yield put(Actions.requestDetailDone(json));
+    yield put(Actions.add(json));
   } else {
     // yield put({
     //   type: boardAction.DELETE_BOARD_ITEM,
@@ -81,16 +75,8 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
   // yield put(hideLoading());
 }
 
-export function* updateCommentSaga({ payload }: ReturnType<typeof Actions.updateComment>) {
-  const json = yield call(getComments, payload);
-  if (!json) return;
-
-  yield put(Actions.requestDetailDone(json));
-}
-
 export const detailSaga = [
-  takeLatest(REQUEST_DETAIL, requestDetailSaga),
-  takeLatest(UPDATE_COMMENT, updateCommentSaga),
+  takeLatest(REQUEST, requestDetailSaga),
 ];
 
 /* Reducer */
@@ -99,25 +85,20 @@ export interface DetailState {
   readonly prefix?: string;
   readonly boardId?: string;
   readonly articleId?: string;
-  readonly loading?: boolean;
+  readonly loading: boolean;
   readonly commentList?: any[];
   readonly bestCommentList?: any[];
 }
 
-const initState: DetailState = {};
+const initState: DetailState = { loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
-    case REQUEST_DETAIL:
+    case REQUEST:
       const { prefix, boardId, articleId } = action.payload;
       return { boardId, prefix, articleId, loading: true };
-    case REQUEST_DETAIL_DONE:
-      return { ...state, ...action.payload };
-    case UPDATE_COMMENT:
-      return { ...state, loading: true };
-    case UPDATE_COMMENT_DONE:
-      const { payload } = action;
-      return { ...state, commentList: payload.commentList, bestCommentList: payload.bestCommentList };
+    case ADD:
+      return { ...state, ...action.payload, loading: false };
     default:
       return state;
   }

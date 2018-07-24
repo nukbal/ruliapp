@@ -9,12 +9,12 @@ const styles = StyleSheet.create({
   }
 });
 
-interface Props {
-  source: { uri: string };
-  fitScreen?: boolean;
-}
+// interface Props {
+//   source: { uri: string };
+//   fitScreen?: boolean;
+// }
 
-export default class LazyImage extends PureComponent<Props> {
+export default class LazyImage extends PureComponent {
 
   state = { width: null, height: null };
 

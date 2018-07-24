@@ -19,7 +19,7 @@ export type Actions = ActionsUnion<typeof Actions>;
 
 /* Selectors */
 
-export const getLoadingState = state => state.loading;
+export const getLoadingState = (state: any): LoadingState => state.loading;
 
 export const isFullLoading = createSelector(
   [getLoadingState],
