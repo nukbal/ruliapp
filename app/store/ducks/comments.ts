@@ -7,25 +7,21 @@ import { createAction, ActionsUnion } from '../helpers';
 /* Actions */
 
 export const REQUEST_COMMENTS = 'REQUEST_COMMENTS';
-export const REQUEST_COMMENTS_DONE = 'REQUEST_COMMENTS_DONE';
+export const ADD_COMMENTS = 'ADD_COMMENTS';
 export const UPDATE_COMMENTS = 'UPDATE_COMMENTS';
-export const UPDATE_COMMENTS_DONE = 'UPDATE_COMMENTS_DONE';
 
 export const Actions  = {
-  requestComment: (prefix: string, boardId: string, articleId: string, page?: number) =>
+  request: (prefix: string, boardId: string, articleId: string, page?: number) =>
     createAction(REQUEST_COMMENTS, { prefix, boardId, articleId, page }),
 
-  requestCommentDone: (payload: any) => createAction(REQUEST_COMMENTS_DONE, payload),
-
-  updateComment: (prefix: string, boardId: string, articleId: string, page?: number) =>
-    createAction(UPDATE_COMMENTS, { prefix, boardId, articleId, page }),
-
-  updateCommentDone: (payload: any) => createAction(UPDATE_COMMENTS_DONE, payload),
+  add: (payload: any) => createAction(ADD_COMMENTS, payload),
+  update: (payload: any) => createAction(UPDATE_COMMENTS, payload),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
 /* Sagas */
 
+// @ts-ignore
 export async function getComments({ prefix, boardId, articleId }) {
   const form = new FormData();
   form.append('page', 1);
@@ -61,7 +57,7 @@ export async function getComments({ prefix, boardId, articleId }) {
 
 /* selectors */
 
-export const getBoardState = state => state.boards;
+export const getBoardState = (state: any) => state.boards;
 
 export const getBoardList = createSelector(
   [getBoardState],
@@ -78,24 +74,28 @@ export const getBoardInfo = createSelector(
 
 /* reducers */
 
-const initState = {};
+export interface CommentState {
+  readonly boardId?: string;
+  readonly prefix?: string;
+  readonly articleId?: string;
+  readonly comments?: any[];
+  readonly loading: boolean;
+  readonly order?: string[];
+}
+
+const initState: CommentState = { loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
     case REQUEST_COMMENTS:
       const { prefix, boardId, articleId } = action.payload;
       return { boardId, prefix, articleId, loading: true };
-    case REQUEST_COMMENTS_DONE:
-      const order = action.payload.map(item => item.id);
-      const comments = arrayToObject(action.payload);
-      return { ...state, comments, order, loading: false };
+    case ADD_COMMENTS:
+      return { ...state, comments: action.payload, loading: false };
     case UPDATE_COMMENTS:
-      const listOrder = action.payload.map(item => item.id);
+      // const listOrder = action.payload.map((item: any) => item.id);
       const commentList = arrayToObject(action.payload);
-      const newOrder = order.concat(listOrder);
-      return { ...state, comments: Object.assign(comments, commentList), newOrder };
-    case UPDATE_COMMENTS_DONE:
-      return { ...state, loading: false };
+      return { ...state, comments: { ...state.comments, ...commentList }, loading: false };
     default:
       return state;
   }

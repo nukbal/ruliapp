@@ -7,29 +7,24 @@ import { createAction, ActionsUnion } from '../helpers';
 
 /* Actions */
 
-export const REQUEST_BOARD_LIST = 'REQUEST_BOARD_LIST';
-export const REQUEST_BOARD_LIST_DONE = 'REQUEST_BOARD_LIST_DONE';
-export const UPDATE_BOARD_LIST = 'UPDATE_BOARD_LIST';
-export const UPDATE_BOARD_LIST_DONE = 'UPDATE_BOARD_LIST_DONE';
-export const DELETE_BOARD_ITEM = 'DELETE_BOARD_ITEM';
+export const REQUEST = 'board/REQUEST';
+export const SET = 'board/SET';
+export const UPDATE = 'board/UPDATE';
+export const DELETE = 'board/DELETE';
 
 export const Actions = {
-  requestBoardList: (prefix, boardId, page, keyword) =>
-    createAction(REQUEST_BOARD_LIST, { prefix, boardId, page, keyword }),
+  request: (prefix: string, boardId: string, page: number, keyword: string) =>
+    createAction(REQUEST, { prefix, boardId, page, keyword }),
 
-  updateBoardList: (prefix, boardId, page, keyword) =>
-    createAction(UPDATE_BOARD_LIST, { prefix, boardId, page, keyword }),
-
-  requestBoardListDone: (payload: any) =>
-    createAction(REQUEST_BOARD_LIST_DONE, payload),
-
-  updateBoardListDone: (payload: any, meta: any) =>
-    createAction(UPDATE_BOARD_LIST_DONE, payload, meta),
+  set: (payload: any[]) => createAction(SET, payload),
+  update: (payload: any[]) => createAction(UPDATE, payload),
+  delete: (payload: any[]) => createAction(DELETE, payload),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
 /* Sagas */
 
+// @ts-ignore
 async function getListData({ prefix, boardId, page, keyword }) {
   const targetUrl = `http://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}${keyword ? `&search_type=subject&search_key=${keyword}` : ''}`;
 
@@ -54,34 +49,26 @@ async function getListData({ prefix, boardId, page, keyword }) {
   }
 }
 
-export function* updateBoard({ payload }: ReturnType<typeof Actions.updateBoardList>) {
+export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
   const json = yield call(getListData, payload);
   if (!json) return;
 
-  yield put(Actions.updateBoardListDone(json, { isAppend: payload.append }));
-}
-
-export function* requestBoard({ payload }: ReturnType<typeof Actions.requestBoardList>) {
-  const json = yield call(getListData, payload);
-  if (!json) return;
-
-  yield put(Actions.requestBoardListDone(json));
+  yield put(Actions.set(json));
 }
 
 export const boardSagas = [
-  takeLatest(REQUEST_BOARD_LIST, requestBoard),
-  throttle(250, UPDATE_BOARD_LIST, updateBoard),
+  throttle(250, REQUEST, requestBoard),
 ];
 
 /* selectors */
 
-export const getBoardState = state => state.boards;
+export const getBoardState = (state: any) => state.boards;
 
 export const getBoardList = createSelector(
   [getBoardState],
   ({ order, data }) => {
     if (order && data) {
-      return order.map(key => data[key]);
+      return order.map((key: string) => data[key]);
     }
     return undefined;
   }
@@ -104,42 +91,52 @@ export const isBoardLoading = createSelector(
 
 /* reducers */
 
-const initState = {};
+export interface BoardState {
+  readonly prefix?: string;
+  readonly boardId?: string;
+  readonly page?: number;
+  readonly param?: {
+    readonly keyword?: string;
+    readonly category?: string;
+  };
+  readonly loading: boolean;
+}
+
+const initState: BoardState = { loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
-    case REQUEST_BOARD_LIST:
+    case REQUEST: {
       const { prefix, boardId, page, keyword } = action.payload;
       return { boardId, prefix, page, keyword, loading: true };
-
-    case REQUEST_BOARD_LIST_DONE:
+    }
+    case SET: {
       // @ts-ignore
       const { title, items } = action.payload;
-      const order = items.map(item => item.key);
+      const order = items.map((item: any) => item.key);
       const data = arrayToObject(items, 'key');
-      return { ...state, title, data, order };
-
-    case UPDATE_BOARD_LIST:
-      return { ...state, page: action.payload.page, loading: true };
-
-    case UPDATE_BOARD_LIST_DONE:
+      return { ...state, title, data, order, loading: false };
+    }
+    case UPDATE: {
       const { payload, meta } = action;
       // @ts-ignore
       const { items } = payload;
     
-      let newOrder = mergeArray(order, items.map(item => item.key));
-      let newData = Object.assign(data, arrayToObject(items, 'key'));
+      // let newOrder = mergeArray(order, items.map(item => item.key));
+      // let newData = Object.assign(data, arrayToObject(items, 'key'));
 
-      if (meta.isAppend) {
-        newOrder = mergeArray(order, items.map(item => item.key));
-        newData = Object.assign(data, arrayToObject(items, 'key'));
-      } else {
-        newOrder = mergeArray(items.map(item => item.key), order);
-        newData = Object.assign(data, arrayToObject(items, 'key'));
-      }
+      // if (meta.isAppend) {
+      //   newOrder = mergeArray(order, items.map(item => item.key));
+      //   newData = Object.assign(data, arrayToObject(items, 'key'));
+      // } else {
+      //   newOrder = mergeArray(items.map(item => item.key), order);
+      //   newData = Object.assign(data, arrayToObject(items, 'key'));
+      // }
 
-      return { ...state, data: newData, order: newOrder, loading: false };
-    default:
+      return { ...state, loading: false };
+    }
+    default: {
       return state;
+    }
   }
 }
