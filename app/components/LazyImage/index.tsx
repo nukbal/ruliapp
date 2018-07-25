@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, Image, View } from 'react-native';
+import { StyleSheet, Image, View, NativeSyntheticEvent } from 'react-native';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -9,28 +9,33 @@ const styles = StyleSheet.create({
   }
 });
 
-// interface Props {
-//   source: { uri: string };
-//   fitScreen?: boolean;
-// }
+interface Props {
+  source: { uri: string };
+  fitScreen?: boolean;
+}
 
-export default class LazyImage extends PureComponent {
+interface State {
+  width?: number;
+  height?: number;
+}
 
-  state = { width: null, height: null };
+export default class LazyImage extends PureComponent<Props, State> {
+
+  state = { width: undefined, height: undefined };
 
   componentDidMount() {
     Image.prefetch(this.props.source.uri);
     this.layout = { width: 0, height: 0 };
   }
 
-  onLayout = ({ nativeEvent }) => {
+  onLayout = ({ nativeEvent }: any) => {
     const { width, height } = nativeEvent.layout;
     this.layout.width = width;
     this.layout.height = height;
-    Image.getSize(this.props.source.uri, this.setImageSize, null);
+    Image.getSize(this.props.source.uri, this.setImageSize, () => {});
   }
 
-  setImageSize = (w, h) => {
+  setImageSize = (w: number, h: number) => {
     let { height, width } = this.layout;
 
     if (this.props.fitScreen) {

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, createRef } from 'react';
 import {
   TextInput,
   View,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Text,
   Animated,
-  TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -51,7 +50,14 @@ const styles = StyleSheet.create({
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
-export default class SearchInput extends PureComponent {
+interface Props {
+  keyboardType?: '' | 'default';
+  returnKeyType?: '' | 'search';
+  onChange: (value: string) => void;
+  onSubmit?: (value: string) => void;
+}
+
+export default class SearchInput extends PureComponent<Props> {
   state = {
     value : '',
     isFocused: false,
@@ -66,22 +72,25 @@ export default class SearchInput extends PureComponent {
     this.cancelAnimated = new Animated.Value(this.cancelWidth);
   }
 
-  onChangeText = (value) => {
+  onChangeText = (value: string) => {
     this.setState({ value });
     if (this.props.onChange) this.props.onChange(value);
   }
 
   onFocus = () => {
-    Animated.parallel([
-      Animated.timing(this.inputAnimated, {
-        toValue: this.width - this.cancelWidth - 4,
-        duration: 200,
-      }).start(),
-      Animated.timing(this.cancelAnimated, {
-        toValue: 0,
-        duration: 200,
-      }).start(() => this.setState({ isFocused: true })),
-    ]);
+    if (this.inputAnimated && this.cancelAnimated) {
+      // @ts-ignore
+      Animated.parallel([
+        Animated.timing(this.inputAnimated, {
+          toValue: this.width - this.cancelWidth - 4,
+          duration: 200,
+        }).start(),
+        Animated.timing(this.cancelAnimated, {
+          toValue: 0,
+          duration: 200,
+        }).start(() => this.setState({ isFocused: true })),
+      ]);
+    }
   }
 
   onBlur = () => {
@@ -92,20 +101,23 @@ export default class SearchInput extends PureComponent {
     this.dismiss(() => this.setState({ isFocused: false, value: '' }));
   }
 
-  dismiss = (callback) => {
-    Animated.parallel([
-      Animated.timing(this.inputAnimated, {
-        toValue: this.width,
-        duration: 200,
-      }).start(),
-      Animated.timing(this.cancelAnimated, {
-        toValue: this.cancelWidth,
-        duration: 200,
-      }).start(callback),
-    ]);
+  dismiss = (callback: () => void) => {
+    if (this.inputAnimated && this.cancelAnimated) {
+      // @ts-ignore
+      Animated.parallel([
+        Animated.timing(this.inputAnimated, {
+          toValue: this.width,
+          duration: 200,
+        }).start(),
+        Animated.timing(this.cancelAnimated, {
+          toValue: this.cancelWidth,
+          duration: 200,
+        }).start(callback),
+      ]);
+    }
   }
 
-  onSubmit = ({ nativeEvent }) => {
+  onSubmit = () => {
     if (this.props.onSubmit) {
       this.props.onSubmit(this.state.value);
     }
@@ -116,12 +128,11 @@ export default class SearchInput extends PureComponent {
     this.setState({ value: '' });
   }
 
-  element = null
-  width = null
-  cancelWidth = null
+  width: number = 0
+  cancelWidth: number = 0
 
-  inputAnimated = null
-  cancelAnimated = null
+  inputAnimated: Animated.Value | undefined
+  cancelAnimated: Animated.Value | undefined
 
   render() {
     const { value, isFocused } = this.state;
@@ -130,7 +141,6 @@ export default class SearchInput extends PureComponent {
         <Animated.View style={[styles.inputWrapper, { width: this.inputAnimated }]}>
           <Ionicons name="ios-search" size={17} color="#8E8E93" />
           <AnimatedTextInput
-            ref={(ref) => { this.element = ref; }}
             style={[styles.textInput, { width: this.inputAnimated }]}
             placeholder="검색하기"
             placeholderTextColor="#8E8E93"
