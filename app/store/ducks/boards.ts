@@ -1,59 +1,59 @@
-import { put, call, takeLatest, take, throttle } from 'redux-saga/effects';
+import { put, call, throttle } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { parseBoardList } from '../../utils/parser';
 import arrayToObject from '../../utils/arrayToObject';
-import mergeArray from '../../utils/mergeArray';
 import { createAction, ActionsUnion } from '../helpers';
 
 /* Actions */
 
 export const REQUEST = 'board/REQUEST';
-export const SET = 'board/SET';
+export const ADD = 'board/ADD';
 export const UPDATE = 'board/UPDATE';
-export const DELETE = 'board/DELETE';
+export const CLEAR = 'board/CLEAR';
 
 export const Actions = {
-  request: (prefix: string, boardId: string, page: number, keyword: string) =>
-    createAction(REQUEST, { prefix, boardId, page, keyword }),
+  request: (
+    prefix: string,
+    boardId?: string,
+    page: number = 1,
+    params?: { keyword?: string, category?: number }
+  ) =>
+    createAction(REQUEST, { prefix, boardId, page, params }),
 
-  set: (payload: any[]) => createAction(SET, payload),
-  update: (payload: any[]) => createAction(UPDATE, payload),
-  delete: (payload: any[]) => createAction(DELETE, payload),
+  add: (title: string, data: BoardRecord[]) => createAction(ADD, { title, data }),
+  update: (payload: BoardRecord[]) => createAction(UPDATE, payload),
+  clear: () => createAction(CLEAR),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
 /* Sagas */
 
-// @ts-ignore
-async function getListData({ prefix, boardId, page, keyword }) {
-  const targetUrl = `http://bbs.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}${keyword ? `&search_type=subject&search_key=${keyword}` : ''}`;
+export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
+  const { prefix, boardId, page, params } = payload;
+
+  let targetUrl = `http://m.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}`;
+  if (params) targetUrl += `${params.keyword ? `&keyword=${params.keyword}`: '' }${params.category ? `&cate=${params.category}` : ''}`;
 
   const config = {
     method: 'GET',
     headers: {
       Accept: 'text/html',
       'Content-Type': 'text/html',
-      'Accept-Encoding': 'gzip, deflate',      
+      'Accept-Encoding': 'gzip, deflate',
       Referer: targetUrl,
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     }
   };
 
   try {
-    const response = await fetch(targetUrl, config);
-    const htmlString = await response.text();
+    const response = yield call(fetch, targetUrl, config);
+    const htmlString = yield response.text();
   
-    return parseBoardList(htmlString, page);
+    const json = parseBoardList(htmlString, page);
+    yield put(Actions.set(json));
   } catch(e) {
     return null;
   }
-}
-
-export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
-  const json = yield call(getListData, payload);
-  if (!json) return;
-
-  yield put(Actions.set(json));
 }
 
 export const boardSagas = [
@@ -95,27 +95,31 @@ export interface BoardState {
   readonly prefix?: string;
   readonly boardId?: string;
   readonly page?: number;
-  readonly param?: {
+  readonly title?: string;
+  readonly params?: {
     readonly keyword?: string;
     readonly category?: string;
   };
+  readonly records: Readonly<{
+    [key: string]: BoardRecord;
+  }>;
+  readonly order: Readonly<string[]>
   readonly loading: boolean;
 }
 
-const initState: BoardState = { loading: false };
+const initState: BoardState = { records: {}, order: [], loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
     case REQUEST: {
-      const { prefix, boardId, page, keyword } = action.payload;
-      return { boardId, prefix, page, keyword, loading: true };
+      const { prefix, boardId, page, params } = action.payload;
+      return { boardId, prefix, page, params, loading: true };
     }
-    case SET: {
-      // @ts-ignore
-      const { title, items } = action.payload;
-      const order = items.map((item: any) => item.key);
-      const data = arrayToObject(items, 'key');
-      return { ...state, title, data, order, loading: false };
+    case ADD: {
+      const { title, data } = action.payload;
+      const order = data.map(item => item.key);
+      const records = arrayToObject(data);
+      return { ...state, title, records, order, loading: false };
     }
     case UPDATE: {
       const { payload, meta } = action;

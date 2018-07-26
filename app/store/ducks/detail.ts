@@ -2,9 +2,7 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { Alert } from 'react-native';
 // import { Actions as boardAction } from './boards';
-// import { Actions as LoadingAction } from './loading';
 import { createAction, ActionsUnion } from '../helpers';
-import { getComments } from './comments';
 import { parseDetail } from '../../utils/parser';
 
 /* Actions */
@@ -85,12 +83,19 @@ export interface DetailState {
   readonly prefix?: string;
   readonly boardId?: string;
   readonly articleId?: string;
+  readonly meta: Readonly<{
+    userName: string;
+    userId: string;
+    level?: number;
+    exp?: number;
+    age?: number;
+    avatarUrl?: string;
+  }>;
+  readonly contents: Readonly<ContentType[]>;
   readonly loading: boolean;
-  readonly commentList?: any[];
-  readonly bestCommentList?: any[];
 }
 
-const initState: DetailState = { loading: false };
+const initState: DetailState = { contents: [], loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
