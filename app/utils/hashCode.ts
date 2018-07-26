@@ -1,5 +1,5 @@
 
-export default function hashCode(str) {
+export default function hashCode(str: string) {
   let hash = 0, i, chr;
   const length = str.length;
   if (length === 0) return hash;

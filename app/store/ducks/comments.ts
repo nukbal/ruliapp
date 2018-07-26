@@ -6,16 +6,16 @@ import { createAction, ActionsUnion } from '../helpers';
 
 /* Actions */
 
-export const REQUEST_COMMENTS = 'REQUEST_COMMENTS';
-export const ADD_COMMENTS = 'ADD_COMMENTS';
-export const UPDATE_COMMENTS = 'UPDATE_COMMENTS';
+export const REQUEST = 'comments/REQUEST';
+export const ADD = 'comments/ADD';
+export const UPDATE = 'comments/UPDATE';
 
 export const Actions  = {
   request: (prefix: string, boardId: string, articleId: string, page?: number) =>
-    createAction(REQUEST_COMMENTS, { prefix, boardId, articleId, page }),
+    createAction(REQUEST, { prefix, boardId, articleId, page }),
 
-  add: (payload: any) => createAction(ADD_COMMENTS, payload),
-  update: (payload: any) => createAction(UPDATE_COMMENTS, payload),
+  add: (payload: any) => createAction(ADD, payload),
+  update: (payload: any) => createAction(UPDATE, payload),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
@@ -87,12 +87,12 @@ const initState: CommentState = { loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
-    case REQUEST_COMMENTS:
+    case REQUEST:
       const { prefix, boardId, articleId } = action.payload;
       return { boardId, prefix, articleId, loading: true };
-    case ADD_COMMENTS:
+    case ADD:
       return { ...state, comments: action.payload, loading: false };
-    case UPDATE_COMMENTS:
+    case UPDATE:
       // const listOrder = action.payload.map((item: any) => item.id);
       const commentList = arrayToObject(action.payload);
       return { ...state, comments: { ...state.comments, ...commentList }, loading: false };
