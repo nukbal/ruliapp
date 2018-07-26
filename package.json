@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "fast-html-parser": "^1.0.1",
     "hoist-non-react-statics": "^2.5.5",
     "react": "^16.4.1",
     "react-native": "^0.56.0",
@@ -28,6 +27,7 @@
     "jest-react-native": "^18.0.0",
     "react-native-typescript-transformer": "^1.2.10",
     "react-test-renderer": "16.2.0",
+    "ts-jest": "^23.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.13.0",
     "tslint-react": "^3.6.0",
@@ -40,6 +40,17 @@
     "test": "node node_modules/jest/bin/jest.js"
   },
   "jest": {
-    "preset": "react-native"
+    "transform": {
+      "^.+\\.(tsx?|ts?)$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?|ts?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
