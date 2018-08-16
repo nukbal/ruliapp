@@ -26,6 +26,10 @@ declare interface BoardRecord {
   categoryId?: number;
 }
 
+declare interface CommentType {
+  key: string;
+}
+
 declare interface ContentType {
   key: string;
   type: string;

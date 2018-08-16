@@ -78,12 +78,14 @@ export interface CommentState {
   readonly boardId?: string;
   readonly prefix?: string;
   readonly articleId?: string;
-  readonly comments?: any[];
+  readonly records: Readonly<{
+    [key: string]: CommentType,
+  }>;
   readonly loading: boolean;
-  readonly order?: string[];
+  readonly order: string[];
 }
 
-const initState: CommentState = { loading: false };
+const initState: CommentState = { records: {}, order: [], loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {

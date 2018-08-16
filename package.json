@@ -43,6 +43,7 @@
     "transform": {
       "^.+\\.(tsx?|ts?)$": "ts-jest"
     },
+    "setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?|ts?)$",
     "moduleFileExtensions": [
       "ts",

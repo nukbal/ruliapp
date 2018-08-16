@@ -1,4 +1,3 @@
-// import { loadHtml } from './commonUtils';
 
 // const extractTitle = (html) => {
 //   const regex = /<title>(.*?)<\/title>/g
