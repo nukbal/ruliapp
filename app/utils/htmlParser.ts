@@ -4,9 +4,14 @@ export interface INode {
   tagName: string;
   attrs?: { [key: string]: any };
   id?: string;
-  className?: string[];
+  /** query attributes (classname or id) */
+  q?: string;
   value?: string;
   childNodes?: INode[];
+  next?: INode;
+  prev?: INode;
+  /** how deep this node's children */
+  depth?: number;
 }
 
 const kBlockElements = {
@@ -67,8 +72,10 @@ function TextNode(raw: string): INode {
 function HTMLNode(name: string = '', attrs?: any) {
   const _node: INode = { tagName: name };
   if (attrs) {
-    if (attrs.id) _node.id = attrs.id;
-    _node.className = attrs.class ? attrs.class.split(/\s+/) : [];
+    let queries = [];
+    if (attrs.id) queries.push(attrs.id);
+    if (attrs.class) queries.push(attrs.class);
+    _node.q = queries.join(' ');
   }
   _node.childNodes = [];
   return _node;
@@ -78,23 +85,97 @@ function appendTextChild(parent: INode, raw?: string) {
   if (parent.childNodes && raw) {
     const text = raw.trim();
     if (text !== '' && !isWhitespace(text)) {
-      parent.childNodes.push(TextNode(text));
+      const prevNode = parent.childNodes[parent.childNodes.length - 1];
+      const child = TextNode(text);
+      if (prevNode) {
+        child.prev = prevNode;
+        prevNode.next = child;
+      }
+      parent.childNodes.push(child);
     }
   }
   return parent;
 }
 
 function appendChild(parent: INode, child: INode) {
-  if (parent.childNodes) parent.childNodes.push(child);
+  if (parent.childNodes) {
+    const prevNode = parent.childNodes[parent.childNodes.length - 1];
+    if (prevNode) {
+      child.prev = prevNode;
+      prevNode.next = child;
+    }
+    parent.childNodes.push(child);
+  } else {
+    parent.childNodes = [child];
+  }
   return child;
 }
 
-export function querySelector(parent: INode, pattern: string) {
-  
+function searchTree(node: INode, arr: string[]): INode | undefined {
+  const query = node.tagName + ' ' + (node.q || '');
+  if(query.indexOf(arr[0]) > -1) {
+    console.log(query);
+    for (let i = 1; i < arr.length; i += 1) {
+      if (query.indexOf(arr[i]) === -1) {
+        return;
+      }
+    }
+    return node;
+  } else if (node.childNodes) {
+    let cursor;
+    for (let i = 0; i < node.childNodes.length; i += 1) {
+      cursor = searchTree(node.childNodes[i], arr);
+      if (cursor) break;
+    }
+    return cursor;
+  }
+  return;
 }
 
-export function querySelectorAll(parent: INode, pattern: string) {
+function findMatchNode(root: INode, pattern: string, all?: boolean) {
+  const arr = pattern.split(' ');
+  let node: any = root;
+  if (!node.childNodes) return;
+  if (!node.tagName) node = node.childNodes[0];
 
+  const tagName = arr[0].split(/[\.|\#]/);
+  node = searchTree(node, tagName);
+  if (!node) return;
+
+  const arrLen = arr.length;
+
+  if (arrLen > 1 && node.childNodes && node.childNodes.length) {
+    let cursor = node;
+    for (let z = 1; z < arrLen; z += 1) {
+      const current = arr[z].split(/[\.|\#]/);
+      const isLast = (z === arrLen - 1);
+
+      cursor = searchTree(cursor, current);
+
+      if (isLast && all) {
+        const res = [];
+        while (cursor.next) {
+          res.push(cursor);
+          cursor = cursor.next;
+        }
+        return res;
+      } else if (isLast) {
+        return cursor;
+      }
+    }
+  }
+
+  return;
+}
+
+export function querySelector(parent: INode, pattern: string): INode | undefined {
+  // @ts-ignore
+  return findMatchNode(parent, pattern);
+}
+
+export function querySelectorAll(parent: INode, pattern: string): INode[] | undefined {
+  // @ts-ignore
+  return findMatchNode(parent, pattern, true);
 }
 
 export default function parse(data: string): INode {

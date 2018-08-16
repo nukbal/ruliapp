@@ -5,6 +5,6 @@ import parser from '../htmlParser';
 describe('html parser', () => {
   it('works', () => {
     const html = fs.readFileSync(resolve(__dirname, './html/hit_sample.txt'), 'utf-8');
-    parser(html);
+    const data = parser(html);
   });
 });

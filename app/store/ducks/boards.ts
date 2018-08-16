@@ -1,6 +1,6 @@
 import { put, call, throttle } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
-import { parseBoardList } from '../../utils/parser';
+import parseBoardList from '../../utils/parseBoard';
 import arrayToObject from '../../utils/arrayToObject';
 import { createAction, ActionsUnion } from '../helpers';
 
@@ -20,8 +20,8 @@ export const Actions = {
   ) =>
     createAction(REQUEST, { prefix, boardId, page, params }),
 
-  add: (title: string, data: BoardRecord[]) => createAction(ADD, { title, data }),
-  update: (payload: BoardRecord[]) => createAction(UPDATE, payload),
+  add: (payload: { title: string, data: BoardRecord[] }) => createAction(ADD, payload),
+  update: (payload: { title: string, data: BoardRecord[] }) => createAction(UPDATE, payload),
   clear: () => createAction(CLEAR),
 };
 export type Actions = ActionsUnion<typeof Actions>;
@@ -41,7 +41,6 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
       'Content-Type': 'text/html',
       'Accept-Encoding': 'gzip, deflate',
       Referer: targetUrl,
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     }
   };
 
@@ -49,8 +48,8 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
     const response = yield call(fetch, targetUrl, config);
     const htmlString = yield response.text();
   
-    const json = parseBoardList(htmlString, page);
-    yield put(Actions.set(json));
+    const json = parseBoardList(htmlString);
+    yield put(Actions.add(json));
   } catch(e) {
     return null;
   }
@@ -89,7 +88,7 @@ export const isBoardLoading = createSelector(
   ({ loading }) => loading || false,
 );
 
-/* reducers */
+/* reducers */{
 
 export interface BoardState {
   readonly prefix?: string;
@@ -122,10 +121,8 @@ export default function reducer(state = initState, action: Actions) {
       return { ...state, title, records, order, loading: false };
     }
     case UPDATE: {
-      const { payload, meta } = action;
-      // @ts-ignore
-      const { items } = payload;
-    
+      const { title, data } = action.payload;
+
       // let newOrder = mergeArray(order, items.map(item => item.key));
       // let newData = Object.assign(data, arrayToObject(items, 'key'));
 

@@ -31,7 +31,7 @@ export const getDetailInfo = createSelector(
 
 async function getDetailData(prefix: string, boardId: string, articleId: string) {
   const targetUrl =
-    `http://bbs.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}?search_type=name&search_key=%2F%2F%2F`;
+    `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}?search_type=name&search_key=%2F%2F%2F`;
   const config = {
     method: 'GET',
     credentials: 'include',
@@ -40,7 +40,6 @@ async function getDetailData(prefix: string, boardId: string, articleId: string)
       'Content-Type': 'text/html',
       'Accept-Encoding': 'gzip, deflate',
       Referer: targetUrl,
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     },
   };
 
@@ -83,7 +82,7 @@ export interface DetailState {
   readonly prefix?: string;
   readonly boardId?: string;
   readonly articleId?: string;
-  readonly meta: Readonly<{
+  readonly meta?: Readonly<{
     userName: string;
     userId: string;
     level?: number;
