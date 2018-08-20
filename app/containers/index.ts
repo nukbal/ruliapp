@@ -1,6 +1,4 @@
-import React from 'react';
 import { DrawerNavigator } from 'react-navigation';
-// @ts-ignore
 import BoardScreen from './Board';
 // @ts-ignore
 import Drawer from './Drawer';

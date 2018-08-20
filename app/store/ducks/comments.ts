@@ -1,7 +1,7 @@
 import { put, call, takeLatest, take, race } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import arrayToObject from '../../utils/arrayToObject';
-import { parseComment } from '../../utils/parser';
+import parseComment from '../../utils/parseComment';
 import { createAction, ActionsUnion } from '../helpers';
 
 /* Actions */
@@ -89,15 +89,18 @@ const initState: CommentState = { records: {}, order: [], loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
-    case REQUEST:
+    case REQUEST: {
       const { prefix, boardId, articleId } = action.payload;
       return { boardId, prefix, articleId, loading: true };
-    case ADD:
-      return { ...state, comments: action.payload, loading: false };
-    case UPDATE:
-      // const listOrder = action.payload.map((item: any) => item.id);
-      const commentList = arrayToObject(action.payload);
-      return { ...state, comments: { ...state.comments, ...commentList }, loading: false };
+    }
+    case ADD: {
+      const records = arrayToObject(action.payload);
+      return { ...state, records, loading: false };
+    }
+    case UPDATE: {
+      const records = arrayToObject(action.payload);
+      return { ...state, records: { ...state.records, ...records }, loading: false };
+    }
     default:
       return state;
   }

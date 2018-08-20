@@ -1,38 +1,44 @@
 import { put, call, throttle } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
-import parseBoardList from '../../utils/parseBoard';
+import qs from 'query-string';
+import parseBoardList, { IParseBoard } from '../../utils/parseBoard';
 import arrayToObject from '../../utils/arrayToObject';
+import mergeArray from '../../utils/mergeArray';
 import { createAction, ActionsUnion } from '../helpers';
 
 /* Actions */
-
 export const REQUEST = 'board/REQUEST';
 export const ADD = 'board/ADD';
 export const UPDATE = 'board/UPDATE';
 export const CLEAR = 'board/CLEAR';
+export const REMOVE = 'board/REMOVE';
 
 export const Actions = {
   request: (
     prefix: string,
     boardId?: string,
-    page: number = 1,
-    params?: { keyword?: string, category?: number }
+    params: { page: number, keyword?: string, cate?: string } = { page: 1 },
+    update?: boolean,
   ) =>
-    createAction(REQUEST, { prefix, boardId, page, params }),
+    createAction(REQUEST, { prefix, boardId, params, update }),
 
-  add: (payload: { title: string, data: BoardRecord[] }) => createAction(ADD, payload),
-  update: (payload: { title: string, data: BoardRecord[] }) => createAction(UPDATE, payload),
+  add: (payload: IParseBoard) => createAction(ADD, payload),
+  update: (payload: IParseBoard) => createAction(UPDATE, payload),
+  remove: (key: string) => createAction(REMOVE, key),
   clear: () => createAction(CLEAR),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
 /* Sagas */
-
 export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
-  const { prefix, boardId, page, params } = payload;
+  const { prefix, boardId, params } = payload;
 
-  let targetUrl = `http://m.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}?page=${page}`;
-  if (params) targetUrl += `${params.keyword ? `&keyword=${params.keyword}`: '' }${params.category ? `&cate=${params.category}` : ''}`;
+  let targetUrl = `http://m.ruliweb.com/${prefix}${boardId ? `/board/${boardId}` : ''}`;
+
+  if (params) {
+    const query = qs.stringify(params);
+    targetUrl += '?' + query;
+  }
 
   const config = {
     method: 'GET',
@@ -47,11 +53,12 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
   try {
     const response = yield call(fetch, targetUrl, config);
     const htmlString = yield response.text();
-  
-    const json = parseBoardList(htmlString);
+    const json = yield call(parseBoardList, htmlString);
+
     yield put(Actions.add(json));
   } catch(e) {
-    return null;
+    console.error(e);
+    return;
   }
 }
 
@@ -61,25 +68,25 @@ export const boardSagas = [
 
 /* selectors */
 
-export const getBoardState = (state: any) => state.boards;
+export const getBoardState = (state: AppState): BoardState => state.boards;
 
 export const getBoardList = createSelector(
   [getBoardState],
-  ({ order, data }) => {
-    if (order && data) {
-      return order.map((key: string) => data[key]);
+  ({ order, records }) => {
+    if (order && records) {
+      return order.map((key: string) => records[key]);
     }
-    return undefined;
+    return;
   }
 );
 
 export const getBoardInfo = createSelector(
   [getBoardState],
-  ({ boardId, prefix, title, page }) => ({
+  ({ boardId, prefix, title, params }) => ({
     boardId,
     prefix,
     title,
-    page,
+    params,
   }),
 );
 
@@ -88,21 +95,21 @@ export const isBoardLoading = createSelector(
   ({ loading }) => loading || false,
 );
 
-/* reducers */{
+/* reducers */
 
 export interface BoardState {
   readonly prefix?: string;
   readonly boardId?: string;
-  readonly page?: number;
   readonly title?: string;
-  readonly params?: {
+  readonly params?: Readonly<{
+    readonly page: number;
     readonly keyword?: string;
-    readonly category?: string;
-  };
+    readonly cate?: string;
+  }>;
   readonly records: Readonly<{
     [key: string]: BoardRecord;
   }>;
-  readonly order: Readonly<string[]>
+  readonly order: string[];
   readonly loading: boolean;
 }
 
@@ -111,30 +118,46 @@ const initState: BoardState = { records: {}, order: [], loading: false };
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
     case REQUEST: {
-      const { prefix, boardId, page, params } = action.payload;
-      return { boardId, prefix, page, params, loading: true };
+      const { prefix, boardId, params, update } = action.payload;
+      if (update) {
+        return { ...state, boardId, prefix, params, loading: true };
+      }
+      return { boardId, prefix, params, loading: true };
     }
     case ADD: {
-      const { title, data } = action.payload;
-      const order = data.map(item => item.key);
-      const records = arrayToObject(data);
+      const { title, rows } = action.payload;
+      const order = rows.map(item => item.key);
+      const records = arrayToObject(rows);
       return { ...state, title, records, order, loading: false };
     }
     case UPDATE: {
-      const { title, data } = action.payload;
+      const { records, order, ...rest } = state;
+      const { rows } = action.payload;
+      
+      const newRows = arrayToObject(rows);
+      const newRecords = { ...records, ...newRows };
 
-      // let newOrder = mergeArray(order, items.map(item => item.key));
-      // let newData = Object.assign(data, arrayToObject(items, 'key'));
+      const newOrder = mergeArray(order, rows.map(item => item.key));
 
-      // if (meta.isAppend) {
-      //   newOrder = mergeArray(order, items.map(item => item.key));
-      //   newData = Object.assign(data, arrayToObject(items, 'key'));
-      // } else {
-      //   newOrder = mergeArray(items.map(item => item.key), order);
-      //   newData = Object.assign(data, arrayToObject(items, 'key'));
-      // }
+      return { ...rest, records: newRecords, order: newOrder, loading: false };
+    }
+    case REMOVE: {
+      const key = action.payload
+      if (key in state.records) {
+        const { records, order, ...rest } = state;
 
-      return { ...state, loading: false };
+        const newRecords = { ...records };
+        delete newRecords[key];
+
+        const newOrder = [...order];
+        newOrder.splice(order.indexOf(key), 1);
+
+        return { records: newRecords, order: newOrder, ...rest };
+      }
+      return state;
+    }
+    case CLEAR: {
+      return initState;
     }
     default: {
       return state;

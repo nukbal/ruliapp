@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { listItem, labelText, border, primaryLight } from '../../styles/color';
+import { listItem, labelText, primaryLight } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,7 +41,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class BoardItem extends PureComponent {
+interface IBoardItem extends BoardRecord {
+  onPress: (payload: LinkType & { subject: string }) => void;
+}
+
+export default class BoardItem extends PureComponent<IBoardItem, { touching: boolean }> {
   state = { touching: false }
 
   beforePress = () => {
@@ -54,34 +57,24 @@ export default class BoardItem extends PureComponent {
   }
 
   onPress = () => {
-    const { onPress, id, title, prefix, boardId } = this.props;
+    const { onPress, id, subject, link } = this.props;
     if (!onPress) return;
 
-    onPress(id, title, prefix, boardId);
+    onPress({ id, subject, prefix: link.prefix, boardId: link.boardId });
   }
 
   render() {
-    const { title, comments, author, like, views, times, likes, placeholder } = this.props;
-
-    if (placeholder) {
-      return (
-        <View style={styles.container}>
-          <View style={styles.info}>
-            <View style={[styles.placeholder, { flex: 1 }]} />
-          </View>
-          <View style={styles.info}>
-            <View style={[styles.placeholder, { width: '65%' }]} />
-          </View>
-        </View>
-      );
-    }
+    const { subject, comments, author, views, likes } = this.props;
     
     const viewStyle = [styles.container];
     const itemText = [styles.itemText];
     const titleText = [styles.titleText];
     if (this.state.touching) {
+      // @ts-ignore
       viewStyle.push({ backgroundColor: primaryLight });
+      // @ts-ignore
       itemText.push({ color: 'white' });
+      // @ts-ignore
       titleText.push({ color: 'white' });
     }
     return (
@@ -92,7 +85,7 @@ export default class BoardItem extends PureComponent {
       >
         <View style={viewStyle}>
           <View style={styles.info}>
-            <Text style={titleText} numberOfLines={1}>{title}</Text>
+            <Text style={titleText} numberOfLines={1}>{subject}</Text>
           </View>
           <View style={styles.info}>
             <Text style={itemText} numberOfLines={1}>{author} |</Text>

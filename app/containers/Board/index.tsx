@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react';
-import { StackNavigator, DrawerNavigator } from 'react-navigation';
+import React from 'react';
+import { StackNavigator } from 'react-navigation';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { darkBarkground, background, titleText, primary, white } from '../../styles/color';
+import { primary } from '../../styles/color';
 import Board from './Board';
+// @ts-ignore
 import DetailScreen from '../Detail';
-import BoardList from '../../config/BoardList';
 
 const styles = StyleSheet.create({
   headerLeft: {
