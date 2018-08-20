@@ -9,11 +9,11 @@
     "strict": true,
     "pretty": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": ["app/**/*"],
   "exclude": [
-    "./node_modules/**",
+    "node_modules",
     "ios",
     "android"
   ]

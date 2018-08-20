@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>BEST - 많이 본 글 / 힛갤 | 루리웹 모바일</title>
+  <title>모바일 정보 게시판 | 루리웹 모바일</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
@@ -10,11 +10,11 @@
   <link rel="manifest" href="/assets/js/manifest.json">
 
   <meta property="og:type" content="website">
-	<meta property="og:title" content="BEST - 많이 본 글 / 힛갤 | 루리웹 모바일">
+	<meta property="og:title" content="모바일 정보 게시판 | 루리웹 모바일">
 	<meta property="og:site_name" content="루리웹">
 	<meta property="og:description" content="게이머를 위한 밝고, 활기찬 포털 커뮤니티 RULIWEB">
 	<meta property="og:image" content="http://img.ruliweb.com/img/2016/ruli_400x210.png">
-    		<script type="text/javascript" src="/assets/js/core.m.min.js?version=551"></script>
+  <link rel="alternate" type="application/rss+xml" title="RSS 2.0 feed" href="http://m.ruliweb.com/news/board/1004/rss" />  		<script type="text/javascript" src="/assets/js/core.m.min.js?version=561"></script>
 	
 
 
@@ -24,7 +24,7 @@
   
   <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/swiper.min.css">
-      		<link rel="stylesheet" href="/assets/css/style.m.min.css?version=427">
+      		<link rel="stylesheet" href="/assets/css/style.m.min.css?version=437">
   
   <link rel="shortcut icon" href="/favicon.ico">
 	<link rel="icon" href="http://img.ruliweb.com/img/2016/icon/ruliweb_icon_144_144.png">
@@ -37,12 +37,12 @@
     <div class="ad_go_wrapper">
       <div class="ad_wrapper row"><div
 			class="adrrr ad_320_50"
-			id="mo_ad_board_list_01"
+			id="mboard_15_320x50_01"
 			style="width:320px;height:50px;"
 			><script src='//image.ruliweb.com/view/view.js?zoneid=38'></script></div></div>      <a class="go_button go_bottom line_h_49" href="#footer"><i class="icon-chevron-down"></i></a>
     </div>
   </div>
-  <input type="hidden" id="site_mod" value="bbs_2">
+  <input type="hidden" id="site_mod" value="bbs_6">
       
   <div class="top_wrapper row relative">
     <div class="sidemenu_wrapper col">
@@ -54,7 +54,7 @@
     </div>
     
     <div class="sub_title_wrapper col">
-          <a href="http://m.ruliweb.com/best"><strong class="sub_title">BEST</strong></a>
+          <a href="http://m.ruliweb.com/news?pkind=1"><strong class="sub_title">뉴스</strong></a>
         </div>
 
     <div class="board_head_btn r_col">
@@ -234,65 +234,221 @@
       </div>
     <ul class="nav_list row">
           
+            <li class="menu">
+              
+                            <a href="http://m.ruliweb.com/news/own">
+                              <h4 class="list_item depth1">기사</h4>
+                            </a>
+                          </li>
+              
             <li class="menu expand style_open_list">
               
-                              <h4 class="list_item depth1">분야별 베스트</h4>
+                              <h4 class="list_item depth1">비디오게임</h4>
                           </li>
                           <li class="menu">
-              <a href="http://m.ruliweb.com/best/humor">
-                <h4 class="list_item depth2">일반유머</h4>
+              <a href="http://m.ruliweb.com/news/524">
+                <h4 class="list_item depth2">PS3 / PS4</h4>
               </a>
             </li>
                             <li class="menu">
-              <a href="http://m.ruliweb.com/best/political">
-                <h4 class="list_item depth2">정치유머</h4>
+              <a href="http://m.ruliweb.com/news/525">
+                <h4 class="list_item depth2">PSP / VITA</h4>
               </a>
             </li>
                             <li class="menu">
-              <a href="http://m.ruliweb.com/best/cartoon">
-                <h4 class="list_item depth2">만화/웹툰</h4>
+              <a href="http://m.ruliweb.com/news/526">
+                <h4 class="list_item depth2">XB360 / XBO</h4>
               </a>
             </li>
                             <li class="menu">
-              <a href="http://m.ruliweb.com/best/ghost">
-                <h4 class="list_item depth2">괴담/오컬트</h4>
+              <a href="http://m.ruliweb.com/news/527">
+                <h4 class="list_item depth2">SWITCH</h4>
               </a>
             </li>
                             <li class="menu">
-              <a href="http://m.ruliweb.com/best/community">
-                <h4 class="list_item depth2">커뮤니티</h4>
-              </a>
-            </li>
-                            <li class="menu">
-              <a href="http://m.ruliweb.com/best/game">
-                <h4 class="list_item depth2">게임</h4>
-              </a>
-            </li>
-                            <li class="menu">
-              <a href="http://m.ruliweb.com/best/hobby">
-                <h4 class="list_item depth2">취미 갤러리</h4>
-              </a>
-            </li>
-                            <li class="menu">
-              <a href="http://m.ruliweb.com/best/anime">
-                <h4 class="list_item depth2">애니/책</h4>
+              <a href="http://m.ruliweb.com/news/528">
+                <h4 class="list_item depth2">NDS / 3DS</h4>
               </a>
             </li>
                 
             <li class="menu">
               
-                            <a href="http://m.ruliweb.com/best/selection">
-                              <h4 class="list_item depth1">많이 본 글 / 힛갤</h4>
+                            <a href="http://m.ruliweb.com/news/529">
+                              <h4 class="list_item depth1">PC/온라인</h4>
                             </a>
                           </li>
               
             <li class="menu">
               
-                            <a href="http://m.ruliweb.com/best/hit_history">
-                              <h4 class="list_item depth1">오른쪽 BEST</h4>
+                            <a href="http://m.ruliweb.com/news/530?cate=4">
+                              <h4 class="list_item depth1">PC H/W</h4>
                             </a>
                           </li>
               
+            <li class="menu">
+              
+                            <a href="http://m.ruliweb.com/news/531">
+                              <h4 class="list_item depth1">모바일</h4>
+                            </a>
+                          </li>
+              
+            <li class="menu">
+              
+                            <a href="http://m.ruliweb.com/news/537?cate=5,6">
+                              <h4 class="list_item depth1">게임 관련</h4>
+                            </a>
+                          </li>
+              
+            <li class="menu expand style_open_list">
+              
+                              <h4 class="list_item depth1">게임쇼</h4>
+                          </li>
+                          <li class="menu">
+              <a href="http://m.ruliweb.com/news/gameshow/549?gameshow=3">
+                <h4 class="list_item depth2">도쿄게임쇼</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/gameshow/550?gameshow=1">
+                <h4 class="list_item depth2">지스타</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/gameshow/551?gameshow=2">
+                <h4 class="list_item depth2">E3 expo</h4>
+              </a>
+            </li>
+                
+            <li class="menu">
+              
+                            <a href="http://web.ruliweb.com/game/grb.htm?main=news">
+                              <h4 class="list_item depth1">게임 심의결과</h4>
+                            </a>
+                          </li>
+              
+            <li class="menu">
+              
+                            <a href="http://m.ruliweb.com/news/538">
+                              <h4 class="list_item depth1">루리웹동영상</h4>
+                            </a>
+                          </li>
+              
+            <li class="menu">
+              
+                            <a href="http://m.ruliweb.com/news/board/11">
+                              <h4 class="list_item depth1">리뷰/읽을거리</h4>
+                            </a>
+                          </li>
+              
+            <li class="menu">
+              
+                            <a href="http://m.ruliweb.com/news/board/17">
+                              <h4 class="list_item depth1">게임 스토리</h4>
+                            </a>
+                          </li>
+              
+            <li class="menu expand style_open_list">
+              
+                              <h4 class="list_item depth1">유저정보</h4>
+                          </li>
+                          <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/1001">
+                <h4 class="list_item depth2">콘솔</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/1003">
+                <h4 class="list_item depth2">PC</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/1004">
+                <h4 class="list_item depth2">모바일</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/1002">
+                <h4 class="list_item depth2">취미</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/1020">
+                <h4 class="list_item depth2">예판/핫딜</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/1005">
+                <h4 class="list_item depth2">종합게시판</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/600003">
+                <h4 class="list_item depth2">봇게시판</h4>
+              </a>
+            </li>
+                
+            <li class="menu">
+              
+                            <a href="http://m.ruliweb.com/news/board/320105">
+                              <h4 class="list_item depth1">게임 방송</h4>
+                            </a>
+                          </li>
+              
+            <li class="menu expand style_open_list">
+              
+                              <h4 class="list_item depth1">유저 스크린샷</h4>
+                          </li>
+                          <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/300496">
+                <h4 class="list_item depth2">콘솔 스샷</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/300534">
+                <h4 class="list_item depth2">PC온라인 스샷</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/300535">
+                <h4 class="list_item depth2">PC패키지 스샷</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/300536">
+                <h4 class="list_item depth2">모바일 스샷</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/179140">
+                <h4 class="list_item depth2">(구)스샷/영상</h4>
+              </a>
+            </li>
+                
+            <li class="menu expand style_open_list">
+              
+                              <h4 class="list_item depth1">유저 동영상</h4>
+                          </li>
+                          <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/300537">
+                <h4 class="list_item depth2">콘솔 영상</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/300538">
+                <h4 class="list_item depth2">PC온라인 영상 </h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/300539">
+                <h4 class="list_item depth2">PC패키지 영상</h4>
+              </a>
+            </li>
+                            <li class="menu">
+              <a href="http://m.ruliweb.com/news/board/300540">
+                <h4 class="list_item depth2">모바일 영상</h4>
+              </a>
+            </li>
+                
             
                         <li class="m_nav_static list_item depth2 expand">
               <a class="sub_parent" href="javascript:;" onclick="app.open_child(this);">
@@ -504,784 +660,1208 @@
   </div>
 </nav>
 
-        <div id="board_list" class="row">
+          <div class="mo_ad_main_ti_wrapper row screen_out" data-t="90">
+      <div
+			class="adrrr ad_308_280"
+			id="mo_ad_main_ti"
+			style="width:308px;height:280px;"
+			><center><script src='//image.ruliweb.com/view/view.js?zoneid=46'></script></center></div>    </div>
+  <div id="board" class="content_main row">
+  
+
+
+  <div id="board_top" class="row widget widget_page section_style_box " data-slideview="1">
+
+  <div class="widget_header row">
+    <div class="title_wrapper col">
+      <a href="http://m.ruliweb.com/news/board/1004?view_best=1">
+        <strong class="section_title">베스트</strong>
+      </a>
+		</div>
+    <div class="best_more r_col board_top_collapse ">BEST 접기</div>
+  </div>
+
+  <div class="list_wrapper widget_body widget_swiper_container row">
+    <div class="swiper-pagination" style="left:60px;top:-3px;"></div>
+
+    <div class="widget_bottom margin_none swiper-wrapper">
+      
+                <ul class="bottom_list swiper-slide">
+                          <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144229">소녀전선 ‘안녕하세요, 라이코입니다’</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144222">[데레스테]「クレイジークレイジー」 이벤트 개최 및 업데이트 내역</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144217">오늘 무료,할인 아이폰 어플 추천 7개 (나침반,프리즘 카메라,오목,아이큐)</a>
+        </li>
+                </ul>
+              
+                <ul class="bottom_list swiper-slide">
+                          <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144213">[대마인 RPG]] OP무비</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144210">스마트폰 대용량 배터리 시대..."차라리 탈착 지원해라"</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144209">러브라이브! 스쿠스타 μ's『여름빛 미소로 1,2,Jump!』댄스 MV</a>
+        </li>
+                </ul>
+              
+                <ul class="bottom_list swiper-slide">
+                          <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144202">"남과 비교하는데 지쳤어요"..SNS 로그아웃</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144201">구글, 아마존 제치고 스마트 스피커 시장점유율 1위 달성해</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144198">'검열' 검색 프로젝트에 입 연 구글…"중국에서 더 많은 일 해야</a>
+        </li>
+                </ul>
+              
+                <ul class="bottom_list swiper-slide">
+                          <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144197">영원한 7일의 도시 '운영 헬적화', 이대로 괜찮을까?</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144196">태어나 ‘말보다 먼저 튼’ 유튜브, 우린 갓튜브 제국에 산다</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144176">소녀전선 [난류연속] PV 전격 공개!</a>
+        </li>
+                </ul>
+              
+                <ul class="bottom_list swiper-slide">
+                          <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144167">소녀전선 무더운 여름, 기다리던 그녀들!!(2)</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144138">아이폰X 노골적 카피…"모토로라, 부끄럽다"</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144134">"검열 받아가면서 중국 가선 안 돼" 구글 직원들 뿔났다</a>
+        </li>
+                </ul>
+              
+                <ul class="bottom_list swiper-slide">
+                          <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144126">LG전자 세계 최대 170인치 ' 마이크로led tv '첫 선</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144118">폰아레나, 삼성 갤럭시 노트 9 리뷰 게재</a>
+        </li>
+              
+                <li class="bottom_list_item">
+          <a class="subject deco text_over" href="http://m.ruliweb.com/news/board/1004/read/2144112">고등학생이 애플 서버를 해킹하여 90GB 분량의 보안 파일을 다운로드했다.</a>
+        </li>
+                </ul>
+                  </div>
+  </div>
+</div>
+
+
+
+
+  <div id="bbs_info" class="row relative">
+    <div class="col col_4 line_h_36">
+              <a id="active_menu" href="http://m.ruliweb.com/news/board/1004" class="bbs_info_menu board_title col_12 text_over text_left"><strong>모바일</strong></a>
+          </div>
+
+
+    <div class="col col_8">
+      <div class="col r_col">
+              <a href="javascript:location.reload();" class="bbs_info_menu btn_refresh btn_default btn_ruli_dark col" title="새로고침"><i class="icon-refresh"></i></a>
+        <a href="javascript:;" onclick="app.add_bookmark();" class="btn_bookmark btn_default btn_ruli_dark col" title="즐겨찾기"><i class="icon-star"></i></a>
+        <a href="http://m.ruliweb.com/news/board/1004/write" class="bbs_info_menu btn_write btn_default btn_ruli_dark col" title="글쓰기"><i class="icon-pencil"></i></a>
+      </div>
+    </div>
+
+     <div class="category screen_out">
+               </div>
+
+  </div>
+
+
+
+
+
+
+<div id="board_list" class="row">
+
+	<div class="board_head_btn r_col">
+	</div>
 	<!-- board Start -->
 	<div class="content_wrapper">
 		<!-- board_top Start -->
-		<div class="board_top row">
-
-			<div class="btn_wrapper row">
-				<input type="hidden" id="board_name" name="board_name" value="루리웹 BEST">
-
-				<div class="category_menu row">
-																<select class="category_select" name="category_select" onchange="location = this.value;">
-															<option value="http://m.ruliweb.com/best/selection?orderby=replycount" >댓글순</option>
-															<option value="http://m.ruliweb.com/best/selection?orderby=recommend" >추천순</option>
-															<option value="http://m.ruliweb.com/best/selection?orderby=readcount" >조회순</option>
-															<option value="http://m.ruliweb.com/best/selection?orderby=regdate" >작성순</option>
-															<option value="http://m.ruliweb.com/best/selection?orderby=best_id"  selected>등록순</option>
-													</select>
-						
-				</div>
-			</div>
-
-			
+		<div class="board_top ">
+														<a href="http://m.ruliweb.com/news/board/1004/list?view_cert=1" class="btn_default btn_ruli_dark col_12 text_large">인증글 보기</a>
+												<input type="hidden" id="board_name" class="board_name" name="board_name" value="모바일 정보 게시판">
+			<input type="hidden" class="board_id"  name="board_id" value="1004">
+			<input type="hidden" class="board_url" name="board_url" value="http://m.ruliweb.com/news/board/1004">
 		</div><!-- board_top end -->
+
+
+    <div class="row">
+								<a class="list_type btn_default btn_yellow col col_6 text_large border_box" target="_self" href="?view=gallery" title="리스트"><i class="icon-th"></i> 갤러리로 보기</a>
+					      <div class="btn_default col col_6 text_large border_box board_notice_collapse ">공지 접기</div>
+    
+          </div>
+
+
 		<!-- board_main start -->
 		<div class="board_main theme_default">
 			<table class="board_list_table">
 				<tbody>
-										<tr class="table_body">
-
+										<tr class="table_body notice ">
 							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38752084">흔한 아버지의 지혜류 甲</a>
-									<span class="num_reply"> (<span
-												class="num">20</span>)</span>																	</div>
+									<a class="subject_link deco_link" href="/family/4454/board/100159/read/9344019">
+										<span class="deco">
+																						[WOW] 격전의 아제로스 레벨업 가이드 (110~120)																					</span>
+
+									</a>
+								</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
 									<span class="writer text_over">
-      									사신군      								</span>
-									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 52                  					</span>
-									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 7146                  					</span>
+										[RULIWEB]
+									</span>
 									<span class="text_bar"> | </span>
 									<span class="time">
-										날짜 17:31									</span>
+										날짜 2018.08.14									</span>
+								</div>
+							</td>
+						</tr>
+											<tr class="table_body notice ">
+							<td class="subject">
+								<div class="title row">
+									<a class="subject_link deco_link" href="/family/4526/board/109995">
+										<span class="deco">
+																						[LOL] 2018 롤챔스 코리아																					</span>
+
+									</a>
+								</div>
+
+								<div class="info row">
+									<span class="writer text_over">
+										[RULIWEB]
+									</span>
+									<span class="text_bar"> | </span>
+									<span class="time">
+										날짜 2018.07.11									</span>
+								</div>
+							</td>
+						</tr>
+											<tr class="table_body notice ">
+							<td class="subject">
+								<div class="title row">
+									<a class="subject_link deco_link" href="/family/4527/board/181429">
+										<span class="deco">
+																						[히오스] HGC 페이즈 2																					</span>
+
+									</a>
+								</div>
+
+								<div class="info row">
+									<span class="writer text_over">
+										[RULIWEB]
+									</span>
+									<span class="text_bar"> | </span>
+									<span class="time">
+										날짜 2018.07.04									</span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38751688">케이온 표절 의혹.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">16</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300010/list?&cate=91">
+										[기타]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144234?">
+										<span class="deco">
+										LG유플러스, 넷플릭스 이어 유튜브와도 '맞손'										</span>
+									</a>
+																																																					</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									BoxBoy      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300010/list">[기타모바일 정보]</a>
+
+                  <span class="writer text_over">
+      							도리통      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 46                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 0</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 14594                  					</span>
+                  <span class="hit">
+                    조회 10                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 16:58									</span>
+                  <span class="time">
+                    날짜 10:45                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38751244">카톡 잘못보낸 웃대인의 드립</a>
-									<span class="num_reply"> (<span
-												class="num">15</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=118">
+										[하드웨어]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144233?">
+										<span class="deco">
+										“누가 더 오래가나”… 불붙은 스마트폰 배터리 전쟁										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">8</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									부들부들™      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							불타는의그대      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 94                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 0</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 24354                  					</span>
+                  <span class="hit">
+                    조회 721                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 16:11									</span>
+                  <span class="time">
+                    날짜 10:06                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38751142">나 곧 영화관 알바하는데 손님인척 해주라.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">18</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300010/list?&cate=91">
+										[기타]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144232?">
+										<span class="deco">
+										이통사, 갤노트9 출시 앞두고 요금제 경쟁 2라운드										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">8</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									EastSea      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300010/list">[기타모바일 정보]</a>
+
+                  <span class="writer text_over">
+      							스타크래프트2      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 70                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 0</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 24701                  					</span>
+                  <span class="hit">
+                    조회 1971                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 16:01									</span>
+                  <span class="time">
+                    날짜 08:16                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750974">마동석을 모르는 엄마한테 장난을 쳐봤음.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">27</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=114">
+										[기타]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144231?">
+										<span class="deco">
+										갤럭시S7엣지, 공짜폰 됐다										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">14</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									월급도둑쨩      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							스타크래프트2      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 176                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 2</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 24569                  					</span>
+                  <span class="hit">
+                    조회 5380                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:46									</span>
+                  <span class="time">
+                    날짜 08:12                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750908">케이크 사직서.JPG</a>
-									<span class="num_reply"> (<span
-												class="num">28</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=114">
+										[기타]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144230?">
+										<span class="deco">
+										스마트폰 이제 ‘펜슬 전쟁’… 갤노트 아성에 애플·LG 도전장										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">123</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									쿠르스와로      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							레이팡      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 100                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #ef618f;">추천 5</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 27371                  					</span>
+                  <span class="hit">
+                    조회 9971                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:39									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750879">개다래 향수 후기.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">27</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=191">
+										[iOS]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144229?">
+										<span class="deco">
+										소녀전선 ‘안녕하세요, 라이코입니다’										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">55</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									UniqueAttacker      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							마에카와미쿠      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 93                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #c23b22;">추천 12</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 25796                  					</span>
+                  <span class="hit">
+                    조회 10757                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:36									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750795">원빈도 좋아하는 말.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">19</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=190">
+										[Android]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144228?">
+										<span class="deco">
+										[아이돌 마스터 밀리시타] 톱클로버 + (엔젤 스타즈) 판매										</span>
+									</a>
+									<i class="icon-picture"></i>																											<span class="num_reply"> (<span
+											class="num">2</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									쿠르스와로      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							야부키 카나　      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 52                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 2</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 15686                  					</span>
+                  <span class="hit">
+                    조회 1825                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:29									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750690">김치찌개 먹다 현탐온 맛녀석들.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">33</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=190">
+										[Android]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144227?">
+										<span class="deco">
+										[아이돌 마스터 밀리시타] 초 비치발레 키 비주얼. SSR정보										</span>
+									</a>
+									<i class="icon-picture"></i>																		<i class="icon-youtube-play"></i>									<span class="num_reply"> (<span
+											class="num">15</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									다이유-EK      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							야부키 카나　      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 59                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #ef618f;">추천 8</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 25794                  					</span>
+                  <span class="hit">
+                    조회 3034                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:20									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750641">친구 이용류.JPG</a>
-									<span class="num_reply"> (<span
-												class="num">10</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=114">
+										[기타]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144226?">
+										<span class="deco">
+										‘배터리 오래가는 폰’ 톱6에 삼성·LG폰 3종 포함…美 컨슈머리포트 선정										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">17</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									쿠르스와로      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							레이팡      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 49                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 4</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 21383                  					</span>
+                  <span class="hit">
+                    조회 4127                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:16									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750554">논산의 마스코트.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">40</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300008/list?&cate=66">
+										[기타]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144225?">
+										<span class="deco">
+										애플 스토어, 5년간 90개 더 늘린다										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">40</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									쿠르스와로      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300008/list">[애플 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							레이팡      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 146                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #ef618f;">추천 5</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 27184                  					</span>
+                  <span class="hit">
+                    조회 5719                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:08									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750517">기린이 사람처럼 되면 불편한 이유</a>
-									<span class="num_reply"> (<span
-												class="num">42</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300008/list?&cate=103">
+										[앱]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144224?">
+										<span class="deco">
+										FGO, 화집 시동 기념 캠페인										</span>
+									</a>
+																		<i class="icon-picture icon-red"></i>																		<span class="num_reply"> (<span
+											class="num">12</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									Aragaki Ayase      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300008/list">[애플 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							이토 시즈카      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 71                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 3</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 20753                  					</span>
+                  <span class="hit">
+                    조회 4942                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:05									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750499">흔한 메쏘드연기.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">24</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300008/list?&cate=102">
+										[아이폰]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144223?">
+										<span class="deco">
+										캐쥬얼 pvp 슈팅 게임 [ Mighty Army ] - 애플 앱스토어 출시										</span>
+									</a>
+																											<i class="icon-youtube-play"></i>									<span class="num_reply"> (<span
+											class="num">7</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									쿠르스와로      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300008/list">[애플 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							마이티아미      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 64                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #ef618f;">추천 5</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 17163                  					</span>
+                  <span class="hit">
+                    조회 2995                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:03									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750498">과도한 칭찬을 받은 사장님 반응.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">9</span>)</span>																	</div>
-								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									시노버즈      								</span>
-									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 44                  					</span>
-									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 13593                  					</span>
-									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 15:03									</span>
-								</div>
-							</td>
-						</tr>
-												<!-- <tr>
-							<td class="ad_wrapper row">
-															</td>
-						<tr> -->
-													<tr class="table_body">
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=190">
+										[Android]									</a>
 
-							<td class="subject">
-								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750363">살인사건 레전드.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">35</span>)</span>																	</div>
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144222?">
+										<span class="deco">
+										[데레스테]「クレイジークレイジー」 이벤트 개최 및 업데이트 내역										</span>
+									</a>
+									<i class="icon-picture"></i>																											<span class="num_reply"> (<span
+											class="num">19</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									시노버즈      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							Anonymity02      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 136                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #c23b22;">추천 15</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 27564                  					</span>
+                  <span class="hit">
+                    조회 3646                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 14:49									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38750367">중국의 기묘한 사건.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">64</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=118">
+										[하드웨어]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144221?">
+										<span class="deco">
+										노트 Note 9 vs S9 플러스 Plus 카메라 비교										</span>
+									</a>
+									<i class="icon-picture"></i>																											<span class="num_reply"> (<span
+											class="num">36</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									Neria      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							나태한성자      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 199                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #ef618f;">추천 5</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 31098                  					</span>
+                  <span class="hit">
+                    조회 10562                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 14:49									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749860">독일제 농기계의 속도</a>
-									<span class="num_reply"> (<span
-												class="num">51</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=118">
+										[하드웨어]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144220?">
+										<span class="deco">
+										노트9 (Note 9) vs P20 pro 카메라 테스트										</span>
+									</a>
+									<i class="icon-picture"></i>																		<i class="icon-youtube-play"></i>									<span class="num_reply"> (<span
+											class="num">57</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									Aragaki Ayase      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							나태한성자      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 72                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 4</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 30241                  					</span>
+                  <span class="hit">
+                    조회 6246                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 14:07									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749796">ppt 발표 담당이 심상치 않다.gif</a>
-									<span class="num_reply"> (<span
-												class="num">15</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=190">
+										[Android]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144219?">
+										<span class="deco">
+										모바일 공포게임 신작 "다이어리(Die)"를 소개합니다.										</span>
+									</a>
+																		<i class="icon-picture icon-red"></i>																		<span class="num_reply"> (<span
+											class="num">24</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									쿠르스와로      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							진인환변호사      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 70                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #ef618f;">추천 9</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 26439                  					</span>
+                  <span class="hit">
+                    조회 7481                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 14:02									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749590">딘딘 행사중 무대불남.gif</a>
-									<span class="num_reply"> (<span
-												class="num">37</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=190">
+										[Android]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144218?">
+										<span class="deco">
+										벽람항로 8월 20일 업데이트 예고										</span>
+									</a>
+									<i class="icon-picture"></i>																											<span class="num_reply"> (<span
+											class="num">7</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									gix1      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							육깝권      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 87                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 1</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 25682                  					</span>
+                  <span class="hit">
+                    조회 3195                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 13:41									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749672">고스펙 노처녀의 쓸쓸한 현실</a>
-									<span class="num_reply"> (<span
-												class="num">223</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300008/list?&cate=103">
+										[앱]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144217?">
+										<span class="deco">
+										오늘 무료,할인 아이폰 어플 추천 7개 (나침반,프리즘 카메라,오목,아이큐)										</span>
+									</a>
+																		<i class="icon-picture icon-red"></i>																		<span class="num_reply"> (<span
+											class="num">4</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									월급도둑쨩      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300008/list">[애플 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							해님달님      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 131                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #c23b22;">추천 10</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 42616                  					</span>
+                  <span class="hit">
+                    조회 4887                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 13:50									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749360">착한기업 제애그룹.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">57</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300010/list?&cate=91">
+										[기타]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144216?">
+										<span class="deco">
+										T플랜 100만명 돌파…데이터 4.2GB 더 써										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">19</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									도코레[짤유머]      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300010/list">[기타모바일 정보]</a>
+
+                  <span class="writer text_over">
+      							스타크래프트2      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 137                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 0</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 35048                  					</span>
+                  <span class="hit">
+                    조회 7081                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 13:19									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749255">일본 만화 악당이 친절한 설명충들인 이유 . jpg</a>
-									<span class="num_reply"> (<span
-												class="num">39</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=190">
+										[Android]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144215?">
+										<span class="deco">
+										80마리 맹수들의 혈전, 애니멀 킹덤 온라인이 출시되었습니다.										</span>
+									</a>
+																											<i class="icon-youtube-play"></i>									<span class="num_reply"> (<span
+											class="num">6</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									βρυκόλακας      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							gba1224      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 133                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #ef618f;">추천 6</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 31197                  					</span>
+                  <span class="hit">
+                    조회 2589                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 13:08									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749196">돈 갚으라고 재촉하는 친구</a>
-									<span class="num_reply"> (<span
-												class="num">15</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=118">
+										[하드웨어]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144214?">
+										<span class="deco">
+										노트9 vs 홍미노트5 유튜브 배터리 테스트										</span>
+									</a>
+									<i class="icon-picture"></i>																											<span class="num_reply"> (<span
+											class="num">58</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									Mimicat      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							나태한성자      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 76                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 3</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 24680                  					</span>
+                  <span class="hit">
+                    조회 9646                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 13:00									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749236">흔한 유부남의 대단한 정신력</a>
-									<span class="num_reply"> (<span
-												class="num">43</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=190">
+										[Android]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144213?">
+										<span class="deco">
+										[대마인 RPG]] OP무비										</span>
+									</a>
+																											<i class="icon-youtube-play"></i>									<span class="num_reply"> (<span
+											class="num">54</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									발자국]      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							레이레나드      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 162                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #c23b22;">추천 13</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 39864                  					</span>
+                  <span class="hit">
+                    조회 8650                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 13:05									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38749139">유사 액체류.gif</a>
-									<span class="num_reply"> (<span
-												class="num">27</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300008/list?&cate=101">
+										[아이패드]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144212?">
+										<span class="deco">
+										[루머] 13인치 MacBook, 신형 iPad Pro 9월 발표										</span>
+									</a>
+									<i class="icon-picture"></i>																											<span class="num_reply"> (<span
+											class="num">27</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									13살무녀에요      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300008/list">[애플 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							Landsknecht™      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 83                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 3</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 32465                  					</span>
+                  <span class="hit">
+                    조회 12768                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 12:53									</span>
+                  <span class="time">
+                    날짜 2018.08.19                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38748701">클럽 철벽녀.jpg</a>
-									<span class="num_reply"> (<span
-												class="num">31</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=191">
+										[iOS]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144211?">
+										<span class="deco">
+										드래곤포커 x 어떤마법의 금서목록 콜라보 개최										</span>
+									</a>
+									<i class="icon-picture"></i>																											<span class="num_reply"> (<span
+											class="num">10</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									파도야파도야      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							S플래티넘      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 159                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 0</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 52316                  					</span>
+                  <span class="hit">
+                    조회 2656                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 12:13									</span>
+                  <span class="time">
+                    날짜 2018.08.18                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38748621">경호원한테 인사해유</a>
-									<span class="num_reply"> (<span
-												class="num">39</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=118">
+										[하드웨어]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144210?">
+										<span class="deco">
+										스마트폰 대용량 배터리 시대..."차라리 탈착 지원해라"										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">78</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									치킨마요먹고싶다      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							lille      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 120                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #c23b22;">추천 20</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 38737                  					</span>
+                  <span class="hit">
+                    조회 14009                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 12:05									</span>
+                  <span class="time">
+                    날짜 2018.08.18                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38748502">아빠 나 부가티 베이론 박살냈어ㅠㅠ</a>
-									<span class="num_reply"> (<span
-												class="num">48</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/320108/list?&cate=190">
+										[Android]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144209?">
+										<span class="deco">
+										러브라이브! 스쿠스타 μ's『여름빛 미소로 1,2,Jump!』댄스 MV										</span>
+									</a>
+																											<i class="icon-youtube-play"></i>									<span class="num_reply"> (<span
+											class="num">20</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									헬조선에적응못해서 정신나간사람      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/320108/list">[모바일 게임 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							마이온      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 145                  					</span>
+										                <span class="recomd">
+	                  <strong style="color: #c23b22;">추천 10</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 42837                  					</span>
+                  <span class="hit">
+                    조회 2286                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 11:54									</span>
+                  <span class="time">
+                    날짜 2018.08.18                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38748383">동성친구를 교육하는 여성 .kakaoTalk</a>
-									<span class="num_reply"> (<span
-												class="num">72</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300010/list?&cate=91">
+										[기타]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144208?">
+										<span class="deco">
+										보링컴퍼니, 다저스 스타디움까지 4분… 더그아웃 루프 계획 발표										</span>
+									</a>
+									<i class="icon-picture"></i>																											<span class="num_reply"> (<span
+											class="num">1</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									월급도둑쨩      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300010/list">[기타모바일 정보]</a>
+
+                  <span class="writer text_over">
+      							사쿠라모리 카오리P      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 287                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 2</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 38888                  					</span>
+                  <span class="hit">
+                    조회 1359                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 11:41									</span>
+                  <span class="time">
+                    날짜 2018.08.18                  </span>
 								</div>
 							</td>
 						</tr>
 											<tr class="table_body">
+														<td class="subject">
 
-							<td class="subject">
 								<div class="title row">
-									<a class="subject_link deco"
-									   href="http://m.ruliweb.com/best/board/300143/read/38748112">강물에 빠진 강아지 구해준 디시인</a>
-									<span class="num_reply"> (<span
-												class="num">74</span>)</span>																	</div>
+									
+																		<a class="cate_label" href="http://m.ruliweb.com/news/board/300009/list?&cate=109">
+										[이통사]									</a>
+
+									<a class="subject_link deco_link"
+									   href="http://m.ruliweb.com/news/board/1004/read/2144207?">
+										<span class="deco">
+										"180조 투자 시너지 크다"..5G 장비 삼성전자로 기우는 통신업계										</span>
+									</a>
+																																				<span class="num_reply"> (<span
+											class="num">52</span>)</span>																	</div>
+
 								<div class="info row">
-									<a class="board_name"
-									   href="http://m.ruliweb.com/best/board/300143">[유머 게시판]</a>
-									<span class="writer text_over">
-      									가라아게 마스크      								</span>
+
+									<a class="board_name" href="http://m.ruliweb.com/news/board/300009/list">[안드로이드 정보 게시판]</a>
+
+                  <span class="writer text_over">
+      							lille      						</span>
 									<span class="text_bar"> | </span>
-									<span class="recomd">
-                    					추천 273                  					</span>
+										                <span class="recomd">
+	                  <strong >추천 3</strong>
+                  </span>
 									<span class="text_bar"> | </span>
-									<span class="hit">
-										조회 44833                  					</span>
+                  <span class="hit">
+                    조회 7000                  </span>
 									<span class="text_bar"> | </span>
-									<span class="time">
-										날짜 11:12									</span>
+                  <span class="time">
+                    날짜 2018.08.18                  </span>
 								</div>
 							</td>
 						</tr>
@@ -1295,36 +1875,235 @@
 			<!-- paging -->
 			<div class="paging_wrapper">
 										<a class="btn_num active">1</a>
-											<a href="http://m.ruliweb.com/best/selection?page=2" class="btn_num">2</a>
-												<a href="http://m.ruliweb.com/best/selection?page=3" class="btn_num">3</a>
-												<a href="http://m.ruliweb.com/best/selection?page=4" class="btn_num">4</a>
-												<a href="http://m.ruliweb.com/best/selection?page=5" class="btn_num">5</a>
-											<a href="http://m.ruliweb.com/best/selection?page=6" class="btn_next"><i
-								class="icon-chevron-right"></i></a>
+											<a href="http://m.ruliweb.com/news/board/1004/list?page=2" class="btn_num">2</a>
+												<a href="http://m.ruliweb.com/news/board/1004/list?page=3" class="btn_num">3</a>
+												<a href="http://m.ruliweb.com/news/board/1004/list?page=4" class="btn_num">4</a>
+												<a href="http://m.ruliweb.com/news/board/1004/list?page=5" class="btn_num">5</a>
+											<a href="http://m.ruliweb.com/news/board/1004/list?page=6" class="btn_next"><i class="icon-chevron-right"></i></a>
 							</div>
 			<br>
 			<!-- search -->
 			<div class="search_wrapper">
-								<form name="board_search" method="get" action="http://m.ruliweb.com/best/selection">
-					<input type="hidden" name="orderby" value="best_id">
-					<input type="hidden" name="type" value="selection">
-					<select class="col col_3 line_h_30" name="search_type">
+								<form name="board_search" method="get" action="http://m.ruliweb.com/news/board/1004?">
+										<select class="col col_3 line_h_30" name="search_type">
 						<option value="subject" selected>제목</option>
-						<option value="nick" >글쓴이</option>
+						<option value="content" >본문</option>
+						<option value="subject_content" >
+							제목+본문
+						</option>
+						<option value="name" >글쓴이</option>
 					</select>
 					<input type="text" class="line_h_30 col col_7 text_left text_large border_box" name="search_key"
-						   value="" required>
+						   value="">
 					<button type="submit" class="btn_default btn_ruli_dark border_box col col_2">검색</button>
 				</form>
 			</div>
-			<!-- <div class="ad_wrapper row">
-				      </div> -->
-			<!-- <br> -->
+			<br>
+			<a href="http://m.ruliweb.com/news/board/1004/write" class="btn_default btn_ruli_dark text_large line_h_40 col_12" title="글쓰기">글쓰기</a>
+									<div class="nbp_container default"></div>
+						<div class="ad_wrapper row"><div
+			class="adrrr ad_320_100"
+			id="mboard_19_320x100_01"
+			style="width:320px;height:100px;"
+			><script src='//image.ruliweb.com/view/view.js?zoneid=39'></script></div></div>			<br>
 		</div><!-- board_bottom end -->
 	</div><!-- board end -->
 </div>
+</div>
 
 
+
+<div id="list_read_bottom" class="row widget widget_page section_style_box" data-slideview="1" data-first="1">
+
+  <div class="widget_header row">
+    <div class="tab hit col col_6 active">
+      <div class="title_wrapper text_center">
+        <strong class="section_title">힛갤</strong>
+      </div>
+		</div>
+    <div class="tab best col col_6 ">
+      <div class="title_wrapper text_center">
+        <strong class="section_title">오른쪽 BEST</strong>
+      </div>
+		</div>
+  </div>
+
+  <div class="list_wrapper widget_body widget_swiper_container row">
+
+    <div class="widget_bottom margin_none swiper-wrapper">
+      <ul class="bottom_list swiper-slide">
+                        <li class="bottom_list_item">
+            <a class="subject deco list_read_bottom_title" href="http://m.ruliweb.com/best/selection"><strong>많이 본 글/힛갤 더보기</strong></a>
+          </li>
+                        <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819702">
+          <strong>          5년전 토르VS현제 토르 비교움짤.gif<span class="num_reply">[36]</span>
+          </strong>        </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819534">
+                    그을린 예술작품.gif<span class="num_reply">[15]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819444">
+                    요즘 밴츠차 신기술.jpg<span class="num_reply">[67]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819399">
+                    남녀차별 보소.<span class="num_reply">[7]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819327">
+                    ???: 이봐, 군인이 될 거라면서? 아주 명...<span class="num_reply">[33]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819302">
+                    PX가면 비싸요<span class="num_reply">[27]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819278">
+                    장난치는 사자표정<span class="num_reply">[29]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819258">
+                    막힌 변기 한방에 뚫기<span class="num_reply">[32]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819225">
+          <strong>          엄마의 시범<span class="num_reply">[12]</span>
+          </strong>        </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819140">
+                    냥이의 폭력성.gif<span class="num_reply">[15]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819095">
+                    시구하는 수녀님.gif<span class="num_reply">[37]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819087">
+                    아빠니까 내가 주는거야... 알지... 크읍....<span class="num_reply">[13]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38819038">
+                    물에 빠진 주인을 본 댕댕이<span class="num_reply">[29]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38818867">
+                    야레야레 사탄 또 당신인가요<span class="num_reply">[19]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38818626">
+                    옆집 개랑 놀기.gif<span class="num_reply">[10]</span>
+                  </a>
+        </li>
+                                      <li class="bottom_list_item">
+          <a class="subject deco" href=
+          "http://m.ruliweb.com/best/board/300143/read/38817976">
+                    맛있는 밥짓기<span class="num_reply">[60]</span>
+                  </a>
+        </li>
+              </ul>
+      <ul class="bottom_list swiper-slide">
+                        <li class="bottom_list_item">
+            <a class="subject deco list_read_bottom_title" href="http://web.ruliweb.com/best/hit_history.htm"><strong>오른쪽 BEST 글 더보기</strong></a>
+          </li>
+                <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300082/read/30579849" >
+            <strong>            아스라다 더블원 에어로모드            </strong>          </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300116/read/30561643" >
+                        결혼 10년만에 이사                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300118/read/30559946" >
+                        레고 윙 건담 제로                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300087/read/30577531" >
+            <strong>            유토로 만든 패트릭 레드필드            </strong>          </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300117/read/30595212" >
+                        갈비돈까스                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300116/read/30561644" >
+                        거실과 주방의 게임 환경	                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300116/read/30561638" >
+            <strong>            제 게임방 진열장입니다.            </strong>          </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300117/read/30595240" >
+                        크림 새우 만들어 봤습니다                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/320001/read/376200" >
+                        없어서 직접 사다가 써보는 리뷰                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300117/read/30595244" >
+            <strong>            미국 O.C fair 길거리 음식들            </strong>          </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300117/read/30595188" >
+                        군필자들의 PTSD                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300117/read/30595275" >
+                        빠네파스타와 소고기스테이크                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300086/read/30560296" >
+            <strong>            DX 초합금혼 콤바트라V             </strong>          </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300087/read/30577512" >
+                        메탈빌드 에일스트라이크건담                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/hobby/board/300182/read/30371950" >
+                        V4 파니갈레 구경왔다가..                      </a>
+        </li>
+                              <li class="bottom_list_item">
+                    <a class="subject deco" href="http://m.ruliweb.com/news/board/11/read/1684" >
+            <strong>            디테일이 살려낸 스케일            </strong>          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+</div>
 	</div><!-- main end -->
 
 
@@ -1418,6 +2197,21 @@
 </div>
 
 
+<script type="text/javascript" src="http://adimg3.search.naver.net/adpost/adpost_show_ads_min.js"></script>
+<script type="text/javascript">
+function __nbp_ad_callback(data){
+	app.nbp_ad_callback(data);
+}
+</script>
+<script type="text/javascript">
+NBP_ADPOST({
+		ch : "m_ruliweb.ch2",
+		cnt : 3,
+		cat1 : "#뉴스",
+		kwdGrp : "모바일루리웹_공통",
+	service : "m_ai"
+});
+</script>
 <script>
 	(function(d,a,b,l,e,_) {
 	d[b]=d[b]||function(){(d[b].q=d[b].q||[]).push(arguments)};e=a.createElement(l);

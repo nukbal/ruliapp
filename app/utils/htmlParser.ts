@@ -10,25 +10,10 @@ export interface INode {
   childNodes?: INode[];
   next?: INode;
   prev?: INode;
-  /** how deep this node's children */
-  depth?: number;
 }
 
-const kBlockElements = {
-  div: true,
-  p: true,
-  // ul: true,
-  // ol: true,
-  li: true,
-  // table: true,
-  // tr: true,
-  td: true,
-  section: true,
-  br: true
-};
-
 const kMarkupPattern = /<!--[^]*?(?=-->)-->|<(\/?)([a-z][a-z0-9]*)\s*([^>]*?)(\/?)>/gi;
-const kAttributePattern = /\b(id|class)\s*=\s*("([^"]+)"|'([^']+)'|(\S+))/ig;
+const kAttributePattern = /\b(id|class|href)\s*=\s*("([^"]+)"|'([^']+)'|(\S+))/ig;
 const kSelfClosingElements = {
   meta: true,
   img: true,
@@ -75,6 +60,7 @@ function HTMLNode(name: string = '', attrs?: any) {
     let queries = [];
     if (attrs.id) queries.push(attrs.id);
     if (attrs.class) queries.push(attrs.class);
+    if (attrs.href) _node.attrs = { href: attrs.href };
     _node.q = queries.join(' ');
   }
   _node.childNodes = [];
@@ -111,15 +97,17 @@ function appendChild(parent: INode, child: INode) {
   return child;
 }
 
+function isQueryContains(node: INode, arr: string[]) {
+  const query = node.tagName + ' ' + (node.q ? `${node.q} ` : '');
+  for (let i = 0, len = arr.length; i < len; i += 1) {
+    if (query.indexOf(arr[i] + ' ') === -1) return false;
+  }
+  return true;
+}
+
 function searchTree(node: INode, arr: string[]): INode | undefined {
-  const query = node.tagName + ' ' + (node.q || '');
-  if(query.indexOf(arr[0]) > -1) {
-    console.log(query);
-    for (let i = 1; i < arr.length; i += 1) {
-      if (query.indexOf(arr[i]) === -1) {
-        return;
-      }
-    }
+  const isMatch = isQueryContains(node, arr);
+  if(isMatch) {
     return node;
   } else if (node.childNodes) {
     let cursor;
@@ -154,8 +142,8 @@ function findMatchNode(root: INode, pattern: string, all?: boolean) {
 
       if (isLast && all) {
         const res = [];
-        while (cursor.next) {
-          res.push(cursor);
+        while (cursor) {
+          if (isQueryContains(cursor, current)) res.push(cursor);
           cursor = cursor.next;
         }
         return res;
@@ -165,7 +153,7 @@ function findMatchNode(root: INode, pattern: string, all?: boolean) {
     }
   }
 
-  return;
+  return node;
 }
 
 export function querySelector(parent: INode, pattern: string): INode | undefined {

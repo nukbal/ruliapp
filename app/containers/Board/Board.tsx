@@ -1,17 +1,14 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, createRef} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { SafeAreaView } from 'react-navigation';
-import { StyleSheet, FlatList, StatusBar, View, RefreshControl } from 'react-native';
+import { StyleSheet, FlatList, StatusBar, RefreshControl } from 'react-native';
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, getBoardInfo, isBoardLoading, Actions } from '../../store/ducks/boards';
 import { darkBarkground } from '../../styles/color';
-
-import BoardList from '../../config/BoardList';
-
 
 const styles = StyleSheet.create({
   container: {
@@ -28,82 +25,90 @@ const styles = StyleSheet.create({
   },
 });
 
-const listPlaceholder = [];
+interface Props {
+  navigation: any;
+  request: typeof Actions.request;
+  info: ReturnType<typeof getBoardInfo>;
+  list: BoardRecord[];
+  refreshing: boolean;
+}
 
-Array.from(Array(10), () => { listPlaceholder.push({ placeholder: true }); });
-
-export class Board extends PureComponent {
-  static navigationOptions = ({ navigation }) => {
-    const title = navigation.getParam('title', BoardList.BestHumorBoard.title);
+export class Board extends PureComponent<Props> {
+  static navigationOptions = ({ navigation }: Props) => {
+    const title = navigation.getParam('title');
     return {
       title: title || '',
     };
   };
 
   static defaultProps = {
-    list: listPlaceholder,
     refreshing: false,
   }
 
   componentDidMount() {
     const { getParam } = this.props.navigation;
-    const params = BoardList.BestHumorBoard.params;
-    const prefix = getParam('prefix', params.prefix);
-    const boardId = getParam('boardId', params.boardId);
-    this.props.requestBoard(prefix, boardId, 1);
+    const prefix = getParam('prefix');
+    const boardId = getParam('boardId');
+    if (prefix && boardId) {
+      this.props.request(prefix, boardId, { page: 1 });
+    }
   }
 
-  pressItem = (id, title, prefix, boardId) => {
+  pressItem = ({ id, subject, prefix, boardId }: LinkType & { subject: string }) => {
     const { navigate } = this.props.navigation;
-    navigate('Detail', { id, board: { prefix, boardId }, title });
+    navigate('Detail', { id, board: { prefix, boardId }, subject });
   }
 
-  renderItem = (row) => {
-    const { item } = row;
+  renderItem = (row: BoardRecord) => {
     return (
       <BoardItem
         onPress={this.pressItem}
-        {...item}
+        {...row}
       />
     );
   }
 
   onEndReached = () => {
-    const { list } = this.props;
-    if (list.filter(({ id }) => id).length > 0) {
-      this.updateList(this.props.info.page + 1, true);
+    const { list, info } = this.props;
+    if (list.filter(({ id }) => id).length > 0 && info.params) {
+      this.updateList(info.params.page + 1, true);
     }
   }
 
   onRefresh = () => {
+    // @ts-ignore
     this.element.scrollToIndex({ index: 0, viewOffset: 0 });
     this.updateList(1, false);
   }
 
-  onSearch = (value) => {
-    const { info, refreshing } = this.props;
+  onSearch = (value: string) => {
+    const { info, request } = this.props;
     const { prefix, boardId } = info;
-    this.props.requestBoard(prefix, boardId, 1, value);
-  }
-
-  updateList = (page, isEnd) => {
-    const { info, refreshing } = this.props;
-    const { prefix, boardId } = info;
-    if (!refreshing) {
-      this.props.updateBoard(prefix, boardId, page, isEnd);
+    if (prefix && boardId && value) {
+      request(prefix, boardId, { page: 1, keyword: value });
     }
   }
 
-  element = null
+  updateList = (page: number, isEnd: boolean) => {
+    const { info, refreshing, request } = this.props;
+    const { prefix, boardId } = info;
+    if (!refreshing && prefix && boardId) {
+      request(prefix, boardId, { page }, true);
+    }
+  }
+
+  element = createRef<FlatList<any>>();
 
   render() {
-    const { list, info, refreshing } = this.props;
+    const { list, refreshing } = this.props;
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
-          ref={(ref) => { this.element = ref; }}
+          ref={this.element}
           data={list}
+          // @ts-ignore
           renderItem={this.renderItem}
+          // @ts-ignore
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
           refreshControl={
             <RefreshControl
@@ -112,7 +117,7 @@ export class Board extends PureComponent {
               onRefresh={this.onRefresh}
             />
           }
-          getItemLayout={(data, index) => (
+          getItemLayout={(_, index) => (
             {length: 75, offset: 75 * index, index}
           )}
           initialNumToRender={10}
@@ -126,13 +131,13 @@ export class Board extends PureComponent {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
-    requestBoard: bindActionCreators(Actions.request, dispatch),
+    request: bindActionCreators(Actions.request, dispatch),
   };
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: AppState) {
   return {
     info: getBoardInfo(state),
     list: getBoardList(state),
@@ -140,4 +145,5 @@ function mapStateToProps(state) {
   };
 }
 
+// @ts-ignore
 export default connect(mapStateToProps, mapDispatchToProps)(Board);

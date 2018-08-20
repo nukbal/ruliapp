@@ -1,8 +1,46 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 
+export function parseBoardUrl(href: string) {
+  const res: any = {};
+  const url = href.replace('http://m.ruliweb.com', '').replace('/', '');
+
+  let cursor = url.indexOf('/board');
+  res.prefix = url.substring(0, cursor);
+
+  cursor = cursor + 7;
+
+  // detect if the link is for post
+  if (url.indexOf('/read/', cursor) > -1) {
+    const startIdx = url.indexOf('/read/', cursor);
+    res.boardId = url.substring(cursor, startIdx); 
+    res.id = url.substring(startIdx + 6, url.length).replace('?', '');
+    res.key = `${res.prefix}_${res.boardId}_${res.id}`;
+  } else {
+    const queryIdx = url.indexOf('?', cursor + 7);
+    if (queryIdx > -1 && queryIdx !== url.length - 1) {
+      const queryStr = url.substring(queryIdx + 1, url.length);
+      res.param = queryStr.split('&')
+        .filter(item => item)
+        .map(item => item.split('='))
+        .reduce((acc, cur) => {
+          const res: any = acc;
+          res[cur[0]] = cur[1];
+          return res;
+        }, {});
+
+      res.boardId = url.substring(cursor, queryIdx).replace('/list', '');
+    } else {
+      res.boardId = url.substring(cursor, url.length);
+    }
+    res.key = `${res.prefix}_${res.boardId}`;
+  }
+
+  return res;
+}
 
 function formatBoardRow(node: INode): BoardRecord | undefined {
-  const record = {};
+  // @ts-ignore
+  const record: BoardRecord = {};
 
   if (!node.childNodes) return;
   const td = node.childNodes[0];
@@ -15,71 +53,79 @@ function formatBoardRow(node: INode): BoardRecord | undefined {
   if (!titleDiv || !infoDiv) return;
   if (!titleDiv.childNodes || !infoDiv.childNodes) return;
 
-  const temp = querySelector(titleDiv, 'span.subject_link text');
-  console.log(temp);
+  let cursor;
 
-  for (let i = 0, len = titleDiv.childNodes.length; i < len; i += 1) {
-    const current = titleDiv.childNodes[i];
-    if (!current.q || !current.childNodes) continue;
-    if (current.q.indexOf('cate_label') > -1) {
-      // @ts-ignore
-      record.categoryName = current.childNodes[0].value;
-    } else if (current.q.indexOf('subject_link') > -1) {
-      // @ts-ignore
-      record.title = current.childNodes[0].value;
-    } else if (current.q.indexOf('num_reply') > -1) {
-      const num = querySelector(current, 'span.num');
-      // @ts-ignore
-      if (num) record.commentNum = num.value;
-    }
+  if (node.q!.indexOf('notice') > -1) record.isNotice = true;
+
+  // board title
+  cursor = querySelector(titleDiv, 'a.subject_link');
+  if (cursor && cursor.attrs) {
+    record.link = parseBoardUrl(cursor.attrs.href!);
+    const text = querySelector(cursor, 'text');
+    if (text) record.subject = text.value!;
+  } else return;
+
+  // board category
+  cursor = querySelector(titleDiv, 'a.cate_label text');
+  const bracketRegex = new RegExp(/[\[|\]]/, 'g');
+  if (cursor) {
+    record.categoryName = cursor.value!.replace(bracketRegex, '');
+  } else {
+    cursor = querySelector(infoDiv, 'a.board_name text');
+    if (cursor) record.categoryName = cursor.value!.replace(bracketRegex, '');
   }
 
-  console.log(titleDiv);
-  console.log(infoDiv);
+  // count of comments
+  cursor = querySelector(titleDiv, 'span.num text');
+  if (cursor) record.comments = cursor.value;
 
-  // const result = {};
-  // const subject = nodes.querySelector('td.subject a');
-  // const link = subject.attributes.href.replace('http://bbs.ruliweb.com/', '');
+  // author name
+  cursor = querySelector(infoDiv, 'span.writer text');
+  if (cursor) record.author = cursor.value!;
 
-  // result.id = link.substring(link.lastIndexOf('/') + 1, link.length);
-  // result.title = subject.rawText.trim();
-  // result.prefix = link.substring(0, link.indexOf('/'));
-  // result.boardId = link.substring(link.indexOf('board/') + 6, link.indexOf('/read'));
+  // view counts
+  cursor = querySelector(infoDiv, 'span.hit text');
+  if (cursor) record.views = cursor.value!.replace('조회 ', '');
 
-  // const comments = nodes.querySelector('span.num');
-  // if (comments) result.comments = comments.text;
-  // result.author = nodes.querySelector('td.writer').text;
-  // result.likes = nodes.querySelector('td.recomd').text;
-  // result.views = nodes.querySelector('td.hit').text;
-  // result.times = nodes.querySelector('td.time').text;
+  // posted date/time
+  cursor = querySelector(infoDiv, 'span.time text');
+  if (cursor) record.date = cursor.value!.replace('날짜 ', '');
 
-  // result.key = `${result.prefix}_${result.boardId}_${result.id}`;
-  // return result;
+  cursor = querySelector(infoDiv, 'span.recomd text');
+  if (cursor) record.likes = cursor.value!.replace('추천 ', '');
+
   return record;
 }
 
+export interface IParseBoard { 
+  title: string;
+  rows: BoardRecord[];
+  notices: BoardRecord[];
+}
 
-export default function parseBoardList (htmlString: string): { title: string, data: BoardRecord[] } {
+export default function parseBoardList (htmlString: string): IParseBoard {
   const title = '';
   const startIndex = htmlString.indexOf('<table class="board_list_table"');
-  const endIndex = htmlString.indexOf('</table>');
+  const endIndex = htmlString.indexOf('</table>', startIndex);
   const html = htmlString.substring(startIndex, endIndex);
   const Nodes = loadHtml(html);
 
-  const boardNodes = querySelectorAll(Nodes, 'table.board_list_table tbody tr');
-  if (!boardNodes) return { title, data: []};
+  const boardNodes = querySelectorAll(Nodes, 'table.board_list_table tr.table_body');
+  if (!boardNodes) return { title, rows: [], notices: [] };
 
   const data = [];
 
   for (let i = 0; i < boardNodes.length; i += 1) {
-    if (i === 0) {
-      const temp = formatBoardRow(boardNodes[i]);
-      if (temp) data.push(temp);
-    }
+    const temp = formatBoardRow(boardNodes[i]);
+    if (temp) data.push(temp);
   }
+
+  const rows = data.filter(item => !item.isNotice);
+  const notices = data.filter(item => item.isNotice);
 
   return {
     title,
-    data,
+    notices,
+    rows,
   }
 }

@@ -1,20 +1,21 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { Alert } from 'react-native';
-// import { Actions as boardAction } from './boards';
+import { Actions as BoardAction } from './boards';
 import { createAction, ActionsUnion } from '../helpers';
-import { parseDetail } from '../../utils/parser';
+import parsePost from '../../utils/parsePost';
 
 /* Actions */
-
-export const REQUEST = 'detail/REQUEST';
-export const ADD = 'detail/ADD';
+export const REQUEST = 'post/REQUEST';
+export const ADD = 'post/ADD';
+export const REMOVE = 'post/REMOVE';
 
 export const Actions = {
-  request: (prefix: string, boardId: string, articleId: string) =>
-    createAction(REQUEST, { prefix, boardId, articleId }),
+  request: (prefix: string, boardId: string, id: string) =>
+    createAction(REQUEST, { prefix, boardId, id }),
 
   add: (payload: any) => createAction(ADD, payload),
+  remove: (key: string) => createAction(REMOVE, key),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
@@ -29,9 +30,9 @@ export const getDetailInfo = createSelector(
 
 /* Sagas */
 
-async function getDetailData(prefix: string, boardId: string, articleId: string) {
+async function getPostDetail(prefix: string, boardId: string, id: string) {
   const targetUrl =
-    `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}?search_type=name&search_key=%2F%2F%2F`;
+    `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}?search_type=name&search_key=%2F%2F%2F`;
   const config = {
     method: 'GET',
     credentials: 'include',
@@ -42,37 +43,26 @@ async function getDetailData(prefix: string, boardId: string, articleId: string)
       Referer: targetUrl,
     },
   };
+  // @ts-ignore
+  const response = await fetch(targetUrl, config);
+  const htmlString = await response.text();
+
+  return parsePost(htmlString);
+}
+
+export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.request>) {
+  const { prefix, boardId, id } = payload;
 
   try {
-    // @ts-ignore
-    const response = await fetch(targetUrl, config);
-    const htmlString = await response.text();
-
-    return parseDetail(htmlString);
+    const json = yield call(getPostDetail, prefix, boardId, id);
+    yield put(Actions.add(json));
   } catch (e) {
+    yield put(BoardAction.remove(`${prefix}_${boardId}_${id}`));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
 }
 
-export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.request>) {
-  const { prefix, boardId, articleId } = payload;
-  // yield put(showLoading());
-
-  const json = yield call(getDetailData, prefix, boardId, articleId);
-
-  if (json) {
-    yield put(Actions.add(json));
-  } else {
-    // yield put({
-    //   type: boardAction.DELETE_BOARD_ITEM,
-    //   payload: `${prefix}_${boardId}_${articleId}`,
-    // });
-  }
-
-  // yield put(hideLoading());
-}
-
-export const detailSaga = [
+export const postSagas = [
   takeLatest(REQUEST, requestDetailSaga),
 ];
 
@@ -81,7 +71,7 @@ export const detailSaga = [
 export interface DetailState {
   readonly prefix?: string;
   readonly boardId?: string;
-  readonly articleId?: string;
+  readonly id?: string;
   readonly meta?: Readonly<{
     userName: string;
     userId: string;
@@ -99,8 +89,8 @@ const initState: DetailState = { contents: [], loading: false };
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
     case REQUEST:
-      const { prefix, boardId, articleId } = action.payload;
-      return { boardId, prefix, articleId, loading: true };
+      const { prefix, boardId, id } = action.payload;
+      return { boardId, prefix, id, loading: true };
     case ADD:
       return { ...state, ...action.payload, loading: false };
     default:
