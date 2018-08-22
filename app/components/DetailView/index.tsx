@@ -1,12 +1,20 @@
 import React, { PureComponent } from 'react';
-import { ScrollView, View, Text, StyleSheet, Share, SectionList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Share,
+  SectionList,
+  TouchableOpacity,
+  ListRenderItemInfo,
+} from 'react-native';
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { darkBarkground, border, listItem, primary } from '../../styles/color';
+import { primary } from '../../styles/color';
 
 import Contents from './Contents';
-import CommentItem from '../Comments/CommentItem';
-import LazyImage from '../LazyImage';
+import Comments from '../Comments';
 
 const styles = StyleSheet.create({
   container: {
@@ -47,36 +55,34 @@ const styles = StyleSheet.create({
   },
 });
 
-const defaultContents = [
-  { type: 'placeholder', content: 'image' },
-  { type: 'placeholder', content: '100%' },
-  { type: 'placeholder', content: '100%' },
-  { type: 'placeholder', content: '50%' },
-];
+interface Props extends ContentType {
+  meta: Readonly<{
+    id: string;
+    boardId: string;
+    prefix: string;
+  }>;
+  contents: ContentType[];
+  comments: CommentType[];
+  commentSize: number;
+  loading?: boolean;
+}
 
-const defaultCommentList = [
-  { placeholder: true },
-  { placeholder: true },
-  { placeholder: true },
-  { placeholder: true },
-]
-
-export default class DetailView extends PureComponent {
+export default class DetailView extends PureComponent<Props> {
   static defaultProps = {
-    contents: defaultContents,
-    commentList: defaultCommentList,
-    bestCommentList: [],
+    contents: [],
+    comments: [],
+    commentSize: 0,
     loading: false,
   }
 
   onPressShare = () => {
-    const { boardId, articleId, prefix } = this.props;
-    Share.share({ url: `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${articleId}` });
+    const { boardId, id, prefix } = this.props.meta;
+    Share.share({ url: `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}` });
   }
 
   onRefresh = () => {
-    const { commentList } = this.props;
-    if (this.props.comments && commentList.length < this.props.comments) {
+    const { comments, commentSize } = this.props;
+    if (commentSize && comments.length < commentSize) {
       this.props.refresh();
     }
   }
@@ -100,10 +106,9 @@ export default class DetailView extends PureComponent {
     );
   }
 
-  renderComment = (isBest) => (row) => {
-    const { item } = row;
+  renderComment = ({ item }: ListRenderItemInfo<CommentType>) => {
     return (
-      <CommentItem {...item} bestOnly={isBest} />
+      <Comments {...item} />
     );
   }
 
@@ -151,14 +156,12 @@ export default class DetailView extends PureComponent {
     const {
       title,
       contents,
-      commentList,
-      bestCommentList,
+      comments,
       loading,
     } = this.props;
     const sections = [
       { index: 0, data: contents, title, renderItem: this.renderItem },
-      { index: 1, data: bestCommentList, renderItem: this.renderComment(true) },
-      { index: 2, data: commentList, renderItem: this.renderComment() },
+      { index: 1, data: comments, renderItem: this.renderComment },
     ];
     return (
       <SectionList

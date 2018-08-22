@@ -11,8 +11,8 @@ export const ADD = 'post/ADD';
 export const REMOVE = 'post/REMOVE';
 
 export const Actions = {
-  request: (prefix: string, boardId: string, id: string) =>
-    createAction(REQUEST, { prefix, boardId, id }),
+  request: (prefix: string, boardId: string, id: string, update?: boolean) =>
+    createAction(REQUEST, { prefix, boardId, id, update }),
 
   add: (payload: any) => createAction(ADD, payload),
   remove: (key: string) => createAction(REMOVE, key),
@@ -89,7 +89,8 @@ const initState: DetailState = { contents: [], loading: false };
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
     case REQUEST:
-      const { prefix, boardId, id } = action.payload;
+      const { prefix, boardId, id, update } = action.payload;
+      if (update) return { ...state, loading: true };
       return { boardId, prefix, id, loading: true };
     case ADD:
       return { ...state, ...action.payload, loading: false };

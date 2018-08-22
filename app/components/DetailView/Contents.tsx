@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet, WebView } from 'react-native';
 
-import { listItem, primary } from '../../styles/color';
+import { listItem } from '../../styles/color';
 
 import LazyImage from '../LazyImage';
 
@@ -32,12 +32,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class ContentItem extends PureComponent {
+export default class ContentItem extends PureComponent<ContentType> {
   getElement = () => {
     const { type, content } = this.props;
-    if (type === 'placeholder') {
-      return <View style={content === 'image' ? styles.placeholderImage : [styles.placeholder, { width: content }]} />
-    }
     if (type === 'embed') {
       return <WebView style={styles.placeholderImage} source={{ uri: content }} javaScriptEnabled />;
     } else if (type === 'image') {

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import LazyImage from '../LazyImage';
-import { border, primary, labelText, listItem, primaryOpacity, commentHeader } from '../../styles/color';
+import { border, primary, labelText, listItem, primaryOpacity } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {

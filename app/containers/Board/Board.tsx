@@ -3,12 +3,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { SafeAreaView } from 'react-navigation';
-import { StyleSheet, FlatList, StatusBar, RefreshControl } from 'react-native';
+import { StyleSheet, FlatList, StatusBar, RefreshControl, ListRenderItemInfo } from 'react-native';
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, getBoardInfo, isBoardLoading, Actions } from '../../store/ducks/boards';
 import { darkBarkground } from '../../styles/color';
+
+import { BestBoard } from '../../config/BoardList';
 
 const styles = StyleSheet.create({
   container: {
@@ -35,7 +37,7 @@ interface Props {
 
 export class Board extends PureComponent<Props> {
   static navigationOptions = ({ navigation }: Props) => {
-    const title = navigation.getParam('title');
+    const title = navigation.getParam('title', BestBoard.title);
     return {
       title: title || '',
     };
@@ -43,13 +45,14 @@ export class Board extends PureComponent<Props> {
 
   static defaultProps = {
     refreshing: false,
+    list: [],
   }
 
   componentDidMount() {
     const { getParam } = this.props.navigation;
-    const prefix = getParam('prefix');
+    const prefix = getParam('prefix', BestBoard.prefix);
     const boardId = getParam('boardId');
-    if (prefix && boardId) {
+    if (prefix) {
       this.props.request(prefix, boardId, { page: 1 });
     }
   }
@@ -59,11 +62,11 @@ export class Board extends PureComponent<Props> {
     navigate('Detail', { id, board: { prefix, boardId }, subject });
   }
 
-  renderItem = (row: BoardRecord) => {
+  renderItem = (row: ListRenderItemInfo<BoardRecord>) => {
     return (
       <BoardItem
         onPress={this.pressItem}
-        {...row}
+        {...row.item}
       />
     );
   }
@@ -76,9 +79,10 @@ export class Board extends PureComponent<Props> {
   }
 
   onRefresh = () => {
-    // @ts-ignore
-    this.element.scrollToIndex({ index: 0, viewOffset: 0 });
-    this.updateList(1, false);
+    if (this.element.current) {
+      this.element.current.scrollToIndex({ index: 0, viewOffset: 0 });
+      this.updateList(1, false);
+    }
   }
 
   onSearch = (value: string) => {
@@ -106,10 +110,8 @@ export class Board extends PureComponent<Props> {
         <FlatList
           ref={this.element}
           data={list}
-          // @ts-ignore
           renderItem={this.renderItem}
-          // @ts-ignore
-          ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
+          // ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
           refreshControl={
             <RefreshControl
               colors={["#9Bd35A", "#689F38"]}
@@ -121,8 +123,8 @@ export class Board extends PureComponent<Props> {
             {length: 75, offset: 75 * index, index}
           )}
           initialNumToRender={10}
-          onEndReached={this.onEndReached}
-          onEndReachedThreshold={0.5}
+          // onEndReached={this.onEndReached}
+          // onEndReachedThreshold={0.5}
           removeClippedSubviews
         />
         <StatusBar barStyle="light-content" />

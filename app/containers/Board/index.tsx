@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { primary } from '../../styles/color';
 import Board from './Board';
 // @ts-ignore
-import DetailScreen from '../Detail';
+import PostScreen from '../Post';
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -24,7 +24,7 @@ export default StackNavigator({
       headerBackTitle: null,
     },
   },
-  Detail: { screen: DetailScreen },
+  Detail: { screen: PostScreen },
 }, {
   navigationOptions: ({ navigation }) => ({
     headerStyle: {
