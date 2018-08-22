@@ -13,7 +13,7 @@ export interface INode {
 }
 
 const kMarkupPattern = /<!--[^]*?(?=-->)-->|<(\/?)([a-z][a-z0-9]*)\s*([^>]*?)(\/?)>/gi;
-const kAttributePattern = /\b(id|class|href)\s*=\s*("([^"]+)"|'([^']+)'|(\S+))/ig;
+const kAttributePattern = /\b(id|class|href|value|src)\s*=\s*("([^"]+)"|'([^']+)'|(\S+))/ig;
 const kSelfClosingElements = {
   meta: true,
   img: true,
@@ -58,9 +58,17 @@ function HTMLNode(name: string = '', attrs?: any) {
   const _node: INode = { tagName: name };
   if (attrs) {
     let queries = [];
-    if (attrs.id) queries.push(attrs.id);
-    if (attrs.class) queries.push(attrs.class);
-    if (attrs.href) _node.attrs = { href: attrs.href };
+    const rest = { ...attrs };
+    const len = Object.keys(rest).length;
+    if (attrs.id) {
+      queries.push(attrs.id);
+      delete rest.id;
+    }
+    if (attrs.class) {
+      queries.push(attrs.class);
+      delete rest.class;
+    }
+    if (len > 0) _node.attrs = rest;
     _node.q = queries.join(' ');
   }
   _node.childNodes = [];
@@ -198,7 +206,6 @@ export default function parse(data: string): INode {
           currentParent = stack[stack.length - 1];
         }
       }
-      // @ts-ignore
       currentParent = appendChild(currentParent, HTMLNode(match[2], attrs));
       stack.push(currentParent);
 

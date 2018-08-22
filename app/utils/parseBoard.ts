@@ -60,7 +60,9 @@ function formatBoardRow(node: INode): BoardRecord | undefined {
   // board title
   cursor = querySelector(titleDiv, 'a.subject_link');
   if (cursor && cursor.attrs) {
-    record.link = parseBoardUrl(cursor.attrs.href!);
+    const { key, ...rest } = parseBoardUrl(cursor.attrs.href!);
+    record.key = key;
+    record.link = { ...rest };
     const text = querySelector(cursor, 'text');
     if (text) record.subject = text.value!;
   } else return;
