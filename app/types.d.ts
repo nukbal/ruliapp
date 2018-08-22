@@ -34,13 +34,24 @@ declare interface BoardRecord {
   categoryLink?: LinkType;
 }
 
-declare interface CommentType {
+declare interface CommentRecord {
   key: string;
+  best?: boolean;
+  content: string;
+  image?: string;
+  userId?: string;
+  userName?: string;
+  userIp?: string;
+  time?: string;
+  likes?: string;
+  dislike?: string;
 }
 
 declare interface ContentType {
   key: string;
   type: string;
+  style?: any;
+  content: any;
 }
 
 declare interface AppState {
