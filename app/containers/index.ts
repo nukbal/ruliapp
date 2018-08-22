@@ -1,6 +1,5 @@
 import { DrawerNavigator } from 'react-navigation';
 import BoardScreen from './Board';
-// @ts-ignore
 import Drawer from './Drawer';
 
 export default DrawerNavigator(

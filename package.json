@@ -4,12 +4,15 @@
   "private": true,
   "dependencies": {
     "hoist-non-react-statics": "^2.5.5",
+    "nanoid": "^1.2.1",
     "query-string": "^6.1.0",
     "react": "^16.4.2",
     "react-native": "^0.56.0",
+    "react-native-fs": "^2.11.15",
     "react-native-vector-icons": "^5.0.0",
     "react-navigation": "^2.11.2",
     "react-redux": "^5.0.7",
+    "realm": "^2.14.2",
     "redux": "^4.0.0",
     "redux-saga": "^0.16.0",
     "reselect": "^3.0.1"

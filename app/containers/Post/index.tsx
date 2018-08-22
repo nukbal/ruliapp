@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
-import { requestDetail, getDetailInfo, updateComment } from '../../store/ducks/detail';
+import { Actions, getDetailInfo } from '../../store/ducks/posts';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
 
@@ -21,8 +21,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export class Detail extends PureComponent {
-  static navigationOptions = ({ navigation }) => ({
+interface Props {
+  navigation: any;
+  request: typeof Actions.request;
+}
+
+export class Detail extends PureComponent<Props> {
+  static navigationOptions = ({ navigation }: Props) => ({
     title: `${navigation.state.params.title}`,
     drawerLockMode: 'locked-closed',
     headerTintColor: 'white',
@@ -46,7 +51,7 @@ export class Detail extends PureComponent {
 
   onRefresh = () => {
     const { prefix, boardId, articleId } = this.props;
-    this.props.updateComment(prefix, boardId, articleId);
+    this.props.request(prefix, boardId, articleId, true);
   }
 
   render() {
@@ -66,7 +71,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: AppState) {
   return getDetailInfo(state);
 }
 
