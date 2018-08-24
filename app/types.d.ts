@@ -47,11 +47,11 @@ declare interface CommentRecord {
   dislike?: string;
 }
 
-declare interface ContentType {
+declare interface ContentRecord {
   key: string;
-  type: string;
+  type: 'block' | 'image' | 'object' | 'text';
   style?: any;
-  content: any;
+  content: string | ContentRecord | ContentRecord[];
 }
 
 declare interface AppState {

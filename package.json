@@ -30,6 +30,8 @@
     "@types/redux-saga": "^0.10.5",
     "jest": "^23.5.0",
     "jest-react-native": "^18.0.0",
+    "babel-jest": "23.4.2",
+    "babel-preset-react-native": "^5",
     "react-native-typescript-transformer": "^1.2.10",
     "react-test-renderer": "16.4.2",
     "ts-jest": "^23.1.3",

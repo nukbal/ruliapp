@@ -7,6 +7,7 @@ import {
   SectionList,
   TouchableOpacity,
   ListRenderItemInfo,
+  SectionListData,
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -55,16 +56,23 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props extends ContentType {
+interface Props {
+  title: string;
+  id: string;
+  boardId: string;
+  prefix: string;
   meta: Readonly<{
     id: string;
     boardId: string;
     prefix: string;
   }>;
-  contents: ContentType[];
-  comments: CommentType[];
+  contents: ContentRecord[];
+  comments: CommentRecord[];
   commentSize: number;
+  likes?: string;
+  dislike?: string;
   loading?: boolean;
+  onRefresh: () => void;
 }
 
 export default class DetailView extends PureComponent<Props> {
@@ -83,16 +91,16 @@ export default class DetailView extends PureComponent<Props> {
   onRefresh = () => {
     const { comments, commentSize } = this.props;
     if (commentSize && comments.length < commentSize) {
-      this.props.refresh();
+      this.props.onRefresh();
     }
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item, index }: ListRenderItemInfo<ContentRecord>) => {
     const newStyle = []
 
-    if (item.style) {
-      newStyle.push(item.style);
-    }
+    // if (item.style) {
+    //   newStyle.push(item.style);
+    // }
 
     if (index === 0) {
       newStyle.push({ paddingTop: 16 });
@@ -106,13 +114,13 @@ export default class DetailView extends PureComponent<Props> {
     );
   }
 
-  renderComment = ({ item }: ListRenderItemInfo<CommentType>) => {
+  renderComment = ({ item }: ListRenderItemInfo<CommentRecord>) => {
     return (
       <Comments {...item} />
     );
   }
 
-  renderSectionHeader = ({ section }) => {
+  renderSectionHeader = ({ section }: { section: SectionListData<any> }) => {
     if (section.index !== 0) return;
 
     return (
@@ -122,19 +130,19 @@ export default class DetailView extends PureComponent<Props> {
     );
   }
 
-  renderSectionFooter = ({ section }) => {
+  renderSectionFooter = ({ section }: { section: SectionListData<any> }) => {
     if (section.index === 0) {
-      const { likes, dislikes } = this.props;
+      const { likes, dislike } = this.props;
       return (
         <View style={styles.infoPanel}>
           <View style={styles.infoItem}>
             <FontAwesome name="thumbs-o-up" size={20} color="white"/>
             {likes && (<Text style={styles.infoText}>{likes}</Text>)}
           </View>
-          {dislikes && (
+          {dislike && (
             <View style={styles.infoItem}>
               <FontAwesome name="thumbs-o-down" size={20} color="white"/>
-              <Text style={styles.infoText}>{dislikes}</Text>
+              <Text style={styles.infoText}>{dislike}</Text>
             </View>
           )}
           <TouchableOpacity style={styles.infoItem} onPress={this.onPressShare}>
@@ -163,6 +171,7 @@ export default class DetailView extends PureComponent<Props> {
       { index: 0, data: contents, title, renderItem: this.renderItem },
       { index: 1, data: comments, renderItem: this.renderComment },
     ];
+    console.log(contents);
     return (
       <SectionList
         refreshing={loading}

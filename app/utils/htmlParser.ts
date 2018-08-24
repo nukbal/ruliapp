@@ -119,7 +119,7 @@ function searchTree(node: INode, arr: string[]): INode | undefined {
     return node;
   } else if (node.childNodes) {
     let cursor;
-    for (let i = 0; i < node.childNodes.length; i += 1) {
+    for (let i = 0, len = node.childNodes.length; i < len; i += 1) {
       cursor = searchTree(node.childNodes[i], arr);
       if (cursor) break;
     }
