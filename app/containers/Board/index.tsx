@@ -1,11 +1,10 @@
 import React from 'react';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import { primary } from '../../styles/color';
-import Board from './Board';
-// @ts-ignore
+import BoardScreen from './Board';
 import PostScreen from '../Post';
 
 const styles = StyleSheet.create({
@@ -17,14 +16,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default StackNavigator({
+export default createStackNavigator({
   Board: {
-    screen: Board,
+    screen: BoardScreen,
     navigationOptions: {
       headerBackTitle: null,
     },
   },
-  Detail: { screen: PostScreen },
+  Post: { screen: PostScreen },
 }, {
   navigationOptions: ({ navigation }) => ({
     headerStyle: {
@@ -37,7 +36,7 @@ export default StackNavigator({
       opacity: 1,
     },
     headerLeft: (
-      <TouchableOpacity onPress={() => navigation.navigate('DrawerToggle')}>
+      <TouchableOpacity onPress={navigation.toggleDrawer}>
         <FontAwesome style={styles.headerLeft} name="navicon" size={20} color="white" />
       </TouchableOpacity>
     ),

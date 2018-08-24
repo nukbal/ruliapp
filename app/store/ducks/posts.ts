@@ -14,7 +14,7 @@ export const Actions = {
   request: (prefix: string, boardId: string, id: string, update?: boolean) =>
     createAction(REQUEST, { prefix, boardId, id, update }),
 
-  add: (payload: any) => createAction(ADD, payload),
+  add: (payload: ContentRecord[]) => createAction(ADD, payload),
   remove: (key: string) => createAction(REMOVE, key),
 };
 export type Actions = ActionsUnion<typeof Actions>;
@@ -25,7 +25,22 @@ export const getDetail = (state: any): DetailState => state.detail;
 
 export const getDetailInfo = createSelector(
   [getDetail],
-  detail => detail,
+  detail => ({
+    id: detail.id,
+    prefix: detail.prefix,
+    boardId: detail.boardId,
+    meta: detail.meta,
+  }),
+);
+
+export const getContents = createSelector(
+  [getDetail],
+  detail => detail.contents,
+);
+
+export const isLoading = createSelector(
+  [getDetail],
+  detail => detail.loading,
 );
 
 /* Sagas */
@@ -43,6 +58,7 @@ async function getPostDetail(prefix: string, boardId: string, id: string) {
       Referer: targetUrl,
     },
   };
+  console.log(targetUrl);
   // @ts-ignore
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
@@ -55,6 +71,7 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
 
   try {
     const json = yield call(getPostDetail, prefix, boardId, id);
+    console.log(json);
     yield put(Actions.add(json));
   } catch (e) {
     yield put(BoardAction.remove(`${prefix}_${boardId}_${id}`));
@@ -80,7 +97,7 @@ export interface DetailState {
     age?: number;
     avatarUrl?: string;
   }>;
-  readonly contents: Readonly<ContentType[]>;
+  readonly contents: Readonly<ContentRecord[]>;
   readonly loading: boolean;
 }
 
@@ -93,7 +110,7 @@ export default function reducer(state = initState, action: Actions) {
       if (update) return { ...state, loading: true };
       return { boardId, prefix, id, loading: true };
     case ADD:
-      return { ...state, ...action.payload, loading: false };
+      return { ...state, contents: action.payload, loading: false };
     default:
       return state;
   }

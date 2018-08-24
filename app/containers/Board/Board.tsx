@@ -57,9 +57,9 @@ export class Board extends PureComponent<Props> {
     }
   }
 
-  pressItem = ({ id, subject, prefix, boardId }: LinkType & { subject: string }) => {
+  pressItem = (params: LinkType & { subject: string }) => {
     const { navigate } = this.props.navigation;
-    navigate('Detail', { id, board: { prefix, boardId }, subject });
+    navigate({ routeName: 'Post', params });
   }
 
   renderItem = (row: ListRenderItemInfo<BoardRecord>) => {
@@ -111,7 +111,7 @@ export class Board extends PureComponent<Props> {
           ref={this.element}
           data={list}
           renderItem={this.renderItem}
-          // ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
+          ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
           refreshControl={
             <RefreshControl
               colors={["#9Bd35A", "#689F38"]}

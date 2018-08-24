@@ -53,8 +53,8 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 interface Props {
   keyboardType?: '' | 'default';
   returnKeyType?: '' | 'search';
-  onChange: (value: string) => void;
-  onSubmit?: (value: string) => void;
+  onChange?: (value: string) => void;
+  onSubmit: (value: string) => void;
 }
 
 export default class SearchInput extends PureComponent<Props> {

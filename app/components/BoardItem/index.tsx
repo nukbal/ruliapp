@@ -57,10 +57,11 @@ export default class BoardItem extends PureComponent<IBoardItem, { touching: boo
   }
 
   onPress = () => {
-    const { onPress, id, subject, link } = this.props;
+    const { onPress, subject, link } = this.props;
     if (!onPress) return;
+    if (!link) return;
 
-    onPress({ id, subject, prefix: link.prefix, boardId: link.boardId });
+    onPress({ subject, ...link });
   }
 
   render() {

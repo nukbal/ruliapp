@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, Image, View, NativeSyntheticEvent } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 
 const styles = StyleSheet.create({
   ImageContent: {

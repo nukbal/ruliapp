@@ -1,13 +1,8 @@
-import { DrawerNavigator } from 'react-navigation';
-import BoardScreen from './Board';
-import Drawer from './Drawer';
+import { createDrawerNavigator } from 'react-navigation';
+import BoardStack from './Board';
+import DrawerScreen from './Drawer';
 
-export default DrawerNavigator(
-  {
-    Main: { screen: BoardScreen },
-  },
-  {
-    contentComponent: Drawer,
-    drawerWidth: 300,
-  }
-);
+export default createDrawerNavigator({
+  Main: { screen: BoardStack },
+  Drawer: { screen: DrawerScreen },
+});

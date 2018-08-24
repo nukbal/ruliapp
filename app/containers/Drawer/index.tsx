@@ -27,7 +27,6 @@ export default class Drawer extends PureComponent {
   }
 
   renderList = (key: string) => {
-    console.log(key);
     // @ts-ignore
     const board = List[key];
     return (

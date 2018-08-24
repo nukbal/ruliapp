@@ -79,7 +79,7 @@ export interface CommentState {
   readonly prefix?: string;
   readonly articleId?: string;
   readonly records: Readonly<{
-    [key: string]: CommentType,
+    [key: string]: CommentRecord,
   }>;
   readonly loading: boolean;
   readonly order: string[];

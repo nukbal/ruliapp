@@ -79,57 +79,32 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class CommentItem extends PureComponent {
-  state = {
-    width: 0,
-  }
+interface Props extends CommentRecord {
+}
 
-  onLayout = ({ nativeEvent }) => {
-    const { width } = nativeEvent.layout;
-    this.setState({ width });
-  }
-
+export default class CommentItem extends PureComponent<Props> {
   render() {
-    if (this.props.placeholder) {
-      return (
-        <View style={[styles.container, { width: '100%', height: 80 }]}>
-          <View style={styles.UserContainer}>
-            <View style={[styles.placeholder, { width: 150 }]} />
-            <View style={[styles.placeholder, { width: 50 }]} />
-          </View>
-          <View style={[styles.CommentContainer, { paddingTop: 0 }]}>
-            <View style={[styles.placeholder]} />
-            <View style={[styles.placeholder, { width: '65%' }]} />
-          </View>
-        </View>
-      );
-    }
-
-    const { user, comment, isChild, time, isBest, like, dislike, image, bestOnly } = this.props;
-    const { width } = this.state;
-    const maxWidth = isChild ? width - 32 : width - 24;
-    const containerStyle = [isChild ? styles.childContainer : styles.container];
-    if (bestOnly) containerStyle[1] = styles.bestContainer;
+    const { userName, userId, content, time, likes, dislike, image, best } = this.props;
     return (
-      <View onLayout={this.onLayout} style={containerStyle}>
+      <View>
         <View style={styles.UserContainer}>
           <View style={styles.horizontal}>
             <Text style={styles.UserText}>
-              {user.name}
+              {userName}
             </Text>
-            {isBest && (<Text style={styles.bestText}>BEST</Text>)}
+            {best && (<Text style={styles.bestText}>BEST</Text>)}
           </View>
           <Text style={styles.timeText}>
             {time}
           </Text>
         </View>
         <View style={styles.CommentContainer}>
-          {image && (<LazyImage source={{ uri: image }} maxWidth={maxWidth} />)}
-          <Text style={styles.CommentText}>{comment}</Text>
+          {image && (<LazyImage source={{ uri: image }} />)}
+          <Text style={styles.CommentText}>{content}</Text>
         </View>
         <View style={styles.infoContainer}>
           <FontAwesome name="thumbs-o-up" size={20} color={primary}/>
-          <Text style={[styles.UserText, { marginLeft: 6 }]}>{like}</Text>
+          <Text style={[styles.UserText, { marginLeft: 6 }]}>{likes}</Text>
           <FontAwesome name="thumbs-o-down" size={20} color={primary}/>
           <Text style={[styles.UserText, { marginLeft: 6 }]}>{dislike}</Text>
         </View>
