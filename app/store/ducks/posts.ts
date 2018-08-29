@@ -1,9 +1,12 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
+import Realm from 'realm';
 import { createSelector } from 'reselect';
 import { Alert } from 'react-native';
 import { Actions as BoardAction } from './boards';
+import { Actions as CommentAction } from './comments';
 import { createAction, ActionsUnion } from '../helpers';
 import parsePost from '../../utils/parsePost';
+import { CommentSchema } from './comments';
 
 /* Actions */
 export const REQUEST = 'post/REQUEST';
@@ -14,17 +17,18 @@ export const Actions = {
   request: (prefix: string, boardId: string, id: string, update?: boolean) =>
     createAction(REQUEST, { prefix, boardId, id, update }),
 
-  add: (payload: ContentRecord[]) => createAction(ADD, payload),
+  add: (payload: { contents: ContentRecord[], header: any, source?: string }) =>
+    createAction(ADD, payload),
   remove: (key: string) => createAction(REMOVE, key),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
 /* Selectors */
 
-export const getDetail = (state: any): DetailState => state.detail;
+export const getPost = (state: any): DetailState => state.posts;
 
-export const getDetailInfo = createSelector(
-  [getDetail],
+export const getPostInfo = createSelector(
+  [getPost],
   detail => ({
     id: detail.id,
     prefix: detail.prefix,
@@ -34,14 +38,97 @@ export const getDetailInfo = createSelector(
 );
 
 export const getContents = createSelector(
-  [getDetail],
+  [getPost],
   detail => detail.contents,
 );
 
 export const isLoading = createSelector(
-  [getDetail],
+  [getPost],
   detail => detail.loading,
 );
+
+/* Realm */
+
+export const PostSchema = {
+  name: 'Post',
+  primaryKey: 'key',
+  properties: {
+    key: 'string',
+    header: 'string',
+    source: 'string?',
+    comments: {
+      type: 'list',
+      objectType: 'Comment',
+    },
+    contents: {
+      type: 'list',
+      objectType: 'Content',
+    },
+  },
+}
+
+const ContentSchema = {
+  name: 'Content',
+  properties: {
+    key: 'string',
+    type: 'string',
+    content: 'string',
+    style: 'string?',
+  },
+}
+
+const schemaList = [PostSchema, CommentSchema, ContentSchema];
+
+function convert(data: any) {
+  const contents = Array.from(data.contents);
+  const comments = Array.from(data.comments);
+  const header = JSON.parse(data.header);
+  return {
+    ...data,
+    header,
+    contents,
+    comments,
+  };
+}
+
+async function load(key: string) {
+  return new Promise((res, rej) => {
+    try {
+      const realm = new Realm({ schema: schemaList });
+      const data = realm.objects('Post').filtered('key == $0', key);
+      if (data.length) {
+        res(convert(data[0]));
+        return;
+      }
+      res();
+    } catch (e) {
+      rej(e);
+    }
+  });
+}
+
+async function save(key: string, data: any) {
+  return new Promise((res, rej) => {
+      try {
+        const realm = new Realm({ schema: schemaList });
+        realm.write(() => {
+          const header = JSON.stringify(data.header);
+          const input = {
+            key,
+            header,
+            contents: data.contents,
+            source: data.source,
+            comments: data.comments,
+          };
+          const response = realm.create('Post', input);
+          res(convert(response));
+        });
+      } catch (e) {
+        rej(e);
+      }
+    }
+  );
+}
 
 /* Sagas */
 
@@ -68,12 +155,25 @@ async function getPostDetail(prefix: string, boardId: string, id: string) {
 
 export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.request>) {
   const { prefix, boardId, id } = payload;
+  const key = `${prefix}_${boardId}_${id}`;
 
   try {
-    const json = yield call(getPostDetail, prefix, boardId, id);
-    console.log(json);
-    yield put(Actions.add(json));
+    let data = yield call(load, key);
+    if (!data) {
+      console.log('download!');
+      const json = yield call(getPostDetail, prefix, boardId, id);
+      data = yield call(save, key, json);
+    }
+
+    const rest = { header: data.header, source: data.source, contents: data.contents  };
+    const comment = data.comments;
+
+    yield put(Actions.add(rest));
+    if (comment.length) {
+      yield put(CommentAction.add(comment));
+    }
   } catch (e) {
+    console.log(e);
     yield put(BoardAction.remove(`${prefix}_${boardId}_${id}`));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
@@ -90,14 +190,16 @@ export interface DetailState {
   readonly boardId?: string;
   readonly id?: string;
   readonly meta?: Readonly<{
+    subject: string;
     userName: string;
     userId: string;
     level?: number;
     exp?: number;
     age?: number;
-    avatarUrl?: string;
+    image?: string;
   }>;
-  readonly contents: Readonly<ContentRecord[]>;
+  readonly source?: string;
+  readonly contents: ContentRecord[];
   readonly loading: boolean;
 }
 
@@ -110,7 +212,8 @@ export default function reducer(state = initState, action: Actions) {
       if (update) return { ...state, loading: true };
       return { boardId, prefix, id, loading: true };
     case ADD:
-      return { ...state, contents: action.payload, loading: false };
+      const { contents, header, source } = action.payload;
+      return { ...state, contents, meta: header, source, loading: false };
     default:
       return state;
   }

@@ -1,14 +1,31 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseComment from './parseComment';
 
-function formatPostHeader(parent: INode) {
+interface HeaderType {
+  subject: string;
+  userName: string;
+  userId: string;
+  level?: number;
+  exp?: number;
+  age?: number;
+  image?: string;
+}
+
+function formatPostHeader(parent: INode): HeaderType {
   const record: any = {};
   let cursor;
-  cursor = querySelector(parent, 'div.user_view img.profile_img_m');
-  if (cursor && cursor.attrs) record.userImage = cursor.attrs.src;
+  const userInfo = querySelector(parent, 'div.user_view div.user_info');
 
-  cursor = querySelector(parent, 'div.user_view div.user_info span.level strong text');
-  if (cursor) record.userLevel = cursor.value;
+  if (userInfo) {
+    cursor = querySelector(userInfo, 'img.profile_img_m');
+    if (cursor && cursor.attrs) record.image = cursor.attrs.src;
+  
+    cursor = querySelector(userInfo, 'span.level strong text');
+    if (cursor) record.level = cursor.value;
+  }
+
+  cursor = querySelector(parent, 'div.user_view h4.subject span text');
+  if (cursor) record.subject = cursor.value;
 
   return record;
 }
@@ -19,13 +36,18 @@ function findContext(current: INode, key: string, style?: any): ContentRecord | 
   switch (tagName) {
     case 'text': {
       if (!current.value) return;
-      if (style) return { key, type: 'text', content: current.value, style };
-      return { key, type: 'text', content: current.value };
+      const value = current.value.replace('&nbsp;', '');
+      if (style) return { key, type: 'text', content: value, style };
+      return { key, type: 'text', content: value };
     }
     case 'img': {
       if (!current.attrs || !current.attrs.src) return;
-      if (style) return { key, type: 'image', content: current.attrs.src, style };
-      return { key, type: 'image', content: current.attrs.src };
+      let url = current.attrs.src;
+      if (url.indexOf('//') === 0) {
+        url = 'http://' + url.substring(2, url.length);
+      }
+      if (style) return { key, type: 'image', content: url, style };
+      return { key, type: 'image', content: url };
     }
     case 'p': {
       const rows = rowSelector(current, ['img', 'text']);
@@ -89,11 +111,18 @@ function formatPostContents(parent: INode, prefix: string): ContentRecord | Cont
   return res;
 }
 
+interface PostType {
+  header: ReturnType<typeof formatPostHeader>;
+  source?: string;
+  contents: ContentRecord[];
+  comments: CommentRecord[];
+}
 
-export default function parsePost(htmlString: string) {
+
+export default function parsePost(htmlString: string): PostType | undefined {
   const startIndex = htmlString.indexOf('<!-- board_main start');
   const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
-  const html = htmlString.substring(startIndex, endIndex);
+  let html = htmlString.substring(startIndex, endIndex);
   const Nodes = loadHtml(html);
   const res: any = {};
 
@@ -111,7 +140,13 @@ export default function parsePost(htmlString: string) {
   const contentNode = querySelector(mainNode, 'div.view_content');
   if (contentNode) {
     res.contents = formatPostContents(contentNode, '');
-  }
+  } else return;
+
+  const cmtStartIdx = htmlString.indexOf('<!-- board_bottom start', endIndex);
+  const cmtEndIdx = htmlString.indexOf('<!-- board_bottom end', cmtStartIdx);
+  html = htmlString.substring(cmtStartIdx, cmtEndIdx);
+  const comments = parseComment(html);
+  res.comments = comments || [];
 
   return res;
 }

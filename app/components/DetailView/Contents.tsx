@@ -5,7 +5,7 @@ import { listItem } from '../../styles/color';
 
 import LazyImage from '../LazyImage';
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: listItem,
@@ -21,35 +21,42 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     justifyContent: 'flex-start',
   },
-  placeholder: {
-    backgroundColor: '#EEEEEE',
-    height: 16,
-  },
-  placeholderImage: {
-    flex: 1,
-    height: 200,
-    backgroundColor: '#EEEEEE',
-  },
 });
 
-export default class ContentItem extends PureComponent<ContentType> {
-  getElement = () => {
-    const { type, content } = this.props;
-    if (type === 'embed') {
-      return <WebView style={styles.placeholderImage} source={{ uri: content }} javaScriptEnabled />;
-    } else if (type === 'image') {
+export default function renderContent({ type, content }: ContentRecord) {
+  if (!type || !content) return null;
+
+  switch (type) {
+    case 'reference': {
+      return <Text style={[styles.container, styles.text]}>출처: {content}</Text>;
+    }
+    case 'object': {
+      return (
+        <WebView
+          style={[styles.container]}
+          // @ts-ignore
+          source={{ uri: content }}
+          javaScriptEnabled
+        />
+      );
+    }
+    case 'image': {
+      // @ts-ignore
       return <LazyImage source={{ uri: content }} fitScreen />;
-    } else {
+    }
+    case 'block': {
+      if (Array.isArray(content)) {
+        const values = []
+        for (let i = 0, len = content.length; i < len; i += 1) {
+          const item = renderContent(content[i]);
+          if(item) values.push(item);
+        }
+        return <View style={styles.container}>{values}</View>;
+      }
+    }
+    default: {
       return <Text style={styles.text}>{content}</Text>;
     }
   }
-
-  render() {
-    const { style } = this.props;
-    return (
-      <View style={[styles.container, ...style]}>
-        {this.getElement()}
-      </View>
-    );
-  }
+  return null;
 }

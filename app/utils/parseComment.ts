@@ -7,6 +7,7 @@ function formatComment(node: INode): CommentRecord | undefined {
   let cursor;
 
   record.key = node.q.substring(0, node.q.indexOf(' '));
+  record.child = node.q.indexOf('child') > -1;
 
   const textNode = querySelector(node, 'div.text_wrapper');
   if (!textNode) return;
@@ -16,7 +17,6 @@ function formatComment(node: INode): CommentRecord | undefined {
   if (cursor && cursor.childNodes) record.content = (cursor.childNodes[0] ? cursor.childNodes[0].value : '');
 
   cursor = querySelector(textNode, 'img.comment_img');
-  if (cursor) console.log(cursor.attrs);
   if (cursor && cursor.attrs) record.image = cursor.attrs.src;
 
   const userInfo = querySelector(node, 'div.user');
@@ -56,12 +56,17 @@ export default function parseComment(htmlString: string) {
   let Nodes = loadHtml(html);
   let commentNodes = querySelectorAll(Nodes, 'table.comment_table tr.comment_element');
 
-  const data = [];
+  let data = [];
+  const best = [];
+  const keylist = [];
 
   if (commentNodes) {
     for (let i = 0; i < commentNodes.length; i += 1) {
       const temp = formatComment(commentNodes[i]);
-      if (temp) data.push(temp);
+      if (temp) {
+        best.push(temp);
+        keylist.push(temp.key);
+      }
     }
   }
 
@@ -74,9 +79,17 @@ export default function parseComment(htmlString: string) {
     for (let i = 0; i < commentNodes.length; i += 1) {
       const temp = formatComment(commentNodes[i]);
       if (temp) {
+        if (keylist.indexOf(temp.key) > -1) {
+          best.splice(keylist.indexOf(temp.key), 1);
+          keylist.splice(keylist.indexOf(temp.key), 1);
+        }
         data.push(temp);
       }
     }
+  }
+
+  if (best.length) {
+    data = data.concat(best);
   }
 
   return data;

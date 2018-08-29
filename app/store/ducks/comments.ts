@@ -14,15 +14,34 @@ export const Actions  = {
   request: (prefix: string, boardId: string, articleId: string, page?: number) =>
     createAction(REQUEST, { prefix, boardId, articleId, page }),
 
-  add: (payload: any) => createAction(ADD, payload),
+  add: (payload: CommentRecord[]) => createAction(ADD, payload),
   update: (payload: any) => createAction(UPDATE, payload),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
+/* Realm */
+
+export const CommentSchema = {
+  name: 'Comment',
+  properties: {
+    key: 'string',
+    child: 'bool?',
+    best: 'bool?',
+    content: 'string',
+    image: 'string?',
+    userId: 'string',
+    userName: 'string',
+    userIp: 'string?',
+    time: 'string',
+    likes: 'string?',
+    dislike: 'string?',
+  },
+}
+
 /* Sagas */
 
 // @ts-ignore
-export async function getComments({ prefix, boardId, articleId }) {
+export async function requestComments({ prefix, boardId, articleId }) {
   const form = new FormData();
   form.append('page', 1);
   form.append('article_id', articleId);
@@ -57,19 +76,14 @@ export async function getComments({ prefix, boardId, articleId }) {
 
 /* selectors */
 
-export const getBoardState = (state: any) => state.boards;
+export const getCommentState = (state: AppState) => state.comments;
 
-export const getBoardList = createSelector(
-  [getBoardState],
-  boards =>  boards.items,
-);
-
-export const getBoardInfo = createSelector(
-  [getBoardState],
-  ({ boardId, prefix }) => ({
-    boardId,
-    prefix,
-  }),
+export const getComments = createSelector(
+  [getCommentState],
+  ({ records, order }) =>  {
+    if (!records || !order) return [];
+    return order.map((key: string) => records[key]);
+  },
 );
 
 /* reducers */
@@ -95,7 +109,8 @@ export default function reducer(state = initState, action: Actions) {
     }
     case ADD: {
       const records = arrayToObject(action.payload);
-      return { ...state, records, loading: false };
+      const order = action.payload.map(item => item.key);
+      return { ...state, records, order, loading: false };
     }
     case UPDATE: {
       const records = arrayToObject(action.payload);

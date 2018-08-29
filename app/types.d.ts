@@ -36,6 +36,7 @@ declare interface BoardRecord {
 
 declare interface CommentRecord {
   key: string;
+  child?: string;
   best?: boolean;
   content: string;
   image?: string;
@@ -49,7 +50,7 @@ declare interface CommentRecord {
 
 declare interface ContentRecord {
   key: string;
-  type: 'block' | 'image' | 'object' | 'text';
+  type: 'block' | 'image' | 'object' | 'text' | 'reference';
   style?: any;
   content: string | ContentRecord | ContentRecord[];
 }

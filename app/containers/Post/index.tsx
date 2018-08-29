@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Actions, getDetailInfo, getContents } from '../../store/ducks/posts';
-import { Actions as CommentAction } from '../../store/ducks/comments';
+import { Actions, getPostInfo, getContents } from '../../store/ducks/posts';
+import { Actions as CommentAction, getComments } from '../../store/ducks/comments';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
+import PostPlaceholder from '../../components/DetailView/placeholder';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,12 +31,14 @@ interface Props {
   boardId: string;
   id: string;
   meta: any;
+  source?: string;
   contents: ContentRecord[];
+  comments: CommentRecord[];
 }
 
 export class Post extends PureComponent<Props> {
   static navigationOptions = ({ navigation }: Props) => ({
-    title: `${navigation.state.params.title}`,
+    title: navigation.state.params.subject,
     drawerLockMode: 'locked-closed',
     headerTintColor: 'white',
     headerRight: (
@@ -50,11 +53,14 @@ export class Post extends PureComponent<Props> {
     ),
    });
 
+   static defaultProps = {
+     contents: [],
+   };
+
   componentDidMount() {
-    console.log(this.props);
     const { params } = this.props.navigation.state;
-    const { prefix, boardId } = params.board;
-    // this.props.request(prefix, boardId, params.id);
+    const { id, prefix, boardId } = params;
+    this.props.request(prefix, boardId, id);
   }
 
   onRefresh = () => {
@@ -63,18 +69,17 @@ export class Post extends PureComponent<Props> {
   }
 
   render() {
-    const { navigation, id, boardId, prefix, contents, meta } = this.props;
+    const { contents } = this.props;
     return (
       <SafeAreaView style={styles.container}>
-        <DetailView
-          id={id}
-          boardId={boardId}
-          prefix={prefix}
-          meta={meta}
-          contents={contents}
-          onRefresh={this.onRefresh}
-          title={navigation.state.params.title}
-        />
+        {contents.length ? (
+          <DetailView
+            {...this.props}
+            onRefresh={this.onRefresh}
+          />
+        ) : (
+          <PostPlaceholder />
+        )}
       </SafeAreaView>
     );
   }
@@ -88,9 +93,10 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 function mapStateToProps(state: AppState) {
-  const info = getDetailInfo(state);
+  const info = getPostInfo(state);
   return {
     contents: getContents(state),
+    comments: getComments(state),
     ...info,
   };
 }

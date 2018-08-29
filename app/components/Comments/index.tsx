@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import LazyImage from '../LazyImage';
-import { border, primary, labelText, listItem, primaryOpacity } from '../../styles/color';
+import { primary, labelText, listItem, primaryOpacity } from '../../styles/color';
 
 const styles = StyleSheet.create({
   container: {
@@ -73,20 +73,17 @@ const styles = StyleSheet.create({
     backgroundColor: primary,
     color: 'white',
   },
-  placeholder: {
-    backgroundColor: '#EEEEEE',
-    height: 16,
-  },
 });
 
-interface Props extends CommentRecord {
-}
-
-export default class CommentItem extends PureComponent<Props> {
+export default class CommentItem extends PureComponent<CommentRecord> {
   render() {
-    const { userName, userId, content, time, likes, dislike, image, best } = this.props;
+    const { userName, content, time, likes, dislike, image, best, child } = this.props;
+    const containerStyle: any = [styles.container];
+    if (child) {
+      containerStyle.push({ paddingLeft: 16 });
+    }
     return (
-      <View>
+      <View style={containerStyle}>
         <View style={styles.UserContainer}>
           <View style={styles.horizontal}>
             <Text style={styles.UserText}>
@@ -94,19 +91,17 @@ export default class CommentItem extends PureComponent<Props> {
             </Text>
             {best && (<Text style={styles.bestText}>BEST</Text>)}
           </View>
-          <Text style={styles.timeText}>
-            {time}
-          </Text>
+          <Text style={styles.timeText}>{time}</Text>
         </View>
         <View style={styles.CommentContainer}>
           {image && (<LazyImage source={{ uri: image }} />)}
-          <Text style={styles.CommentText}>{content}</Text>
+          {content && (<Text style={styles.CommentText}>{content}</Text>)}
         </View>
         <View style={styles.infoContainer}>
-          <FontAwesome name="thumbs-o-up" size={20} color={primary}/>
-          <Text style={[styles.UserText, { marginLeft: 6 }]}>{likes}</Text>
-          <FontAwesome name="thumbs-o-down" size={20} color={primary}/>
-          <Text style={[styles.UserText, { marginLeft: 6 }]}>{dislike}</Text>
+          {likes && (<FontAwesome name="thumbs-o-up" size={20} color={primary} />)}
+          {likes && (<Text style={[styles.UserText, { marginLeft: 6 }]}>{likes}</Text>)}
+          {dislike && (<FontAwesome name="thumbs-o-down" size={20} color={primary} />)}
+          {dislike && (<Text style={[styles.UserText, { marginLeft: 6 }]}>{dislike}</Text>)}
         </View>
       </View>
     );
