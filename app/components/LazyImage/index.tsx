@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
+import {  } from '../../utils/images';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -15,16 +16,16 @@ interface Props {
 }
 
 interface State {
-  width?: number;
-  height?: number;
+  path?: string;
+  width: number;
+  height: number;
 }
 
 export default class LazyImage extends PureComponent<Props, State> {
 
-  state = { width: undefined, height: undefined };
+  state = { path: undefined, width: 0, height: 0 };
 
   componentDidMount() {
-    Image.prefetch(this.props.source.uri);
     this.layout = { width: 0, height: 0 };
   }
 
@@ -61,16 +62,15 @@ export default class LazyImage extends PureComponent<Props, State> {
   layout = { width: 0, height: 0 };
 
   render() {
-    const { source } = this.props;
-    if (this.state.width === null) {
-      return <View style={styles.ImageContent} onLayout={this.onLayout} />;
+    if (this.state.path) {
+      return (
+        <Image
+          style={this.state}
+          source={{ uri: this.state.path }}
+          resizeMode="contain"
+        />
+      );
     }
-    return (
-      <Image
-        style={this.state}
-        source={source}
-        resizeMode="contain"
-      />
-    );
+    return <View style={styles.ImageContent} onLayout={this.onLayout} />;
   }
 }
