@@ -1,10 +1,9 @@
 import { put, call, throttle } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import qs from 'query-string';
-import parseBoardList, { IParseBoard } from '../../utils/parseBoard';
-import arrayToObject from '../../utils/arrayToObject';
-import mergeArray from '../../utils/mergeArray';
+import parseBoardList from '../../utils/parseBoard';
 import { createAction, ActionsUnion } from '../helpers';
+import realm from '../realm';
 
 /* Actions */
 export const REQUEST = 'board/REQUEST';
@@ -22,12 +21,30 @@ export const Actions = {
   ) =>
     createAction(REQUEST, { prefix, boardId, params, update }),
 
-  add: (payload: IParseBoard) => createAction(ADD, payload),
-  update: (payload: IParseBoard) => createAction(UPDATE, payload),
+  add: (title: string, rows: string[]) => createAction(ADD, { title, rows }),
+  update: (payload: string[]) => createAction(UPDATE, payload),
   remove: (key: string) => createAction(REMOVE, key),
   clear: () => createAction(CLEAR),
 };
 export type Actions = ActionsUnion<typeof Actions>;
+
+/* realm */
+
+function save(rows: PostRecord[]) {
+  return new Promise((res, rej) => {
+    try {
+      realm.write(() => {
+        for (let i = 0, len = rows.length; i < len; i += 1) {
+          realm.create('Post', rows[i], true);
+        }
+        res();
+      });
+    } catch (e) {
+      rej(e);
+    }
+  });
+}
+
 
 /* Sagas */
 export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
@@ -55,7 +72,10 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
     const htmlString = yield response.text();
     const json = yield call(parseBoardList, htmlString);
 
-    yield put(Actions.add(json));
+    const keyList = json.rows.map((item: PostRecord) => item.key);
+
+    yield call(save, json.rows);
+    yield put(Actions.add(json.title, keyList));
   } catch(e) {
     console.error(e);
     return;
@@ -72,12 +92,7 @@ export const getBoardState = (state: AppState): BoardState => state.boards;
 
 export const getBoardList = createSelector(
   [getBoardState],
-  ({ order, records }) => {
-    if (order && records) {
-      return order.map((key: string) => records[key]);
-    }
-    return;
-  }
+  ({ records }) => records,
 );
 
 export const getBoardInfo = createSelector(
@@ -106,14 +121,11 @@ export interface BoardState {
     readonly keyword?: string;
     readonly cate?: string;
   }>;
-  readonly records: Readonly<{
-    [key: string]: BoardRecord;
-  }>;
-  readonly order: string[];
+  readonly records: string[];
   readonly loading: boolean;
 }
 
-const initState: BoardState = { records: {}, order: [], loading: false };
+const initState: BoardState = { records: [], loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
@@ -122,37 +134,27 @@ export default function reducer(state = initState, action: Actions) {
       if (update) {
         return { ...state, boardId, prefix, params, loading: true };
       }
-      return { boardId, prefix, params, loading: true };
+      return { ...initState, boardId, prefix, params, loading: true };
     }
     case ADD: {
       const { title, rows } = action.payload;
-      const order = rows.map(item => item.key);
-      const records = arrayToObject(rows);
-      return { ...state, title, records, order, loading: false };
+      return { ...state, title, records: rows, loading: false };
     }
     case UPDATE: {
-      const { records, order, ...rest } = state;
-      const { rows } = action.payload;
-      
-      const newRows = arrayToObject(rows);
-      const newRecords = { ...records, ...newRows };
+      const { records, ...rest } = state;
+      const newRecords = [ ...records, ...action.payload ];
 
-      const newOrder = mergeArray(order, rows.map(item => item.key));
-
-      return { ...rest, records: newRecords, order: newOrder, loading: false };
+      return { ...rest, records: newRecords, loading: false };
     }
     case REMOVE: {
       const key = action.payload
       if (key in state.records) {
-        const { records, order, ...rest } = state;
+        const { records, ...rest } = state;
 
-        const newRecords = { ...records };
-        delete newRecords[key];
+        const newRecord = [...records];
+        newRecord.splice(records.indexOf(key), 1);
 
-        const newOrder = [...order];
-        newOrder.splice(order.indexOf(key), 1);
-
-        return { records: newRecords, order: newOrder, ...rest };
+        return { records: newRecord, ...rest };
       }
       return state;
     }

@@ -1,52 +1,68 @@
-import React, { PureComponent } from 'react';
-import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import { listItem, labelText, primaryLight } from '../../styles/color';
+import React, { Component } from 'react';
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import { primaryLight } from '../../styles/color';
+import styles from './styles';
+import Placeholder from './placeholder';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: 75,
-    paddingRight: 15,
-    paddingLeft: 15,
-    paddingTop: 12,
-    paddingBottom: 12,
-    backgroundColor: listItem,
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    marginBottom: 1,
-  },
-  info: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  item: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap:'wrap',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  titleText: {
-    color: 'black',
-  },
-  itemText: {
-    marginLeft: 3,
-    fontSize: 13,
-    color: labelText,
-  },
-  placeholder: {
-    backgroundColor: '#EEEEEE',
-    height: 16,
-  },
-});
+import realm from '../../store/realm';
 
-interface IBoardItem extends BoardRecord {
-  onPress: (payload: LinkType & { subject: string }) => void;
+async function loadItem(key: string) {
+  return new Promise((res, rej) => {
+    try {
+      const data: PostRecord | undefined = realm.objectForPrimaryKey('Post', key);
+      let response;
+      if (data) {
+        response = {
+          subject: data.subject,
+          user: data.user,
+          commentSize: data.commentSize,
+          likes: data.likes,
+          views: data.views,
+        };
+      }
+      res(response);
+    } catch (e) {
+      rej(e);
+    }
+  });
 }
 
-export default class BoardItem extends PureComponent<IBoardItem, { touching: boolean }> {
-  state = { touching: false }
+
+interface IBoardItem {
+  id: string;
+  onPress: (payload: any) => void;
+}
+
+interface State {
+  touching: boolean;
+  loading: boolean;
+}
+
+export default class BoardItem extends Component<IBoardItem, State> {
+  constructor(props: IBoardItem) {
+    super(props);
+    const keys = props.id.split('_');
+
+    // @ts-ignore
+    this.record = { key: props.id, id: keys[2], prefix: keys[0], boardId: keys[1], subject: '' };
+  }
+
+  state = { touching: false, loading: true };
+  record: PostRecord
+
+  async componentDidMount() {
+    const record = await loadItem(this.props.id);
+    if (record) {
+      // @ts-ignore
+      this.record = { ...this.record, ...record };
+      this.setState({ loading: false });
+    }
+  }
+
+  shouldComponentUpdate(_: any, state: State) {
+    return state.touching !== this.state.touching ||
+      state.loading !== this.state.loading;
+  }
 
   beforePress = () => {
     this.setState({ touching: true });
@@ -57,15 +73,18 @@ export default class BoardItem extends PureComponent<IBoardItem, { touching: boo
   }
 
   onPress = () => {
-    const { onPress, subject, link } = this.props;
+    const { onPress } = this.props;
     if (!onPress) return;
-    if (!link) return;
+    const { subject, id, prefix, boardId } = this.record;
+    if (!id || !boardId) return;
 
-    onPress({ subject, ...link });
+    onPress({ subject, id, prefix, boardId });
   }
 
   render() {
-    const { subject, comments, author, views, likes } = this.props;
+    if (this.state.loading) {
+      return <Placeholder />;
+    }
     
     const viewStyle = [styles.container];
     const itemText = [styles.itemText];
@@ -78,6 +97,7 @@ export default class BoardItem extends PureComponent<IBoardItem, { touching: boo
       // @ts-ignore
       titleText.push({ color: 'white' });
     }
+    const { subject, user, commentSize, likes, views } = this.record;
     return (
       <TouchableWithoutFeedback
         onPressIn={this.beforePress}
@@ -89,10 +109,10 @@ export default class BoardItem extends PureComponent<IBoardItem, { touching: boo
             <Text style={titleText} numberOfLines={1}>{subject}</Text>
           </View>
           <View style={styles.info}>
-            <Text style={itemText} numberOfLines={1}>{author} |</Text>
-            <Text style={itemText}>덧글 {comments || 0} |</Text>
-            <Text style={itemText}>추천 {likes || 0} |</Text>
-            <Text style={itemText}>조회 {views || 0}</Text>
+            <Text style={itemText} numberOfLines={1}>{user.name} |</Text>
+            <Text style={itemText}>덧글 {commentSize} |</Text>
+            <Text style={itemText}>추천 {likes} |</Text>
+            <Text style={itemText}>조회 {views}</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>

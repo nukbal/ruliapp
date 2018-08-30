@@ -7,7 +7,16 @@ function formatComment(node: INode): CommentRecord | undefined {
   let cursor;
 
   record.key = node.q.substring(0, node.q.indexOf(' '));
-  record.child = node.q.indexOf('child') > -1;
+  if (node.q.indexOf('child') > -1) {
+    let current = node.prev;
+    while (current) {
+      if (current.q && current.q.indexOf('parent') > -1) {
+        record.child = current.q.substring(0, node.q.indexOf(' '));
+        break;
+      }
+      current = current.prev;
+    }
+  }
 
   const textNode = querySelector(node, 'div.text_wrapper');
   if (!textNode) return;

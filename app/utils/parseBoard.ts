@@ -38,9 +38,10 @@ export function parseBoardUrl(href: string) {
   return res;
 }
 
-function formatBoardRow(node: INode): BoardRecord | undefined {
+function formatBoardRow(node: INode): PostRecord | undefined {
   // @ts-ignore
-  const record: BoardRecord = {};
+  const record: PostRecord = {};
+  record.user = { id: '', name: '' };
 
   if (!node.childNodes) return;
   const td = node.childNodes[0];
@@ -60,9 +61,12 @@ function formatBoardRow(node: INode): BoardRecord | undefined {
   // board title
   cursor = querySelector(titleDiv, 'a.subject_link');
   if (cursor && cursor.attrs) {
-    const { key, ...rest } = parseBoardUrl(cursor.attrs.href!);
+    const { key, boardId, id, prefix } = parseBoardUrl(cursor.attrs.href!);
     record.key = key;
-    record.link = { ...rest };
+    record.boardId = boardId;
+    record.id = id;
+    record.prefix = prefix;
+
     const text = querySelector(cursor, 'text');
     if (text) record.subject = text.value!;
   } else return;
@@ -79,30 +83,30 @@ function formatBoardRow(node: INode): BoardRecord | undefined {
 
   // count of comments
   cursor = querySelector(titleDiv, 'span.num text');
-  if (cursor) record.comments = cursor.value;
+  if (cursor && cursor.value) record.commentSize = parseInt(cursor.value);
 
   // author name
   cursor = querySelector(infoDiv, 'span.writer text');
-  if (cursor) record.author = cursor.value!;
+  if (cursor) record.user.name = cursor.value!;
 
   // view counts
   cursor = querySelector(infoDiv, 'span.hit text');
-  if (cursor) record.views = cursor.value!.replace('조회 ', '');
+  if (cursor && cursor.value) record.views = parseInt(cursor.value.replace('조회 ', ''), 10);
 
   // posted date/time
   cursor = querySelector(infoDiv, 'span.time text');
-  if (cursor) record.date = cursor.value!.replace('날짜 ', '');
+  if (cursor && cursor.value) record.date = cursor.value.replace('날짜 ', '');
 
   cursor = querySelector(infoDiv, 'span.recomd text');
-  if (cursor) record.likes = cursor.value!.replace('추천 ', '');
+  if (cursor && cursor.value) record.likes = parseInt(cursor.value!.replace('추천 ', ''), 10);
 
   return record;
 }
 
 export interface IParseBoard { 
   title: string;
-  rows: BoardRecord[];
-  notices: BoardRecord[];
+  rows: PostRecord[];
+  notices: PostRecord[];
 }
 
 export default function parseBoardList (htmlString: string): IParseBoard {
