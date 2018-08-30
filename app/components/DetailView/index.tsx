@@ -58,16 +58,8 @@ interface Props {
   boardId: string;
   prefix: string;
   subject: string;
-  meta: Readonly<{
-    userName: string;
-    userId: string;
-    level?: number;
-    exp?: number;
-    age?: number;
-    image?: string;
-  }>;
-  contents: ContentRecord[];
-  comments: CommentRecord[];
+  contents: string[];
+  comments: string[];
   commentSize: number;
   likes?: string;
   dislike?: string;
@@ -130,16 +122,18 @@ export default class DetailView extends PureComponent<Props> {
           url={`http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}`}
         />
       );
-    } else if (section.index === 1 && this.props.comments) {
-      const { comments } = this.props;
+    } else if (section.index === 1 && this.props.commentSize) {
+      const { commentSize } = this.props;
       return (
         <View style={styles.infoItem}>
-          <Text>덧글 {comments}개</Text>
+          <Text>덧글 {commentSize}개</Text>
         </View>
       );
     }
     return null;
   }
+
+  keyExtractor = (item: string, index: number) => item;
 
   render() {
     const {
@@ -158,6 +152,7 @@ export default class DetailView extends PureComponent<Props> {
         onRefresh={this.onRefresh}
         renderSectionHeader={this.renderSectionHeader}
         renderSectionFooter={this.renderSectionFooter}
+        keyExtractor={this.keyExtractor}
         sections={sections}
         stickySectionHeadersEnabled={false}
         removeClippedSubviews

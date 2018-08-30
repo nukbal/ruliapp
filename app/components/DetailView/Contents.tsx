@@ -1,9 +1,24 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { View, Text, StyleSheet, WebView } from 'react-native';
 
 import { listItem } from '../../styles/color';
 
 import LazyImage from '../LazyImage';
+
+import realm from '../../store/realm';
+
+async function loadItem(key: string) {
+  return new Promise((res, rej) => {
+    try {
+      const data: ContentRecord | undefined = realm.objectForPrimaryKey('Content', key);
+      let response;
+      if (data) response = data;
+      res(response);
+    } catch (e) {
+      rej(e);
+    }
+  });
+}
 
 export const styles = StyleSheet.create({
   container: {
@@ -23,7 +38,7 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default function renderContent({ type, content }: ContentRecord) {
+function renderContent({ type, content }: ContentRecord) {
   if (!type || !content) return null;
 
   switch (type) {
@@ -42,21 +57,40 @@ export default function renderContent({ type, content }: ContentRecord) {
     }
     case 'image': {
       // @ts-ignore
-      return <LazyImage source={{ uri: content }} fitScreen />;
-    }
-    case 'block': {
-      if (Array.isArray(content)) {
-        const values = []
-        for (let i = 0, len = content.length; i < len; i += 1) {
-          const item = renderContent(content[i]);
-          if(item) values.push(item);
-        }
-        return <View style={styles.container}>{values}</View>;
-      }
+      return <LazyImage source={{ uri: content }} />;
     }
     default: {
       return <Text style={styles.text}>{content}</Text>;
     }
   }
-  return null;
 }
+
+
+export default class ContentItem extends Component<{ id: string }, { loading: boolean }> {
+  state = { loading: true };
+
+
+  async componentDidMount() {
+    const record = await loadItem(this.props.id);
+    if (record) {
+      // @ts-ignore
+      this.record = record;
+      this.setState({ loading: false });
+    }
+  }
+
+  shouldComponentUpdate(_: any, state: { loading: boolean }) {
+    return state.loading !== this.state.loading;
+  }
+
+  record: ContentRecord | undefined;
+
+  render() {
+    if (!this.record || this.state.loading) {
+      return <View style={styles.container} />;
+    }
+    console.log(this.record);
+    return renderContent(this.record);
+  }
+}
+

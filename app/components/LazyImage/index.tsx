@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
-import {  } from '../../utils/images';
+import loader from './loader';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -12,21 +12,26 @@ const styles = StyleSheet.create({
 
 interface Props {
   source: { uri: string };
-  fitScreen?: boolean;
 }
 
 interface State {
   path?: string;
   width: number;
   height: number;
+  percent: number;
 }
 
 export default class LazyImage extends PureComponent<Props, State> {
 
-  state = { path: undefined, width: 0, height: 0 };
+  state = { path: undefined, width: 0, height: 0, percent: 0 };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.layout = { width: 0, height: 0 };
+    await loader(this.props.source.uri, this.beginDownload);
+  }
+
+  beginDownload = (path: string) => {
+    this.setState({ path });
   }
 
   onLayout = ({ nativeEvent }: any) => {
@@ -39,33 +44,29 @@ export default class LazyImage extends PureComponent<Props, State> {
   setImageSize = (w: number, h: number) => {
     let { height, width } = this.layout;
 
-    if (this.props.fitScreen) {
-      const ratio = width / w;
-      height = Math.floor(h * ratio);
+    let ratio;
+    const half = width / 2;
+    if (half > w) {
+      ratio = half / w;
+      width = half;
+    } else if (width > w) {
+      ratio = 1;
+      width = w;
     } else {
-      let ratio;
-      const half = width / 2;
-      if (half > w) {
-        ratio = half / w;
-        width = half;
-      } else if (width > w) {
-        ratio = 1;
-        width = w;
-      } else {
-        ratio = width / w;
-      }
-      height = Math.floor(h * ratio);
+      ratio = width / w;
     }
+    height = Math.floor(h * ratio);
     this.setState({ width, height });
   }
 
   layout = { width: 0, height: 0 };
 
   render() {
-    if (this.state.path) {
+    const { path, width, height } = this.state;
+    if (path) {
       return (
         <Image
-          style={this.state}
+          style={{ width, height }}
           source={{ uri: this.state.path }}
           resizeMode="contain"
         />

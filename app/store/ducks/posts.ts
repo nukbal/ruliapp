@@ -8,6 +8,7 @@ import parsePost from '../../utils/parsePost';
 import realm from '../realm';
 
 /* Actions */
+
 export const REQUEST = 'post/REQUEST';
 export const ADD = 'post/ADD';
 export const REMOVE = 'post/REMOVE';
@@ -16,7 +17,7 @@ export const Actions = {
   request: (prefix: string, boardId: string, id: string, update?: boolean) =>
     createAction(REQUEST, { prefix, boardId, id, update }),
 
-  add: (payload: { contents: ContentRecord[], subject: string }) =>
+  add: (payload: PostRecord) =>
     createAction(ADD, payload),
   remove: (key: string) => createAction(REMOVE, key),
 };
@@ -50,7 +51,7 @@ export const isLoading = createSelector(
 /* Realm queries */
 
 function convert(data: any) {
-  const { contents, comments, ...rest } = data;
+  const { contents, comments, user, ...rest } = data;
   const contentKeys = contents.map((item: any) => item.key);
   const commentKeys = comments.map((item: any) => item.key);
   return {
@@ -64,7 +65,12 @@ function load(key: string) {
   return new Promise((res, rej) => {
     try {
       const data = realm.objectForPrimaryKey('Post', key);
-      res(data && convert(data));
+      // @ts-ignore
+      if (data && data.contents.length) {
+        res(convert(data));
+        return;
+      }
+      res();
     } catch (e) {
       rej(e);
     }

@@ -1,8 +1,11 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
+import escapeHtml from 'escape-html';
 
 function formatComment(node: INode): CommentRecord | undefined {
   // @ts-ignore
   const record: CommentRecord = {};
+  record.user = { id: '', name: '' };
+
   if (!node.q) return;
   let cursor;
 
@@ -23,7 +26,7 @@ function formatComment(node: INode): CommentRecord | undefined {
 
   cursor = querySelector(textNode, 'span.text');
   // @ts-ignore
-  if (cursor && cursor.childNodes) record.content = (cursor.childNodes[0] ? cursor.childNodes[0].value : '');
+  if (cursor && cursor.childNodes) record.content = escapeHtml(cursor.childNodes[0] ? cursor.childNodes[0].value : '');
 
   cursor = querySelector(textNode, 'img.comment_img');
   if (cursor && cursor.attrs) record.image = cursor.attrs.src;
@@ -31,13 +34,13 @@ function formatComment(node: INode): CommentRecord | undefined {
   const userInfo = querySelector(node, 'div.user');
   if (userInfo) {
     cursor = querySelector(userInfo, 'input.member_srl');
-    if (cursor && cursor.attrs) record.userId = cursor.attrs.value;
+    if (cursor && cursor.attrs) record.user.id = cursor.attrs.value;
 
     cursor = querySelector(userInfo, 'strong.nick text');
-    if (cursor) record.userName = cursor.value;
+    if (cursor && cursor.value) record.user.name = cursor.value;
 
     cursor = querySelector(userInfo, 'span.ip text');
-    if (cursor && cursor.value) record.userIp = cursor.value.replace('| ', '');
+    if (cursor && cursor.value) record.user.ip = cursor.value.replace('| ', '');
 
     cursor = querySelector(userInfo, 'span.time text');
     if (cursor && cursor.value) record.time = cursor.value.replace('| ', '');

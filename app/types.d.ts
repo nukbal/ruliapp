@@ -45,9 +45,8 @@ declare interface CommentRecord {
   child?: string;
   best?: boolean;
   content: string;
+  user: UserRecord;
   image?: string;
-  userId?: string;
-  userName?: string;
   userIp?: string;
   time?: string;
   likes?: string;
@@ -61,6 +60,7 @@ declare interface UserRecord {
   experience?: string;
   age?: string;
   image?: string;
+  ip?: string;
 }
 
 declare interface ContentRecord {
