@@ -2,16 +2,22 @@ import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseComment from './parseComment';
 
 interface HeaderType {
-  subject: string;
   userName: string;
   userId: string;
   level?: number;
-  exp?: number;
+  experience?: number;
   age?: number;
   image?: string;
 }
 
-function formatPostHeader(parent: INode): HeaderType {
+function parseTitle(html: string) {
+  const startIdx = (html.indexOf('<title>') + 7);
+  const endIdx = html.indexOf('</title', startIdx);
+  const str = html.substring(startIdx, endIdx);
+  return str.substring(0, str.indexOf(' | '));
+}
+
+function parsePostUser(parent: INode): HeaderType {
   const record: any = {};
   let cursor;
   const userInfo = querySelector(parent, 'div.user_view div.user_info');
@@ -19,13 +25,19 @@ function formatPostHeader(parent: INode): HeaderType {
   if (userInfo) {
     cursor = querySelector(userInfo, 'img.profile_img_m');
     if (cursor && cursor.attrs) record.image = cursor.attrs.src;
+
+    cursor = querySelector(userInfo, 'a.nick strong text');
+    if (cursor && cursor.value) record.name = cursor.value;
+
+    cursor = querySelector(userInfo, 'input#member_srl');
+    if (cursor && cursor.attrs) record.id = cursor.attrs.value;
   
     cursor = querySelector(userInfo, 'span.level strong text');
-    if (cursor) record.level = cursor.value;
+    if (cursor && cursor.value) record.level = parseInt(cursor.value, 10);
+  
+    cursor = querySelector(userInfo, 'span.exp_text strong text');
+    if (cursor && cursor.value) record.experience = parseInt(cursor.value.replace('%', ''), 10);
   }
-
-  cursor = querySelector(parent, 'div.user_view h4.subject span text');
-  if (cursor) record.subject = cursor.value;
 
   return record;
 }
@@ -59,21 +71,6 @@ function findContext(current: INode, key: string, style?: any): ContentRecord | 
         if (value) return value;
       }
     }
-    case 'blockquote': {
-      if (!current.childNodes) return;
-      const res = [];
-      for (let i = 0, len = current.childNodes.length; i < len; i += 1) {
-        const temp = findContext(current.childNodes[i], `${key}_${i}`);
-        if (temp) res.push(temp);
-      }
-      if (res.length) {
-        if (current.attrs && current.attrs.style) {
-          return { key, type: 'block', content: res, style: current.attrs.style };
-        } else {
-          return { key, type: 'block', content: res };
-        }
-      }
-    }
   }
   return;
 }
@@ -94,9 +91,9 @@ function rowSelector(root: INode, pattern: string[]): INode[] | undefined {
   }
 }
 
-function formatPostContents(parent: INode, prefix: string): ContentRecord | ContentRecord[] | undefined {
+function parsePostContents(parent: INode, prefix: string): ContentRecord | ContentRecord[] | undefined {
   let res: ContentRecord[] = [];
-  const rows = rowSelector(parent, ['p', 'blockquote']);
+  const rows = rowSelector(parent, ['p']);
   if (!rows) return;
 
   const rowLen = rows.length;
@@ -112,23 +109,27 @@ function formatPostContents(parent: INode, prefix: string): ContentRecord | Cont
 }
 
 interface PostType {
-  header: ReturnType<typeof formatPostHeader>;
+  subject: string;
+  user: ReturnType<typeof parsePostUser>;
   source?: string;
   contents: ContentRecord[];
   comments: CommentRecord[];
 }
 
 
-export default function parsePost(htmlString: string): PostType | undefined {
+export default function parsePost(htmlString: string, prefix: string): PostType | undefined {
   const startIndex = htmlString.indexOf('<!-- board_main start');
   const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
   let html = htmlString.substring(startIndex, endIndex);
   const Nodes = loadHtml(html);
   const res: any = {};
 
+  res.subject = parseTitle(htmlString);
+  if (!res.subject) return;
+
   const headerNode = querySelector(Nodes, 'div.board_main div.board_main_top');
   if (headerNode) {
-    res.header = formatPostHeader(headerNode);
+    res.user = parsePostUser(headerNode);
   }
 
   const mainNode = querySelector(Nodes, 'div.board_main div.board_main_view');
@@ -139,7 +140,7 @@ export default function parsePost(htmlString: string): PostType | undefined {
   
   const contentNode = querySelector(mainNode, 'div.view_content');
   if (contentNode) {
-    res.contents = formatPostContents(contentNode, '');
+    res.contents = parsePostContents(contentNode, prefix);
   } else return;
 
   const cmtStartIdx = htmlString.indexOf('<!-- board_bottom start', endIndex);

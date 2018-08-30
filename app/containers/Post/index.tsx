@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Actions, getPostInfo, getContents } from '../../store/ducks/posts';
+import { Actions, getPostInfo, getContents, isLoading } from '../../store/ducks/posts';
 import { Actions as CommentAction, getComments } from '../../store/ducks/comments';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
@@ -30,10 +30,10 @@ interface Props {
   prefix: string;
   boardId: string;
   id: string;
-  meta: any;
-  source?: string;
   contents: ContentRecord[];
   comments: CommentRecord[];
+  commentSize: number;
+  loading: boolean;
 }
 
 export class Post extends PureComponent<Props> {
@@ -69,17 +69,20 @@ export class Post extends PureComponent<Props> {
   }
 
   render() {
-    const { contents } = this.props;
+    const { loading, ...rest } = this.props;
+    if (loading) {
+      return (
+        <SafeAreaView style={styles.container}>
+          <PostPlaceholder />
+        </SafeAreaView>
+      );
+    }
     return (
       <SafeAreaView style={styles.container}>
-        {contents.length ? (
-          <DetailView
-            {...this.props}
-            onRefresh={this.onRefresh}
-          />
-        ) : (
-          <PostPlaceholder />
-        )}
+        <DetailView
+          {...rest}
+          onRefresh={this.onRefresh}
+        />
       </SafeAreaView>
     );
   }
@@ -97,6 +100,7 @@ function mapStateToProps(state: AppState) {
   return {
     contents: getContents(state),
     comments: getComments(state),
+    loading: isLoading(state),
     ...info,
   };
 }

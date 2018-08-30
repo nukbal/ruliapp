@@ -31,7 +31,7 @@ interface Props {
   navigation: any;
   request: typeof Actions.request;
   info: ReturnType<typeof getBoardInfo>;
-  list: BoardRecord[];
+  list: string[];
   refreshing: boolean;
 }
 
@@ -59,14 +59,16 @@ export class Board extends PureComponent<Props> {
 
   pressItem = (params: LinkType & { subject: string }) => {
     const { navigate } = this.props.navigation;
+    console.log(params);
     navigate({ routeName: 'Post', params });
   }
 
-  renderItem = (row: ListRenderItemInfo<BoardRecord>) => {
+  renderItem = ({ item }: ListRenderItemInfo<string>) => {
+    if (!item) return null;
     return (
       <BoardItem
         onPress={this.pressItem}
-        {...row.item}
+        id={item}
       />
     );
   }
@@ -79,10 +81,6 @@ export class Board extends PureComponent<Props> {
   }
 
   onRefresh = () => {
-    if (this.element.current) {
-      this.element.current.scrollToIndex({ index: 0, viewOffset: 0 });
-      this.updateList(1, false);
-    }
   }
 
   onSearch = (value: string) => {
@@ -101,16 +99,16 @@ export class Board extends PureComponent<Props> {
     }
   }
 
-  element = createRef<FlatList<any>>();
+  keyExtractor = (item: string, index: number) => item;
 
   render() {
     const { list, refreshing } = this.props;
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
-          ref={this.element}
           data={list}
           renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
           refreshControl={
             <RefreshControl
@@ -125,7 +123,6 @@ export class Board extends PureComponent<Props> {
           initialNumToRender={10}
           // onEndReached={this.onEndReached}
           // onEndReachedThreshold={0.5}
-          removeClippedSubviews
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>

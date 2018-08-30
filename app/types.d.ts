@@ -16,22 +16,28 @@ declare interface LinkType {
   params?: any;
 }
 
-declare interface BoardRecord {
+declare interface UserRecord {
+  id: string;
+  name: string;
+  level?: number;
+  experience?: number;
+  age?: number;
+  image?: string;
+}
+
+declare interface PostRecord {
   key: string;
+  prefix: string;
+  boardId: string;
   id: string;
   subject: string;
-  author: string;
-  link: LinkType;
-  views?: string;
-  likes?: string;
-  dislike?: string;
-  comments?: string;
+  user: UserRecord;
+  views?: number;
+  likes?: number;
+  dislikes?: number;
+  commentSize?: number;
   date?: string;
   isNotice?: boolean;
-  hasImage?: boolean;
-  hasYoutube?: boolean;
-  categoryName?: string;
-  categoryLink?: LinkType;
 }
 
 declare interface CommentRecord {
@@ -48,11 +54,20 @@ declare interface CommentRecord {
   dislike?: string;
 }
 
+declare interface UserRecord {
+  id: string;
+  name: string;
+  level?: string;
+  experience?: string;
+  age?: string;
+  image?: string;
+}
+
 declare interface ContentRecord {
   key: string;
-  type: 'block' | 'image' | 'object' | 'text' | 'reference';
+  type: 'image' | 'object' | 'text' | 'reference';
   style?: any;
-  content: string | ContentRecord | ContentRecord[];
+  content: string;
 }
 
 declare interface AppState {

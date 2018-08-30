@@ -3,17 +3,14 @@ import {
   View,
   Text,
   StyleSheet,
-  Share,
   SectionList,
-  TouchableOpacity,
   ListRenderItemInfo,
   SectionListData,
 } from 'react-native';
 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
 import { primary } from '../../styles/color';
 
+import Footer from './Footer';
 import Contents from './Contents';
 import Comments from '../Comments';
 
@@ -60,8 +57,8 @@ interface Props {
   id: string;
   boardId: string;
   prefix: string;
+  subject: string;
   meta: Readonly<{
-    subject: string;
     userName: string;
     userId: string;
     level?: number;
@@ -69,7 +66,6 @@ interface Props {
     age?: number;
     image?: string;
   }>;
-  source?: string;
   contents: ContentRecord[];
   comments: CommentRecord[];
   commentSize: number;
@@ -87,11 +83,6 @@ export default class DetailView extends PureComponent<Props> {
     loading: false,
   }
 
-  onPressShare = () => {
-    const { boardId, id, prefix } = this.props;
-    Share.share({ url: `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}` });
-  }
-
   onRefresh = () => {
     const { comments, commentSize } = this.props;
     if (commentSize && comments.length < commentSize) {
@@ -99,7 +90,7 @@ export default class DetailView extends PureComponent<Props> {
     }
   }
 
-  renderItem = ({ item, index }: ListRenderItemInfo<ContentRecord>) => {
+  renderItem = ({ item, index }: ListRenderItemInfo<string>) => {
     const newStyle = [];
 
     if (index === 0) {
@@ -110,12 +101,12 @@ export default class DetailView extends PureComponent<Props> {
     }
 
     // @ts-ignore
-    return <Contents {...item} style={newStyle} />;
+    return <Contents id={item} style={newStyle} />;
   }
 
-  renderComment = ({ item }: ListRenderItemInfo<CommentRecord>) => {
-    if (!item.key) return null;
-    return <Comments {...item} />;
+  renderComment = ({ item }: ListRenderItemInfo<string>) => {
+    if (!item) return null;
+    return <Comments id={item} />;
   }
 
   renderSectionHeader = ({ section }: { section: SectionListData<any> }) => {
@@ -131,25 +122,13 @@ export default class DetailView extends PureComponent<Props> {
 
   renderSectionFooter = ({ section }: { section: SectionListData<any> }) => {
     if (section.index === 0) {
-      const { likes, dislike } = this.props;
+      const { likes, dislike, prefix, boardId, id } = this.props;
       return (
-        <View style={styles.infoPanel}>
-          {likes && (
-            <View style={styles.infoItem}>
-              <FontAwesome name="thumbs-o-up" size={20} color="white"/>
-              <Text style={styles.infoText}>{likes}</Text>
-            </View>
-          )}
-          {dislike && (
-            <View style={styles.infoItem}>
-              <FontAwesome name="thumbs-o-down" size={20} color="white"/>
-              <Text style={styles.infoText}>{dislike}</Text>
-            </View>
-          )}
-          <TouchableOpacity style={styles.infoItem} onPress={this.onPressShare}>
-            <FontAwesome name="share-square-o" size={20} color="white"/>
-          </TouchableOpacity>
-        </View>
+        <Footer
+          likes={likes}
+          dislike={dislike}
+          url={`http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}`}
+        />
       );
     } else if (section.index === 1 && this.props.comments) {
       const { comments } = this.props;
@@ -159,26 +138,25 @@ export default class DetailView extends PureComponent<Props> {
         </View>
       );
     }
+    return null;
   }
 
   render() {
     const {
-      meta,
+      subject,
       contents,
       comments,
       loading,
     } = this.props;
     const sections = [
-      { index: 0, data: contents, title: meta.subject, renderItem: this.renderItem },
+      { index: 0, data: contents, title: subject, renderItem: this.renderItem },
       { index: 1, data: comments, renderItem: this.renderComment },
     ];
     return (
       <SectionList
         refreshing={loading}
         onRefresh={this.onRefresh}
-        // @ts-ignore
         renderSectionHeader={this.renderSectionHeader}
-        // @ts-ignore
         renderSectionFooter={this.renderSectionFooter}
         sections={sections}
         stickySectionHeadersEnabled={false}

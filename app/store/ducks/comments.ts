@@ -21,23 +21,6 @@ export type Actions = ActionsUnion<typeof Actions>;
 
 /* Realm */
 
-export const CommentSchema = {
-  name: 'Comment',
-  properties: {
-    key: 'string',
-    child: 'bool?',
-    best: 'bool?',
-    content: 'string',
-    image: 'string?',
-    userId: 'string',
-    userName: 'string',
-    userIp: 'string?',
-    time: 'string',
-    likes: 'string?',
-    dislike: 'string?',
-  },
-}
-
 /* Sagas */
 
 // @ts-ignore
@@ -80,26 +63,17 @@ export const getCommentState = (state: AppState) => state.comments;
 
 export const getComments = createSelector(
   [getCommentState],
-  ({ records, order }) =>  {
-    if (!records || !order) return [];
-    return order.map((key: string) => records[key]);
-  },
+  ({ records }) =>  records,
 );
 
 /* reducers */
 
 export interface CommentState {
-  readonly boardId?: string;
-  readonly prefix?: string;
-  readonly articleId?: string;
-  readonly records: Readonly<{
-    [key: string]: CommentRecord,
-  }>;
+  readonly records: string[];
   readonly loading: boolean;
-  readonly order: string[];
 }
 
-const initState: CommentState = { records: {}, order: [], loading: false };
+const initState: CommentState = { records: [], loading: false };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {

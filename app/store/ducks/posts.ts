@@ -1,12 +1,11 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
-import Realm from 'realm';
 import { createSelector } from 'reselect';
 import { Alert } from 'react-native';
 import { Actions as BoardAction } from './boards';
 import { Actions as CommentAction } from './comments';
 import { createAction, ActionsUnion } from '../helpers';
 import parsePost from '../../utils/parsePost';
-import { CommentSchema } from './comments';
+import realm from '../realm';
 
 /* Actions */
 export const REQUEST = 'post/REQUEST';
@@ -17,7 +16,7 @@ export const Actions = {
   request: (prefix: string, boardId: string, id: string, update?: boolean) =>
     createAction(REQUEST, { prefix, boardId, id, update }),
 
-  add: (payload: { contents: ContentRecord[], header: any, source?: string }) =>
+  add: (payload: { contents: ContentRecord[], subject: string }) =>
     createAction(ADD, payload),
   remove: (key: string) => createAction(REMOVE, key),
 };
@@ -25,7 +24,7 @@ export type Actions = ActionsUnion<typeof Actions>;
 
 /* Selectors */
 
-export const getPost = (state: any): DetailState => state.posts;
+export const getPost = (state: any): PostState => state.posts;
 
 export const getPostInfo = createSelector(
   [getPost],
@@ -33,7 +32,8 @@ export const getPostInfo = createSelector(
     id: detail.id,
     prefix: detail.prefix,
     boardId: detail.boardId,
-    meta: detail.meta,
+    subject: detail.subject,
+    user: detail.user,
   }),
 );
 
@@ -47,80 +47,41 @@ export const isLoading = createSelector(
   detail => detail.loading,
 );
 
-/* Realm */
-
-export const PostSchema = {
-  name: 'Post',
-  primaryKey: 'key',
-  properties: {
-    key: 'string',
-    header: 'string',
-    source: 'string?',
-    comments: {
-      type: 'list',
-      objectType: 'Comment',
-    },
-    contents: {
-      type: 'list',
-      objectType: 'Content',
-    },
-  },
-}
-
-const ContentSchema = {
-  name: 'Content',
-  properties: {
-    key: 'string',
-    type: 'string',
-    content: 'string',
-    style: 'string?',
-  },
-}
-
-const schemaList = [PostSchema, CommentSchema, ContentSchema];
+/* Realm queries */
 
 function convert(data: any) {
-  const contents = Array.from(data.contents);
-  const comments = Array.from(data.comments);
-  const header = JSON.parse(data.header);
+  const { contents, comments, ...rest } = data;
+  const contentKeys = contents.map((item: any) => item.key);
+  const commentKeys = comments.map((item: any) => item.key);
   return {
-    ...data,
-    header,
-    contents,
-    comments,
+    ...rest,
+    contents: contentKeys,
+    comments: commentKeys,
   };
 }
 
-async function load(key: string) {
+function load(key: string) {
   return new Promise((res, rej) => {
     try {
-      const realm = new Realm({ schema: schemaList });
-      const data = realm.objects('Post').filtered('key == $0', key);
-      if (data.length) {
-        res(convert(data[0]));
-        return;
-      }
-      res();
+      const data = realm.objectForPrimaryKey('Post', key);
+      res(data && convert(data));
     } catch (e) {
       rej(e);
     }
   });
 }
 
-async function save(key: string, data: any) {
+function save(key: string, data: any) {
   return new Promise((res, rej) => {
       try {
-        const realm = new Realm({ schema: schemaList });
         realm.write(() => {
-          const header = JSON.stringify(data.header);
           const input = {
             key,
-            header,
+            subject: data.subject,
             contents: data.contents,
-            source: data.source,
             comments: data.comments,
           };
-          const response = realm.create('Post', input);
+          const response = realm.create('Post', input, true);
           res(convert(response));
         });
       } catch (e) {
@@ -128,6 +89,20 @@ async function save(key: string, data: any) {
       }
     }
   );
+}
+
+function remove(key: string) {
+  return new Promise((res, rej) => {
+    try {
+      const data = realm.objectForPrimaryKey('Post', key);
+      realm.write(() => {
+        realm.delete(data);
+        res();
+      });
+    } catch (e) {
+      rej(e);
+    }
+  });
 }
 
 /* Sagas */
@@ -145,12 +120,11 @@ async function getPostDetail(prefix: string, boardId: string, id: string) {
       Referer: targetUrl,
     },
   };
-  console.log(targetUrl);
   // @ts-ignore
   const response = await fetch(targetUrl, config);
   const htmlString = await response.text();
 
-  return parsePost(htmlString);
+  return parsePost(htmlString, `${prefix}_${boardId}_${id}`);
 }
 
 export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.request>) {
@@ -160,21 +134,20 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
   try {
     let data = yield call(load, key);
     if (!data) {
-      console.log('download!');
       const json = yield call(getPostDetail, prefix, boardId, id);
       data = yield call(save, key, json);
     }
 
-    const rest = { header: data.header, source: data.source, contents: data.contents  };
-    const comment = data.comments;
+    const { comments, ...rest } = data;
 
     yield put(Actions.add(rest));
-    if (comment.length) {
-      yield put(CommentAction.add(comment));
+    if (data.comments.length) {
+      yield put(CommentAction.add(data.comments));
     }
   } catch (e) {
     console.log(e);
-    yield put(BoardAction.remove(`${prefix}_${boardId}_${id}`));
+    // yield call(remove, key);
+    yield put(BoardAction.remove(key));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
 }
@@ -185,35 +158,32 @@ export const postSagas = [
 
 /* Reducer */
 
-export interface DetailState {
-  readonly prefix?: string;
-  readonly boardId?: string;
-  readonly id?: string;
-  readonly meta?: Readonly<{
-    subject: string;
-    userName: string;
-    userId: string;
-    level?: number;
-    exp?: number;
-    age?: number;
-    image?: string;
-  }>;
-  readonly source?: string;
-  readonly contents: ContentRecord[];
+export interface PostState extends PostRecord {
+  readonly contents: string[];
   readonly loading: boolean;
 }
 
-const initState: DetailState = { contents: [], loading: false };
+const initState: PostState = {
+  key: '',
+  prefix: '',
+  boardId: '',
+  id: '',
+  subject: '',
+  user: { id: '', name: '' },
+  contents: [],
+  loading: false,
+};
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
-    case REQUEST:
+    case REQUEST: {
       const { prefix, boardId, id, update } = action.payload;
       if (update) return { ...state, loading: true };
       return { boardId, prefix, id, loading: true };
-    case ADD:
-      const { contents, header, source } = action.payload;
-      return { ...state, contents, meta: header, source, loading: false };
+    }
+    case ADD: {
+      return { ...state, ...action.payload, loading: false };
+    }
     default:
       return state;
   }

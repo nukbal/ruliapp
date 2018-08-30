@@ -1,83 +1,59 @@
-import React, { PureComponent } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { Component } from 'react';
+import { View, Text } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import LazyImage from '../LazyImage';
-import { primary, labelText, listItem, primaryOpacity } from '../../styles/color';
+import { primary } from '../../styles/color';
+import styles from './styles';
+import Placeholder from './placeholder';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    marginBottom: 1,
-    justifyContent: 'center',
-    backgroundColor: listItem,
-  },
-  childContainer: {
-    flex: 1,
-    padding: 16,
-    paddingLeft: 25,
-    marginBottom: 3,
-    justifyContent: 'center',
-    backgroundColor: listItem,
-  },
-  bestContainer: {
-    backgroundColor: primaryOpacity,
-  },
-  UserContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  UserText: {
-    color: 'black',
-    fontWeight: 'bold',
-    justifyContent: 'flex-start',
-    paddingRight: 6,
-  },
-  timeText: {
-    fontSize: 13,
-    color: labelText,
-    fontWeight: 'bold',
-    justifyContent: 'flex-start',
-  },
-  CommentContainer: {
-    flex: 1,
-    paddingTop: 8,
-    justifyContent: 'flex-start',
-    alignItems: 'baseline',
-  },
-  CommentText: {
-    color: 'black',
-    lineHeight: 21,
-    justifyContent: 'flex-start',
-  },
-  horizontal: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  infoContainer: {
-    flex: 1,
-    paddingTop: 8,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  bestText: {
-    paddingTop: 3,
-    paddingBottom: 3,
-    paddingLeft: 8,
-    paddingRight: 8,
-    fontSize: 13,
-    backgroundColor: primary,
-    color: 'white',
-  },
-});
+import realm from '../../store/realm';
 
-export default class CommentItem extends PureComponent<CommentRecord> {
+async function loadItem(key: string) {
+  return new Promise((res, rej) => {
+    try {
+      const data: PostRecord | undefined = realm.objectForPrimaryKey('Comment', key);
+      let response;
+      if (data) {
+        response = {
+          subject: data.subject,
+          user: data.user,
+          commentSize: data.commentSize,
+          likes: data.likes,
+          views: data.views,
+        };
+      }
+      res(response);
+    } catch (e) {
+      rej(e);
+    }
+  });
+}
+
+interface Props {
+  id: string;
+}
+
+export default class Comment extends Component<Props, { loading: boolean }> {
+  state = { loading: true };
+
+  async componentDidMount() {
+    const record = await loadItem(this.props.id);
+    if (record) {
+      // @ts-ignore
+      this.record = record;
+      this.setState({ loading: false });
+    }
+  }
+
+  // @ts-ignore
+  record: CommentRecord = {};
+
   render() {
-    const { userName, content, time, likes, dislike, image, best, child } = this.props;
+    if (this.state.loading) {
+      return <Placeholder />;
+    }
+    const { userName, content, time, likes, dislike, image, best, child } = this.record;
     const containerStyle: any = [styles.container];
     if (child) {
       containerStyle.push({ paddingLeft: 16 });
@@ -91,7 +67,7 @@ export default class CommentItem extends PureComponent<CommentRecord> {
             </Text>
             {best && (<Text style={styles.bestText}>BEST</Text>)}
           </View>
-          <Text style={styles.timeText}>{time}</Text>
+          {time && (<Text style={styles.timeText}>{time}</Text>)}
         </View>
         <View style={styles.CommentContainer}>
           {image && (<LazyImage source={{ uri: image }} />)}
