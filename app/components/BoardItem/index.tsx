@@ -11,15 +11,7 @@ async function loadItem(key: string) {
     try {
       const data: PostRecord | undefined = realm.objectForPrimaryKey('Post', key);
       let response;
-      if (data) {
-        response = {
-          subject: data.subject,
-          user: data.user,
-          commentSize: data.commentSize,
-          likes: data.likes,
-          views: data.views,
-        };
-      }
+      if (data) response = data;
       res(response);
     } catch (e) {
       rej(e);

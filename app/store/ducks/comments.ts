@@ -82,13 +82,10 @@ export default function reducer(state = initState, action: Actions) {
       return { boardId, prefix, articleId, loading: true };
     }
     case ADD: {
-      const records = arrayToObject(action.payload);
-      const order = action.payload.map(item => item.key);
-      return { ...state, records, order, loading: false };
+      return { ...state, records: action.payload, loading: false };
     }
     case UPDATE: {
-      const records = arrayToObject(action.payload);
-      return { ...state, records: { ...state.records, ...records }, loading: false };
+      return { ...state, records: [...state.records, ...action.payload], loading: false };
     }
     default:
       return state;

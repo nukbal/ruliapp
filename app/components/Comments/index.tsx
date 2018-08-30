@@ -12,17 +12,9 @@ import realm from '../../store/realm';
 async function loadItem(key: string) {
   return new Promise((res, rej) => {
     try {
-      const data: PostRecord | undefined = realm.objectForPrimaryKey('Comment', key);
+      const data: CommentRecord | undefined = realm.objectForPrimaryKey('Comment', key);
       let response;
-      if (data) {
-        response = {
-          subject: data.subject,
-          user: data.user,
-          commentSize: data.commentSize,
-          likes: data.likes,
-          views: data.views,
-        };
-      }
+      if (data) response = data;
       res(response);
     } catch (e) {
       rej(e);
@@ -47,13 +39,13 @@ export default class Comment extends Component<Props, { loading: boolean }> {
   }
 
   // @ts-ignore
-  record: CommentRecord = {};
+  record: CommentRecord = { user: { name: '', id: '' } };
 
   render() {
     if (this.state.loading) {
       return <Placeholder />;
     }
-    const { userName, content, time, likes, dislike, image, best, child } = this.record;
+    const { user, content, time, likes, dislike, image, best, child } = this.record;
     const containerStyle: any = [styles.container];
     if (child) {
       containerStyle.push({ paddingLeft: 16 });
@@ -63,7 +55,7 @@ export default class Comment extends Component<Props, { loading: boolean }> {
         <View style={styles.UserContainer}>
           <View style={styles.horizontal}>
             <Text style={styles.UserText}>
-              {userName}
+              {user.name}
             </Text>
             {best && (<Text style={styles.bestText}>BEST</Text>)}
           </View>
@@ -71,7 +63,7 @@ export default class Comment extends Component<Props, { loading: boolean }> {
         </View>
         <View style={styles.CommentContainer}>
           {image && (<LazyImage source={{ uri: image }} />)}
-          {content && (<Text style={styles.CommentText}>{content}</Text>)}
+          <Text style={styles.CommentText}>{content || ''}</Text>
         </View>
         <View style={styles.infoContainer}>
           {likes && (<FontAwesome name="thumbs-o-up" size={20} color={primary} />)}

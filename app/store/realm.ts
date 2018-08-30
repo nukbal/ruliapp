@@ -27,9 +27,7 @@ export const CommentSchema = {
     best: 'bool?',
     content: 'string',
     image: 'string?',
-    userId: 'string',
-    userName: 'string',
-    userIp: 'string?',
+    user: { type: 'linkingObjects', objectType: 'User', property: 'comments' },
     time: 'string',
     likes: 'string?',
     dislike: 'string?',
@@ -57,12 +55,27 @@ export const UserSchema = {
     experience: 'string?',
     age: 'string?',
     image: 'string?',
+    ip: 'string?',
     posts: 'Post[]',
+    comments: 'Comment[]',
   },
 }
 
-export const schemaList = [PostSchema, CommentSchema, ContentSchema, UserSchema];
+export const ImageSchema = {
+  name: 'Image',
+  primaryKey: 'url',
+  properties: {
+    url: 'string',
+    path: 'string',
+    finished: { type: 'bool', default: false },
+    width: 'int?',
+    height: 'int?',
+    color: 'string?',
+  },
+}
 
-const instance = new Realm({ schema: schemaList, deleteRealmIfMigrationNeeded: true });
+export const schemaList = [PostSchema, CommentSchema, ContentSchema, UserSchema, ImageSchema];
+
+const instance = new Realm({ schema: schemaList, migration: (_, newRealm) => newRealm.deleteAll() });
 
 export default instance;

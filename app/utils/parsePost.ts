@@ -1,5 +1,6 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseComment from './parseComment';
+import escapeHtml from 'escape-html';
 
 interface HeaderType {
   userName: string;
@@ -48,7 +49,7 @@ function findContext(current: INode, key: string, style?: any): ContentRecord | 
   switch (tagName) {
     case 'text': {
       if (!current.value) return;
-      const value = current.value.replace('&nbsp;', '');
+      const value = escapeHtml(current.value);
       if (style) return { key, type: 'text', content: value, style };
       return { key, type: 'text', content: value };
     }
@@ -148,6 +149,8 @@ export default function parsePost(htmlString: string, prefix: string): PostType 
   html = htmlString.substring(cmtStartIdx, cmtEndIdx);
   const comments = parseComment(html);
   res.comments = comments || [];
+
+  console.log(res);
 
   return res;
 }
