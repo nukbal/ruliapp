@@ -36,7 +36,7 @@ declare interface PostRecord {
   likes?: number;
   dislikes?: number;
   commentSize?: number;
-  date?: string;
+  date?: Date;
   isNotice?: boolean;
 }
 
@@ -48,7 +48,7 @@ declare interface CommentRecord {
   user: UserRecord;
   image?: string;
   userIp?: string;
-  time?: string;
+  time?: Date;
   likes?: string;
   dislike?: string;
 }

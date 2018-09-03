@@ -1,17 +1,27 @@
-import fs, { DownloadBeginCallbackResult, DownloadProgressCallbackResult } from 'react-native-fs';
+import fs from 'react-native-fs';
+import { Image } from 'react-native';
 import realm from '../../store/realm';
 // @ts-ignore
 import nanoid from 'nanoid/non-secure';
 
 const cachePath = fs.CachesDirectoryPath;
 
-async function load(url: string) {
+interface ImageType {
+  url: string;
+  path: string;
+  finished: boolean;
+  width?: number;
+  height?: number;
+}
+
+function load(url: string): Promise<ImageType> {
   return new Promise((res, rej) => {
     try {
-      const data = realm.objectForPrimaryKey('Image', url);
+      const data = realm.objectForPrimaryKey<ImageType>('Image', url);
+      console.log(data);
       let response;
       // @ts-ignore
-      if (data && data.finished) response = data;
+      if (data) response = data;
       res(response);
     } catch (e) {
       rej(e);
@@ -19,12 +29,12 @@ async function load(url: string) {
   });
 }
 
-async function save(input: any) {
+function save(input: any & { url: string }): Promise<ImageType> {
   return new Promise((res, rej) => {
     try {
       realm.write(() => {
-        const data = realm.create('Image', input, true);
-        res(data);
+        const result = realm.create<ImageType>('Image', input, true);
+        res(result);
       });
     } catch (e) {
       rej(e);
@@ -32,55 +42,72 @@ async function save(input: any) {
   });
 }
 
-type startCallback = (path: string) => void;
+function getImageSize(path: string): Promise<{ width: number, height: number }> {
+  return new Promise((res, rej) => {
+    Image.getSize(path, (width, height) => res({ width, height }), rej);
+  });
+}
+
+function onError(e: any, id?: number) {
+  console.warn(e);
+  if (id) fs.stopDownload(id);
+}
+
+type startCallback = (path: string, layout?: { width: number, height: number }) => void;
 type updateCallback = (percent: number) => void;
 
 export default async function loader(url: string, start?: startCallback, update?: updateCallback) {
-  const data = await load(url);
-  if (data) return data;
-
-  const fileName = nanoid();
-  const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
-  const targetUrl = `${cachePath}/${fileName}.${ext}`;
+  const init = await load(url);
+  if (init && init.finished) return init;
+  let path: string;
   let id: number | undefined;
   let total = 0;
-
-  function error() {
-    if (id) fs.stopDownload(id);
-  }
-
-  function begin({ jobId, statusCode, contentLength }: DownloadBeginCallbackResult) {
-    if (statusCode < 400) {
-      id = jobId;
-      try {
-        total = contentLength;
-        realm.write(() => {
-          const data = realm.create('Image', { url, path: targetUrl }, true);
-          if (start && data) start(targetUrl);
-        });
-      } catch (e) {
-        console.log(e);
-        error();
-      }
-    }
-  }
-
-  function progress({ bytesWritten }: DownloadProgressCallbackResult) {
-    if (update) {
-      const percent = Math.round((bytesWritten / total) * 100);
-      update(percent);
-    }
+  
+  if (init && init.path) {
+    path = init.path;
+  } else {
+    const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
+    path = `${cachePath}/${nanoid()}.${ext}`;
   }
 
   try {
-    const response = await fs.downloadFile({ fromUrl: url, toFile: targetUrl, begin });
-    // @ts-ignore
+    const config: fs.DownloadFileOptions = {
+      fromUrl: url,
+      toFile: path,
+      begin: async ({ statusCode, contentLength }) => {
+        if (statusCode < 400) {
+          total = contentLength;
+          try {
+            const layout = await getImageSize(path);
+            let data;
+            if (layout) {
+              data = await save({ url, path, width: layout.width, height: layout.height });
+            } else {
+              data = await save({ url, path });
+            }
+            if (start && data) start(path, layout);
+          } catch (e) {
+            onError(e, id);
+          }
+        }
+      },
+      progress: ({ bytesWritten }) => {
+        if (update) {
+          const percent = Math.round((bytesWritten / total) * 100);
+          update(percent);
+        }
+      }
+    };
+
+    const { jobId, promise } = fs.downloadFile(config);
+    id = jobId;
+    const response = await promise;
     if (response.statusCode < 400) {
-      const result = await save({ url, path: targetUrl, finished: true });
-      return result;
+      const data = await save({ url, path, finished: true });
+      return data;
     }
   } catch (e) {
-    error();
+    onError(e, id);
   }
 }
 

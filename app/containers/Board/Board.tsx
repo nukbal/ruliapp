@@ -59,7 +59,6 @@ export class Board extends PureComponent<Props> {
 
   pressItem = (params: LinkType & { subject: string }) => {
     const { navigate } = this.props.navigation;
-    console.log(params);
     navigate({ routeName: 'Post', params });
   }
 

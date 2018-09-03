@@ -155,7 +155,6 @@ export default class DetailView extends PureComponent<Props> {
         keyExtractor={this.keyExtractor}
         sections={sections}
         stickySectionHeadersEnabled={false}
-        removeClippedSubviews
       />
     );
   }

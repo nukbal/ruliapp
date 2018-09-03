@@ -43,12 +43,11 @@ function renderContent({ type, content }: ContentRecord) {
 
   switch (type) {
     case 'reference': {
-      return <Text style={[styles.container, styles.text]}>출처: {content}</Text>;
+      return <Text style={styles.text}>출처: {content}</Text>;
     }
     case 'object': {
       return (
         <WebView
-          style={[styles.container]}
           // @ts-ignore
           source={{ uri: content }}
           javaScriptEnabled
@@ -69,13 +68,15 @@ function renderContent({ type, content }: ContentRecord) {
 export default class ContentItem extends Component<{ id: string }, { loading: boolean }> {
   state = { loading: true };
 
-
   async componentDidMount() {
-    const record = await loadItem(this.props.id);
-    if (record) {
-      // @ts-ignore
-      this.record = record;
-      this.setState({ loading: false });
+    if (!this.record) {
+      this.setState({ loading: true });
+      const record = await loadItem(this.props.id);
+      if (record) {
+        // @ts-ignore
+        this.record = record;
+        this.setState({ loading: false });
+      }
     }
   }
 
@@ -89,8 +90,8 @@ export default class ContentItem extends Component<{ id: string }, { loading: bo
     if (!this.record || this.state.loading) {
       return <View style={styles.container} />;
     }
-    console.log(this.record);
-    return renderContent(this.record);
+    const Content = renderContent(this.record);
+    return <View style={styles.container}>{Content}</View>
   }
 }
 

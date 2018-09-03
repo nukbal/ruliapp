@@ -67,9 +67,18 @@ function findContext(current: INode, key: string, style?: any): ContentRecord | 
       if (!rows) return;
       const hasStyle = current.attrs && current.attrs.style;
 
+      const textArr = [];
+
       for (let i = 0, len = rows.length; i < len; i ++) {
         const value = findContext(rows[i], `${key}_0`, hasStyle && current.attrs!.style);
-        if (value) return value;
+        if (value && value.type === 'image') {
+          return value;
+        } else if (value && value.type === 'text') {
+          textArr.push(value.content);
+        }
+      }
+      if (textArr.length) {
+        return { key, type: 'text', content: textArr.join(' ') };
       }
     }
   }

@@ -77,7 +77,7 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
     yield call(save, json.rows);
     yield put(Actions.add(json.title, keyList));
   } catch(e) {
-    console.error(e);
+    console.warn(e);
     return;
   }
 }

@@ -1,5 +1,6 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import escapeHtml from 'escape-html';
+import parseDate from './parseDate';
 
 function formatComment(node: INode): CommentRecord | undefined {
   // @ts-ignore
@@ -35,6 +36,7 @@ function formatComment(node: INode): CommentRecord | undefined {
   if (userInfo) {
     cursor = querySelector(userInfo, 'input.member_srl');
     if (cursor && cursor.attrs) record.user.id = cursor.attrs.value;
+    else return;
 
     cursor = querySelector(userInfo, 'strong.nick text');
     if (cursor && cursor.value) record.user.name = cursor.value;
@@ -43,7 +45,10 @@ function formatComment(node: INode): CommentRecord | undefined {
     if (cursor && cursor.value) record.user.ip = cursor.value.replace('| ', '');
 
     cursor = querySelector(userInfo, 'span.time text');
-    if (cursor && cursor.value) record.time = cursor.value.replace('| ', '');
+    if (cursor && cursor.value) {
+      const dateStr = cursor.value.replace('| ', '');
+      record.time = parseDate(dateStr);
+    }
   }
 
   cursor = querySelector(node, 'button.btn_dislike');

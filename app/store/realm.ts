@@ -1,13 +1,24 @@
 import Realm from 'realm';
 
+export const BoardSchema = {
+  name: 'Board',
+  primaryKey: 'key',
+  properties: {
+    key: 'string',
+    posts: 'Post[]',
+    notice: 'Post[]',
+    updated: 'date',
+  }
+}
+
 export const PostSchema = {
   name: 'Post',
   primaryKey: 'key',
   properties: {
     key: 'string',
     subject: 'string',
-    user: { type: 'linkingObjects', objectType: 'User', property: 'posts' },
-    date: 'string?',
+    user: 'User',
+    date: 'date?',
     views: { type: 'int', default: 0 },
     likes: { type: 'int', default: 0 },
     dislikes: { type: 'int', default: 0 },
@@ -27,8 +38,8 @@ export const CommentSchema = {
     best: 'bool?',
     content: 'string',
     image: 'string?',
-    user: { type: 'linkingObjects', objectType: 'User', property: 'comments' },
-    time: 'string',
+    user: 'User',
+    time: 'date',
     likes: 'string?',
     dislike: 'string?',
   },
@@ -51,9 +62,9 @@ export const UserSchema = {
   properties: {
     id: 'string',
     name: 'string',
-    level: 'string?',
-    experience: 'string?',
-    age: 'string?',
+    level: 'int?',
+    experience: 'int?',
+    age: 'int?', 
     image: 'string?',
     ip: 'string?',
     posts: 'Post[]',
@@ -70,11 +81,10 @@ export const ImageSchema = {
     finished: { type: 'bool', default: false },
     width: 'int?',
     height: 'int?',
-    color: 'string?',
   },
 }
 
-export const schemaList = [PostSchema, CommentSchema, ContentSchema, UserSchema, ImageSchema];
+export const schemaList = [BoardSchema, PostSchema, CommentSchema, ContentSchema, UserSchema, ImageSchema];
 
 const instance = new Realm({ schema: schemaList, migration: (_, newRealm) => newRealm.deleteAll() });
 

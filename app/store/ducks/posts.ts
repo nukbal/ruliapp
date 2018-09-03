@@ -84,6 +84,7 @@ function save(key: string, data: any) {
           const input = {
             key,
             subject: data.subject,
+            user: data.user,
             contents: data.contents,
             comments: data.comments,
           };
@@ -151,7 +152,7 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
       yield put(CommentAction.add(data.comments));
     }
   } catch (e) {
-    console.log(e);
+    console.warn(e);
     // yield call(remove, key);
     yield put(BoardAction.remove(key));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');

@@ -8,7 +8,7 @@ const style = StyleSheet.create({
   placeholder: {
     backgroundColor: '#dedede',
     marginBottom: 8,
-    height: 12,
+    height: 16,
   },
 });
 

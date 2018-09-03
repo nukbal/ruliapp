@@ -21,52 +21,63 @@ interface State {
   percent: number;
 }
 
+function setImageSize(image: { width: number, height: number }, layout: { width: number, height: number }) {
+  let { height, width } = layout;
+
+  let ratio;
+  const half = width / 2;
+  if (half > image.width) {
+    ratio = half / image.width;
+    width = half;
+  } else if (width > image.width) {
+    ratio = 1;
+    width = image.width;
+  } else {
+    ratio = width / image.width;
+  }
+  height = Math.floor(image.height * ratio);
+  return { width, height };
+}
+
 export default class LazyImage extends PureComponent<Props, State> {
 
   state = { path: undefined, width: 0, height: 0, percent: 0 };
+  layout = { width: 0, height: 0 };
 
   async componentDidMount() {
     this.layout = { width: 0, height: 0 };
-    await loader(this.props.source.uri, this.beginDownload);
+    const image = await loader(this.props.source.uri, this.beginDownload);
+    if (image) {
+      const { path, width, height } = image;
+      let layout;
+      if (width && height) {
+        layout = { width, height };
+      }
+      this.beginDownload(path, layout);
+    }
   }
 
-  beginDownload = (path: string) => {
-    this.setState({ path });
+  beginDownload = (path: string, layout?: { width: number, height: number }) => {
+    if (layout) {
+      const { width, height } = setImageSize(layout, this.layout);
+      this.setState({ path, width, height });
+    } else {
+      this.setState({ path });
+    }
   }
 
   onLayout = ({ nativeEvent }: any) => {
     const { width, height } = nativeEvent.layout;
     this.layout.width = width;
     this.layout.height = height;
-    Image.getSize(this.props.source.uri, this.setImageSize, () => {});
   }
-
-  setImageSize = (w: number, h: number) => {
-    let { height, width } = this.layout;
-
-    let ratio;
-    const half = width / 2;
-    if (half > w) {
-      ratio = half / w;
-      width = half;
-    } else if (width > w) {
-      ratio = 1;
-      width = w;
-    } else {
-      ratio = width / w;
-    }
-    height = Math.floor(h * ratio);
-    this.setState({ width, height });
-  }
-
-  layout = { width: 0, height: 0 };
 
   render() {
     const { path, width, height } = this.state;
-    if (path) {
+    if (path && width && height) {
       return (
         <Image
-          style={{ width, height }}
+          style={[styles.ImageContent, { width, height }]}
           source={{ uri: this.state.path }}
           resizeMode="contain"
         />

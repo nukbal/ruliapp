@@ -40,14 +40,17 @@ export default class BoardItem extends Component<IBoardItem, State> {
   }
 
   state = { touching: false, loading: true };
-  record: PostRecord
+  record: PostRecord;
 
   async componentDidMount() {
-    const record = await loadItem(this.props.id);
-    if (record) {
-      // @ts-ignore
-      this.record = { ...this.record, ...record };
-      this.setState({ loading: false });
+    if (!this.record.subject) {
+      this.setState({ loading: true });
+      const record = await loadItem(this.props.id);
+      if (record) {
+        // @ts-ignore
+        this.record = { ...this.record, ...record };
+        this.setState({ loading: false });
+      }
     }
   }
 
@@ -74,9 +77,7 @@ export default class BoardItem extends Component<IBoardItem, State> {
   }
 
   render() {
-    if (this.state.loading) {
-      return <Placeholder />;
-    }
+    if (this.state.loading) return <Placeholder />;
     
     const viewStyle = [styles.container];
     const itemText = [styles.itemText];

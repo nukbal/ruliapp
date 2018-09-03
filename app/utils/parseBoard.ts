@@ -1,4 +1,5 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
+import parseDate from './parseDate';
 
 export function parseBoardUrl(href: string) {
   const res: any = {};
@@ -66,20 +67,21 @@ function formatBoardRow(node: INode): PostRecord | undefined {
     record.boardId = boardId;
     record.id = id;
     record.prefix = prefix;
+    record.user.id = id;
 
     const text = querySelector(cursor, 'text');
     if (text) record.subject = text.value!;
   } else return;
 
   // board category
-  cursor = querySelector(titleDiv, 'a.cate_label text');
-  const bracketRegex = new RegExp(/[\[|\]]/, 'g');
-  if (cursor) {
-    record.categoryName = cursor.value!.replace(bracketRegex, '');
-  } else {
-    cursor = querySelector(infoDiv, 'a.board_name text');
-    if (cursor) record.categoryName = cursor.value!.replace(bracketRegex, '');
-  }
+  // cursor = querySelector(titleDiv, 'a.cate_label text');
+  // const bracketRegex = new RegExp(/[\[|\]]/, 'g');
+  // if (cursor) {
+  //   record.categoryName = cursor.value!.replace(bracketRegex, '');
+  // } else {
+  //   cursor = querySelector(infoDiv, 'a.board_name text');
+  //   if (cursor) record.categoryName = cursor.value!.replace(bracketRegex, '');
+  // }
 
   // count of comments
   cursor = querySelector(titleDiv, 'span.num text');
@@ -95,7 +97,10 @@ function formatBoardRow(node: INode): PostRecord | undefined {
 
   // posted date/time
   cursor = querySelector(infoDiv, 'span.time text');
-  if (cursor && cursor.value) record.date = cursor.value.replace('날짜 ', '');
+  if (cursor && cursor.value) {
+    const dateStr = cursor.value.replace('날짜 ', '');
+    record.date = parseDate(dateStr);
+  }
 
   cursor = querySelector(infoDiv, 'span.recomd text');
   if (cursor && cursor.value) record.likes = parseInt(cursor.value!.replace('추천 ', ''), 10);

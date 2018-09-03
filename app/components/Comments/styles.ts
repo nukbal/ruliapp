@@ -71,7 +71,7 @@ export default StyleSheet.create({
     color: 'white',
   },
   placeholder: {
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#dedede',
     height: 16,
   },
 });
