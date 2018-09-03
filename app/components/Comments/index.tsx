@@ -6,6 +6,7 @@ import LazyImage from '../LazyImage';
 import { primary } from '../../styles/color';
 import styles from './styles';
 import Placeholder from './placeholder';
+import formatDate from '../../utils/formatDate';
 
 import realm from '../../store/realm';
 
@@ -29,20 +30,23 @@ interface Props {
 export default class Comment extends Component<Props, { loading: boolean }> {
   state = { loading: true };
 
+  // @ts-ignore
+  record: CommentRecord;
+
   async componentDidMount() {
-    const record = await loadItem(this.props.id);
-    if (record) {
-      // @ts-ignore
-      this.record = record;
-      this.setState({ loading: false });
+    if (!this.record) {
+      this.setState({ loading: true });
+      const record = await loadItem(this.props.id);
+      if (record) {
+        // @ts-ignore
+        this.record = record;
+        this.setState({ loading: false });
+      }
     }
   }
 
-  // @ts-ignore
-  record: CommentRecord = { user: { name: '', id: '' } };
-
   render() {
-    if (this.state.loading) {
+    if (this.state.loading && !this.record) {
       return <Placeholder />;
     }
     const { user, content, time, likes, dislike, image, best, child } = this.record;
@@ -59,7 +63,7 @@ export default class Comment extends Component<Props, { loading: boolean }> {
             </Text>
             {best && (<Text style={styles.bestText}>BEST</Text>)}
           </View>
-          {time && (<Text style={styles.timeText}>{time}</Text>)}
+          {time && (<Text style={styles.timeText}>{formatDate(time)}</Text>)}
         </View>
         <View style={styles.CommentContainer}>
           {image && (<LazyImage source={{ uri: image }} />)}

@@ -9,7 +9,7 @@ export default function BoardPlaceholder() {
         <View style={[styles.placeholder, { width: '80%' }]} />
       </View>
       <View style={styles.info}>
-        <View style={[styles.placeholder, { width: '65%' }]} />
+        <View style={[styles.placeholder, { width: '45%' }]} />
       </View>
     </View>
   );

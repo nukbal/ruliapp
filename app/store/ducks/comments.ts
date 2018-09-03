@@ -53,6 +53,7 @@ export async function requestComments({ prefix, boardId, articleId }) {
     }
     return parseComment(json.view);
   } catch(e) {
+    console.warn(e);
     return null;
   }
 }

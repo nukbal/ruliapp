@@ -9,11 +9,11 @@ export default function CommentPlaceholder() {
         <View style={[styles.placeholder, { width: '30%' }]} />
       </View>
       <View style={styles.CommentContainer}>
-        <View style={[styles.placeholder, { width: '85%' }]} />
+        <View style={[styles.placeholder, { width: '85%', marginBottom: 3 }]} />
         <View style={[styles.placeholder, { width: '65%' }]} />
       </View>
       <View style={styles.infoContainer}>
-        <View style={[styles.placeholder, { width: '30%' }]} />
+        <View style={[styles.placeholder, { width: '25%' }]} />
       </View>
     </View>
   );

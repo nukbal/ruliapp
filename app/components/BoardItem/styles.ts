@@ -36,7 +36,7 @@ export default StyleSheet.create({
     color: labelText,
   },
   placeholder: {
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#dedede',
     height: 16,
   },
 });

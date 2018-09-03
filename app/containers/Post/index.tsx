@@ -36,7 +36,11 @@ interface Props {
   loading: boolean;
 }
 
-export class Post extends PureComponent<Props> {
+interface State {
+  loading: boolean;
+}
+
+export class Post extends PureComponent<Props, State> {
   static navigationOptions = ({ navigation }: Props) => ({
     title: navigation.state.params.subject,
     drawerLockMode: 'locked-closed',
@@ -53,9 +57,14 @@ export class Post extends PureComponent<Props> {
     ),
    });
 
-   static defaultProps = {
-     contents: [],
-   };
+   static getDerivedStateFromProps(props: Props, state: State) {
+     if (state.loading && props.loading) {
+      return { loading: false };
+     }
+     return { loading: true };
+   }
+
+   state = { loading: true };
 
   componentDidMount() {
     const { params } = this.props.navigation.state;

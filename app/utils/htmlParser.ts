@@ -13,7 +13,7 @@ export interface INode {
 }
 
 const kMarkupPattern = /<!--[^]*?(?=-->)-->|<(\/?)([a-z][a-z0-9]*)\s*([^>]*?)(\/?)>/gi;
-const kAttributePattern = /\b(id|class|href|value|src)\s*=\s*("([^"]+)"|'([^']+)'|(\S+))/ig;
+const kAttributePattern = /\b(id|class|href|value|src|onClick)\s*=\s*("([^"]+)"|'([^']+)'|(\S+))/ig;
 const kSelfClosingElements = {
   meta: true,
   img: true,
