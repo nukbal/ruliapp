@@ -29,15 +29,37 @@ export const Actions = {
 export type Actions = ActionsUnion<typeof Actions>;
 
 /* realm */
+function load(key: string) {
+  return new Promise((res, rej) => {
+    try {
+      const board = realm.objectForPrimaryKey('Board', key);
+      if (board) {
+        const updatedTime = board.updated.getTime();
+        const currentTime = new Date().getTime();
+        if (currentTime - updatedTime > 60000) {
+          res(board);
+          return;
+        }
+      }
+      res();
+    } catch (e) {
+      rej(e);
+    }
+  });
+}
 
-function save(rows: PostRecord[]) {
+function save(key: string, { title, rows, notices }: ReturnType<typeof parseBoardList>) {
   return new Promise((res, rej) => {
     try {
       realm.write(() => {
+        const board = realm.create('Board', { key, title, updated: new Date() }, true);
         for (let i = 0, len = rows.length; i < len; i += 1) {
-          realm.create('Post', rows[i], true);
+          const exists = board.posts.filtered('key = $0', rows[i].key);
+          if (exists.length === 0) {
+            board.posts.push(rows[i]);
+          }
         }
-        res();
+        res(board);
       });
     } catch (e) {
       rej(e);
@@ -66,16 +88,19 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
       Referer: targetUrl,
     }
   };
+  const key = `${prefix}${boardId ? `_${boardId}` : ''}`;
 
   try {
-    const response = yield call(fetch, targetUrl, config);
-    const htmlString = yield response.text();
-    const json = yield call(parseBoardList, htmlString);
+    let data = yield call(load, key);
+    if (!data) {
+      const response = yield call(fetch, targetUrl, config);
+      const htmlString = yield response.text();
+      const json = yield call(parseBoardList, htmlString);
+      data = yield call(save, key, json);
+    }
 
-    const keyList = json.rows.map((item: PostRecord) => item.key);
-
-    yield call(save, json.rows);
-    yield put(Actions.add(json.title, keyList));
+    const keys = data.posts.sorted('date', true).map((item: PostRecord) => item.key);
+    yield put(Actions.add(data.title, keys));
   } catch(e) {
     console.warn(e);
     return;
@@ -83,7 +108,7 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
 }
 
 export const boardSagas = [
-  throttle(250, REQUEST, requestBoard),
+  throttle(1000, REQUEST, requestBoard),
 ];
 
 /* selectors */

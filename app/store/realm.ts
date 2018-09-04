@@ -5,6 +5,7 @@ export const BoardSchema = {
   primaryKey: 'key',
   properties: {
     key: 'string',
+    title: 'string',
     posts: 'Post[]',
     notice: 'Post[]',
     updated: 'date',
@@ -86,6 +87,6 @@ export const ImageSchema = {
 
 export const schemaList = [BoardSchema, PostSchema, CommentSchema, ContentSchema, UserSchema, ImageSchema];
 
-const instance = new Realm({ schema: schemaList, migration: (_, newRealm) => newRealm.deleteAll() });
+const instance = new Realm({ schema: schemaList });
 
 export default instance;

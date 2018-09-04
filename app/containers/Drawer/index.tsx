@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, ScrollView, TouchableWithoutFeedback, View, Text } from 'react-native';
-import { NavigationActions, SafeAreaView } from 'react-navigation';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import * as List from '../../config/BoardList';
 
 const styles = StyleSheet.create({
@@ -8,42 +8,50 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  listWrapper: {
     flex: 1,
-    padding: 8,
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingRight: 18,
+    paddingLeft: 18,
   }
 });
 
+function ParentItem({ label, onPress }: { label: string, onPress: () => void }) {
+  return (
+    <TouchableOpacity style={styles.listWrapper} onPress={onPress}>
+      <View style={styles.listItem}>
+        <Text>{label}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
 export default class Drawer extends PureComponent {
   onPressBoard = (config: any) => () => {
-    const { title, ...params } = config;
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({ routeName: 'Board', params: { title, ...params }})
-      ]
-    });
-    // @ts-ignore
-    this.props.navigation.dispatch(resetAction);
+    console.warn(config);
+    this.props.navigation.navigate({ routeName: 'Board', params: config, key: config.key })
   }
 
   renderList = (key: string) => {
     // @ts-ignore
     const board = List[key];
     return (
-      <TouchableWithoutFeedback key={key} onPress={this.onPressBoard(board)}>
+      <TouchableOpacity key={key} style={styles.listWrapper} onPress={this.onPressBoard(board)}>
         <View style={styles.listItem}>
           <Text>{board.title}</Text>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   }
 
   render() {
     return (
       <SafeAreaView style={styles.wrapper}>
-        <ScrollView>
-          {Object.keys(List).map(this.renderList)}
-        </ScrollView>
+        {Object.keys(List).map(this.renderList)}
       </SafeAreaView>
     );
   }

@@ -46,7 +46,7 @@ function formatComment(node: INode): CommentRecord | undefined {
 
     cursor = querySelector(userInfo, 'span.time text');
     if (cursor && cursor.value) {
-      const dateStr = cursor.value.replace('| ', '');
+      const dateStr = cursor.value.replace('| ', '').trim();
       record.time = parseDate(dateStr);
     }
   }

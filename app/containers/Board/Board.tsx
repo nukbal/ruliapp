@@ -3,14 +3,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { SafeAreaView } from 'react-navigation';
-import { StyleSheet, FlatList, StatusBar, RefreshControl, ListRenderItemInfo } from 'react-native';
+import { StyleSheet, FlatList, StatusBar, RefreshControl, ListRenderItemInfo, View, Text } from 'react-native';
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import { getBoardList, getBoardInfo, isBoardLoading, Actions } from '../../store/ducks/boards';
 import { darkBarkground } from '../../styles/color';
-
-import { BestBoard } from '../../config/BoardList';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,19 +23,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  empty: {
+    flex: 1,
+    backgroundColor: darkBarkground,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: '#dedede',
+    fontSize: 16,
+  }
 });
 
-interface Props {
+const EmptyState = (
+  <View style={styles.empty}>
+    <Text style={styles.emptyText}>Empty</Text>
+  </View>
+);
+
+interface Props extends ReturnType<typeof getBoardInfo> {
   navigation: any;
   request: typeof Actions.request;
-  info: ReturnType<typeof getBoardInfo>;
   list: string[];
   refreshing: boolean;
 }
 
 export class Board extends PureComponent<Props> {
   static navigationOptions = ({ navigation }: Props) => {
-    const title = navigation.getParam('title', BestBoard.title);
+    const title = navigation.getParam('title');
     return {
       title: title || '',
     };
@@ -50,7 +63,7 @@ export class Board extends PureComponent<Props> {
 
   componentDidMount() {
     const { getParam } = this.props.navigation;
-    const prefix = getParam('prefix', BestBoard.prefix);
+    const prefix = getParam('prefix');
     const boardId = getParam('boardId');
     if (prefix) {
       this.props.request(prefix, boardId, { page: 1 });
@@ -73,26 +86,28 @@ export class Board extends PureComponent<Props> {
   }
 
   onEndReached = () => {
-    const { list, info } = this.props;
-    if (list.filter(({ id }) => id).length > 0 && info.params) {
-      this.updateList(info.params.page + 1, true);
+    const { list, params } = this.props;
+    if (list.filter(({ id }) => id).length > 0 && params) {
+      this.updateList(params.page + 1, true);
     }
   }
 
   onRefresh = () => {
+    const { prefix, boardId, request } = this.props;
+    if (prefix && boardId) {
+      request(prefix, boardId, { page: 1 });
+    }
   }
 
   onSearch = (value: string) => {
-    const { info, request } = this.props;
-    const { prefix, boardId } = info;
+    const { prefix, boardId, request } = this.props;
     if (prefix && boardId && value) {
       request(prefix, boardId, { page: 1, keyword: value });
     }
   }
 
   updateList = (page: number, isEnd: boolean) => {
-    const { info, refreshing, request } = this.props;
-    const { prefix, boardId } = info;
+    const { prefix, boardId, refreshing, request } = this.props;
     if (!refreshing && prefix && boardId) {
       request(prefix, boardId, { page }, true);
     }
@@ -102,6 +117,9 @@ export class Board extends PureComponent<Props> {
 
   render() {
     const { list, refreshing } = this.props;
+    if (list.length === 0) {
+      return EmptyState;
+    }
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
@@ -136,8 +154,12 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 function mapStateToProps(state: AppState) {
+  const { boardId, prefix, title, params } = getBoardInfo(state);
   return {
-    info: getBoardInfo(state),
+    boardId,
+    prefix,
+    title,
+    params,
     list: getBoardList(state),
     refreshing: isBoardLoading(state),
   };
