@@ -1,11 +1,13 @@
-import React, { PureComponent } from 'react';
-import { StyleSheet, Image, View } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Image, View, Text } from 'react-native';
 import loader from './loader';
 
 const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#dedede',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 200,
   }
 });
@@ -21,8 +23,8 @@ interface State {
   percent: number;
 }
 
-function setImageSize(image: { width: number, height: number }, layout: { width: number, height: number }) {
-  let { height, width } = layout;
+function setImageSize(image: { width: number, height: number }, screenWidth: number) {
+  let width = screenWidth;
 
   let ratio;
   const half = width / 2;
@@ -35,20 +37,20 @@ function setImageSize(image: { width: number, height: number }, layout: { width:
   } else {
     ratio = width / image.width;
   }
-  height = Math.floor(image.height * ratio);
+  const height = Math.floor(image.height * ratio);
   return { width, height };
 }
 
-export default class LazyImage extends PureComponent<Props, State> {
+export default class LazyImage extends Component<Props, State> {
 
   state = { path: undefined, width: 0, height: 0, percent: 0 };
-  layout = { width: 0, height: 0 };
+  image: any = undefined;
+  screenWidth = 0;
 
   async componentDidMount() {
-    this.layout = { width: 0, height: 0 };
-    const image = await loader(this.props.source.uri, this.beginDownload);
-    if (image) {
-      const { path, width, height } = image;
+    this.image = await loader(this.props.source.uri, undefined, this.updateDownload);
+    if (this.image) {
+      const { path, width, height } = this.image;
       let layout;
       if (width && height) {
         layout = { width, height };
@@ -57,19 +59,36 @@ export default class LazyImage extends PureComponent<Props, State> {
     }
   }
 
+  shouldComponentUpdate(_: Props, state: State) {
+    return this.state.percent !== state.percent ||
+      this.state.width !== state.width ||
+      this.state.height !== state.height;
+  }
+
   beginDownload = (path: string, layout?: { width: number, height: number }) => {
-    if (layout) {
-      const { width, height } = setImageSize(layout, this.layout);
+    if (layout && this.screenWidth) {
+      const { width, height } = setImageSize(layout, this.screenWidth);
       this.setState({ path, width, height });
     } else {
       this.setState({ path });
     }
   }
 
+  updateDownload = (percent: number) => {
+    if (percent !== this.state.percent) {
+      this.setState({ percent });
+    }
+  }
+
   onLayout = ({ nativeEvent }: any) => {
-    const { width, height } = nativeEvent.layout;
-    this.layout.width = width;
-    this.layout.height = height;
+    if (this.screenWidth !== nativeEvent.layout.width) {
+      this.screenWidth = nativeEvent.layout.width;
+      if (this.state.path) {
+        const layout = { width: this.image.width, height: this.image.height };
+        const { width, height } = setImageSize(layout, this.screenWidth);
+        this.setState({ width, height });
+      }
+    }
   }
 
   render() {
@@ -83,6 +102,10 @@ export default class LazyImage extends PureComponent<Props, State> {
         />
       );
     }
-    return <View style={styles.ImageContent} onLayout={this.onLayout} />;
+    return (
+      <View style={styles.ImageContent} onLayout={this.onLayout}>
+        <Text>{this.state.percent || 0}</Text>
+      </View>
+    )
   }
 }

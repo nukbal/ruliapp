@@ -1,6 +1,14 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseDate from './parseDate';
 
+
+function parseTitle(html: string) {
+  const startIdx = (html.indexOf('<title>') + 7);
+  const endIdx = html.indexOf('</title', startIdx);
+  const str = html.substring(startIdx, endIdx);
+  return str.substring(0, str.indexOf(' | '));
+}
+
 export function parseBoardUrl(href: string) {
   const res: any = {};
   const url = href.replace('http://m.ruliweb.com', '').replace('/', '');
@@ -67,7 +75,7 @@ function formatBoardRow(node: INode): PostRecord | undefined {
     record.boardId = boardId;
     record.id = id;
     record.prefix = prefix;
-    record.user.id = id;
+    record.user.id = key;
 
     const text = querySelector(cursor, 'text');
     if (text) record.subject = text.value!;
@@ -115,7 +123,7 @@ export interface IParseBoard {
 }
 
 export default function parseBoardList (htmlString: string): IParseBoard {
-  const title = '';
+  const title = parseTitle(htmlString);
   const startIndex = htmlString.indexOf('<table class="board_list_table"');
   const endIndex = htmlString.indexOf('</table>', startIndex);
   const html = htmlString.substring(startIndex, endIndex);

@@ -10,15 +10,14 @@ interface ImageType {
   url: string;
   path: string;
   finished: boolean;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
 }
 
 function load(url: string): Promise<ImageType> {
   return new Promise((res, rej) => {
     try {
       const data = realm.objectForPrimaryKey<ImageType>('Image', url);
-      console.log(data);
       let response;
       // @ts-ignore
       if (data) response = data;
@@ -57,6 +56,12 @@ type startCallback = (path: string, layout?: { width: number, height: number }) 
 type updateCallback = (percent: number) => void;
 
 export default async function loader(url: string, start?: startCallback, update?: updateCallback) {
+  const imgPath = `${cachePath}/images`
+  const exists = await fs.exists(imgPath);
+  if (!exists) {
+    await fs.mkdir(imgPath);
+  }
+
   const init = await load(url);
   if (init && init.finished) return init;
   let path: string;
@@ -67,7 +72,7 @@ export default async function loader(url: string, start?: startCallback, update?
     path = init.path;
   } else {
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
-    path = `${cachePath}/${nanoid()}.${ext}`;
+    path = `${imgPath}/${nanoid()}.${ext}`;
   }
 
   try {
@@ -78,14 +83,8 @@ export default async function loader(url: string, start?: startCallback, update?
         if (statusCode < 400) {
           total = contentLength;
           try {
-            const layout = await getImageSize(path);
-            let data;
-            if (layout) {
-              data = await save({ url, path, width: layout.width, height: layout.height });
-            } else {
-              data = await save({ url, path });
-            }
-            if (start && data) start(path, layout);
+            const data = await save({ url, path });
+            if (start && data) start(path);
           } catch (e) {
             onError(e, id);
           }
@@ -103,7 +102,8 @@ export default async function loader(url: string, start?: startCallback, update?
     id = jobId;
     const response = await promise;
     if (response.statusCode < 400) {
-      const data = await save({ url, path, finished: true });
+      const layout = await getImageSize(path);
+      const data = await save({ url, path, finished: true, width: layout.width, height: layout.height });
       return data;
     }
   } catch (e) {

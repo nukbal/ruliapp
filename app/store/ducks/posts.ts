@@ -81,6 +81,10 @@ function save(key: string, data: any) {
   return new Promise((res, rej) => {
       try {
         realm.write(() => {
+          const old = realm.objectForPrimaryKey('Post', key);
+          if (old && old.user.id !== data.user.id) {
+            realm.delete(old.user);
+          }
           const input = {
             key,
             subject: data.subject,
@@ -148,13 +152,12 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
     const { comments, ...rest } = data;
 
     yield put(Actions.add(rest));
-    if (data.comments.length) {
-      yield put(CommentAction.add(data.comments));
-    }
+    yield put(CommentAction.add(data.comments));
+
   } catch (e) {
-    console.warn(e);
+    console.warn(e.message);
     // yield call(remove, key);
-    yield put(BoardAction.remove(key));
+    // yield put(BoardAction.remove(key));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
 }
