@@ -27,6 +27,7 @@ export const PostSchema = {
     isNotice: 'bool?',
     comments: 'Comment[]',
     contents: 'Content[]',
+    finished: { type: 'bool', default: false },
   },
 }
 
@@ -54,6 +55,7 @@ export const ContentSchema = {
     type: 'string',
     content: 'string',
     style: 'string?',
+    order: 'int',
   },
 }
 

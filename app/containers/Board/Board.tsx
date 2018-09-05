@@ -1,4 +1,4 @@
-import React, { PureComponent, createRef} from 'react';
+import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -117,7 +117,7 @@ export class Board extends PureComponent<Props> {
 
   render() {
     const { list, refreshing } = this.props;
-    if (list.length === 0) {
+    if (list.length === 0 && !refreshing) {
       return EmptyState;
     }
     return (

@@ -15,7 +15,7 @@ export default function parseDate(str: string): Date | undefined {
     return parseTime(date, str);
   } else {
     const [dateStr, timeStr] = str.split(' ');
-    const [yearStr, monthStr, dayStr] = dateStr.split('.');
+    const [yearStr, monthStr, dayStr] = dateStr.split(/\.|-/);
 
     let year;
     if (yearStr.length < 4) {
@@ -27,6 +27,9 @@ export default function parseDate(str: string): Date | undefined {
     date.setMonth(parseInt(monthStr, 10) - 1);
     date.setDate(parseInt(dayStr, 10));    
 
-    return parseTime(date, timeStr);
+    if (timeStr) {
+      return parseTime(date, timeStr);
+    }
+    return date;
   }
 }

@@ -30,12 +30,10 @@ interface Props {
 export default class Comment extends Component<Props, { loading: boolean }> {
   state = { loading: true };
 
-  // @ts-ignore
-  record: CommentRecord;
+  record: CommentRecord | undefined;
 
   async componentDidMount() {
     if (!this.record) {
-      this.setState({ loading: true });
       const record = await loadItem(this.props.id);
       if (record) {
         // @ts-ignore
@@ -45,8 +43,12 @@ export default class Comment extends Component<Props, { loading: boolean }> {
     }
   }
 
+  shouldComponentUpdate(_: Props, state: { loading: boolean }) {
+    return state.loading !== this.state.loading;
+  }
+
   render() {
-    if (this.state.loading && !this.record) {
+    if (this.state.loading || !this.record) {
       return <Placeholder />;
     }
     const { user, content, time, likes, dislike, image, best, child } = this.record;

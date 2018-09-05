@@ -1,4 +1,3 @@
-// import entities from 'entities';
 
 export interface INode {
   tagName: string;
@@ -114,6 +113,8 @@ function isQueryContains(node: INode, arr: string[]) {
 }
 
 function searchTree(node: INode, arr: string[]): INode | undefined {
+  if (!node) return;
+
   const isMatch = isQueryContains(node, arr);
   if(isMatch) {
     return node;

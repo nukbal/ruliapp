@@ -12,6 +12,7 @@ import realm from '../realm';
 export const REQUEST = 'post/REQUEST';
 export const ADD = 'post/ADD';
 export const REMOVE = 'post/REMOVE';
+export const ERROR = 'post/ERROR';
 
 export const Actions = {
   request: (prefix: string, boardId: string, id: string, update?: boolean) =>
@@ -20,6 +21,7 @@ export const Actions = {
   add: (payload: PostRecord) =>
     createAction(ADD, payload),
   remove: (key: string) => createAction(REMOVE, key),
+  error: () => createAction(ERROR),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
@@ -29,12 +31,15 @@ export const getPost = (state: any): PostState => state.posts;
 
 export const getPostInfo = createSelector(
   [getPost],
-  detail => ({
-    id: detail.id,
-    prefix: detail.prefix,
-    boardId: detail.boardId,
-    subject: detail.subject,
-    user: detail.user,
+  ({ id, prefix, boardId, subject, user, likes, dislikes, commentSize }) => ({
+    id,
+    prefix,
+    boardId,
+    subject,
+    user,
+    likes,
+    dislikes,
+    commentSize,
   }),
 );
 
@@ -46,6 +51,11 @@ export const getContents = createSelector(
 export const isLoading = createSelector(
   [getPost],
   detail => detail.loading,
+);
+
+export const isError = createSelector(
+  [getPost],
+  detail => detail.error,
 );
 
 /* Realm queries */
@@ -66,7 +76,7 @@ function load(key: string) {
     try {
       const data = realm.objectForPrimaryKey('Post', key);
       // @ts-ignore
-      if (data && data.contents.length) {
+      if (data && data.finished) {
         res(convert(data));
         return;
       }
@@ -91,6 +101,7 @@ function save(key: string, data: any) {
             user: data.user,
             contents: data.contents,
             comments: data.comments,
+            finished: true,
           };
           const response = realm.create('Post', input, true);
           res(convert(response));
@@ -156,8 +167,9 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
 
   } catch (e) {
     console.warn(e.message);
-    // yield call(remove, key);
-    // yield put(BoardAction.remove(key));
+
+    yield call(remove, key);
+    yield put(BoardAction.remove(key));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
 }
@@ -171,6 +183,7 @@ export const postSagas = [
 export interface PostState extends PostRecord {
   readonly contents: string[];
   readonly loading: boolean;
+  readonly error: boolean;
 }
 
 const initState: PostState = {
@@ -182,6 +195,7 @@ const initState: PostState = {
   user: { id: '', name: '' },
   contents: [],
   loading: false,
+  error: false,
 };
 
 export default function reducer(state = initState, action: Actions) {
@@ -189,10 +203,13 @@ export default function reducer(state = initState, action: Actions) {
     case REQUEST: {
       const { prefix, boardId, id, update } = action.payload;
       if (update) return { ...state, loading: true };
-      return { boardId, prefix, id, loading: true };
+      return { ...initState, boardId, prefix, id, loading: true };
     }
     case ADD: {
-      return { ...state, ...action.payload, loading: false };
+      return { ...state, ...action.payload, loading: false, error: false };
+    }
+    case ERROR: {
+      return { ...state, error: true };
     }
     default:
       return state;

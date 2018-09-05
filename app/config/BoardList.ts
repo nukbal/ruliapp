@@ -9,5 +9,4 @@ export const BestBoard = { title: '많이 본 글/힛갤', prefix: 'best/selecti
 export const BestHumorBoard = { title: 'BEST - 일반유머', prefix: 'best/humor' };
 export const BestHobbyBoard = { title: 'BEST - 취미 갤러리', prefix: 'best/hobby' };
 
-export const WowNews = { title: 'WOW 뉴스게시판', prefix: 'family/4454', boardId: '300007' };
-export const WowInfo = { title: 'WOW 정보게시판', prefix: 'family/4454', boardId: '100159' };
+export const WowNews = { title: 'WOW', prefix: 'family/4454', boardId: '100159' };

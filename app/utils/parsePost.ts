@@ -1,10 +1,10 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseComment from './parseComment';
-import escapeHtml from 'escape-html';
+import formatText from './formatText';
 
 interface HeaderType {
-  userName: string;
-  userId: string;
+  name: string;
+  id: string;
   level?: number;
   experience?: number;
   age?: number;
@@ -21,7 +21,7 @@ function parseTitle(html: string) {
 function parsePostUser(parent: INode): HeaderType {
   const record: any = {};
   let cursor;
-  const userInfo = querySelector(parent, 'div.user_view div.user_info');
+  const userInfo = querySelector(parent, 'div.user_info');
 
   if (userInfo) {
     cursor = querySelector(userInfo, 'img.profile_img_m');
@@ -49,7 +49,7 @@ function findContext(current: INode, key: string, style?: any): ContentRecord | 
   switch (tagName) {
     case 'text': {
       if (!current.value) return;
-      const value = escapeHtml(current.value);
+      const value = formatText(current.value);
       if (style) return { key, type: 'text', content: value, style };
       return { key, type: 'text', content: value };
     }
@@ -114,6 +114,7 @@ function parsePostContents(parent: INode, prefix: string): ContentRecord | Conte
     if (value) res.push(value);
   }
 
+  res = res.map((item, i) => { item.order = i; return item; });
 
   return res;
 }
@@ -131,6 +132,10 @@ export default function parsePost(htmlString: string, prefix: string): PostType 
   const startIndex = htmlString.indexOf('<!-- board_main start');
   const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
   let html = htmlString.substring(startIndex, endIndex);
+  if (!html) {
+    throw new Error('failed to parse html string: cannnot found content section');
+  }
+
   const Nodes = loadHtml(html);
   const res: any = {};
 
@@ -158,8 +163,6 @@ export default function parsePost(htmlString: string, prefix: string): PostType 
   html = htmlString.substring(cmtStartIdx, cmtEndIdx);
   const comments = parseComment(html);
   res.comments = comments || [];
-
-  console.log(res);
 
   return res;
 }

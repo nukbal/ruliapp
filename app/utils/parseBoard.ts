@@ -22,8 +22,13 @@ export function parseBoardUrl(href: string) {
   if (url.indexOf('/read/', cursor) > -1) {
     const startIdx = url.indexOf('/read/', cursor);
     res.boardId = url.substring(cursor, startIdx); 
-    res.id = url.substring(startIdx + 6, url.length).replace('?', '');
+    res.id = url.substring(startIdx + 6, url.length);
+    if (res.id.indexOf('?') > 0) {
+      res.id = res.id.substring(0, res.id.indexOf('?'));
+    }
+  
     res.key = `${res.prefix}_${res.boardId}_${res.id}`;
+
   } else {
     const queryIdx = url.indexOf('?', cursor + 7);
     if (queryIdx > -1 && queryIdx !== url.length - 1) {
