@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import LazyImage from '../LazyImage';
 import { primary } from '../../styles/color';
@@ -72,10 +72,10 @@ export default class Comment extends Component<Props, { loading: boolean }> {
           <Text style={styles.CommentText}>{content || ''}</Text>
         </View>
         <View style={styles.infoContainer}>
-          {likes && (<FontAwesome name="thumbs-o-up" size={20} color={primary} />)}
-          {likes && (<Text style={[styles.UserText, { marginLeft: 6 }]}>{likes}</Text>)}
-          {dislike && (<FontAwesome name="thumbs-o-down" size={20} color={primary} />)}
-          {dislike && (<Text style={[styles.UserText, { marginLeft: 6 }]}>{dislike}</Text>)}
+          {likes > 0 && (<Icon name="thumb-up" size={20} color={primary} />)}
+          {likes > 0 && (<Text style={[styles.UserText, { marginLeft: 6 }]}>{likes}</Text>)}
+          {dislike > 0 && (<Icon name="thumb-down" size={20} color="red" />)}
+          {dislike > 0 && (<Text style={[styles.UserText, { marginLeft: 6 }]}>{dislike}</Text>)}
         </View>
       </View>
     );

@@ -1,4 +1,4 @@
-import React, { PureComponent, createRef } from 'react';
+import React, { PureComponent } from 'react';
 import {
   TextInput,
   View,
@@ -8,7 +8,7 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { primary } from '../../styles/color';
 
@@ -139,7 +139,7 @@ export default class SearchInput extends PureComponent<Props> {
     return(
       <View style={styles.container}>
         <Animated.View style={[styles.inputWrapper, { width: this.inputAnimated }]}>
-          <Ionicons name="ios-search" size={17} color="#8E8E93" />
+          <Icon name="search" size={17} color="#8E8E93" />
           <AnimatedTextInput
             style={[styles.textInput, { width: this.inputAnimated }]}
             placeholder="검색하기"

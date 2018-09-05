@@ -6,7 +6,7 @@ import {
   Share,
   TouchableOpacity,
 } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { primary } from '../../styles/color';
 
@@ -62,24 +62,24 @@ export default class ContentFooter extends Component<Props> {
       <View style={styles.infoPanel}>
         {likes > 0 && (
           <View style={styles.infoItem}>
-            <FontAwesome name="thumbs-o-up" size={20} color="white"/>
+            <Icon name="thumb-up" size={20} color="white"/>
             <Text style={styles.infoText}>{likes}</Text>
           </View>
         )}
         {dislikes > 0 && (
           <View style={styles.infoItem}>
-            <FontAwesome name="thumbs-o-down" size={20} color="white"/>
+            <Icon name="thumb-down" size={20} color="white"/>
             <Text style={styles.infoText}>{dislikes}</Text>
           </View>
         )}
         {comments > 0 && (
           <View style={styles.infoItem}>
-            <FontAwesome name="thumbs-o-down" size={20} color="white"/>
+            <Icon name="message" size={20} color="white"/>
             <Text style={styles.infoText}>{comments}</Text>
           </View>
         )}
         <TouchableOpacity style={styles.infoItem} onPress={this.onPressShare}>
-          <FontAwesome name="share-square-o" size={20} color="white"/>
+          <Icon name="link" size={20} color="white"/>
         </TouchableOpacity>
       </View>
     );

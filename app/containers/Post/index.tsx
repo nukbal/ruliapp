@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Actions, getPostInfo, getContents, isLoading } from '../../store/ducks/posts';
 import { Actions as CommentAction, getComments } from '../../store/ducks/comments';
@@ -43,12 +43,12 @@ export class Post extends PureComponent<Props> {
     headerTintColor: 'white',
     headerRight: (
       <TouchableOpacity style={styles.headerIcon}>
-        <FontAwesome name="ellipsis-v" size={20} color="white" />
+        <Icon name="more-vert" size={20} color="white" />
       </TouchableOpacity>
     ),
     headerLeft: (
       <TouchableOpacity style={styles.headerIcon} onPress={() => { navigation.goBack(); }}>
-        <FontAwesome name="chevron-left" size={20} color="white" />
+        <Icon name="navigate-before" size={20} color="white" />
       </TouchableOpacity>
     ),
    });
