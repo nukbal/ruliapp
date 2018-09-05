@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
-import { SafeAreaView, NavigationActions } from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import * as List from '../../config/BoardList';
 
 const styles = StyleSheet.create({
