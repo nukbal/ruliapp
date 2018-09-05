@@ -35,14 +35,21 @@ const styles = StyleSheet.create({
 
 interface Props {
   url: string;
-  likes?: string;
-  dislike?: string;
+  likes: number;
+  dislikes: number;
+  comments: number;
 }
 
 export default class ContentFooter extends Component<Props> {
+  static defaultProps = {
+    likes: 0,
+    dislikes: 0,
+    comments: 0,
+  }
+
   shouldComponentUpdate(props: Props) {
     return props.likes !== this.props.likes ||
-      props.dislike !== this.props.dislike;
+      props.dislikes !== this.props.dislikes;
   }
 
   onPressShare = () => {
@@ -50,19 +57,25 @@ export default class ContentFooter extends Component<Props> {
   }
 
   render() {
-    const { likes, dislike } = this.props;
+    const { likes, dislikes, comments } = this.props;
     return (
       <View style={styles.infoPanel}>
-        {likes && (
+        {likes > 0 && (
           <View style={styles.infoItem}>
             <FontAwesome name="thumbs-o-up" size={20} color="white"/>
             <Text style={styles.infoText}>{likes}</Text>
           </View>
         )}
-        {dislike && (
+        {dislikes > 0 && (
           <View style={styles.infoItem}>
             <FontAwesome name="thumbs-o-down" size={20} color="white"/>
-            <Text style={styles.infoText}>{dislike}</Text>
+            <Text style={styles.infoText}>{dislikes}</Text>
+          </View>
+        )}
+        {comments > 0 && (
+          <View style={styles.infoItem}>
+            <FontAwesome name="thumbs-o-down" size={20} color="white"/>
+            <Text style={styles.infoText}>{comments}</Text>
           </View>
         )}
         <TouchableOpacity style={styles.infoItem} onPress={this.onPressShare}>

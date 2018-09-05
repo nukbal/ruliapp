@@ -60,9 +60,9 @@ interface Props {
   subject: string;
   contents: string[];
   comments: string[];
-  commentSize: number;
-  likes?: string;
-  dislike?: string;
+  commentSize?: number;
+  likes?: number;
+  dislikes?: number;
   loading?: boolean;
   onRefresh: () => void;
 }
@@ -114,20 +114,14 @@ export default class DetailView extends PureComponent<Props> {
 
   renderSectionFooter = ({ section }: { section: SectionListData<any> }) => {
     if (section.index === 0) {
-      const { likes, dislike, prefix, boardId, id } = this.props;
+      const { likes, dislikes, commentSize, prefix, boardId, id } = this.props;
       return (
         <Footer
           likes={likes}
-          dislike={dislike}
+          dislikes={dislikes}
+          comments={commentSize}
           url={`http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}`}
         />
-      );
-    } else if (section.index === 1 && this.props.commentSize) {
-      const { commentSize } = this.props;
-      return (
-        <View style={styles.infoItem}>
-          <Text>덧글 {commentSize}개</Text>
-        </View>
       );
     }
     return null;

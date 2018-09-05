@@ -68,6 +68,7 @@ declare interface ContentRecord {
   type: 'image' | 'object' | 'text' | 'reference';
   style?: any;
   content: string;
+  order?: number;
 }
 
 declare interface AppState {

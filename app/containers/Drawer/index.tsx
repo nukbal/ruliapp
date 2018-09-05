@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView, NavigationActions } from 'react-navigation';
 import * as List from '../../config/BoardList';
 
 const styles = StyleSheet.create({
@@ -31,16 +31,17 @@ function ParentItem({ label, onPress }: { label: string, onPress: () => void }) 
 }
 
 export default class Drawer extends PureComponent {
-  onPressBoard = (config: any) => () => {
-    console.warn(config);
-    this.props.navigation.navigate({ routeName: 'Board', params: config, key: config.key })
+  onPressBoard = (key: string, config: any) => () => {
+    const { navigation } = this.props;
+    navigation.navigate({ routeName: 'Board', params: config, key: key });
+    navigation.closeDrawer();
   }
 
   renderList = (key: string) => {
     // @ts-ignore
     const board = List[key];
     return (
-      <TouchableOpacity key={key} style={styles.listWrapper} onPress={this.onPressBoard(board)}>
+      <TouchableOpacity key={key} style={styles.listWrapper} onPress={this.onPressBoard(key, board)}>
         <View style={styles.listItem}>
           <Text>{board.title}</Text>
         </View>

@@ -36,11 +36,7 @@ interface Props {
   loading: boolean;
 }
 
-interface State {
-  loading: boolean;
-}
-
-export class Post extends PureComponent<Props, State> {
+export class Post extends PureComponent<Props> {
   static navigationOptions = ({ navigation }: Props) => ({
     title: navigation.state.params.subject,
     drawerLockMode: 'locked-closed',
@@ -57,15 +53,6 @@ export class Post extends PureComponent<Props, State> {
     ),
    });
 
-   static getDerivedStateFromProps(props: Props, state: State) {
-     if (state.loading && props.loading) {
-      return { loading: false };
-     }
-     return { loading: true };
-   }
-
-   state = { loading: true };
-
   componentDidMount() {
     const { params } = this.props.navigation.state;
     const { id, prefix, boardId } = params;
@@ -77,9 +64,13 @@ export class Post extends PureComponent<Props, State> {
     this.props.requestComment(prefix, boardId, id);
   }
 
+  componentWillUnmount() {
+    this.props.clear();
+  }
+
   render() {
     const { loading, ...rest } = this.props;
-    if (loading) {
+    if (loading || !this.props.id) {
       return (
         <SafeAreaView style={styles.container}>
           <PostPlaceholder />
@@ -101,6 +92,7 @@ function mapDispatchToProps(dispatch: any) {
   return {
     request: bindActionCreators(Actions.request, dispatch),
     requestComment: bindActionCreators(CommentAction.request, dispatch),
+    clear: bindActionCreators(Actions.remove, dispatch),
   };
 }
 

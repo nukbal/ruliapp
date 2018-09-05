@@ -1,6 +1,6 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
-import escapeHtml from 'escape-html';
 import parseDate from './parseDate';
+import formatText from './formatText';
 
 function formatComment(node: INode): CommentRecord | undefined {
   // @ts-ignore
@@ -27,7 +27,7 @@ function formatComment(node: INode): CommentRecord | undefined {
 
   cursor = querySelector(textNode, 'span.text');
   // @ts-ignore
-  if (cursor && cursor.childNodes) record.content = escapeHtml(cursor.childNodes[0] ? cursor.childNodes[0].value : '');
+  if (cursor && cursor.childNodes) record.content = formatText(cursor.childNodes[0] ? cursor.childNodes[0].value : '');
 
   cursor = querySelector(textNode, 'img.comment_img');
   if (cursor && cursor.attrs) record.image = cursor.attrs.src;
