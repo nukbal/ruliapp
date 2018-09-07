@@ -86,16 +86,16 @@ export class Board extends PureComponent<Props> {
   }
 
   onEndReached = () => {
-    const { list, params } = this.props;
-    if (list.filter(({ id }) => id).length > 0 && params) {
-      this.updateList(params.page + 1, true);
+    const { prefix, request, boardId, params } = this.props;
+    if (prefix) {
+      request(prefix, boardId, { ...params, page: 1 }, true);
     }
   }
 
   onRefresh = () => {
     const { prefix, boardId, request } = this.props;
-    if (prefix && boardId) {
-      request(prefix, boardId, { page: 1 });
+    if (prefix) {
+      request(prefix, boardId, { page: 1 }, true);
     }
   }
 
@@ -103,13 +103,6 @@ export class Board extends PureComponent<Props> {
     const { prefix, boardId, request } = this.props;
     if (prefix && boardId && value) {
       request(prefix, boardId, { page: 1, keyword: value });
-    }
-  }
-
-  updateList = (page: number, isEnd: boolean) => {
-    const { prefix, boardId, refreshing, request } = this.props;
-    if (!refreshing && prefix && boardId) {
-      request(prefix, boardId, { page }, true);
     }
   }
 

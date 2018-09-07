@@ -36,7 +36,7 @@ function load(key: string) {
       if (board) {
         const updatedTime = board.updated.getTime();
         const currentTime = new Date().getTime();
-        if (currentTime - updatedTime > 60000) {
+        if (currentTime - updatedTime < 60000) {
           res(board);
           return;
         }

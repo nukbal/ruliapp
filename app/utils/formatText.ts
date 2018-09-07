@@ -9,7 +9,7 @@ const charSet = {
 }
 
 
-const regex = new RegExp('(&quot;|&apos;|&amp;|&gt;|&lt;)', 'g');
+const regex = new RegExp('(&quot;|&apos;|&amp;|&gt;|&lt;|&nbsp;)', 'g');
 
 export default function formatText(str: string) {
   if (!str) return '';

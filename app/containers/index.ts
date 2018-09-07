@@ -8,5 +8,6 @@ export default createDrawerNavigator(
   },
   {
     contentComponent: DrawerScreen,
+    backBehavior: 'none',
   }
 );

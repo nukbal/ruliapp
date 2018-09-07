@@ -39,7 +39,6 @@ interface Props {
 export class Post extends PureComponent<Props> {
   static navigationOptions = ({ navigation }: Props) => ({
     title: navigation.state.params.subject,
-    drawerLockMode: 'locked-closed',
     headerTintColor: 'white',
     headerRight: (
       <TouchableOpacity style={styles.headerIcon}>

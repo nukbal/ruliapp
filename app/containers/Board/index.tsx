@@ -23,7 +23,10 @@ export default createStackNavigator({
       headerBackTitle: null,
     },
   },
-  Post: { screen: PostScreen },
+  Post: {
+    screen: PostScreen,
+    drawerLockMode: 'locked-closed',
+  },
 }, {
   navigationOptions: ({ navigation }) => ({
     headerStyle: {
