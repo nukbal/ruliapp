@@ -1,11 +1,18 @@
-import React, { PureComponent } from 'react';
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
-import * as List from '../../config/BoardList';
+import React, { Component } from 'react';
+import { StyleSheet, TouchableOpacity, ScrollView, View, Text } from 'react-native';
+import { StackActions, NavigationActions } from 'react-navigation';
+import { primary } from '../../styles/color';
+
+import boardList from '../../config/BoardList';
+import { DrawerItems } from 'react-navigation';
 
 const styles = StyleSheet.create({
-  wrapper: {
+  header: {
     flex: 1,
+    padding: 16,
+    height: 63,
+    justifyContent: 'center',
+    backgroundColor: primary,
   },
   listItem: {
     flexDirection: 'row',
@@ -30,30 +37,43 @@ function ParentItem({ label, onPress }: { label: string, onPress: () => void }) 
   );
 }
 
-export default class Drawer extends PureComponent {
-  onPressBoard = (key: string, config: any) => () => {
+export default class Drawer extends Component {
+
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  onPressItem = ({ focused, route }) => {
+    if (focused) return;
+
+    const { key, ...rest } = route;
     const { navigation } = this.props;
-    navigation.navigate({ routeName: 'Board', params: config, key: key });
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Board', params: rest, key })
+      ]
+    });
+    navigation.dispatch(resetAction);
+    // navigation.navigate({ index: 0, routeName: 'Board', params: rest, key, type: 'ReplaceCurrentScreen' });
     navigation.closeDrawer();
   }
 
-  renderList = (key: string) => {
-    // @ts-ignore
-    const board = List[key];
-    return (
-      <TouchableOpacity key={key} style={styles.listWrapper} onPress={this.onPressBoard(key, board)}>
-        <View style={styles.listItem}>
-          <Text>{board.title}</Text>
-        </View>
-      </TouchableOpacity>
-    );
+  getLabel = ({ route }) => {
+    return route.title;
   }
 
   render() {
     return (
-      <SafeAreaView style={styles.wrapper}>
-        {Object.keys(List).map(this.renderList)}
-      </SafeAreaView>
+      <ScrollView>
+        <View style={styles.header}><Text>Ruliweb</Text></View>
+        <DrawerItems
+          items={boardList}
+          getLabel={this.getLabel}
+          renderIcon={() => null}
+          onItemPress={this.onPressItem}
+        />
+      </ScrollView>
     );
   }
 }
