@@ -58,8 +58,8 @@ export const CommentSchema = {
     image: 'string?',
     user: 'User',
     time: 'date',
-    likes: 'string?',
-    dislike: 'string?',
+    likes: 'int?',
+    dislike: 'int?',
   },
 }
 

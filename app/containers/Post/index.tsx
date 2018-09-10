@@ -9,6 +9,8 @@ import PostPlaceholder from '../../components/DetailView/placeholder';
 import { request } from '../../models/posts';
 import { request as requestComments } from '../../models/comments';
 
+import { PostRecord, ContentRecord, CommentRecord } from '../../types';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -61,7 +63,7 @@ export default class Post extends Component<Props, State> {
     const { params } = this.props.navigation.state;
     const { id, prefix, boardId } = params;
     this.setState({ loading: true });
-    requestComments({ prefix, boardId, id }).then((comments: CommentRecord[]) => {
+    requestComments({ prefix, boardId, id }).then(comments => {
       this.setState({ comments, loading: false });
     });
   }

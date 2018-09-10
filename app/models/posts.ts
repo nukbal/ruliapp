@@ -1,11 +1,12 @@
 import { Alert } from 'react-native';
 import realm from './realm';
 import parsePost from '../utils/parsePost';
+import { PostRecord } from '../types';
 
-export function load(key: string) {
+export function load(key: string): Promise<PostRecord> {
   return new Promise((res, rej) => {
     try {
-      const data = realm.objectForPrimaryKey('Post', key);
+      const data = realm.objectForPrimaryKey<PostRecord>('Post', key);
       // @ts-ignore
       if (data && data.finished) {
         res(data);
@@ -18,11 +19,11 @@ export function load(key: string) {
   });
 }
 
-export function save(key: string, data: any) {
+export function save(key: string, data: any): Promise<PostRecord> {
   return new Promise((res, rej) => {
       try {
         realm.write(() => {
-          const old = realm.objectForPrimaryKey('Post', key);
+          const old = realm.objectForPrimaryKey<PostRecord>('Post', key);
           if (old && old.user.id !== data.user.id) {
             realm.delete(old.user);
           }
@@ -35,7 +36,7 @@ export function save(key: string, data: any) {
             finished: true,
             updated: new Date(),
           };
-          const response = realm.create('Post', input, true);
+          const response = realm.create<PostRecord>('Post', input, true);
           res(response);
         });
       } catch (e) {

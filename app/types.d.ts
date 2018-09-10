@@ -1,13 +1,6 @@
+import { List } from 'realm';
 
 declare module '*.txt';
-
-/** Flux Standars Action */
-declare interface FSA<T extends string, P = undefined, M = undefined> {
-  type: T;
-  payload: P;
-  meta: M;
-  error?: boolean;
-}
 
 declare interface LinkType {
   prefix: string;
@@ -16,13 +9,12 @@ declare interface LinkType {
   params?: any;
 }
 
-declare interface UserRecord {
-  id: string;
-  name: string;
-  level?: number;
-  experience?: number;
-  age?: number;
-  image?: string;
+declare interface BoardRecord {
+  key: string;
+  title: string;
+  posts: List<PostRecord>;
+  notice: List<PostRecord>;
+  updated: Date;
 }
 
 declare interface PostRecord {
@@ -38,6 +30,10 @@ declare interface PostRecord {
   commentSize?: number;
   date?: Date;
   isNotice?: boolean;
+  comments: List<CommentRecord>;
+  contents: List<ContentRecord>;
+  finished?: boolean;
+  updated: Date;
 }
 
 declare interface CommentRecord {
@@ -47,10 +43,10 @@ declare interface CommentRecord {
   content: string;
   user: UserRecord;
   image?: string;
-  userIp?: string;
+  user: UserRecord;
   time?: Date;
-  likes: number;
-  dislike: number;
+  likes?: number;
+  dislike?: number;
 }
 
 declare interface UserRecord {
@@ -69,11 +65,4 @@ declare interface ContentRecord {
   style?: any;
   content: string;
   order?: number;
-}
-
-declare interface AppState {
-  readonly boards: any;
-  readonly detail: any;
-  readonly comments: any;
-  readonly loading: any;
 }

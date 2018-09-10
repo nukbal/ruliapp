@@ -7,6 +7,8 @@ import { primary } from '../../styles/color';
 import styles from './styles';
 import formatDate from '../../utils/formatDate';
 
+import { CommentRecord } from '../../types';
+
 export default class Comment extends PureComponent<CommentRecord> {
   render() {
     const { user, content, time, likes, dislike, image, best, child } = this.props;

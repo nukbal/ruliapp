@@ -7,12 +7,15 @@ import {
   ListRenderItemInfo,
   SectionListData,
 } from 'react-native';
+import { List } from 'realm';
 
 import { primary } from '../../styles/color';
 
 import Footer from './Footer';
 import Contents from './Contents';
 import Comments from '../Comments';
+
+import { PostRecord, CommentRecord, ContentRecord } from '../../types';
 
 export const styles = StyleSheet.create({
   container: {
@@ -58,8 +61,8 @@ interface Props {
   boardId: string;
   prefix: string;
   subject: string;
-  contents: PostRecord[];
-  comments: CommentRecord[];
+  contents: List<ContentRecord>;
+  comments: List<CommentRecord>;
   commentSize?: number;
   likes?: number;
   dislikes?: number;

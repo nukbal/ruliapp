@@ -16,6 +16,8 @@ import BoardItem from '../../components/BoardItem';
 import { darkBarkground } from '../../styles/color';
 import { request } from '../../models/boards';
 
+import { PostRecord } from '../../types';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
