@@ -2,6 +2,8 @@ import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseDate from './parseDate';
 import formatText from './formatText';
 
+import { CommentRecord } from '../types';
+
 function formatComment(node: INode): CommentRecord | undefined {
   // @ts-ignore
   const record: CommentRecord = {};
@@ -54,13 +56,13 @@ function formatComment(node: INode): CommentRecord | undefined {
   cursor = querySelector(node, 'button.btn_dislike');
   if (cursor) {
     const dislike = querySelector(cursor, 'span.num text');
-    if (dislike) record.dislike = dislike.value;
+    if (dislike && dislike.value) record.dislike = parseInt(dislike.value, 10);
   }
 
   cursor = querySelector(node, 'button.btn_like');
   if (cursor) {
     const like = querySelector(cursor, 'span.num text');
-    if (like) record.likes = like.value;
+    if (like && like.value) record.likes = parseInt(like.value, 10);
   }
 
   return record;
