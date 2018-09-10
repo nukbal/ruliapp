@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from 'react-navigation';
-import BoardStack from './Board';
-import DrawerScreen from './Drawer';
+import BoardStack from './containers/Board';
+import DrawerScreen from './containers/Drawer';
 
 export default createDrawerNavigator(
   {

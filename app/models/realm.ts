@@ -17,6 +17,9 @@ export const PostSchema = {
   primaryKey: 'key',
   properties: {
     key: 'string',
+    id: 'string',
+    boardId: 'string',
+    prefix: 'string',
     subject: 'string',
     user: 'User',
     date: 'date?',
@@ -28,6 +31,19 @@ export const PostSchema = {
     comments: 'Comment[]',
     contents: 'Content[]',
     finished: { type: 'bool', default: false },
+    updated: { type: 'date', default: new Date() },
+  },
+}
+
+export const ContentSchema = {
+  name: 'Content',
+  primaryKey: 'key',
+  properties: {
+    key: 'string',
+    type: 'string',
+    content: 'string',
+    style: 'string?',
+    order: 'int',
   },
 }
 
@@ -44,18 +60,6 @@ export const CommentSchema = {
     time: 'date',
     likes: 'string?',
     dislike: 'string?',
-  },
-}
-
-export const ContentSchema = {
-  name: 'Content',
-  primaryKey: 'key',
-  properties: {
-    key: 'string',
-    type: 'string',
-    content: 'string',
-    style: 'string?',
-    order: 'int',
   },
 }
 
