@@ -58,8 +58,8 @@ interface Props {
   boardId: string;
   prefix: string;
   subject: string;
-  contents: string[];
-  comments: string[];
+  contents: PostRecord[];
+  comments: CommentRecord[];
   commentSize?: number;
   likes?: number;
   dislikes?: number;
@@ -72,7 +72,7 @@ export default class DetailView extends PureComponent<Props> {
     contents: [],
     comments: [],
     commentSize: 0,
-    loading: false,
+    loading: true,
   }
 
   onRefresh = () => {
@@ -82,23 +82,14 @@ export default class DetailView extends PureComponent<Props> {
     }
   }
 
-  renderItem = ({ item, index }: ListRenderItemInfo<string>) => {
-    const newStyle = [];
-
-    if (index === 0) {
-      newStyle.push({ paddingTop: 16 });
-    }
-    if (index === this.props.contents.length - 1) {
-      newStyle.push({ paddingBottom: 16 });
-    }
-
+  renderItem = ({ item, index }: ListRenderItemInfo<PostRecord>) => {
     // @ts-ignore
-    return <Contents id={item} style={newStyle} />;
+    return <Contents {...item} />;
   }
 
-  renderComment = ({ item }: ListRenderItemInfo<string>) => {
+  renderComment = ({ item }: ListRenderItemInfo<CommentRecord>) => {
     if (!item) return null;
-    return <Comments id={item} />;
+    return <Comments {...item} />;
   }
 
   renderSectionHeader = ({ section }: { section: SectionListData<any> }) => {
@@ -127,7 +118,7 @@ export default class DetailView extends PureComponent<Props> {
     return null;
   }
 
-  keyExtractor = (item: string, index: number) => item;
+  keyExtractor = (item: CommentRecord | ContentRecord, i: number) => item.key;
 
   render() {
     const {

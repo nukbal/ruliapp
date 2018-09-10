@@ -1,6 +1,6 @@
 import fs from 'react-native-fs';
 import { Image } from 'react-native';
-import realm from '../../store/realm';
+import realm from '../../models/realm';
 // @ts-ignore
 import nanoid from 'nanoid/non-secure';
 

@@ -1,24 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { View, Text, StyleSheet, WebView } from 'react-native';
-
 import { listItem } from '../../styles/color';
-
 import LazyImage from '../LazyImage';
-
-import realm from '../../store/realm';
-
-async function loadItem(key: string) {
-  return new Promise((res, rej) => {
-    try {
-      const data: ContentRecord | undefined = realm.objectForPrimaryKey('Content', key);
-      let response;
-      if (data) response = data;
-      res(response);
-    } catch (e) {
-      rej(e);
-    }
-  });
-}
 
 export const styles = StyleSheet.create({
   container: {
@@ -65,32 +48,9 @@ function renderContent({ type, content }: ContentRecord) {
 }
 
 
-export default class ContentItem extends Component<{ id: string }, { loading: boolean }> {
-  state = { loading: true };
-
-  async componentDidMount() {
-    if (!this.record) {
-      this.setState({ loading: true });
-      const record = await loadItem(this.props.id);
-      if (record) {
-        // @ts-ignore
-        this.record = record;
-        this.setState({ loading: false });
-      }
-    }
-  }
-
-  shouldComponentUpdate(_: any, state: { loading: boolean }) {
-    return state.loading !== this.state.loading;
-  }
-
-  record: ContentRecord | undefined;
-
+export default class ContentItem extends PureComponent<ContentRecord> {
   render() {
-    if (!this.record || this.state.loading) {
-      return <View style={styles.container} />;
-    }
-    const Content = renderContent(this.record);
+    const Content = renderContent(this.props);
     return <View style={styles.container}>{Content}</View>
   }
 }

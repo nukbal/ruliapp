@@ -1,14 +1,20 @@
 import React, { PureComponent } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 
 import { SafeAreaView } from 'react-navigation';
-import { StyleSheet, FlatList, StatusBar, RefreshControl, ListRenderItemInfo, View, Text } from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  StatusBar,
+  RefreshControl,
+  ListRenderItemInfo,
+  View,
+  Text,
+} from 'react-native';
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
-import { getBoardList, getBoardInfo, isBoardLoading, Actions } from '../../store/ducks/boards';
 import { darkBarkground } from '../../styles/color';
+import { request } from '../../models/boards';
 
 const styles = StyleSheet.create({
   container: {
@@ -41,76 +47,102 @@ const EmptyState = (
   </View>
 );
 
-interface Props extends ReturnType<typeof getBoardInfo> {
+interface Props {
   navigation: any;
-  request: typeof Actions.request;
-  list: string[];
-  refreshing: boolean;
 }
 
-export class Board extends PureComponent<Props> {
+export default class Board extends PureComponent<Props> {
   static navigationOptions = ({ navigation }: Props) => {
     const title = navigation.getParam('title');
     return {
       title: title || '',
     };
   };
+  
+  state = { list: [], loading: true };
+  prefix: string | undefined;
+  boardId: string | undefined;
+  params: any = { page: 1 };
 
-  static defaultProps = {
-    refreshing: false,
-    list: [],
-  }
-
-  componentDidMount() {
+  async componentDidMount() {
     const { getParam } = this.props.navigation;
-    const prefix = getParam('prefix');
-    const boardId = getParam('boardId');
-    if (prefix) {
-      this.props.request(prefix, boardId, { page: 1 });
+    this.prefix = getParam('prefix');
+    this.boardId = getParam('boardId');
+    if (this.prefix) {
+      this.setState({ loading: true });
+      const data = await request({
+        prefix: this.prefix,
+        boardId: this.boardId,
+        params: { page: 1 },
+      });
+      this.requestHandler(data);
     }
   }
 
-  pressItem = (params: LinkType & { subject: string }) => {
+  pressItem = ({ id, boardId, prefix }: PostRecord) => {
     const { navigate } = this.props.navigation;
-    navigate({ routeName: 'Post', params });
+    navigate({ routeName: 'Post', params: { id, boardId, prefix } });
   }
 
-  renderItem = ({ item }: ListRenderItemInfo<string>) => {
+  renderItem = ({ item, separators }: ListRenderItemInfo<PostRecord>) => {
     if (!item) return null;
     return (
       <BoardItem
-        onPress={this.pressItem}
-        id={item}
+        onPress={() => this.pressItem(item)}
+        onShowUnderlay={separators.highlight}
+        onHideUnderlay={separators.unhighlight}
+        {...item}
       />
     );
   }
 
+  requestHandler = (data: any) => {
+    if (data) {
+      const num = this.params.page;
+      this.setState({ list: data.posts.slice(0, num * 30), loading: false });
+    } else {
+      this.setState({ loading: false });
+    }
+  }
+
   onEndReached = () => {
-    const { prefix, request, boardId, params } = this.props;
-    if (prefix) {
-      request(prefix, boardId, { ...params, page: 1 }, true);
+    if (this.prefix && !this.state.loading) {
+      this.setState({ loading: true });
+      request({
+        prefix: this.prefix,
+        boardId: this.boardId,
+        params: { ...this.params, page: this.params.page + 1 }
+      }).then(this.requestHandler);
     }
   }
 
   onRefresh = () => {
-    const { prefix, boardId, request } = this.props;
-    if (prefix) {
-      request(prefix, boardId, { page: 1 }, true);
+    if (this.prefix && !this.state.loading) {
+      this.setState({ loading: true });
+      request({
+        prefix: this.prefix,
+        boardId: this.boardId,
+        params: { ...this.params, page: 1 }
+      }).then(this.requestHandler);
     }
   }
 
-  onSearch = (value: string) => {
-    const { prefix, boardId, request } = this.props;
-    if (prefix && boardId && value) {
-      request(prefix, boardId, { page: 1, keyword: value });
+  onSearch = (keyword: string) => {
+    if (this.prefix && !this.state.loading && keyword) {
+      this.setState({ loading: true });
+      request({
+        prefix: this.prefix,
+        boardId: this.boardId,
+        params: { ...this.params, page: 1, keyword }
+      }).then(this.requestHandler);
     }
   }
 
-  keyExtractor = (item: string, index: number) => item;
+  keyExtractor = (item: PostRecord, i: number) => item.key;
 
   render() {
-    const { list, refreshing } = this.props;
-    if (list.length === 0 && !refreshing) {
+    const { list, loading } = this.state;
+    if (list.length === 0 && !loading) {
       return EmptyState;
     }
     return (
@@ -123,7 +155,7 @@ export class Board extends PureComponent<Props> {
           refreshControl={
             <RefreshControl
               colors={["#9Bd35A", "#689F38"]}
-              refreshing={refreshing}
+              refreshing={loading}
               onRefresh={this.onRefresh}
             />
           }
@@ -131,32 +163,11 @@ export class Board extends PureComponent<Props> {
             {length: 75, offset: 75 * index, index}
           )}
           initialNumToRender={10}
-          // onEndReached={this.onEndReached}
-          // onEndReachedThreshold={0.5}
+          onEndReached={this.onEndReached}
+          onEndReachedThreshold={0.5}
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>
     );
   }
 }
-
-function mapDispatchToProps(dispatch: any) {
-  return {
-    request: bindActionCreators(Actions.request, dispatch),
-  };
-}
-
-function mapStateToProps(state: AppState) {
-  const { boardId, prefix, title, params } = getBoardInfo(state);
-  return {
-    boardId,
-    prefix,
-    title,
-    params,
-    list: getBoardList(state),
-    refreshing: isBoardLoading(state),
-  };
-}
-
-// @ts-ignore
-export default connect(mapStateToProps, mapDispatchToProps)(Board);

@@ -1,14 +1,13 @@
-import React, { PureComponent } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Actions, getPostInfo, getContents, isLoading } from '../../store/ducks/posts';
-import { Actions as CommentAction, getComments } from '../../store/ducks/comments';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
 import PostPlaceholder from '../../components/DetailView/placeholder';
+
+import { request } from '../../models/posts';
+import { request as requestComments } from '../../models/comments';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,18 +24,15 @@ const styles = StyleSheet.create({
 
 interface Props {
   navigation: any;
-  request: typeof Actions.request;
-  requestComment: typeof CommentAction.request;
-  prefix: string;
-  boardId: string;
-  id: string;
-  contents: ContentRecord[];
+}
+
+interface State extends PostRecord {
   comments: CommentRecord[];
-  commentSize: number;
+  contents: ContentRecord[];
   loading: boolean;
 }
 
-export class Post extends PureComponent<Props> {
+export default class Post extends Component<Props, State> {
   static navigationOptions = ({ navigation }: Props) => ({
     title: navigation.state.params.subject,
     headerTintColor: 'white',
@@ -50,60 +46,32 @@ export class Post extends PureComponent<Props> {
         <Icon name="navigate-before" size={20} color="white" />
       </TouchableOpacity>
     ),
-   });
+  });
 
-  componentDidMount() {
+  state = { prefix: '', boardId: '', id: '', subject: '', user: {}, comments: [], contents: [], loading: true };
+
+  async componentDidMount() {
     const { params } = this.props.navigation.state;
     const { id, prefix, boardId } = params;
-    this.props.request(prefix, boardId, id);
+    const data = await request({ prefix, boardId, id });
+    this.setState({ ...data, loading: false });
   }
 
   onRefresh = () => {
-    const { prefix, boardId, id } = this.props;
-    this.props.requestComment(prefix, boardId, id);
-  }
-
-  componentWillUnmount() {
-    this.props.clear();
+    const { params } = this.props.navigation.state;
+    const { id, prefix, boardId } = params;
+    this.setState({ loading: true });
+    requestComments({ prefix, boardId, id }).then((comments: CommentRecord[]) => {
+      this.setState({ comments, loading: false });
+    });
   }
 
   render() {
-    const { loading, ...rest } = this.props;
-    if (loading || !this.props.id) {
-      return (
-        <SafeAreaView style={styles.container}>
-          <PostPlaceholder />
-        </SafeAreaView>
-      );
-    }
+    const { loading } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        <DetailView
-          {...rest}
-          onRefresh={this.onRefresh}
-        />
+        {this.state.loading ? (<PostPlaceholder />) : (<DetailView {...this.state} />)}
       </SafeAreaView>
     );
   }
 }
-
-function mapDispatchToProps(dispatch: any) {
-  return {
-    request: bindActionCreators(Actions.request, dispatch),
-    requestComment: bindActionCreators(CommentAction.request, dispatch),
-    clear: bindActionCreators(Actions.remove, dispatch),
-  };
-}
-
-function mapStateToProps(state: AppState) {
-  const info = getPostInfo(state);
-  return {
-    contents: getContents(state),
-    comments: getComments(state),
-    loading: isLoading(state),
-    ...info,
-  };
-}
-
-// @ts-ignore
-export default connect(mapStateToProps, mapDispatchToProps)(Post);

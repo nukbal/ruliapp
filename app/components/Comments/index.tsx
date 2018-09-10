@@ -1,57 +1,15 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import LazyImage from '../LazyImage';
 import { primary } from '../../styles/color';
 import styles from './styles';
-import Placeholder from './placeholder';
 import formatDate from '../../utils/formatDate';
 
-import realm from '../../store/realm';
-
-async function loadItem(key: string) {
-  return new Promise((res, rej) => {
-    try {
-      const data: CommentRecord | undefined = realm.objectForPrimaryKey('Comment', key);
-      let response;
-      if (data) response = data;
-      res(response);
-    } catch (e) {
-      rej(e);
-    }
-  });
-}
-
-interface Props {
-  id: string;
-}
-
-export default class Comment extends Component<Props, { loading: boolean }> {
-  state = { loading: true };
-
-  record: CommentRecord | undefined;
-
-  async componentDidMount() {
-    if (!this.record) {
-      const record = await loadItem(this.props.id);
-      if (record) {
-        // @ts-ignore
-        this.record = record;
-        this.setState({ loading: false });
-      }
-    }
-  }
-
-  shouldComponentUpdate(_: Props, state: { loading: boolean }) {
-    return state.loading !== this.state.loading;
-  }
-
+export default class Comment extends PureComponent<CommentRecord> {
   render() {
-    if (this.state.loading || !this.record) {
-      return <Placeholder />;
-    }
-    const { user, content, time, likes, dislike, image, best, child } = this.record;
+    const { user, content, time, likes, dislike, image, best, child } = this.props;
     const containerStyle: any = [styles.container];
     if (child) {
       containerStyle.push({ paddingLeft: 16 });
