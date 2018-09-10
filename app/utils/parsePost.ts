@@ -1,6 +1,7 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseComment from './parseComment';
 import formatText from './formatText';
+import { CommentRecord, ContentRecord } from '../types';
 
 interface HeaderType {
   name: string;

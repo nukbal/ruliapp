@@ -1,6 +1,8 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseDate from './parseDate';
 
+import { PostRecord } from '../types';
+
 
 function parseTitle(html: string) {
   const startIdx = (html.indexOf('<title>') + 7);
