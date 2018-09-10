@@ -1,11 +1,12 @@
 import qs from 'query-string';
 import parseBoardList from '../utils/parseBoard';
 import realm from './realm';
+import { BoardRecord } from '../types';
 
-export function load(key: string) {
+export function load(key: string): Promise<BoardRecord> {
   return new Promise((res, rej) => {
     try {
-      const board = realm.objectForPrimaryKey('Board', key);
+      const board = realm.objectForPrimaryKey<BoardRecord>('Board', key);
       if (board) {
         const updatedTime = board.updated.getTime();
         const currentTime = new Date().getTime();
@@ -21,11 +22,11 @@ export function load(key: string) {
   });
 }
 
-export function save(key: string, { title, rows, notices }: ReturnType<typeof parseBoardList>) {
+export function save(key: string, { title, rows, notices }: ReturnType<typeof parseBoardList>): Promise<BoardRecord> {
   return new Promise((res, rej) => {
     try {
       realm.write(() => {
-        const board = realm.create('Board', { key, title, updated: new Date() }, true);
+        const board = realm.create<BoardRecord>('Board', { key, title, updated: new Date() }, true);
         for (let i = 0, len = rows.length; i < len; i += 1) {
           const exists = board.posts.filtered('key = $0', rows[i].key);
           if (exists.length === 0) {

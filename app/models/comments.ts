@@ -1,11 +1,17 @@
+import { List } from 'realm';
 import parseComment from '../utils/parseComment';
 import realm from './realm';
+import { CommentRecord, PostRecord } from '../types';
 
-function save(key: string, rows: CommentRecord[]) {
+function save(key: string, rows: CommentRecord[]): Promise<List<CommentRecord> | undefined> {
   return new Promise((res, rej) => {
       try {
         realm.write(() => {
-          const posts = realm.objectForPrimaryKey('Post', key);
+          const posts = realm.objectForPrimaryKey<PostRecord>('Post', key);
+          if (!posts) {
+            res();
+            return;
+          }
           posts.updated = new Date();
 
           for (let i = 0, len = rows.length; i < len; i += 1) {
@@ -24,15 +30,15 @@ function save(key: string, rows: CommentRecord[]) {
   );
 }
 
-function load(key: string) {
+function load(key: string): Promise<List<CommentRecord> | undefined> {
   return new Promise((res, rej) => {
     try {
-      const post = realm.objectForPrimaryKey('Post', key);
+      const post = realm.objectForPrimaryKey<PostRecord>('Post', key);
       if (post) {
         const updatedTime = post.updated.getTime();
         const currentTime = new Date().getTime();
         if (currentTime - updatedTime < 60000) {
-          res(posts.comments);
+          res(post.comments);
           return;
         }
       }
@@ -43,7 +49,13 @@ function load(key: string) {
   });
 }
 
-export async function request({ prefix, boardId, id }: { prefix: string, boardId: string, id: string }): CommentRecord[] {
+interface Props {
+  prefix: string;
+  boardId: string;
+  id: string;
+}
+
+export async function request({ prefix, boardId, id }: Props) {
   const key = `${prefix}_${boardId}_${id}`;
 
   try {
