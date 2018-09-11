@@ -45,8 +45,8 @@ declare interface CommentRecord {
   image?: string;
   user: UserRecord;
   time?: Date;
-  likes?: number;
-  dislike?: number;
+  likes: number;
+  dislike: number;
 }
 
 declare interface UserRecord {

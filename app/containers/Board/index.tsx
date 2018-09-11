@@ -40,7 +40,7 @@ export default createStackNavigator({
     },
     headerLeft: (
       <TouchableOpacity onPress={navigation.toggleDrawer}>
-        <Icon style={styles.headerLeft} name="menu" size={20} color="white" />
+        <Icon style={styles.headerLeft} name="menu" size={24} color="white" />
       </TouchableOpacity>
     ),
   }),
