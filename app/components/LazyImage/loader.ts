@@ -55,6 +55,8 @@ function onError(e: any, id?: number) {
 type startCallback = (path: string, layout?: { width: number, height: number }) => void;
 type updateCallback = (percent: number) => void;
 
+const fileNameRegex = new RegExp('\.(gif|jpg|jpeg|tiff|png|webp)$', 'i');
+
 export default async function loader(url: string, start?: startCallback, update?: updateCallback) {
   const imgPath = `${cachePath}/images`
   const exists = await fs.exists(imgPath);
@@ -70,9 +72,11 @@ export default async function loader(url: string, start?: startCallback, update?
   
   if (init && init.path) {
     path = init.path;
-  } else {
+  } else if (fileNameRegex.test(url)){
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
     path = `${imgPath}/${nanoid()}.${ext}`;
+  } else {
+    path = `${imgPath}/${nanoid()}.jpg`
   }
 
   try {
