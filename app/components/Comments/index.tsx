@@ -10,6 +10,11 @@ import formatDate from '../../utils/formatDate';
 import { CommentRecord } from '../../types';
 
 export default class Comment extends PureComponent<CommentRecord> {
+  static defaultProps = {
+    likes: 0,
+    dislike: 0,
+  }
+
   render() {
     const { user, content, time, likes, dislike, image, best, child } = this.props;
     const containerStyle: any = [styles.container];

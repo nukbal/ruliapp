@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import { SafeAreaView } from 'react-navigation';
 import {
@@ -53,25 +53,31 @@ interface Props {
   navigation: any;
 }
 
-export default class Board extends PureComponent<Props> {
+interface State {
+  init: boolean;
+  pushing: boolean;
+  appending: boolean;
+}
+
+export default class Board extends Component<Props, State> {
   static navigationOptions = ({ navigation }: Props) => {
-    const title = navigation.getParam('title');
+    const title = navigation.getParam('title', 'BEST - 일반유머');
     return {
       title: title || '',
     };
   };
   
-  state = { list: [], loading: true };
+  state = { init: true, pushing: true, appending: false };
   prefix: string | undefined;
   boardId: string | undefined;
   params: any = { page: 1 };
+  records: PostRecord[] = [];
 
   async componentDidMount() {
     const { getParam } = this.props.navigation;
-    this.prefix = getParam('prefix');
+    this.prefix = getParam('prefix', 'best/humor');
     this.boardId = getParam('boardId');
     if (this.prefix) {
-      this.setState({ loading: true });
       const data = await request({
         prefix: this.prefix,
         boardId: this.boardId,
@@ -81,9 +87,22 @@ export default class Board extends PureComponent<Props> {
     }
   }
 
-  pressItem = ({ id, boardId, prefix }: PostRecord) => {
+  shouldComponentUpdate(_: Props, state: State) {
+    return state.init !== this.state.init ||
+      state.pushing !== this.state.pushing ||
+      state.appending !== this.state.appending;
+  }
+  
+  componentWillUnmount() {
+    this.prefix = undefined;
+    this.boardId = undefined;
+    this.params = undefined;
+    this.records = [];
+  }
+
+  pressItem = ({ id, boardId, prefix, subject }: PostRecord) => {
     const { navigate } = this.props.navigation;
-    navigate({ routeName: 'Post', params: { id, boardId, prefix } });
+    navigate({ routeName: 'Post', params: { id, boardId, prefix, subject } });
   }
 
   renderItem = ({ item, separators }: ListRenderItemInfo<PostRecord>) => {
@@ -99,28 +118,27 @@ export default class Board extends PureComponent<Props> {
   }
 
   requestHandler = (data: any) => {
-    if (data) {
-      const num = this.params.page;
-      this.setState({ list: data.posts.slice(0, num * 30), loading: false });
-    } else {
-      this.setState({ loading: false });
-    }
+    if (data) this.records = data.posts;
+    this.setState({ init: false, pushing: false, appending: false });
   }
 
   onEndReached = () => {
-    if (this.prefix && !this.state.loading) {
-      this.setState({ loading: true });
+    if (this.prefix && !this.state.appending) {
+      this.setState({ appending: true });
       request({
         prefix: this.prefix,
         boardId: this.boardId,
         params: { ...this.params, page: this.params.page + 1 }
-      }).then(this.requestHandler);
+      }).then((data) => {
+        this.params.page = this.params.page + 1;
+        this.requestHandler(data);
+      });
     }
   }
 
   onRefresh = () => {
-    if (this.prefix && !this.state.loading) {
-      this.setState({ loading: true });
+    if (this.prefix && !this.state.pushing) {
+      this.setState({ pushing: true });
       request({
         prefix: this.prefix,
         boardId: this.boardId,
@@ -130,8 +148,8 @@ export default class Board extends PureComponent<Props> {
   }
 
   onSearch = (keyword: string) => {
-    if (this.prefix && !this.state.loading && keyword) {
-      this.setState({ loading: true });
+    if (this.prefix && !this.state.pushing && keyword) {
+      this.setState({ pushing: true });
       request({
         prefix: this.prefix,
         boardId: this.boardId,
@@ -141,32 +159,31 @@ export default class Board extends PureComponent<Props> {
   }
 
   keyExtractor = (item: PostRecord, i: number) => item.key;
+  getItemLayout = (_: any, index: number) => ({ length: 75, offset: 75 * index, index })
 
   render() {
-    const { list, loading } = this.state;
-    if (list.length === 0 && !loading) {
+    const { pushing, init } = this.state;
+    if (!this.records.length || init) {
       return EmptyState;
     }
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={list}
+          data={this.records}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
           refreshControl={
             <RefreshControl
               colors={["#9Bd35A", "#689F38"]}
-              refreshing={loading}
+              refreshing={pushing}
               onRefresh={this.onRefresh}
             />
           }
-          getItemLayout={(_, index) => (
-            {length: 75, offset: 75 * index, index}
-          )}
-          initialNumToRender={10}
+          getItemLayout={this.getItemLayout}
+          initialNumToRender={8}
           onEndReached={this.onEndReached}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0}
         />
         <StatusBar barStyle="light-content" />
       </SafeAreaView>

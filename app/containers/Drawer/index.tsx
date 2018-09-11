@@ -43,10 +43,11 @@ export default class Drawer extends Component {
     return false;
   }
 
-  onPressItem = ({ focused, route }) => {
+  onPressItem = ({ focused, route }: { focused: boolean, route: any }) => {
     if (focused) return;
 
     const { key, ...rest } = route;
+    // @ts-ignore
     const { navigation } = this.props;
     const resetAction = StackActions.reset({
       index: 0,
@@ -55,11 +56,10 @@ export default class Drawer extends Component {
       ]
     });
     navigation.dispatch(resetAction);
-    // navigation.navigate({ index: 0, routeName: 'Board', params: rest, key, type: 'ReplaceCurrentScreen' });
     navigation.closeDrawer();
   }
 
-  getLabel = ({ route }) => {
+  getLabel = ({ route }: { route: any }) => {
     return route.title;
   }
 

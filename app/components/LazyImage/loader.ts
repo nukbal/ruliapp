@@ -53,7 +53,7 @@ function onError(e: any, id?: number) {
 }
 
 type startCallback = (path: string, layout?: { width: number, height: number }) => void;
-type updateCallback = (percent: number) => void;
+type updateCallback = (percent: number, path?: string) => void;
 
 const fileNameRegex = new RegExp('\.(gif|jpg|jpeg|tiff|png|webp)$', 'i');
 
@@ -83,15 +83,16 @@ export default async function loader(url: string, start?: startCallback, update?
     const config: fs.DownloadFileOptions = {
       fromUrl: url,
       toFile: path,
-      begin: async ({ statusCode, contentLength }) => {
+      begin: ({ statusCode, contentLength }) => {
         if (statusCode < 400) {
           total = contentLength;
-          try {
-            const data = await save({ url, path });
-            if (start && data) start(path);
-          } catch (e) {
-            onError(e, id);
-          }
+          save({ url, path })
+            .then((data) => {
+              if (start && data) start(path);
+            })
+            .catch(e => {
+              onError(e, id);
+            });
         }
       },
       progress: ({ bytesWritten }) => {

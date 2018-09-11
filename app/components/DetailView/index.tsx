@@ -57,29 +57,18 @@ export const styles = StyleSheet.create({
 });
 
 interface Props {
-  id: string;
-  boardId: string;
-  prefix: string;
-  subject: string;
-  contents: List<ContentRecord>;
-  comments: List<CommentRecord>;
-  commentSize?: number;
-  likes?: number;
-  dislikes?: number;
-  loading?: boolean;
+  data: PostRecord;
+  loading: boolean;
   onRefresh: () => void;
 }
 
 export default class DetailView extends PureComponent<Props> {
   static defaultProps = {
-    contents: [],
-    comments: [],
-    commentSize: 0,
     loading: true,
   }
 
   onRefresh = () => {
-    const { comments, commentSize } = this.props;
+    const { comments, commentSize } = this.props.data;
     if (commentSize && comments.length < commentSize) {
       this.props.onRefresh();
     }
@@ -107,8 +96,8 @@ export default class DetailView extends PureComponent<Props> {
   }
 
   renderSectionFooter = ({ section }: { section: SectionListData<any> }) => {
-    if (section.index === 0) {
-      const { likes, dislikes, commentSize, prefix, boardId, id } = this.props;
+    if (section.index === 0 && this.props.data) {
+      const { likes, dislikes, commentSize, prefix, boardId, id } = this.props.data;
       return (
         <Footer
           likes={likes}
@@ -128,19 +117,19 @@ export default class DetailView extends PureComponent<Props> {
       subject,
       contents,
       comments,
-      loading,
-    } = this.props;
+    } = this.props.data;
     const sections = [
       { index: 0, data: contents, title: subject, renderItem: this.renderItem },
       { index: 1, data: comments, renderItem: this.renderComment },
     ];
     return (
       <SectionList
-        refreshing={loading}
+        refreshing={this.props.loading}
         onRefresh={this.onRefresh}
         renderSectionHeader={this.renderSectionHeader}
         renderSectionFooter={this.renderSectionFooter}
         keyExtractor={this.keyExtractor}
+        // @ts-ignore
         sections={sections}
         stickySectionHeadersEnabled={false}
       />

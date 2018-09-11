@@ -9,7 +9,7 @@ import PostPlaceholder from '../../components/DetailView/placeholder';
 import { request } from '../../models/posts';
 import { request as requestComments } from '../../models/comments';
 
-import { PostRecord, ContentRecord, CommentRecord } from '../../types';
+import { PostRecord } from '../../types';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,9 +28,8 @@ interface Props {
   navigation: any;
 }
 
-interface State extends PostRecord {
-  comments: CommentRecord[];
-  contents: ContentRecord[];
+interface State {
+  init: boolean;
   loading: boolean;
 }
 
@@ -40,39 +39,55 @@ export default class Post extends Component<Props, State> {
     headerTintColor: 'white',
     headerRight: (
       <TouchableOpacity style={styles.headerIcon}>
-        <Icon name="more-vert" size={20} color="white" />
+        <Icon name="more-vert" size={24} color="white" />
       </TouchableOpacity>
     ),
     headerLeft: (
       <TouchableOpacity style={styles.headerIcon} onPress={() => { navigation.goBack(); }}>
-        <Icon name="navigate-before" size={20} color="white" />
+        <Icon name="navigate-before" size={24} color="white" />
       </TouchableOpacity>
     ),
   });
 
-  state = { prefix: '', boardId: '', id: '', subject: '', user: {}, comments: [], contents: [], loading: true };
+  state = { init: true, loading: true };
+  data: PostRecord | undefined;
 
   async componentDidMount() {
     const { params } = this.props.navigation.state;
     const { id, prefix, boardId } = params;
-    const data = await request({ prefix, boardId, id });
-    this.setState({ ...data, loading: false });
+    this.data = await request({ prefix, boardId, id });
+    this.setState({ init: false, loading: false });
+  }
+
+  shouldComponentUpdate(_: Props, state: State) {
+    return state.init !== this.state.init ||
+      state.loading !== this.state.loading;
+  }
+  
+  componentWillUnmount() {
+    this.data = undefined;
   }
 
   onRefresh = () => {
     const { params } = this.props.navigation.state;
     const { id, prefix, boardId } = params;
-    this.setState({ loading: true });
-    requestComments({ prefix, boardId, id }).then(comments => {
-      this.setState({ comments, loading: false });
-    });
+    if (this.data) {
+      this.setState({ loading: true });
+      requestComments({ prefix, boardId, id }).then(comments => {
+        this.setState({ loading: false });
+      });
+    }
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, init } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        {this.state.loading ? (<PostPlaceholder />) : (<DetailView {...this.state} />)}
+        {
+          (init || !this.data) ?
+          <PostPlaceholder /> :
+          <DetailView data={this.data} onRefresh={this.onRefresh} loading={loading} />
+        }
       </SafeAreaView>
     );
   }

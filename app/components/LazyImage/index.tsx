@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, View, Text } from 'react-native';
+import { StyleSheet, Image, View, Text, ActivityIndicator } from 'react-native';
 import loader from './loader';
 
 const styles = StyleSheet.create({
@@ -45,27 +45,37 @@ export default class LazyImage extends Component<Props, State> {
 
   state = { path: undefined, width: 0, height: 0, percent: 0 };
   image: any = undefined;
+  promise: any;
   screenWidth = 0;
 
-  async componentDidMount() {
-    this.image = await loader(this.props.source.uri, undefined, this.updateDownload);
-    if (this.image) {
-      const { path, width, height } = this.image;
-      let layout;
-      if (width && height) {
-        layout = { width, height };
+  componentDidMount() {
+    this.promise = loader(this.props.source.uri, undefined, this.updateDownload);
+    this.promise.then((image: any) => {
+      this.promise = undefined;
+      this.image = image;
+      if (this.image) {
+        const { path, width, height } = this.image;
+        let layout;
+        if (width && height) {
+          layout = { width, height };
+        }
+        this.downloadHandler(path, layout);
       }
-      this.beginDownload(path, layout);
-    }
+    });
   }
 
   shouldComponentUpdate(_: Props, state: State) {
     return this.state.percent !== state.percent ||
-      this.state.width !== state.width ||
+      this.state.path !== state.path || 
       this.state.height !== state.height;
   }
 
-  beginDownload = (path: string, layout?: { width: number, height: number }) => {
+  componentWillUnmount() {
+    this.image = undefined;
+    this.promise = undefined;
+  }
+
+  downloadHandler = (path: string, layout?: { width: number, height: number }) => {
     if (layout && this.screenWidth) {
       const { width, height } = setImageSize(layout, this.screenWidth);
       this.setState({ path, width, height });
@@ -75,7 +85,7 @@ export default class LazyImage extends Component<Props, State> {
   }
 
   updateDownload = (percent: number) => {
-    if (percent !== this.state.percent) {
+    if (percent !== this.state.percent && this.state.percent < 100) {
       this.setState({ percent });
     }
   }
@@ -92,19 +102,25 @@ export default class LazyImage extends Component<Props, State> {
   }
 
   render() {
-    const { path, width, height } = this.state;
-    if (path && width && height) {
+    const { path, height, width, percent } = this.state;
+    const containerStyle = [styles.ImageContent];
+    // @ts-ignore
+    if (height && width) containerStyle.push({ height, width });
+
+    if (path) {
       return (
         <Image
-          style={[styles.ImageContent, { width, height }]}
-          source={{ uri: this.state.path }}
+          style={containerStyle}
+          source={{ uri: path, cache: 'only-if-cached' }}
           resizeMode="contain"
         />
       );
     }
+
     return (
-      <View style={styles.ImageContent} onLayout={this.onLayout}>
-        <Text>{this.state.percent || 0}</Text>
+      <View style={containerStyle} onLayout={this.onLayout}>
+        <ActivityIndicator />
+        <Text>{percent || 0}</Text>
       </View>
     )
   }
