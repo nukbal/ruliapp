@@ -1,7 +1,6 @@
 import { Alert } from 'react-native';
 import realm from './realm';
 import parsePost from '../utils/parsePost';
-import { PostRecord } from '../types';
 
 export function load(key: string): Promise<PostRecord> {
   return new Promise((res, rej) => {

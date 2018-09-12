@@ -1,10 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
-import { primaryLight } from '../../styles/color';
 import styles from './styles';
 import Placeholder from './placeholder';
-
-import { PostRecord } from '../../types';
 
 interface Props extends PostRecord {
   onPress: () => void;

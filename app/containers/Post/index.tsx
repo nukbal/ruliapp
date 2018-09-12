@@ -9,8 +9,6 @@ import PostPlaceholder from '../../components/DetailView/placeholder';
 import { request } from '../../models/posts';
 import { request as requestComments } from '../../models/comments';
 
-import { PostRecord } from '../../types';
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,7 +1,6 @@
 import { List } from 'realm';
 import parseComment from '../utils/parseComment';
 import realm from './realm';
-import { CommentRecord, PostRecord } from '../types';
 
 function save(key: string, rows: CommentRecord[]): Promise<List<CommentRecord> | undefined> {
   return new Promise((res, rej) => {
@@ -62,10 +61,10 @@ export async function request({ prefix, boardId, id }: Props) {
     let data = await load(key);
     if (!data) {
       const form = new FormData();
-      form.append('page', 1);
+      form.append('page', '1');
       form.append('article_id', id);
       form.append('board_id', boardId);
-      form.append('cmtimg', 1);
+      form.append('cmtimg', '1');
 
       const targetUrl = `http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}`;
       const config = {

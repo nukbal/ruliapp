@@ -1,7 +1,6 @@
 import qs from 'query-string';
 import parseBoardList from '../utils/parseBoard';
 import realm from './realm';
-import { BoardRecord } from '../types';
 
 export function load(key: string): Promise<BoardRecord> {
   return new Promise((res, rej) => {

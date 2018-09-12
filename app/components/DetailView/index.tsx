@@ -15,8 +15,6 @@ import Footer from './Footer';
 import Contents from './Contents';
 import Comments from '../Comments';
 
-import { PostRecord, CommentRecord, ContentRecord } from '../../types';
-
 export const styles = StyleSheet.create({
   container: {
     flex: 1,

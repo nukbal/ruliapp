@@ -2,8 +2,6 @@ import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseDate from './parseDate';
 import formatText from './formatText';
 
-import { CommentRecord } from '../types';
-
 function formatComment(node: INode): CommentRecord | undefined {
   // @ts-ignore
   const record: CommentRecord = {};

@@ -1,4 +1,4 @@
-import { List } from 'realm';
+// @filename: node_modules/realm/lib/index.d.ts
 
 declare module '*.txt';
 

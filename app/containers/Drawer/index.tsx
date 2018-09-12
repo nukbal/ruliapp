@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, ScrollView, View, Text } from 'react-native';
-import { StackActions, NavigationActions } from 'react-navigation';
+import { StackActions, NavigationActions, DrawerItems } from 'react-navigation';
 import { primary } from '../../styles/color';
 
 import boardList from '../../config/BoardList';
-import { DrawerItems } from 'react-navigation';
 
 const styles = StyleSheet.create({
   header: {

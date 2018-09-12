@@ -3,8 +3,6 @@ import { View, Text, StyleSheet, WebView } from 'react-native';
 import { listItem } from '../../styles/color';
 import LazyImage from '../LazyImage';
 
-import { ContentRecord } from '../../types';
-
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
