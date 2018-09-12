@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView, NavigationScreenProp } from 'react-navigation';
 import {
   StyleSheet,
   FlatList,
@@ -48,7 +48,7 @@ const EmptyState = (
 );
 
 interface Props {
-  navigation: any;
+  navigation: NavigationScreenProp<any, { prefix: string, boardId: string, title: string }>;
 }
 
 interface State {

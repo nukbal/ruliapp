@@ -13,7 +13,8 @@ export default StyleSheet.create({
     backgroundColor: listItem,
     alignItems: 'baseline',
     justifyContent: 'center',
-    marginBottom: 1,
+    borderBottomWidth: 1,
+    borderColor: '#eee',
   },
   info: {
     flex: 1,

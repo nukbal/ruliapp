@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, ScrollView, View, Text } from 'react-native';
-import { StackActions, NavigationActions, DrawerItems } from 'react-navigation';
+import { StackActions, NavigationActions, DrawerItems, NavigationScreenProp } from 'react-navigation';
 import { primary } from '../../styles/color';
 
 import boardList from '../../config/BoardList';
@@ -36,7 +36,11 @@ function ParentItem({ label, onPress }: { label: string, onPress: () => void }) 
   );
 }
 
-export default class Drawer extends Component {
+interface Props {
+  navigation: NavigationScreenProp<any>;
+}
+
+export default class Drawer extends Component<Props> {
 
   shouldComponentUpdate() {
     return false;
@@ -46,7 +50,6 @@ export default class Drawer extends Component {
     if (focused) return;
 
     const { key, ...rest } = route;
-    // @ts-ignore
     const { navigation } = this.props;
     const resetAction = StackActions.reset({
       index: 0,

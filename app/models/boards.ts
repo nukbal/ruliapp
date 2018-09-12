@@ -1,4 +1,5 @@
 import qs from 'query-string';
+import { Platform } from 'react-native';
 import parseBoardList from '../utils/parseBoard';
 import realm from './realm';
 
@@ -9,7 +10,7 @@ export function load(key: string): Promise<BoardRecord> {
       if (board) {
         const updatedTime = board.updated.getTime();
         const currentTime = new Date().getTime();
-        if (currentTime - updatedTime < 60000) {
+        if (currentTime - updatedTime < 30000) {
           res(board);
           return;
         }
@@ -57,6 +58,11 @@ export async function request({ prefix, boardId, params }: { prefix: string, boa
       Referer: targetUrl,
     }
   };
+
+  if (Platform.OS === 'android') {
+    delete config.headers['Accept-Encoding'];
+  }
+
   const key = `${prefix}${boardId ? `_${boardId}` : ''}`;
 
   try {

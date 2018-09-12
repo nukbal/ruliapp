@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView, NavigationScreenProp } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { darkBarkground } from '../../styles/color';
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  navigation: any;
+  navigation: NavigationScreenProp<any, { prefix: string, boardId: string, id: string, subject: string }>;
 }
 
 interface State {

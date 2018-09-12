@@ -1,4 +1,5 @@
 import { List } from 'realm';
+import { Platform } from 'react-native';
 import parseComment from '../utils/parseComment';
 import realm from './realm';
 
@@ -78,6 +79,11 @@ export async function request({ prefix, boardId, id }: Props) {
           Referer: targetUrl,
         },
       };
+
+      if (Platform.OS === 'android') {
+        delete config.headers['Accept-Encoding'];
+      }
+
       // @ts-ignore
       const response = await fetch('http://api.ruliweb.com/commentView', config);
       const res = await response.json();

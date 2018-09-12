@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import realm from './realm';
 import parsePost from '../utils/parsePost';
 
@@ -77,6 +77,11 @@ export async function request({ prefix, boardId, id }: { prefix: string, boardId
           Referer: targetUrl,
         },
       };
+
+      if (Platform.OS === 'android') {
+        delete config.headers['Accept-Encoding'];
+      }
+
       // @ts-ignore
       const response = await fetch(targetUrl, config);
       const htmlString = await response.text();

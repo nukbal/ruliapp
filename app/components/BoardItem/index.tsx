@@ -19,6 +19,7 @@ export default class BoardItem extends PureComponent<Props> {
         onPress={this.props.onPress}
         onShowUnderlay={this.props.onShowUnderlay}
         onHideUnderlay={this.props.onHideUnderlay}
+        underlayColor="#1A70DC"
       >
         <View style={styles.container}>
           <View style={styles.info}>
