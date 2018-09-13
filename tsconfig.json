@@ -1,16 +1,21 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "target": "es2015",
+    "target": "esnext",
     "moduleResolution": "node",
     "jsx": "react",
+    "allowJs": true,
     "noEmit": true,
     "strict": true,
     "pretty": true,
     "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "lib": ["esnext"]
   },
+  "include": [
+    "app"
+  ],
   "exclude": [
     "node_modules",
     "ios",
