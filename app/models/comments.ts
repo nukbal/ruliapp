@@ -37,7 +37,7 @@ function load(key: string): Promise<List<CommentRecord> | undefined> {
       if (post) {
         const updatedTime = post.updated.getTime();
         const currentTime = new Date().getTime();
-        if (currentTime - updatedTime < 60000) {
+        if (currentTime - updatedTime < 30000) {
           res(post.comments);
           return;
         }

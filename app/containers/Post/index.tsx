@@ -47,7 +47,7 @@ export default class Post extends Component<Props, State> {
     ),
   });
 
-  state = { init: true, loading: true };
+  state = { init: true, loading: false };
   data: PostRecord | undefined;
 
   async componentDidMount() {
@@ -69,7 +69,7 @@ export default class Post extends Component<Props, State> {
   onRefresh = () => {
     const { params } = this.props.navigation.state;
     const { id, prefix, boardId } = params;
-    if (this.data && !this.state.loading) {
+    if (this.data && !this.state.loading && !this.state.init) {
       this.setState({ loading: true });
       requestComments({ prefix, boardId, id }).then(comments => {
         this.setState({ loading: false });

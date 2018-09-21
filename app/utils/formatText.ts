@@ -1,7 +1,10 @@
 
 const charSet = {
   '&quot;': '"',
+
   '&apos;': '\'',
+  '&#039;': '\'',
+
   '&amp;': '&',
   '&gt;': '>',
   '&lt;': '<',
@@ -9,7 +12,7 @@ const charSet = {
 }
 
 
-const regex = new RegExp('(&quot;|&apos;|&amp;|&gt;|&lt;|&nbsp;)', 'g');
+const regex = new RegExp(`(${Object.keys(charSet).join('|')})`, 'g');
 
 export default function formatText(str: string) {
   if (!str) return '';

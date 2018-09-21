@@ -17,7 +17,7 @@ export default class Comment extends PureComponent<CommentRecord> {
     const { user, content, time, likes, dislike, image, best, child } = this.props;
     const containerStyle: any = [styles.container];
     if (child) {
-      containerStyle.push({ paddingLeft: 16 });
+      containerStyle.push({ paddingLeft: 32 });
     }
     return (
       <View style={containerStyle}>
