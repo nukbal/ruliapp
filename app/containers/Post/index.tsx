@@ -69,7 +69,7 @@ export default class Post extends Component<Props, State> {
   onRefresh = () => {
     const { params } = this.props.navigation.state;
     const { id, prefix, boardId } = params;
-    if (this.data) {
+    if (this.data && !this.state.loading) {
       this.setState({ loading: true });
       requestComments({ prefix, boardId, id }).then(comments => {
         this.setState({ loading: false });

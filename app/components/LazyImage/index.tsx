@@ -18,8 +18,7 @@ interface Props {
 
 interface State {
   path?: string;
-  width: number;
-  height: number;
+  screenWidth: number;
   percent: number;
 }
 
@@ -43,7 +42,7 @@ function setImageSize(image: { width: number, height: number }, screenWidth: num
 
 export default class LazyImage extends Component<Props, State> {
 
-  state = { path: undefined, width: 0, height: 0, percent: 0 };
+  state = { path: undefined, percent: 0, screenWidth: 0 };
   image: any = undefined;
   promise: any;
   screenWidth = 0;
@@ -54,12 +53,7 @@ export default class LazyImage extends Component<Props, State> {
       this.promise = undefined;
       this.image = image;
       if (this.image) {
-        const { path, width, height } = this.image;
-        let layout;
-        if (width && height) {
-          layout = { width, height };
-        }
-        this.downloadHandler(path, layout);
+        this.setState({ path: this.image.path });
       }
     });
   }
@@ -67,21 +61,12 @@ export default class LazyImage extends Component<Props, State> {
   shouldComponentUpdate(_: Props, state: State) {
     return this.state.percent !== state.percent ||
       this.state.path !== state.path || 
-      this.state.height !== state.height;
+      this.state.screenWidth !== state.screenWidth;
   }
 
   componentWillUnmount() {
     this.image = undefined;
     this.promise = undefined;
-  }
-
-  downloadHandler = (path: string, layout?: { width: number, height: number }) => {
-    if (layout && this.screenWidth) {
-      const { width, height } = setImageSize(layout, this.screenWidth);
-      this.setState({ path, width, height });
-    } else {
-      this.setState({ path });
-    }
   }
 
   updateDownload = (percent: number) => {
@@ -91,34 +76,27 @@ export default class LazyImage extends Component<Props, State> {
   }
 
   onLayout = ({ nativeEvent }: any) => {
-    if (this.screenWidth !== nativeEvent.layout.width) {
-      this.screenWidth = nativeEvent.layout.width;
-      if (this.state.path) {
-        const layout = { width: this.image.width, height: this.image.height };
-        const { width, height } = setImageSize(layout, this.screenWidth);
-        this.setState({ width, height });
-      }
+    if (this.state.screenWidth !== nativeEvent.layout.width) {
+      this.setState({ screenWidth: nativeEvent.layout.width });
     }
   }
 
   render() {
-    const { path, height, width, percent } = this.state;
-    const containerStyle = [styles.ImageContent];
-    // @ts-ignore
-    if (height && width) containerStyle.push({ height, width });
+    const { path, percent, screenWidth } = this.state;
 
-    if (path) {
+    if (path && screenWidth) {
+      const containerStyle = [styles.ImageContent, setImageSize(this.image, screenWidth)];
       return (
         <Image
           style={containerStyle}
-          source={{ uri: path, cache: 'only-if-cached' }}
+          source={{ uri: path }}
           resizeMode="contain"
         />
       );
     }
 
     return (
-      <View style={containerStyle} onLayout={this.onLayout}>
+      <View style={styles.ImageContent} onLayout={this.onLayout}>
         <ActivityIndicator />
         <Text>{percent || 0}</Text>
       </View>

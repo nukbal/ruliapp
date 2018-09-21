@@ -28,20 +28,23 @@ export default createStackNavigator({
     drawerLockMode: 'locked-closed',
   },
 }, {
-  navigationOptions: ({ navigation }) => ({
-    headerStyle: {
-      backgroundColor: primary,
-    },
-    headerTitleStyle: {
-      color: 'white',
-    },
-    cardStyle: {
-      opacity: 1,
-    },
-    headerLeft: (
-      <TouchableOpacity onPress={navigation.toggleDrawer}>
-        <Icon style={styles.headerLeft} name="menu" size={24} color="white" />
-      </TouchableOpacity>
-    ),
-  }),
+  navigationOptions: ({ navigation }) => {
+    return {
+      headerStyle: {
+        backgroundColor: primary,
+      },
+      headerTitleStyle: {
+        color: 'white',
+      },
+      cardStyle: {
+        opacity: 1,
+      },
+      headerLeft: (
+        <TouchableOpacity onPress={navigation.toggleDrawer}>
+          <Icon style={styles.headerLeft} name="menu" size={24} color="white" />
+        </TouchableOpacity>
+      ),
+      drawerLockMode: (navigation.state.routeName === 'Board' ? 'unlocked' : 'locked-closed'),
+    };
+  },
 });

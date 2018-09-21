@@ -6,15 +6,17 @@ import {
   FlatList,
   StatusBar,
   RefreshControl,
-  ListRenderItemInfo,
+  ActivityIndicator,
   View,
-  Text,
+  ListRenderItemInfo,
 } from 'react-native';
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
+import itemStyles from '../../components/BoardItem/styles';
 import { darkBarkground } from '../../styles/color';
 import { request } from '../../models/boards';
+import Placeholder from './placeholder';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,22 +30,12 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  empty: {
-    flex: 1,
-    backgroundColor: darkBarkground,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyText: {
-    color: '#dedede',
-    fontSize: 16,
   }
 });
 
-const EmptyState = (
-  <View style={styles.empty}>
-    <Text style={styles.emptyText}>Empty</Text>
+const AppendLoading = (
+  <View style={[itemStyles.container, { alignItems: 'center' }]}>
+    <ActivityIndicator />
   </View>
 );
 
@@ -123,12 +115,13 @@ export default class Board extends Component<Props, State> {
   onEndReached = () => {
     if (this.prefix && !this.state.appending) {
       this.setState({ appending: true });
+      const nextPage = this.params.page + 1;
       request({
         prefix: this.prefix,
         boardId: this.boardId,
-        params: { ...this.params, page: this.params.page + 1 }
+        params: { ...this.params, page: nextPage }
       }).then((data) => {
-        this.params.page = this.params.page + 1;
+        this.params.page = nextPage;
         this.requestHandler(data);
       });
     }
@@ -160,9 +153,9 @@ export default class Board extends Component<Props, State> {
   getItemLayout = (_: any, index: number) => ({ length: 75, offset: 75 * index, index })
 
   render() {
-    const { pushing, init } = this.state;
+    const { pushing, init, appending } = this.state;
     if (!this.records.length || init) {
-      return EmptyState;
+      return <Placeholder />;
     }
     return (
       <SafeAreaView style={styles.container}>
@@ -170,6 +163,7 @@ export default class Board extends Component<Props, State> {
           data={this.records}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
+          ListEmptyComponent={<Placeholder />}
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
           refreshControl={
             <RefreshControl
@@ -178,6 +172,7 @@ export default class Board extends Component<Props, State> {
               onRefresh={this.onRefresh}
             />
           }
+          ListFooterComponent={appending ? AppendLoading : undefined}
           getItemLayout={this.getItemLayout}
           initialNumToRender={8}
           onEndReached={this.onEndReached}
