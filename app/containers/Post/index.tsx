@@ -54,7 +54,11 @@ export default class Post extends Component<Props, State> {
     const { params } = this.props.navigation.state;
     const { id, prefix, boardId } = params;
     this.data = await request({ prefix, boardId, id });
-    this.setState({ init: false, loading: false });
+    if (this.data) {
+      this.setState({ init: false, loading: false });
+    } else {
+      this.props.navigation.goBack();
+    }
   }
 
   shouldComponentUpdate(_: Props, state: State) {

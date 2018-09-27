@@ -38,7 +38,6 @@ function renderContent({ type, content }: ContentRecord) {
       );
     }
     case 'image': {
-      // @ts-ignore
       return <LazyImage source={{ uri: content }} />;
     }
     default: {

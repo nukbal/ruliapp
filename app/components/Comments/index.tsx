@@ -17,7 +17,7 @@ export default class Comment extends PureComponent<CommentRecord> {
     const { user, content, time, likes, dislike, image, best, child } = this.props;
     const containerStyle: any = [styles.container];
     if (child) {
-      containerStyle.push({ paddingLeft: 32 });
+      containerStyle.push({ paddingLeft: 32, backgroundColor: '#F6FBFE' });
     }
     return (
       <View style={containerStyle}>
@@ -30,8 +30,8 @@ export default class Comment extends PureComponent<CommentRecord> {
           </View>
           {time && (<Text style={styles.timeText}>{formatDate(time)}</Text>)}
         </View>
+        {image && (<View style={styles.UserContainer}><LazyImage source={{ uri: image }} /></View>)}
         <View style={styles.CommentContainer}>
-          {image && (<LazyImage source={{ uri: image }} />)}
           <Text style={styles.CommentText}>{content || ''}</Text>
         </View>
         <View style={styles.infoContainer}>

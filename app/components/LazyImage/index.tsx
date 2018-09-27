@@ -5,7 +5,6 @@ import loader from './loader';
 const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
-    backgroundColor: '#dedede',
     alignItems: 'center',
     justifyContent: 'center',
     height: 200,
@@ -96,7 +95,7 @@ export default class LazyImage extends Component<Props, State> {
     }
 
     return (
-      <View style={styles.ImageContent} onLayout={this.onLayout}>
+      <View style={[styles.ImageContent, { backgroundColor: '#dedede' }]} onLayout={this.onLayout}>
         <ActivityIndicator />
         <Text>{percent || 0}</Text>
       </View>
