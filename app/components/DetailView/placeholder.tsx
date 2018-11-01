@@ -19,8 +19,10 @@ export default function PostPlaceholder() {
     <ScrollView>
       <View style={styles.title}>
         <View style={[style.placeholder, { width: '65%', height: 20 }]} />
+        <View style={[style.placeholder, { width: '45%' }]} />
       </View>
       <View style={[ContentStyle.container, { paddingTop: 16, paddingBottom: 16 }]}>
+        <View style={[...inlineStyle, { width: '100%', height: 200 }]} />
         <View style={[...inlineStyle, { width: '100%' }]} />
         <View style={[...inlineStyle, { width: '100%' }]} />
         <View style={[...inlineStyle, { width: '75%' }]} />
