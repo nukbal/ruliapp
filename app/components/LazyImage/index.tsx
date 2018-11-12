@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Image, View, Text, ActivityIndicator } from 'react-native';
+import { stopDownload } from 'react-native-fs';
 import loader from './loader';
+import handle from '../../utils/handle';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -42,14 +44,16 @@ function setImageSize(image: { width: number, height: number }, screenWidth: num
 export default class LazyImage extends Component<Props, State> {
 
   state = { path: undefined, percent: 0, screenWidth: 0 };
+  jobId?: number = undefined;
   image: any = undefined;
-  promise: any;
+  loader: any;
   screenWidth = 0;
 
   componentDidMount() {
-    this.promise = loader(this.props.source.uri, undefined, this.updateDownload);
-    this.promise.then((image: any) => {
-      this.promise = undefined;
+    this.loader = handle(loader(this.props.source.uri, this.onStartDownload, this.updateDownload));
+    this.loader.promise.then((image: any) => {
+      this.loader = undefined;
+      this.jobId = undefined;
       this.image = image;
       if (this.image) {
         this.setState({ path: this.image.path });
@@ -64,8 +68,15 @@ export default class LazyImage extends Component<Props, State> {
   }
 
   componentWillUnmount() {
+    if (this.jobId) stopDownload(this.jobId);
+    if (this.loader) this.loader.cancel();
+
     this.image = undefined;
-    this.promise = undefined;
+    this.loader = undefined;
+  }
+
+  onStartDownload = (path: string, id?: number) => {
+    this.jobId = id;
   }
 
   updateDownload = (percent: number) => {
