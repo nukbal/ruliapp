@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-import { SafeAreaView, NavigationScreenProp } from 'react-navigation';
+import { NavigationScreenProp, SafeAreaView } from 'react-navigation';
 import {
   StyleSheet,
   FlatList,
@@ -51,7 +50,7 @@ interface State {
 
 export default class Board extends Component<Props, State> {
   static navigationOptions = ({ navigation }: Props) => {
-    const title = navigation.getParam('title', 'BEST - 일반유머');
+    const title = navigation.getParam('title', 'Ruliapp');
     return {
       title: title || '',
     };

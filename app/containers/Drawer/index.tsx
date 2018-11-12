@@ -1,55 +1,22 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView, View, Text } from 'react-native';
-import { StackActions, NavigationActions, DrawerItems, NavigationScreenProp } from 'react-navigation';
+import { StyleSheet, SectionList, Text, TouchableHighlight } from 'react-native';
+import { NavigationScreenProp, NavigationActions, StackActions, SafeAreaView } from 'react-navigation';
 import { primary } from '../../styles/color';
 
 import boardList from '../../config/BoardList';
-
-const styles = StyleSheet.create({
-  header: {
-    flex: 1,
-    padding: 16,
-    height: 63,
-    justifyContent: 'center',
-    backgroundColor: primary,
-  },
-  listItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  listWrapper: {
-    flex: 1,
-    paddingTop: 12,
-    paddingBottom: 12,
-    paddingRight: 18,
-    paddingLeft: 18,
-  }
-});
-
-function ParentItem({ label, onPress }: { label: string, onPress: () => void }) {
-  return (
-    <TouchableOpacity style={styles.listWrapper} onPress={onPress}>
-      <View style={styles.listItem}>
-        <Text>{label}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-}
 
 interface Props {
   navigation: NavigationScreenProp<any>;
 }
 
 export default class Drawer extends Component<Props> {
+  state = { current: null };
 
   shouldComponentUpdate() {
     return false;
   }
 
-  onPressItem = ({ focused, route }: { focused: boolean, route: any }) => {
-    if (focused) return;
-
-    const { key, ...rest } = route;
+  onPressItem = ({ key, ...rest }: any) => {
     const { navigation } = this.props;
     const resetAction = StackActions.reset({
       index: 0,
@@ -58,24 +25,28 @@ export default class Drawer extends Component<Props> {
       ]
     });
     navigation.dispatch(resetAction);
-    navigation.closeDrawer();
   }
 
-  getLabel = ({ route }: { route: any }) => {
-    return route.title;
+  renderItem = ({ item, index, section }: any) => {
+    const onPress = () => this.onPressItem(item);
+    return (
+      <TouchableHighlight onPress={onPress} key={index}>
+        <Text>{item.title}</Text>
+      </TouchableHighlight>
+    );
   }
 
   render() {
+    const sections = [
+      { title: '', data: boardList },
+    ];
     return (
-      <ScrollView>
-        <View style={styles.header}><Text>Ruliweb</Text></View>
-        <DrawerItems
-          items={boardList}
-          getLabel={this.getLabel}
-          renderIcon={() => null}
-          onItemPress={this.onPressItem}
+      <SafeAreaView>
+        <SectionList
+          sections={sections}
+          renderItem={this.renderItem}
         />
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }

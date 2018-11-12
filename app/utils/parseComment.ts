@@ -30,7 +30,11 @@ function formatComment(node: INode): CommentRecord | undefined {
   if (cursor && cursor.childNodes) record.content = formatText(cursor.childNodes[0] ? cursor.childNodes[0].value : '');
 
   cursor = querySelector(textNode, 'img.comment_img');
-  if (cursor && cursor.attrs) record.image = cursor.attrs.src;
+  if (cursor && cursor.attrs) {
+    let url = cursor.attrs.src;
+    if (url.indexOf('//') === 0) url = 'http' + url;
+    record.image = url;
+  }
 
   const userInfo = querySelector(node, 'div.user');
   if (userInfo) {

@@ -1,6 +1,13 @@
-// @filename: node_modules/realm/lib/index.d.ts
-
 declare module '*.txt';
+
+declare module 'react-navigation-tabs' {
+  import * as all from 'react-navigation';
+  const createBottomTabNavigator = all.createBottomTabNavigator;
+}
+declare module 'react-navigation-stack' {
+  import * as all from 'react-navigation';
+  const createStackNavigator = all.createStackNavigator;
+}
 
 declare interface LinkType {
   prefix: string;
