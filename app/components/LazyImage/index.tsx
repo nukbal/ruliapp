@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, View, Text, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import Image from 'react-native-fast-image';
 import { stopDownload } from 'react-native-fs';
 import loader from './loader';
 import handle from '../../utils/handle';

@@ -5,6 +5,21 @@ import { primary } from '../../styles/color';
 
 import boardList from '../../config/BoardList';
 
+const styles = StyleSheet.create({
+  container: {
+    height: 45,
+    flex: 1,
+    paddingRight: 15,
+    paddingLeft: 15,
+    paddingTop: 12,
+    paddingBottom: 12,
+    alignItems: 'baseline',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+  }
+});
+
 interface Props {
   navigation: NavigationScreenProp<any>;
 }
@@ -30,7 +45,12 @@ export default class Drawer extends Component<Props> {
   renderItem = ({ item, index, section }: any) => {
     const onPress = () => this.onPressItem(item);
     return (
-      <TouchableHighlight onPress={onPress} key={index}>
+      <TouchableHighlight
+        style={styles.container}
+        onPress={onPress}
+        key={index}
+        underlayColor="#1A70DC"
+      >
         <Text>{item.title}</Text>
       </TouchableHighlight>
     );

@@ -5,16 +5,17 @@
   "dependencies": {
     "nanoid": "^2.0.0",
     "query-string": "^6.2.0",
-    "react": "16.6.1",
-    "react-native": "0.57.4",
+    "react": "16.6.3",
+    "react-native": "0.57.7",
+    "react-native-fast-image": "^5.1.1",
     "react-native-fs": "^2.12.1",
-    "react-native-gesture-handler": "^1.0.9",
-    "react-native-screens": "^1.0.0-alpha.16",
-    "react-native-vector-icons": "^6.0.2",
-    "react-navigation": "^3.0.0-rc.5",
-    "react-navigation-stack": "^1.0.0-alpha.34",
-    "react-navigation-tabs": "^1.0.0-alpha.5",
-    "realm": "^2.19.0"
+    "react-native-gesture-handler": "^1.0.10",
+    "react-native-screens": "^1.0.0-alpha.17",
+    "react-native-vector-icons": "^6.1.0",
+    "react-navigation": "^3.0.7",
+    "react-navigation-stack": "^1.0.5",
+    "react-navigation-tabs": "^1.0.1",
+    "realm": "^2.21.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.9",
@@ -26,15 +27,16 @@
     "@types/react-native-fs": "^2.8.2",
     "@types/react-native-vector-icons": "^4.6.4",
     "@types/react-navigation": "^2.13.1",
-    "babel-jest": "23.6.0",
+    "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
     "jest-react-native": "^18.0.0",
     "metro-react-native-babel-preset": "^0.49.0",
     "react-test-renderer": "16.6.0",
+    "ts-jest": "^23.10.5",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.1.5"
+    "typescript": "^3.2.2"
   },
   "scripts": {
     "start": "react-native start",

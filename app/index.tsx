@@ -28,7 +28,7 @@ const MainNav = createBottomTabNavigator(
             return <Icon name="dashboard" size={size} color={tintColor!} />;
           }
           case 'List': {
-            return <Icon name="dashboard" size={size} color={tintColor!} />;
+            return <Icon name="list" size={size} color={tintColor!} />;
           }
           case 'Settings': {
             return <Icon name="settings" size={size} color={tintColor!} />;
