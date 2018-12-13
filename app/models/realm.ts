@@ -1,4 +1,4 @@
-import Realm from 'realm';
+// import Realm from 'realm';
 
 export const BoardSchema = {
   name: 'Board',
@@ -93,6 +93,6 @@ export const ImageSchema = {
 
 export const schemaList = [BoardSchema, PostSchema, CommentSchema, ContentSchema, UserSchema, ImageSchema];
 
-const instance = new Realm({ schema: schemaList });
+// const instance = new Realm({ schema: schemaList });
 
-export default instance;
+export default undefined;

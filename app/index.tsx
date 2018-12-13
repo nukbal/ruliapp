@@ -1,4 +1,6 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 // import { createStackNavigator } from 'react-navigation-stack';
@@ -10,6 +12,7 @@ import DrawerScreen from './containers/Drawer';
 import ConfigScreen from './containers/Settings';
 
 import { primary } from './styles/color';
+import createStores from './store';
 
 const MainNav = createBottomTabNavigator(
   {
@@ -46,4 +49,17 @@ const MainNav = createBottomTabNavigator(
   }
 );
 
-export default createAppContainer(MainNav);
+const Container = createAppContainer(MainNav);
+
+const { store, persistor } = createStores();
+if (__DEV__) persistor.purge();
+
+export default function App() {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Container />
+      </PersistGate>
+    </Provider>
+  );
+}

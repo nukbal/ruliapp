@@ -15,7 +15,12 @@
     "react-navigation": "^3.0.7",
     "react-navigation-stack": "^1.0.5",
     "react-navigation-tabs": "^1.0.1",
-    "realm": "^2.21.0"
+    "react-redux": "^6.0.0",
+    "realm": "^2.21.0",
+    "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
+    "redux-saga": "^0.16.2",
+    "reselect": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.9",
@@ -27,11 +32,18 @@
     "@types/react-native-fs": "^2.8.2",
     "@types/react-native-vector-icons": "^4.6.4",
     "@types/react-navigation": "^2.13.1",
+    "@types/react-redux": "^6.0.11",
+    "@types/redux": "^3.6.0",
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
     "jest-react-native": "^18.0.0",
     "metro-react-native-babel-preset": "^0.49.0",
+    "node-noop": "^1.0.0",
+    "react-dom": "^16.6.3",
+    "react-native-web": "^0.9.9",
     "react-test-renderer": "16.6.0",
+    "react-testing-library": "^5.3.2",
+    "redux-devtools-extension": "^2.13.7",
     "ts-jest": "^23.10.5",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
@@ -58,6 +70,10 @@
       "jsx",
       "json",
       "node"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^react-art$": "node-noop"
+    }
   }
 }

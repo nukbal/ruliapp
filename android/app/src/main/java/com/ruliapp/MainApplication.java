@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.rnfs.RNFSPackage;
 import com.facebook.react.ReactNativeHost;
@@ -32,7 +31,6 @@ public class MainApplication extends Application implements ReactApplication {
             new FastImageViewPackage(),
             new RNScreensPackage(),
             new RNGestureHandlerPackage(),
-            new RealmReactPackage(),
             new VectorIconsPackage(),
             new RNFSPackage()
       );

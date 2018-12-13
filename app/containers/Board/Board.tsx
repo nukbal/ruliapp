@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { bindActionCreators, AnyAction, Dispatch } from 'redux';
+import { connect } from 'react-redux';
 import { NavigationScreenProp, SafeAreaView } from 'react-navigation';
 import {
   StyleSheet,
@@ -14,7 +16,7 @@ import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import itemStyles from '../../components/BoardItem/styles';
 import { darkBarkground } from '../../styles/color';
-import { request } from '../../models/boards';
+import { Actions } from '../../stores/boards';
 import Placeholder from './placeholder';
 
 const styles = StyleSheet.create({
@@ -39,7 +41,10 @@ const AppendLoading = (
 );
 
 interface Props {
-  navigation: NavigationScreenProp<any, { prefix: string, boardId: string, title: string }>;
+  navigation: NavigationScreenProp<any, { title: string, key: string }>;
+  request: typeof Actions.request;
+  update: typeof Actions.update;
+  records: any[];
 }
 
 interface State {
@@ -48,7 +53,7 @@ interface State {
   appending: boolean;
 }
 
-export default class Board extends Component<Props, State> {
+export class Board extends Component<Props, State> {
   static navigationOptions = ({ navigation }: Props) => {
     const title = navigation.getParam('title', 'Ruliapp');
     return {
@@ -57,22 +62,12 @@ export default class Board extends Component<Props, State> {
   };
   
   state = { init: true, pushing: true, appending: false };
-  prefix: string | undefined;
-  boardId: string | undefined;
-  params: any = { page: 1 };
-  records: PostRecord[] = [];
 
-  async componentDidMount() {
+  componentDidMount() {
     const { getParam } = this.props.navigation;
-    this.prefix = getParam('prefix', 'best/humor');
-    this.boardId = getParam('boardId');
-    if (this.prefix) {
-      const data = await request({
-        prefix: this.prefix,
-        boardId: this.boardId,
-        params: { page: 1 },
-      });
-      this.requestHandler(data);
+    const key = getParam('key');
+    if (key) {
+      this.props.request(key);
     }
   }
 
@@ -80,13 +75,6 @@ export default class Board extends Component<Props, State> {
     return state.init !== this.state.init ||
       state.pushing !== this.state.pushing ||
       state.appending !== this.state.appending;
-  }
-  
-  componentWillUnmount() {
-    this.prefix = undefined;
-    this.boardId = undefined;
-    this.params = undefined;
-    this.records = [];
   }
 
   pressItem = ({ id, boardId, prefix, subject }: PostRecord) => {
@@ -107,44 +95,24 @@ export default class Board extends Component<Props, State> {
   }
 
   requestHandler = (data: any) => {
-    if (data) this.records = data.posts;
     this.setState({ init: false, pushing: false, appending: false });
   }
 
   onEndReached = () => {
-    if (this.prefix && !this.state.appending) {
+    if (!this.state.appending) {
       this.setState({ appending: true });
-      const nextPage = this.params.page + 1;
-      request({
-        prefix: this.prefix,
-        boardId: this.boardId,
-        params: { ...this.params, page: nextPage }
-      }).then((data) => {
-        this.params.page = nextPage;
-        this.requestHandler(data);
-      });
     }
   }
 
   onRefresh = () => {
-    if (this.prefix && !this.state.pushing) {
+    if (!this.state.pushing) {
       this.setState({ pushing: true });
-      request({
-        prefix: this.prefix,
-        boardId: this.boardId,
-        params: { ...this.params, page: 1 }
-      }).then(this.requestHandler);
     }
   }
 
   onSearch = (keyword: string) => {
-    if (this.prefix && !this.state.pushing && keyword) {
+    if (!this.state.pushing && keyword) {
       this.setState({ pushing: true });
-      request({
-        prefix: this.prefix,
-        boardId: this.boardId,
-        params: { ...this.params, page: 1, keyword }
-      }).then(this.requestHandler);
     }
   }
 
@@ -153,13 +121,14 @@ export default class Board extends Component<Props, State> {
 
   render() {
     const { pushing, init, appending } = this.state;
-    if (!this.records.length || init) {
+    const { records } = this.props;
+    if (init) {
       return <Placeholder />;
     }
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={this.records}
+          data={records}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           ListEmptyComponent={<Placeholder />}
@@ -182,3 +151,18 @@ export default class Board extends Component<Props, State> {
     );
   }
 }
+
+function mapStateToProps(state: any) {
+  return {
+    records: [],
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch<AnyAction>) {
+  return {
+    request: bindActionCreators(Actions.request, dispatch),
+    update: bindActionCreators(Actions.update, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

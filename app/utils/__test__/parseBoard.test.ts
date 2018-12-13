@@ -17,7 +17,7 @@ describe('parsing board', () => {
         .toEqual({ prefix: 'news', boardId: '1004', id: '2144237', key: 'news_1004_2144237' });
   });
   it('works', () => {
-    const html = fs.readFileSync(resolve(__dirname, './html/hit_sample.txt'), 'utf-8');
+    const html = fs.readFileSync(resolve(__dirname, './html/hit_sample'), 'utf-8');
   
     const before = process.memoryUsage().heapUsed;
     const data = parser(html);
