@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet, WebView } from 'react-native';
 import { listItem } from '../../styles/color';
 import LazyImage from '../LazyImage';

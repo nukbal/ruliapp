@@ -10,24 +10,24 @@ function parseTitle(html: string) {
 }
 
 export function parseBoardUrl(href: string) {
-  const res: any = {};
   const url = href.replace('http://m.ruliweb.com', '').replace('/', '');
 
   let id = null;
   let cursor = url.indexOf('/board');
-  res.prefix = url.substring(0, cursor);
+  let query = url;
 
   cursor = cursor + 7;
 
-  if (url.indexOf('/read/', cursor) > -1) {
-    const startIdx = url.indexOf('/read/', cursor);
-    id = url.substring(startIdx + 6, url.length);
-    if (id.indexOf('?') > 0) {
-      id = id.substring(0, res.id.indexOf('?'));
-    }
+  const startIdx = url.indexOf('/read/', cursor);
+  id = url.substring(startIdx + 6, url.length);
+  if (id.indexOf('?') > 0) {
+    id = id.substring(0, id.indexOf('?'));
+  }
+  if (query.indexOf('?') > 0) {
+    query = query.substring(0, query.indexOf('?'));
   }
 
-  return id;
+  return { id, url: query };
 }
 
 function formatBoardRow(node: INode): PostRecord | undefined {
@@ -52,9 +52,10 @@ function formatBoardRow(node: INode): PostRecord | undefined {
   // board title
   cursor = querySelector(titleDiv, 'a.subject_link');
   if (cursor && cursor.attrs) {
-    const id = parseBoardUrl(cursor.attrs.href!);
+    const { id, url } = parseBoardUrl(cursor.attrs.href!);
     if (!id) return;
     record.key = id;
+    record.url = url;
 
     const text = querySelector(cursor, 'text');
     if (text) record.subject = text.value!;
@@ -101,7 +102,7 @@ export interface IParseBoard {
   notices: PostRecord[];
 }
 
-export default function parseBoardList (htmlString: string): IParseBoard {
+export default function parseBoardList (htmlString: string, key: string): IParseBoard {
   const title = parseTitle(htmlString);
   const startIndex = htmlString.indexOf('<table class="board_list_table"');
   const endIndex = htmlString.indexOf('</table>', startIndex);
@@ -115,7 +116,7 @@ export default function parseBoardList (htmlString: string): IParseBoard {
 
   for (let i = 0; i < boardNodes.length; i += 1) {
     const temp = formatBoardRow(boardNodes[i]);
-    if (temp) data.push(temp);
+    if (temp) data.push({ ...temp, parent: key });
   }
 
   const rows = data.filter(item => !item.isNotice);

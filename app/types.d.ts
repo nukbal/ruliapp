@@ -36,9 +36,8 @@ declare interface BoardRecord {
 
 declare interface PostRecord {
   key: string;
-  prefix: string;
-  boardId: string;
-  id: string;
+  url: string;
+  parent: string;
   subject: string;
   userName: string;
   views?: number;
@@ -47,7 +46,7 @@ declare interface PostRecord {
   commentSize?: number;
   date?: Date;
   isNotice?: boolean;
-  comments: string[];
+  comments: CommentRecord[];
   contents: ContentRecord[];
   finished?: boolean;
   updated: Date;
@@ -60,7 +59,6 @@ declare interface CommentRecord {
   content: string;
   user: UserRecord;
   image?: string;
-  user: UserRecord;
   time?: Date;
   likes: number;
   dislike: number;

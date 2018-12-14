@@ -7,7 +7,6 @@ import {
   ListRenderItemInfo,
   SectionListData,
 } from 'react-native';
-import { List } from 'realm';
 
 import { primary } from '../../styles/color';
 
@@ -62,7 +61,7 @@ interface Props {
 
 export default class DetailView extends PureComponent<Props> {
   static defaultProps = {
-    loading: true,
+    loading: false,
   }
 
   onRefresh = () => {
@@ -94,13 +93,13 @@ export default class DetailView extends PureComponent<Props> {
 
   renderSectionFooter = ({ section }: { section: SectionListData<any> }) => {
     if (section.index === 0 && this.props.data) {
-      const { likes, dislikes, commentSize, prefix, boardId, id } = this.props.data;
+      const { likes, dislikes, commentSize, url } = this.props.data;
       return (
         <Footer
           likes={likes}
           dislikes={dislikes}
           comments={commentSize}
-          url={`http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}`}
+          url={`http://m.ruliweb.com/${url}`}
         />
       );
     }

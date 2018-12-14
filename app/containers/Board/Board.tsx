@@ -10,13 +10,14 @@ import {
   ActivityIndicator,
   View,
   ListRenderItemInfo,
+  Text,
 } from 'react-native';
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import itemStyles from '../../components/BoardItem/styles';
 import { darkBarkground } from '../../styles/color';
-import { Actions } from '../../stores/boards';
+import { Actions, getBoardList } from '../../stores/boards';
 import Placeholder from './placeholder';
 
 const styles = StyleSheet.create({
@@ -48,7 +49,6 @@ interface Props {
 }
 
 interface State {
-  init: boolean;
   pushing: boolean;
   appending: boolean;
 }
@@ -59,27 +59,32 @@ export class Board extends Component<Props, State> {
     return {
       title: title || '',
     };
-  };
+  }; 
+  constructor(props: Props) {
+    super(props);
+    if (props.navigation.state.params) {
+      this.boardKey = props.navigation.state.params.key;
+    }
+  }
   
-  state = { init: true, pushing: true, appending: false };
+  boardKey = '';
+  state = { pushing: true, appending: false };
 
   componentDidMount() {
-    const { getParam } = this.props.navigation;
-    const key = getParam('key');
-    if (key) {
-      this.props.request(key);
+    if (this.boardKey) {
+      this.props.request(this.boardKey);
     }
   }
 
-  shouldComponentUpdate(_: Props, state: State) {
-    return state.init !== this.state.init ||
-      state.pushing !== this.state.pushing ||
-      state.appending !== this.state.appending;
+  shouldComponentUpdate(props: Props, state: State) {
+    return state.pushing !== this.state.pushing ||
+      state.appending !== this.state.appending ||
+      this.props.records.length !== props.records.length;
   }
 
-  pressItem = ({ id, boardId, prefix, subject }: PostRecord) => {
+  pressItem = ({ url, parent, key, subject }: PostRecord) => {
     const { navigate } = this.props.navigation;
-    navigate({ routeName: 'Post', params: { id, boardId, prefix, subject } });
+    navigate({ routeName: 'Post', params: { url, parent, key, subject } });
   }
 
   renderItem = ({ item, separators }: ListRenderItemInfo<PostRecord>) => {
@@ -92,10 +97,6 @@ export class Board extends Component<Props, State> {
         {...item}
       />
     );
-  }
-
-  requestHandler = (data: any) => {
-    this.setState({ init: false, pushing: false, appending: false });
   }
 
   onEndReached = () => {
@@ -120,11 +121,13 @@ export class Board extends Component<Props, State> {
   getItemLayout = (_: any, index: number) => ({ length: 75, offset: 75 * index, index })
 
   render() {
-    const { pushing, init, appending } = this.state;
+    const { pushing, appending } = this.state;
     const { records } = this.props;
-    if (init) {
-      return <Placeholder />;
+
+    if (!this.boardKey) {
+      return <View><Text>Please select board</Text></View>
     }
+
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
@@ -152,7 +155,12 @@ export class Board extends Component<Props, State> {
   }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: any, props: Props) {
+  if (props.navigation.state.params) {
+    return {
+      records: getBoardList(props.navigation.state.params.key)(state),
+    };
+  }
   return {
     records: [],
   };

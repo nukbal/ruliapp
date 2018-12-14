@@ -5,7 +5,7 @@ import parseBoardList, { IParseBoard } from '../utils/parseBoard';
 import arrayToObject from '../utils/arrayToObject';
 import { createAction, ActionsUnion } from './helpers';
 
-import { Actions as PostActions } from './posts';
+import { Actions as PostActions, getPostRecordsByParent } from './posts';
 
 /* Actions */
 export const REQUEST = 'board/REQUEST';
@@ -52,7 +52,7 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
   try {
     const response = yield call(fetch, targetUrl, config);
     const htmlString = yield response.text();
-    const json: IParseBoard = yield call(parseBoardList, htmlString);
+    const json: IParseBoard = yield call(parseBoardList, htmlString, key);
 
     // @ts-ignore
     yield put(PostActions.bump(key, arrayToObject(json.rows)));
@@ -71,13 +71,14 @@ export const boardSagas = [
 
 /* selectors */
 
-export const getBoardState = (state: any): BoardState => state.boards;
+export const getBoardState = (state: any): BoardState => state.board;
 
-export const getBoardList = createSelector(
-  [getBoardState],
-  ({ current, records }, posts) => {
-    const data = records[current] || [];
-    return data.map((key: string) => posts[key]);
+export const getBoardList = (key: string) => createSelector(
+  [getBoardState, getPostRecordsByParent(key)],
+  ({ records }, posts) => {
+    if (!key) return [];
+    const data = records[key] ? records[key].posts : [];
+    return data.map((k: string) => posts[k]);
   },
 );
 
@@ -89,7 +90,6 @@ export const isBoardLoading = createSelector(
 /* reducers */
 
 export interface BoardState {
-  readonly current: string;
   readonly records: Readonly<{
     [key: string]: BoardRecord,
   }>;
@@ -97,7 +97,6 @@ export interface BoardState {
 }
 
 const initState: BoardState = {
-  current: '',
   records: {},
   loading: false,
 };
@@ -105,15 +104,16 @@ const initState: BoardState = {
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
     case REQUEST: {
-      const { key, params } = action.payload;
+      const { key } = action.payload;
       const records = { ...state.records };
       if (records[key]) {
         records[key] = { ...records[key], key };
       } else {
-        records[key] = { key };
+        // @ts-ignore
+        records[key] = { key, posts: [] };
       }
       
-      return { current: key, records, loading: true };
+      return { records, loading: true };
     }
     case ADD: {
       const { key, posts } = action.payload;
