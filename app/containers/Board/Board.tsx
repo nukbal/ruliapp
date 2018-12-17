@@ -163,14 +163,9 @@ export class Board extends Component<Props, State> {
   }
 }
 
-function mapStateToProps(state: any, props: Props) {
-  if (props.navigation.state.params) {
-    return {
-      records: getBoardList(props.navigation.state.params.key)(state),
-    };
-  }
+function mapStateToProps(state: any) {
   return {
-    records: [],
+    records: getBoardList(state),
   };
 }
 

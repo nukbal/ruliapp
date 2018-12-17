@@ -4,7 +4,8 @@ function numeric(num: number) {
   return str.substring(str.length - 2, str.length);
 }
 
-export default function format(date: Date) {
+export default function format(d: Date | string) {
+  let date = new Date(d);
   const month = numeric(date.getMonth() + 1);
   const day = numeric(date.getDate());
   const hour = numeric(date.getHours());

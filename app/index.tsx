@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 // @ts-ignore
@@ -12,6 +11,7 @@ import ConfigScreen from './containers/Settings';
 
 import { primary } from './styles/color';
 import createStores from './store';
+import { AsyncStorage } from 'react-native';
 
 const MainNav = createBottomTabNavigator(
   {
@@ -22,6 +22,7 @@ const MainNav = createBottomTabNavigator(
   {
     // @ts-ignore
     defaultNavigationOptions: ({ navigation }) => ({
+      // @ts-ignore
       tabBarIcon: ({ horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         const size = horizontal ? 20 : 25;
@@ -50,15 +51,14 @@ const MainNav = createBottomTabNavigator(
 
 const Container = createAppContainer(MainNav);
 
-const { store, persistor } = createStores();
-if (__DEV__) persistor.purge();
+const store = createStores();
+
+if (__DEV__) AsyncStorage.clear();
 
 export default function App() {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Container />
-      </PersistGate>
+      <Container />
     </Provider>
   );
 }

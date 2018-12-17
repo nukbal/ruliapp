@@ -1,7 +1,7 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, select, throttle } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
-import { Alert, Platform, StatusBar } from 'react-native';
-import { Actions as BoardAction } from './boards';
+import { Alert, Platform, StatusBar, AsyncStorage } from 'react-native';
+import { Actions as BoardAction, getPostByKey } from './boards';
 import { createAction, ActionsUnion } from './helpers';
 import parsePost from '../utils/parsePost';
 import parseComment from '../utils/parseComment';
@@ -21,12 +21,12 @@ export const Actions = {
 
   add: (payload: PostRecord) => createAction(ADD, payload),
   bump: (key: string, rows: any[]) => createAction(BUMP, { key, rows }),
-  remove: (parent: string, key: string) => createAction(REMOVE, { parent, key }),
+  remove: (url: string) => createAction(REMOVE, url),
 
   requestComment: (payload: { key: string, url: string, parent: string }) =>
     createAction(REQUEST_COMMENT, payload),
-  updateComment: (payload: { key: string, url: string, parent: string, comments: CommentRecord[] }) =>
-    createAction(UPDATE_COMMENT, payload),
+  updateComment: (comments: CommentRecord[]) =>
+    createAction(UPDATE_COMMENT, comments),
 };
 export type Actions = ActionsUnion<typeof Actions>;
 
@@ -34,26 +34,31 @@ export type Actions = ActionsUnion<typeof Actions>;
 
 export const getPosts = (state: any): PostState => state.post;
 
-export const getPostRecords = createSelector(
-  [getPosts],
-  posts => posts.records,
-);
+export const getPostContents = createSelector([getPosts], posts => posts.contents);
+export const getPostComments = createSelector([getPosts], posts => posts.comments);
+export const getPostMeta = createSelector([getPosts], posts => ({
+  commentSize: posts.commentSize || 0,
+  views: posts.views || 0,
+  likes: posts.likes || 0,
+  dislikes: posts.dislikes || 0,
+  url: posts.url,
+  date: posts.date,
+}));
 
 export const isPostLoading = createSelector([getPosts], posts => posts.loading);
 export const isCommentLoading = createSelector([getPosts], posts => posts.commentLoading);
-
-export const getPostRecordsByParent = (parent: string) => createSelector(
-  [getPostRecords], records => records[parent] || {},
-);
-
-export const getPostRecordsByKey = (parent: string, key: string) => createSelector(
-  [getPostRecordsByParent(parent)], records => records[key],
-);
 
 /* Sagas */
 
 export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.request>) {
   const { key, parent, url } = payload;
+
+  const cache = yield AsyncStorage.getItem(`@Posts:${url}`);
+  if (cache) {
+    const json = JSON.parse(cache);
+    yield put(Actions.add(json));
+    return;
+  }
 
   StatusBar.setNetworkActivityIndicatorVisible(false);
   try {
@@ -76,19 +81,27 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
 
     // @ts-ignore
     const response = yield call(fetch, targetUrl, config);
+    if (!response.ok) throw new Error('request failed');
+
     const htmlString = yield response.text();
     const json = yield call(parsePost, htmlString, '');
-    yield put(Actions.add({ ...json, key, parent }));
+    if (!json) throw new Error('parse failed');
+
+    const record = yield select(getPostByKey(key));
+
+    const data = { ...record, ...json, order: json.comments.map((item: CommentRecord) => item.key) };
+    yield AsyncStorage.setItem(`@Posts:${url}`, JSON.stringify(data));
+    yield put(Actions.add(data));
   } catch (e) {
     console.warn(e.message);
     yield put(BoardAction.remove(parent, key));
-    yield put(Actions.remove(parent, key));
+    yield put(Actions.remove(url));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
   StatusBar.setNetworkActivityIndicatorVisible(false);
 }
 
-export function* requestComments({ payload }: ReturnType<typeof Actions.updateComment>) {
+export function* requestComments({ payload }: ReturnType<typeof Actions.requestComment>) {
   const { key, parent, url } = payload;
   const boardId = url.substring(url.indexOf('board/') + 6, url.indexOf('/read'));
   
@@ -119,67 +132,69 @@ export function* requestComments({ payload }: ReturnType<typeof Actions.updateCo
   
     if (json.success) {
       const comments = yield call(parseComment, json.view);
-      yield put(Actions.updateComment({ ...payload, comments }));
+      yield put(Actions.updateComment(comments));
+
+      const cache = yield AsyncStorage.getItem(`@Posts:${url}`);
+      const data = JSON.parse(cache);
+      yield AsyncStorage.setItem(`@Posts:${url}`, JSON.stringify({ ...data, comments }));
     }
   } catch(e) {}
   StatusBar.setNetworkActivityIndicatorVisible(false);
   return null;
 }
 
+function* removePost({ payload }: ReturnType<typeof Actions.remove>) {
+  yield AsyncStorage.removeItem(`@Posts:${payload}`);
+}
+
 export const postSagas = [
   takeLatest(REQUEST, requestDetailSaga),
-  takeLatest(REQUEST_COMMENT, requestComments),
+  throttle(500, REQUEST_COMMENT, requestComments),
+  takeLatest(REMOVE, removePost),
 ];
 
 /* Reducer */
 
-export interface PostState {
-  readonly records: Readonly<{
-    [key: string]: Readonly<{
-      [item: string]: PostRecord;
-    }>;
-  }>;
+export interface PostState extends PostRecord {
   readonly loading: boolean;
   readonly commentLoading: boolean;
 }
 
-const initState: PostState = { records: {}, loading: false, commentLoading: false };
+const initState: PostState = {
+  key: '',
+  url: '',
+  parent: '',
+  subject: '',
+  user: { id: '', name: '' },
+  comments: [],
+  contents: [],
+  loading: false,
+  commentLoading: false,
+};
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
     case REQUEST: {
-      return { ...state, loading: true, commentLoading: false };
-    }
-    case BUMP: {
-      const { key, rows } = action.payload;
-      const records = Object.assign(state.records[key] || {}, rows);
-      return { records: { ...state.records, [key]: records }, loading: false, commentLoading: false };
+      return { ...initState, ...action.payload, loading: true, commentLoading: false, updated: new Date() };
     }
     case ADD: {
-      const { parent, key } = action.payload;
-      const records = { ...state.records };
-      if (!records[parent]) records[parent] = {};
-      if (!records[parent][key]) {
-        // @ts-ignore
-        records[parent][key] = { ...action.payload, finished: true };
-      } else {
-        // @ts-ignore
-        records[parent][key] = { ...records[parent][key], ...action.payload, finished: true };
-      }
-      return { records, loading: false, commentLoading: false };
+      return { ...state, ...action.payload, loading: false, commentLoading: false };
     }
-
     case REQUEST_COMMENT: {
       return { ...state, commentLoading: true };
     }
     case UPDATE_COMMENT: {
-      const { parent, key, comments } = action.payload;
-      const records = { ...state.records };
-      const post = records[parent][key];
-      // @ts-ignore
-      records[parent][key] = { ...post, comments };
 
-      return { ...state, commentLoading: false };
+      // const oldkeys = state.comments.map(item => item.key);
+      // const newKeys = comments.map(item => item.key);
+
+      // let list = Array.from(new Set([...oldkeys, ...newKeys]));
+      // list = list.map(key => );
+
+      return { ...state, comments: action.payload, commentLoading: false };
+    }
+    case REMOVE: {
+      return initState;
     }
     default:
       return state;

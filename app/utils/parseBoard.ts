@@ -77,7 +77,8 @@ function formatBoardRow(node: INode): PostRecord | undefined {
 
   // author name
   cursor = querySelector(infoDiv, 'span.writer text');
-  if (cursor) record.userName = cursor.value!;
+  // @ts-ignore
+  if (cursor) record.user = { name: cursor.value! };
 
   // view counts
   cursor = querySelector(infoDiv, 'span.hit text');

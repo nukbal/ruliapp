@@ -7,7 +7,14 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
 import PostPlaceholder from '../../components/DetailView/placeholder';
-import { Actions, getPostRecordsByKey, isPostLoading, isCommentLoading } from '../../stores/posts';
+import {
+  Actions,
+  getPostContents,
+  getPostComments,
+  getPostMeta,
+  isPostLoading,
+  isCommentLoading,
+} from '../../stores/posts';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,7 +31,16 @@ const styles = StyleSheet.create({
 
 interface Props {
   navigation: NavigationScreenProp<any, { url: string, parent: string, key: string, subject: string }>;
-  data: PostRecord;
+  contents: ContentRecord[];
+  comments: CommentRecord[];
+  meta: {
+    commentSize: number;
+    views: number;
+    likes: number;
+    dislikes: number;
+    url: string;
+    date: Date;
+  };
   request: typeof Actions.request;
   requestComment: typeof Actions.requestComment;
   loading: boolean;
@@ -53,9 +69,9 @@ export class Post extends PureComponent<Props, State> {
   });
 
   componentDidMount() {
-    const { data, navigation } = this.props;
+    const { navigation } = this.props;
     const { params } = navigation.state;
-    if (params && (!data || !data.finished)) {
+    if (params) {
       this.props.request(params);
     }
   }
@@ -68,30 +84,31 @@ export class Post extends PureComponent<Props, State> {
   }
 
   render() {
-    const { data, loading, commentLoading } = this.props;
+    const { contents, comments, loading, commentLoading } = this.props;
     return (
       <View style={styles.container}>
         {
-          (loading || !data || !data.finished) ?
+          (loading) ?
           <PostPlaceholder /> :
-          <DetailView data={data} onRefresh={this.onRefresh} loading={commentLoading} />
+          <DetailView
+            subject={this.props.navigation.state.params.subject}
+            contents={contents}
+            comments={comments}
+            onRefresh={this.onRefresh}
+            loading={commentLoading}
+            {...this.props.meta}
+          />
         }
       </View>
     );
   }
 }
 
-function mapStateToProps(state: any, props: Props) {
-  let data = undefined;
-
-  if (props.navigation.state.params) {
-    const { parent, key } = props.navigation.state.params;
-    // @ts-ignore
-    data = getPostRecordsByKey(parent, key)(state);
-  }
-
+function mapStateToProps(state: any) {
   return {
-    data,
+    comments: getPostComments(state),
+    contents: getPostContents(state),
+    meta: getPostMeta(state),
     loading: isPostLoading(state),
     commentLoading: isCommentLoading(state),
   };

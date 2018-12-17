@@ -6,8 +6,6 @@ import parseBoardList, { IParseBoard } from '../utils/parseBoard';
 import arrayToObject from '../utils/arrayToObject';
 import { createAction, ActionsUnion } from './helpers';
 
-import { Actions as PostActions, getPostRecordsByParent } from './posts';
-
 /* Actions */
 export const REQUEST = 'board/REQUEST';
 export const ADD = 'board/ADD';
@@ -23,7 +21,7 @@ export const Actions = {
   ) =>
     createAction(REQUEST, { key, params, callback }),
 
-  add: (key: string, posts: string[]) => createAction(ADD, { key, posts }),
+  add: (key: string, posts: PostRecord[]) => createAction(ADD, { key, posts }),
   remove: (key: string, post: string) => createAction(REMOVE, { key, post }),
   clear: () => createAction(CLEAR),
 };
@@ -56,11 +54,7 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
     const htmlString = yield response.text();
     const json: IParseBoard = yield call(parseBoardList, htmlString, key);
 
-    // @ts-ignore
-    yield put(PostActions.bump(key, arrayToObject(json.rows)));
-
-    const idList = json.rows.map(item => item.key);
-    yield put(Actions.add(key, idList));
+    yield put(Actions.add(key, json.rows));
 
     if (payload.callback) yield call(payload.callback);
   } catch(e) {
@@ -78,13 +72,14 @@ export const boardSagas = [
 
 export const getBoardState = (state: any): BoardState => state.board;
 
-export const getBoardList = (key: string) => createSelector(
-  [getBoardState, getPostRecordsByParent(key)],
-  ({ records }, posts) => {
-    if (!key) return [];
-    const data = records[key] ? records[key].posts : [];
-    return data.map((k: string) => posts[k]);
-  },
+export const getPostByKey = (key: string) => createSelector(
+  [getBoardState],
+  ({ posts }) => (key ? posts[key] : {}),
+);
+
+export const getBoardList = createSelector(
+  [getBoardState],
+  ({ order, posts }) => order.map((k: string) => posts[k]),
 );
 
 export const isBoardLoading = createSelector(
@@ -95,60 +90,71 @@ export const isBoardLoading = createSelector(
 /* reducers */
 
 export interface BoardState {
-  readonly records: Readonly<{
-    [key: string]: BoardRecord,
+  readonly key: string;
+  readonly posts: Readonly<{
+    [key: string]: PostRecord;
   }>;
+  readonly order: string[];
   readonly loading: boolean;
+  readonly updated?: Date;
 }
 
 const initState: BoardState = {
-  records: {},
+  key: '',
+  posts: {},
+  order: [],
   loading: false,
+  updated: undefined,
 };
 
 export default function reducer(state = initState, action: Actions) {
   switch (action.type) {
     case REQUEST: {
       const { key } = action.payload;
-      const records = { ...state.records };
-      if (records[key]) {
-        records[key] = { ...records[key], key };
-      } else {
-        // @ts-ignore
-        records[key] = { key, posts: [] };
+      let posts: any = [];
+      let order: string[] = [];
+      if (state.key === key) {
+        posts = state.posts;
+        order = state.order;
       }
-      return { records, loading: true };
+      return { key, posts, order, loading: true };
     }
     case ADD: {
       const { key, posts } = action.payload;
-      const current = state.records[key];
-      let newPosts: string[] = [];
+      const newPosts = arrayToObject(posts);
 
-      if (current.posts[0] === posts[0]) {
-        newPosts = posts;
-      } else if (current.posts[0] > posts[0]) {
-        newPosts = Array.from(new Set([...current.posts, ...posts]));
+      let newOrder: string[] = [];
+      const postOrder = posts.map(item => item.key);
+
+      if (state.order[0] === postOrder[0]) {
+        newOrder = postOrder;
+      } else if (state.order[0] > postOrder[0]) {
+        newOrder = Array.from(new Set([...state.order, ...postOrder]));
       } else {
-        newPosts = Array.from(new Set([...posts, ...current.posts]));
+        newOrder = Array.from(new Set([...postOrder, ...state.order]));
       }
 
       return {
-        records: {
-          ...state.records,
-          [key]: { posts: newPosts, updatedAt: new Date() },
-        },
+        ...state,
+        posts: { ...state.posts, ...newPosts },
+        order: newOrder,
         loading: false,
+        updated: new Date(),
       };
     }
     case REMOVE: {
       const { key, post } = action.payload;
-      const current = state.records[key];
 
-      const newOrder = [...current.posts];
-      newOrder.splice(current.posts.indexOf(post), 1);
+      const newPosts = { ...state.posts };
+      delete newPosts[post];
+
+      const newOrder = [...state.order];
+      newOrder.splice(state.order.indexOf(post), 1);
 
       return {
-        records: { ...state.records, [key]: { ...current, posts: newOrder }},
+        ...state,
+        posts: newPosts,
+        order: newOrder,
         loading: false,
       };
     }

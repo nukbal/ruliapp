@@ -31,7 +31,7 @@ declare interface BoardRecord {
   title: string;
   posts: List<PostRecord>;
   notice: List<PostRecord>;
-  updated: Date;
+  updated?: Date;
 }
 
 declare interface PostRecord {
@@ -39,7 +39,7 @@ declare interface PostRecord {
   url: string;
   parent: string;
   subject: string;
-  userName: string;
+  user: UserRecord;
   views?: number;
   likes?: number;
   dislikes?: number;
@@ -49,7 +49,7 @@ declare interface PostRecord {
   comments: CommentRecord[];
   contents: ContentRecord[];
   finished?: boolean;
-  updated: Date;
+  updated?: Date;
 }
 
 declare interface CommentRecord {

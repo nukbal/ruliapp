@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -54,14 +54,27 @@ export const styles = StyleSheet.create({
 });
 
 interface Props {
-  data: PostRecord;
+  subject: string;
+  contents: ContentRecord[];
+  comments: CommentRecord[];
+  likes: number;
+  dislikes: number;
+  commentSize: number;
+  url: string;
   loading: boolean;
   onRefresh: () => void;
 }
 
-export default class DetailView extends PureComponent<Props> {
+export default class DetailView extends Component<Props> {
   static defaultProps = {
     loading: false,
+  }
+
+  shouldComponentUpdate(props: Props) {
+    return this.props.loading !== props.loading ||
+      this.props.url !== props.url ||
+      this.props.comments.length !== props.comments.length ||
+      this.props.contents.length !== props.contents.length;
   }
 
   onRefresh = () => {
@@ -92,8 +105,8 @@ export default class DetailView extends PureComponent<Props> {
   }
 
   renderSectionFooter = ({ section }: { section: SectionListData<any> }) => {
-    if (section.index === 0 && this.props.data) {
-      const { likes, dislikes, commentSize, url } = this.props.data;
+    if (section.index === 0 && this.props.url) {
+      const { likes, dislikes, commentSize, url } = this.props;
       return (
         <Footer
           likes={likes}
@@ -113,7 +126,7 @@ export default class DetailView extends PureComponent<Props> {
       subject,
       contents,
       comments,
-    } = this.props.data;
+    } = this.props;
     const sections = [
       { index: 0, data: contents, title: subject, renderItem: this.renderItem },
       { index: 1, data: comments, renderItem: this.renderComment },
