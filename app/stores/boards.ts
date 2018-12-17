@@ -1,6 +1,7 @@
 import { put, call, throttle } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import qs from 'query-string';
+import { StatusBar } from 'react-native';
 import parseBoardList, { IParseBoard } from '../utils/parseBoard';
 import arrayToObject from '../utils/arrayToObject';
 import { createAction, ActionsUnion } from './helpers';
@@ -18,12 +19,12 @@ export const Actions = {
   request: (
     key: string,
     params: { page: number, keyword?: string, cate?: string } = { page: 1 },
+    callback?: () => void,
   ) =>
-    createAction(REQUEST, { key, params }),
+    createAction(REQUEST, { key, params, callback }),
 
   add: (key: string, posts: string[]) => createAction(ADD, { key, posts }),
-  update: (payload: IParseBoard) => createAction(UPDATE, payload),
-  remove: (key: string) => createAction(REMOVE, key),
+  remove: (key: string, post: string) => createAction(REMOVE, { key, post }),
   clear: () => createAction(CLEAR),
 };
 export type Actions = ActionsUnion<typeof Actions>;
@@ -48,6 +49,7 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
       Referer: targetUrl,
     }
   };
+  StatusBar.setNetworkActivityIndicatorVisible(true);
 
   try {
     const response = yield call(fetch, targetUrl, config);
@@ -59,10 +61,13 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
 
     const idList = json.rows.map(item => item.key);
     yield put(Actions.add(key, idList));
+
+    if (payload.callback) yield call(payload.callback);
   } catch(e) {
     console.error(e);
-    return;
   }
+
+  StatusBar.setNetworkActivityIndicatorVisible(false);
 }
 
 export const boardSagas = [
@@ -112,33 +117,40 @@ export default function reducer(state = initState, action: Actions) {
         // @ts-ignore
         records[key] = { key, posts: [] };
       }
-      
       return { records, loading: true };
     }
     case ADD: {
       const { key, posts } = action.payload;
+      const current = state.records[key];
+      let newPosts: string[] = [];
+
+      if (current.posts[0] === posts[0]) {
+        newPosts = posts;
+      } else if (current.posts[0] > posts[0]) {
+        newPosts = Array.from(new Set([...current.posts, ...posts]));
+      } else {
+        newPosts = Array.from(new Set([...posts, ...current.posts]));
+      }
+
       return {
         records: {
           ...state.records,
-          [key]: { posts, updatedAt: new Date() },
+          [key]: { posts: newPosts, updatedAt: new Date() },
         },
         loading: false,
       };
     }
-    case UPDATE: {
-      const { order, ...rest } = state;
-      // const newOrder = mergeArray(order, rows.map(item => item.key));
-
-      return { ...rest, loading: false };
-    }
     case REMOVE: {
-      const key = action.payload;
-      const { order, ...rest } = state;
+      const { key, post } = action.payload;
+      const current = state.records[key];
 
-      const newOrder = [...order];
-      newOrder.splice(order.indexOf(key), 1);
+      const newOrder = [...current.posts];
+      newOrder.splice(current.posts.indexOf(post), 1);
 
-      return { order: newOrder, updatedAt: new Date(), ...rest };
+      return {
+        records: { ...state.records, [key]: { ...current, posts: newOrder }},
+        loading: false,
+      };
     }
     case CLEAR: {
       return initState;

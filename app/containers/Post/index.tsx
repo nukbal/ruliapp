@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { bindActionCreators, Dispatch, AnyAction } from 'redux';
 import { connect } from 'react-redux';
-import { SafeAreaView, NavigationScreenProp } from 'react-navigation';
+import { NavigationScreenProp } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
 import PostPlaceholder from '../../components/DetailView/placeholder';
@@ -53,8 +53,11 @@ export class Post extends PureComponent<Props, State> {
   });
 
   componentDidMount() {
-    const { params } = this.props.navigation.state;
-    this.props.request(params);
+    const { data, navigation } = this.props;
+    const { params } = navigation.state;
+    if (params && (!data || !data.finished)) {
+      this.props.request(params);
+    }
   }
 
   onRefresh = () => {
@@ -67,13 +70,13 @@ export class Post extends PureComponent<Props, State> {
   render() {
     const { data, loading, commentLoading } = this.props;
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         {
-          (loading || !data || !data.contents) ?
+          (loading || !data || !data.finished) ?
           <PostPlaceholder /> :
           <DetailView data={data} onRefresh={this.onRefresh} loading={commentLoading} />
         }
-      </SafeAreaView>
+      </View>
     );
   }
 }

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators, AnyAction, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { NavigationScreenProp, SafeAreaView } from 'react-navigation';
+import { NavigationScreenProp } from 'react-navigation';
 import {
   StyleSheet,
   FlatList,
   StatusBar,
-  RefreshControl,
   ActivityIndicator,
   View,
   ListRenderItemInfo,
@@ -44,8 +43,7 @@ const AppendLoading = (
 interface Props {
   navigation: NavigationScreenProp<any, { title: string, key: string }>;
   request: typeof Actions.request;
-  update: typeof Actions.update;
-  records: any[];
+  records: PostRecord[];
 }
 
 interface State {
@@ -68,7 +66,8 @@ export class Board extends Component<Props, State> {
   }
   
   boardKey = '';
-  state = { pushing: true, appending: false };
+  lastPage = 1;
+  state = { pushing: false, appending: false };
 
   componentDidMount() {
     if (this.boardKey) {
@@ -100,20 +99,30 @@ export class Board extends Component<Props, State> {
   }
 
   onEndReached = () => {
-    if (!this.state.appending) {
+    if (this.boardKey && !this.state.appending && this.props.records.length > 0) {
       this.setState({ appending: true });
+      this.props.request(this.boardKey, { page: this.lastPage + 1 }, () => {
+        this.lastPage = this.lastPage + 1;
+        this.setState({ appending: false });
+      });
     }
   }
 
   onRefresh = () => {
-    if (!this.state.pushing) {
+    if (this.boardKey && !this.state.pushing && this.props.records.length > 0) {
       this.setState({ pushing: true });
+      this.props.request(this.boardKey, { page: 1 }, () => {
+        this.setState({ pushing: false });
+      });
     }
   }
 
   onSearch = (keyword: string) => {
-    if (!this.state.pushing && keyword) {
+    if (this.boardKey && !this.state.pushing && keyword) {
       this.setState({ pushing: true });
+      this.props.request(this.boardKey, { keyword, page: 1 }, () => {
+        this.setState({ pushing: false });
+      });
     }
   }
 
@@ -125,24 +134,23 @@ export class Board extends Component<Props, State> {
     const { records } = this.props;
 
     if (!this.boardKey) {
-      return <View><Text>Please select board</Text></View>
+      return (
+        <View style={[styles.container, { alignItems: 'center' }]}>
+          <Text>Please select board</Text>
+        </View>
+      );
     }
 
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <FlatList
           data={records}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           ListEmptyComponent={<Placeholder />}
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
-          refreshControl={
-            <RefreshControl
-              colors={["#9Bd35A", "#689F38"]}
-              refreshing={pushing}
-              onRefresh={this.onRefresh}
-            />
-          }
+          refreshing={pushing}
+          onRefresh={this.onRefresh}
           ListFooterComponent={appending ? AppendLoading : undefined}
           getItemLayout={this.getItemLayout}
           initialNumToRender={8}
@@ -150,7 +158,7 @@ export class Board extends Component<Props, State> {
           onEndReachedThreshold={0}
         />
         <StatusBar barStyle="light-content" />
-      </SafeAreaView>
+      </View>
     );
   }
 }
@@ -169,7 +177,6 @@ function mapStateToProps(state: any, props: Props) {
 function mapDispatchToProps(dispatch: Dispatch<AnyAction>) {
   return {
     request: bindActionCreators(Actions.request, dispatch),
-    update: bindActionCreators(Actions.update, dispatch),
   };
 }
 

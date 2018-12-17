@@ -1,6 +1,6 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
-import { Alert, Platform } from 'react-native';
+import { Alert, Platform, StatusBar } from 'react-native';
 import { Actions as BoardAction } from './boards';
 import { createAction, ActionsUnion } from './helpers';
 import parsePost from '../utils/parsePost';
@@ -55,6 +55,7 @@ export const getPostRecordsByKey = (parent: string, key: string) => createSelect
 export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.request>) {
   const { key, parent, url } = payload;
 
+  StatusBar.setNetworkActivityIndicatorVisible(false);
   try {
     const targetUrl =
       `http://m.ruliweb.com/${url}?search_type=name&search_key=%2F%2F%2F`;
@@ -80,10 +81,11 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
     yield put(Actions.add({ ...json, key, parent }));
   } catch (e) {
     console.warn(e.message);
-    yield put(BoardAction.remove(key));
+    yield put(BoardAction.remove(parent, key));
     yield put(Actions.remove(parent, key));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
+  StatusBar.setNetworkActivityIndicatorVisible(false);
 }
 
 export function* requestComments({ payload }: ReturnType<typeof Actions.updateComment>) {
@@ -108,19 +110,20 @@ export function* requestComments({ payload }: ReturnType<typeof Actions.updateCo
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
     }
   };
+
+  StatusBar.setNetworkActivityIndicatorVisible(true);
   try {
     // @ts-ignore
     const response = yield call(fetch, 'http://api.ruliweb.com/commentView', config);
     const json = yield response.json();
   
-    if (!json.success) {
-      return null;
+    if (json.success) {
+      const comments = yield call(parseComment, json.view);
+      yield put(Actions.updateComment({ ...payload, comments }));
     }
-    const comments = yield call(parseComment, json.view);
-    yield put(Actions.updateComment({ ...payload, comments }));
-  } catch(e) {
-    return null;
-  }
+  } catch(e) {}
+  StatusBar.setNetworkActivityIndicatorVisible(false);
+  return null;
 }
 
 export const postSagas = [
@@ -158,10 +161,10 @@ export default function reducer(state = initState, action: Actions) {
       if (!records[parent]) records[parent] = {};
       if (!records[parent][key]) {
         // @ts-ignore
-        records[parent][key] = action.payload;
+        records[parent][key] = { ...action.payload, finished: true };
       } else {
         // @ts-ignore
-        records[parent][key] = { ...records[parent][key], ...action.payload };
+        records[parent][key] = { ...records[parent][key], ...action.payload, finished: true };
       }
       return { records, loading: false, commentLoading: false };
     }
