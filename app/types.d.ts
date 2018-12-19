@@ -79,5 +79,6 @@ declare interface ContentRecord {
   type: 'image' | 'object' | 'text' | 'reference';
   style?: any;
   content: string;
-  order?: number;
+  /** only on image */
+  size?: { width: number, height: number };
 }

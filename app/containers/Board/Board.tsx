@@ -156,6 +156,7 @@ export class Board extends Component<Props, State> {
           initialNumToRender={8}
           onEndReached={this.onEndReached}
           onEndReachedThreshold={0}
+          removeClippedSubviews
         />
         <StatusBar barStyle="light-content" />
       </View>

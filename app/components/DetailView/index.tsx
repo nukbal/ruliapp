@@ -141,6 +141,7 @@ export default class DetailView extends Component<Props> {
         // @ts-ignore
         sections={sections}
         stickySectionHeadersEnabled={false}
+        removeClippedSubviews
       />
     );
   }

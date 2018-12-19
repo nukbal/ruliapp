@@ -18,10 +18,11 @@ interface Props {
 interface State {
   percent: number;
   size: { width: number, height: number };
+  screenWidth: number;
 }
 
-function setImageSize(image: { width: number, height: number }) {
-  let { width } = Dimensions.get('window');
+function setImageSize(image: { width: number, height: number }, screenWidth: number) {
+  let width = screenWidth;
   width = width - 32;
 
   let ratio;
@@ -40,7 +41,7 @@ function setImageSize(image: { width: number, height: number }) {
 }
 
 export default class LazyImage extends Component<Props, State> {
-  state = { percent: 0, size: { width: 0, height: 0 } };
+  state = { percent: 0, size: { width: 0, height: 0 }, screenWidth: 0 };
 
   shouldComponentUpdate(_: Props, state: State) {
     return this.state.percent !== state.percent ||
@@ -54,25 +55,28 @@ export default class LazyImage extends Component<Props, State> {
     }
   }
 
+  onLayout = ({ nativeEvent }: any) => {
+    this.setState({ screenWidth: nativeEvent.layout.width });
+  }
+
   onLoad = ({ nativeEvent }: OnLoadEvent) => {
     this.setState({ size: nativeEvent });
   }
 
   render() {
-    const { percent, size } = this.state;
+    const { size } = this.state;
 
     const containerStyle = [styles.ImageContent, { backgroundColor: '#ededed' }];
     if (size.width) {
       // @ts-ignore
-      containerStyle[1] = setImageSize(size);
+      containerStyle[1] = setImageSize(size, this.state.screenWidth);
     }
     return (
       <Image
         style={containerStyle}
         source={this.props.source}
-        resizeMode="contain"
-        onProgress={this.onProgress}
         onLoad={this.onLoad}
+        onLayout={this.onLayout}
       />
     );
   }
