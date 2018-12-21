@@ -15,7 +15,8 @@ export default class Comment extends Component<CommentRecord> {
 
   shouldComponentUpdate(props: CommentRecord) {
     return this.props.likes !== props.likes ||
-      this.props.dislike !== props.dislike;
+      this.props.dislike !== props.dislike ||
+      this.props.best !== props.best;
   }
 
   render() {

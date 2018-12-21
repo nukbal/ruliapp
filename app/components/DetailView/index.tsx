@@ -127,9 +127,9 @@ export default class DetailView extends Component<Props> {
       contents,
       comments,
     } = this.props;
-    const sections = [
-      { index: 0, data: contents, title: subject, renderItem: this.renderItem },
-      { index: 1, data: comments, renderItem: this.renderComment },
+    const sections: SectionListData<any>[] = [
+      { index: 0, data: contents, title: subject, renderItem: this.renderItem, removeClippedSubviews: true },
+      { index: 1, data: comments, renderItem: this.renderComment, removeClippedSubviews: true },
     ];
     return (
       <SectionList
@@ -138,10 +138,8 @@ export default class DetailView extends Component<Props> {
         renderSectionHeader={this.renderSectionHeader}
         renderSectionFooter={this.renderSectionFooter}
         keyExtractor={this.keyExtractor}
-        // @ts-ignore
         sections={sections}
         stickySectionHeadersEnabled={false}
-        removeClippedSubviews
       />
     );
   }
