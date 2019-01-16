@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet, Image, View, ImageLoadEventData, NativeSyntheticEvent,
+  StyleSheet, View,
   ActivityIndicator,
 } from 'react-native';
-// import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
+import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -61,8 +61,8 @@ export default class LazyImage extends Component<Props, State> {
     this.setState({ screenWidth: nativeEvent.layout.width });
   }
 
-  onLoad = ({ nativeEvent }: NativeSyntheticEvent<ImageLoadEventData>) => {
-    this.setState({ size: { width: nativeEvent.source.width, height: nativeEvent.source.height } });
+  onLoad = ({ nativeEvent }: OnLoadEvent) => {
+    this.setState({ size: { width: nativeEvent.width, height: nativeEvent.height } });
   }
 
   onError = () => {
