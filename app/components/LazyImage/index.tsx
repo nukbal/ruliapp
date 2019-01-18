@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
-import Image from 'react-native-fast-image';
-import { stopDownload } from 'react-native-fs';
-import loader from './loader';
-import handle from '../../utils/handle';
+import {
+  StyleSheet, View,
+  ActivityIndicator,
+} from 'react-native';
+import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 200,
+  },
+  image: {
+    flex: 1,
   }
 });
 
@@ -19,13 +22,16 @@ interface Props {
 }
 
 interface State {
-  path?: string;
-  screenWidth: number;
   percent: number;
+  size: { width: number, height: number };
+  screenWidth: number;
+  error: boolean;
 }
 
 function setImageSize(image: { width: number, height: number }, screenWidth: number) {
+  if (!image.width || !screenWidth) return { backgroundColor: '#ededed' };
   let width = screenWidth;
+  width = width - 32;
 
   let ratio;
   const half = width / 2;
@@ -43,74 +49,40 @@ function setImageSize(image: { width: number, height: number }, screenWidth: num
 }
 
 export default class LazyImage extends Component<Props, State> {
-
-  state = { path: undefined, percent: 0, screenWidth: 0 };
-  jobId?: number = undefined;
-  image: any = undefined;
-  loader: any;
-  screenWidth = 0;
-
-  componentDidMount() {
-    this.loader = handle(loader(this.props.source.uri, this.onStartDownload, this.updateDownload));
-    this.loader.promise.then((image: any) => {
-      this.loader = undefined;
-      this.jobId = undefined;
-      this.image = image;
-      if (this.image) {
-        this.setState({ path: this.image.path });
-      }
-    });
-  }
+  state = { percent: 0, size: { width: 0, height: 0 }, screenWidth: 0, error: false };
 
   shouldComponentUpdate(_: Props, state: State) {
     return this.state.percent !== state.percent ||
-      this.state.path !== state.path || 
-      this.state.screenWidth !== state.screenWidth;
-  }
-
-  componentWillUnmount() {
-    if (this.jobId) stopDownload(this.jobId);
-    if (this.loader) this.loader.cancel();
-
-    this.image = undefined;
-    this.loader = undefined;
-  }
-
-  onStartDownload = (path: string, id?: number) => {
-    this.jobId = id;
-  }
-
-  updateDownload = (percent: number) => {
-    if (percent !== this.state.percent && this.state.percent < 100) {
-      this.setState({ percent });
-    }
+      this.state.size.width !== state.size.width ||
+      this.state.error !== state.error;
   }
 
   onLayout = ({ nativeEvent }: any) => {
-    if (this.state.screenWidth !== nativeEvent.layout.width) {
-      this.setState({ screenWidth: nativeEvent.layout.width });
-    }
+    this.setState({ screenWidth: nativeEvent.layout.width });
+  }
+
+  onLoad = ({ nativeEvent }: OnLoadEvent) => {
+    this.setState({ size: { width: nativeEvent.width, height: nativeEvent.height } });
+  }
+
+  onError = () => {
+    this.setState({ error: true });
   }
 
   render() {
-    const { path, percent, screenWidth } = this.state;
-
-    if (path && screenWidth) {
-      const containerStyle = [styles.ImageContent, setImageSize(this.image, screenWidth)];
-      return (
-        <Image
-          style={containerStyle}
-          source={{ uri: path }}
-          resizeMode="contain"
-        />
-      );
+    const { size, error } = this.state;
+    if (error) {
+      return (<View style={styles.ImageContent} />);
     }
 
     return (
-      <View style={[styles.ImageContent, { backgroundColor: '#dedede' }]} onLayout={this.onLayout}>
-        <ActivityIndicator />
-        <Text>{percent || 0}</Text>
-      </View>
-    )
+      <Image
+        style={[styles.ImageContent, setImageSize(size, this.state.screenWidth)]}
+        source={this.props.source}
+        onLayout={this.onLayout}
+        onLoad={this.onLoad}
+        onError={this.onError}
+      />
+    );
   }
 }

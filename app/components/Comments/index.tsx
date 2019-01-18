@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -7,10 +7,16 @@ import { primary } from '../../styles/color';
 import styles from './styles';
 import formatDate from '../../utils/formatDate';
 
-export default class Comment extends PureComponent<CommentRecord> {
+export default class Comment extends Component<CommentRecord> {
   static defaultProps = {
     likes: 0,
     dislike: 0,
+  }
+
+  shouldComponentUpdate(props: CommentRecord) {
+    return this.props.likes !== props.likes ||
+      this.props.dislike !== props.dislike ||
+      this.props.best !== props.best;
   }
 
   render() {

@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import { NavigationScreenProp, SafeAreaView } from 'react-navigation';
+import { bindActionCreators, AnyAction, Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import { NavigationScreenProp } from 'react-navigation';
 import {
   StyleSheet,
   FlatList,
   StatusBar,
-  RefreshControl,
   ActivityIndicator,
   View,
   ListRenderItemInfo,
+  Text,
 } from 'react-native';
 
 import SearchBar from '../../components/SearchBar';
 import BoardItem from '../../components/BoardItem';
 import itemStyles from '../../components/BoardItem/styles';
 import { darkBarkground } from '../../styles/color';
-import { request } from '../../models/boards';
+import { Actions, getBoardList } from '../../stores/boards';
 import Placeholder from './placeholder';
 
 const styles = StyleSheet.create({
@@ -39,59 +41,49 @@ const AppendLoading = (
 );
 
 interface Props {
-  navigation: NavigationScreenProp<any, { prefix: string, boardId: string, title: string }>;
+  navigation: NavigationScreenProp<any, { title: string, key: string }>;
+  request: typeof Actions.request;
+  records: PostRecord[];
 }
 
 interface State {
-  init: boolean;
   pushing: boolean;
   appending: boolean;
 }
 
-export default class Board extends Component<Props, State> {
+export class Board extends Component<Props, State> {
   static navigationOptions = ({ navigation }: Props) => {
     const title = navigation.getParam('title', 'Ruliapp');
     return {
       title: title || '',
     };
-  };
+  }; 
+  constructor(props: Props) {
+    super(props);
+    if (props.navigation.state.params) {
+      this.boardKey = props.navigation.state.params.key;
+    }
+  }
   
-  state = { init: true, pushing: true, appending: false };
-  prefix: string | undefined;
-  boardId: string | undefined;
-  params: any = { page: 1 };
-  records: PostRecord[] = [];
+  boardKey = '';
+  lastPage = 1;
+  state = { pushing: false, appending: false };
 
-  async componentDidMount() {
-    const { getParam } = this.props.navigation;
-    this.prefix = getParam('prefix', 'best/humor');
-    this.boardId = getParam('boardId');
-    if (this.prefix) {
-      const data = await request({
-        prefix: this.prefix,
-        boardId: this.boardId,
-        params: { page: 1 },
-      });
-      this.requestHandler(data);
+  componentDidMount() {
+    if (this.boardKey) {
+      this.props.request(this.boardKey);
     }
   }
 
-  shouldComponentUpdate(_: Props, state: State) {
-    return state.init !== this.state.init ||
-      state.pushing !== this.state.pushing ||
-      state.appending !== this.state.appending;
-  }
-  
-  componentWillUnmount() {
-    this.prefix = undefined;
-    this.boardId = undefined;
-    this.params = undefined;
-    this.records = [];
+  shouldComponentUpdate(props: Props, state: State) {
+    return state.pushing !== this.state.pushing ||
+      state.appending !== this.state.appending ||
+      this.props.records.length !== props.records.length;
   }
 
-  pressItem = ({ id, boardId, prefix, subject }: PostRecord) => {
+  pressItem = ({ url, parent, key, subject }: PostRecord) => {
     const { navigate } = this.props.navigation;
-    navigate({ routeName: 'Post', params: { id, boardId, prefix, subject } });
+    navigate({ routeName: 'Post', params: { url, parent, key, subject } });
   }
 
   renderItem = ({ item, separators }: ListRenderItemInfo<PostRecord>) => {
@@ -106,45 +98,31 @@ export default class Board extends Component<Props, State> {
     );
   }
 
-  requestHandler = (data: any) => {
-    if (data) this.records = data.posts;
-    this.setState({ init: false, pushing: false, appending: false });
-  }
-
   onEndReached = () => {
-    if (this.prefix && !this.state.appending) {
+    if (this.boardKey && !this.state.appending && this.props.records.length > 0) {
       this.setState({ appending: true });
-      const nextPage = this.params.page + 1;
-      request({
-        prefix: this.prefix,
-        boardId: this.boardId,
-        params: { ...this.params, page: nextPage }
-      }).then((data) => {
-        this.params.page = nextPage;
-        this.requestHandler(data);
+      this.props.request(this.boardKey, { page: this.lastPage + 1 }, () => {
+        this.lastPage = this.lastPage + 1;
+        this.setState({ appending: false });
       });
     }
   }
 
   onRefresh = () => {
-    if (this.prefix && !this.state.pushing) {
+    if (this.boardKey && !this.state.pushing && this.props.records.length > 0) {
       this.setState({ pushing: true });
-      request({
-        prefix: this.prefix,
-        boardId: this.boardId,
-        params: { ...this.params, page: 1 }
-      }).then(this.requestHandler);
+      this.props.request(this.boardKey, { page: 1 }, () => {
+        this.setState({ pushing: false });
+      });
     }
   }
 
   onSearch = (keyword: string) => {
-    if (this.prefix && !this.state.pushing && keyword) {
+    if (this.boardKey && !this.state.pushing && keyword) {
       this.setState({ pushing: true });
-      request({
-        prefix: this.prefix,
-        boardId: this.boardId,
-        params: { ...this.params, page: 1, keyword }
-      }).then(this.requestHandler);
+      this.props.request(this.boardKey, { keyword, page: 1 }, () => {
+        this.setState({ pushing: false });
+      });
     }
   }
 
@@ -152,33 +130,50 @@ export default class Board extends Component<Props, State> {
   getItemLayout = (_: any, index: number) => ({ length: 75, offset: 75 * index, index })
 
   render() {
-    const { pushing, init, appending } = this.state;
-    if (!this.records.length || init) {
-      return <Placeholder />;
+    const { pushing, appending } = this.state;
+    const { records } = this.props;
+
+    if (!this.boardKey) {
+      return (
+        <View style={[styles.container, { alignItems: 'center' }]}>
+          <Text>Please select board</Text>
+        </View>
+      );
     }
+
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <FlatList
-          data={this.records}
+          data={records}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           ListEmptyComponent={<Placeholder />}
           ListHeaderComponent={<SearchBar onSubmit={this.onSearch} />}
-          refreshControl={
-            <RefreshControl
-              colors={["#9Bd35A", "#689F38"]}
-              refreshing={pushing}
-              onRefresh={this.onRefresh}
-            />
-          }
+          refreshing={pushing}
+          onRefresh={this.onRefresh}
           ListFooterComponent={appending ? AppendLoading : undefined}
           getItemLayout={this.getItemLayout}
           initialNumToRender={8}
           onEndReached={this.onEndReached}
           onEndReachedThreshold={0}
+          removeClippedSubviews
         />
         <StatusBar barStyle="light-content" />
-      </SafeAreaView>
+      </View>
     );
   }
 }
+
+function mapStateToProps(state: any) {
+  return {
+    records: getBoardList(state),
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch<AnyAction>) {
+  return {
+    request: bindActionCreators(Actions.request, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

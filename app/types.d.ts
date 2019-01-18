@@ -9,6 +9,16 @@ declare module 'react-navigation-stack' {
   const createStackNavigator = all.createStackNavigator;
 }
 
+declare interface FSA<T extends string, P = undefined, M = undefined> {
+  type: T;
+  payload: P;
+  meta: M;
+  error?: boolean;
+}
+
+declare type ActionCallback<T = any> = (error?: boolean, json?: any) => void;
+
+
 declare interface LinkType {
   prefix: string;
   boardId: string;
@@ -21,14 +31,13 @@ declare interface BoardRecord {
   title: string;
   posts: List<PostRecord>;
   notice: List<PostRecord>;
-  updated: Date;
+  updated?: Date;
 }
 
 declare interface PostRecord {
   key: string;
-  prefix: string;
-  boardId: string;
-  id: string;
+  url: string;
+  parent: string;
   subject: string;
   user: UserRecord;
   views?: number;
@@ -37,10 +46,10 @@ declare interface PostRecord {
   commentSize?: number;
   date?: Date;
   isNotice?: boolean;
-  comments: List<CommentRecord>;
-  contents: List<ContentRecord>;
+  comments: CommentRecord[];
+  contents: ContentRecord[];
   finished?: boolean;
-  updated: Date;
+  updated?: Date;
 }
 
 declare interface CommentRecord {
@@ -50,7 +59,6 @@ declare interface CommentRecord {
   content: string;
   user: UserRecord;
   image?: string;
-  user: UserRecord;
   time?: Date;
   likes: number;
   dislike: number;
@@ -71,5 +79,6 @@ declare interface ContentRecord {
   type: 'image' | 'object' | 'text' | 'reference';
   style?: any;
   content: string;
-  order?: number;
+  /** only on image */
+  size?: { width: number, height: number };
 }

@@ -1,13 +1,20 @@
-import React, { Component } from 'react';
-import { SafeAreaView, NavigationScreenProp } from 'react-navigation';
+import React, { PureComponent } from 'react';
+import { bindActionCreators, Dispatch, AnyAction } from 'redux';
+import { connect } from 'react-redux';
+import { NavigationScreenProp } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { darkBarkground } from '../../styles/color';
 import DetailView from '../../components/DetailView';
 import PostPlaceholder from '../../components/DetailView/placeholder';
-
-import { request } from '../../models/posts';
-import { request as requestComments } from '../../models/comments';
+import {
+  Actions,
+  getPostContents,
+  getPostComments,
+  getPostMeta,
+  isPostLoading,
+  isCommentLoading,
+} from '../../stores/posts';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +30,21 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  navigation: NavigationScreenProp<any, { prefix: string, boardId: string, id: string, subject: string }>;
+  navigation: NavigationScreenProp<any, { url: string, parent: string, key: string, subject: string }>;
+  contents: ContentRecord[];
+  comments: CommentRecord[];
+  meta: {
+    commentSize: number;
+    views: number;
+    likes: number;
+    dislikes: number;
+    url: string;
+    date: Date;
+  };
+  request: typeof Actions.request;
+  requestComment: typeof Actions.requestComment;
+  loading: boolean;
+  commentLoading: boolean;
 }
 
 interface State {
@@ -31,7 +52,7 @@ interface State {
   loading: boolean;
 }
 
-export default class Post extends Component<Props, State> {
+export class Post extends PureComponent<Props, State> {
   static navigationOptions = ({ navigation }: Props) => ({
     title: navigation.state.params.subject,
     headerTintColor: 'white',
@@ -47,50 +68,58 @@ export default class Post extends Component<Props, State> {
     ),
   });
 
-  state = { init: true, loading: false };
-  data: PostRecord | undefined;
-
-  async componentDidMount() {
-    const { params } = this.props.navigation.state;
-    const { id, prefix, boardId } = params;
-    this.data = await request({ prefix, boardId, id });
-    if (this.data) {
-      this.setState({ init: false, loading: false });
-    } else {
-      this.props.navigation.goBack();
+  componentDidMount() {
+    const { navigation } = this.props;
+    const { params } = navigation.state;
+    if (params) {
+      this.props.request(params);
     }
-  }
-
-  shouldComponentUpdate(_: Props, state: State) {
-    return state.init !== this.state.init ||
-      state.loading !== this.state.loading;
-  }
-  
-  componentWillUnmount() {
-    this.data = undefined;
   }
 
   onRefresh = () => {
     const { params } = this.props.navigation.state;
-    const { id, prefix, boardId } = params;
-    if (this.data && !this.state.loading && !this.state.init) {
-      this.setState({ loading: true });
-      requestComments({ prefix, boardId, id }).then(comments => {
-        this.setState({ loading: false });
-      });
+    if (!this.props.commentLoading) {
+      this.props.requestComment(params);
     }
   }
 
   render() {
-    const { loading, init } = this.state;
+    const { contents, comments, loading, commentLoading } = this.props;
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         {
-          (init || !this.data) ?
+          (loading) ?
           <PostPlaceholder /> :
-          <DetailView data={this.data} onRefresh={this.onRefresh} loading={loading} />
+          <DetailView
+            subject={this.props.navigation.state.params.subject}
+            contents={contents}
+            comments={comments}
+            onRefresh={this.onRefresh}
+            loading={commentLoading}
+            {...this.props.meta}
+          />
         }
-      </SafeAreaView>
+      </View>
     );
   }
 }
+
+function mapStateToProps(state: any) {
+  return {
+    comments: getPostComments(state),
+    contents: getPostContents(state),
+    meta: getPostMeta(state),
+    loading: isPostLoading(state),
+    commentLoading: isCommentLoading(state),
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch<AnyAction>) {
+  return {
+    request: bindActionCreators(Actions.request, dispatch),
+    requestComment: bindActionCreators(Actions.requestComment, dispatch),
+  };
+}
+
+// @ts-ignore
+export default connect(mapStateToProps, mapDispatchToProps)(Post);

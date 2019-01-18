@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 import styles from './styles';
 import Placeholder from './placeholder';
@@ -9,7 +9,14 @@ interface Props extends PostRecord {
   onHideUnderlay: any;
 }
 
-export default class BoardItem extends PureComponent<Props> {
+export default class BoardItem extends Component<Props> {
+  shouldComponentUpdate(props: Props) {
+    return this.props.subject !== props.subject ||
+      this.props.likes !== props.likes ||
+      this.props.views !== props.views ||
+      this.props.commentSize !== props.commentSize;
+  }
+
   render() {
     if (!this.props.subject) return <Placeholder />;
 

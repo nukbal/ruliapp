@@ -32,7 +32,7 @@ function formatComment(node: INode): CommentRecord | undefined {
   cursor = querySelector(textNode, 'img.comment_img');
   if (cursor && cursor.attrs) {
     let url = cursor.attrs.src;
-    if (url.indexOf('//') === 0) url = 'http' + url;
+    if (url.indexOf('//') === 0) url = 'http:' + url;
     record.image = url;
   }
 

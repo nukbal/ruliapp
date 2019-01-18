@@ -1,7 +1,7 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-// import { createStackNavigator } from 'react-navigation-stack';
 // @ts-ignore
 import { createAppContainer } from 'react-navigation';
 
@@ -10,6 +10,8 @@ import DrawerScreen from './containers/Drawer';
 import ConfigScreen from './containers/Settings';
 
 import { primary } from './styles/color';
+import createStores from './store';
+import { AsyncStorage } from 'react-native';
 
 const MainNav = createBottomTabNavigator(
   {
@@ -20,6 +22,7 @@ const MainNav = createBottomTabNavigator(
   {
     // @ts-ignore
     defaultNavigationOptions: ({ navigation }) => ({
+      // @ts-ignore
       tabBarIcon: ({ horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         const size = horizontal ? 20 : 25;
@@ -46,4 +49,16 @@ const MainNav = createBottomTabNavigator(
   }
 );
 
-export default createAppContainer(MainNav);
+const Container = createAppContainer(MainNav);
+
+const store = createStores();
+
+if (__DEV__) AsyncStorage.clear();
+
+export default function App() {
+  return (
+    <Provider store={store}>
+      <Container />
+    </Provider>
+  );
+}

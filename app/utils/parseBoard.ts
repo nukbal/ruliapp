@@ -10,52 +10,29 @@ function parseTitle(html: string) {
 }
 
 export function parseBoardUrl(href: string) {
-  const res: any = {};
   const url = href.replace('http://m.ruliweb.com', '').replace('/', '');
 
+  let id = null;
   let cursor = url.indexOf('/board');
-  res.prefix = url.substring(0, cursor);
+  let query = url;
 
   cursor = cursor + 7;
 
-  // detect if the link is for post
-  if (url.indexOf('/read/', cursor) > -1) {
-    const startIdx = url.indexOf('/read/', cursor);
-    res.boardId = url.substring(cursor, startIdx); 
-    res.id = url.substring(startIdx + 6, url.length);
-    if (res.id.indexOf('?') > 0) {
-      res.id = res.id.substring(0, res.id.indexOf('?'));
-    }
-  
-    res.key = `${res.prefix}_${res.boardId}_${res.id}`;
-
-  } else {
-    const queryIdx = url.indexOf('?', cursor + 7);
-    if (queryIdx > -1 && queryIdx !== url.length - 1) {
-      const queryStr = url.substring(queryIdx + 1, url.length);
-      res.param = queryStr.split('&')
-        .filter(item => item)
-        .map(item => item.split('='))
-        .reduce((acc, cur) => {
-          const res: any = acc;
-          res[cur[0]] = cur[1];
-          return res;
-        }, {});
-
-      res.boardId = url.substring(cursor, queryIdx).replace('/list', '');
-    } else {
-      res.boardId = url.substring(cursor, url.length);
-    }
-    res.key = `${res.prefix}_${res.boardId}`;
+  const startIdx = url.indexOf('/read/', cursor);
+  id = url.substring(startIdx + 6, url.length);
+  if (id.indexOf('?') > 0) {
+    id = id.substring(0, id.indexOf('?'));
+  }
+  if (query.indexOf('?') > 0) {
+    query = query.substring(0, query.indexOf('?'));
   }
 
-  return res;
+  return { id, url: query };
 }
 
 function formatBoardRow(node: INode): PostRecord | undefined {
   // @ts-ignore
   const record: PostRecord = {};
-  record.user = { id: '', name: '' };
 
   if (!node.childNodes) return;
   const td = node.childNodes[0];
@@ -75,12 +52,10 @@ function formatBoardRow(node: INode): PostRecord | undefined {
   // board title
   cursor = querySelector(titleDiv, 'a.subject_link');
   if (cursor && cursor.attrs) {
-    const { key, boardId, id, prefix } = parseBoardUrl(cursor.attrs.href!);
-    record.key = key;
-    record.boardId = boardId;
-    record.id = id;
-    record.prefix = prefix;
-    record.user.id = key;
+    const { id, url } = parseBoardUrl(cursor.attrs.href!);
+    if (!id) return;
+    record.key = id;
+    record.url = url;
 
     const text = querySelector(cursor, 'text');
     if (text) record.subject = text.value!;
@@ -102,7 +77,8 @@ function formatBoardRow(node: INode): PostRecord | undefined {
 
   // author name
   cursor = querySelector(infoDiv, 'span.writer text');
-  if (cursor) record.user.name = cursor.value!;
+  // @ts-ignore
+  if (cursor) record.user = { name: cursor.value! };
 
   // view counts
   cursor = querySelector(infoDiv, 'span.hit text');
@@ -127,7 +103,7 @@ export interface IParseBoard {
   notices: PostRecord[];
 }
 
-export default function parseBoardList (htmlString: string): IParseBoard {
+export default function parseBoardList (htmlString: string, key: string): IParseBoard {
   const title = parseTitle(htmlString);
   const startIndex = htmlString.indexOf('<table class="board_list_table"');
   const endIndex = htmlString.indexOf('</table>', startIndex);
@@ -141,7 +117,7 @@ export default function parseBoardList (htmlString: string): IParseBoard {
 
   for (let i = 0; i < boardNodes.length; i += 1) {
     const temp = formatBoardRow(boardNodes[i]);
-    if (temp) data.push(temp);
+    if (temp) data.push({ ...temp, parent: key });
   }
 
   const rows = data.filter(item => !item.isNotice);

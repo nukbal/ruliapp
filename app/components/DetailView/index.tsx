@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   ListRenderItemInfo,
   SectionListData,
 } from 'react-native';
-import { List } from 'realm';
 
 import { primary } from '../../styles/color';
 
@@ -55,14 +54,27 @@ export const styles = StyleSheet.create({
 });
 
 interface Props {
-  data: PostRecord;
+  subject: string;
+  contents: ContentRecord[];
+  comments: CommentRecord[];
+  likes: number;
+  dislikes: number;
+  commentSize: number;
+  url: string;
   loading: boolean;
   onRefresh: () => void;
 }
 
-export default class DetailView extends PureComponent<Props> {
+export default class DetailView extends Component<Props> {
   static defaultProps = {
-    loading: true,
+    loading: false,
+  }
+
+  shouldComponentUpdate(props: Props) {
+    return this.props.loading !== props.loading ||
+      this.props.url !== props.url ||
+      this.props.comments.length !== props.comments.length ||
+      this.props.contents.length !== props.contents.length;
   }
 
   onRefresh = () => {
@@ -93,14 +105,14 @@ export default class DetailView extends PureComponent<Props> {
   }
 
   renderSectionFooter = ({ section }: { section: SectionListData<any> }) => {
-    if (section.index === 0 && this.props.data) {
-      const { likes, dislikes, commentSize, prefix, boardId, id } = this.props.data;
+    if (section.index === 0 && this.props.url) {
+      const { likes, dislikes, commentSize, url } = this.props;
       return (
         <Footer
           likes={likes}
           dislikes={dislikes}
           comments={commentSize}
-          url={`http://m.ruliweb.com/${prefix}/board/${boardId}/read/${id}`}
+          url={`http://m.ruliweb.com/${url}`}
         />
       );
     }
@@ -114,10 +126,10 @@ export default class DetailView extends PureComponent<Props> {
       subject,
       contents,
       comments,
-    } = this.props.data;
-    const sections = [
-      { index: 0, data: contents, title: subject, renderItem: this.renderItem },
-      { index: 1, data: comments, renderItem: this.renderComment },
+    } = this.props;
+    const sections: SectionListData<any>[] = [
+      { index: 0, data: contents, title: subject, renderItem: this.renderItem, removeClippedSubviews: true },
+      { index: 1, data: comments, renderItem: this.renderComment, removeClippedSubviews: true },
     ];
     return (
       <SectionList
@@ -126,7 +138,6 @@ export default class DetailView extends PureComponent<Props> {
         renderSectionHeader={this.renderSectionHeader}
         renderSectionFooter={this.renderSectionFooter}
         keyExtractor={this.keyExtractor}
-        // @ts-ignore
         sections={sections}
         stickySectionHeadersEnabled={false}
       />

@@ -31,12 +31,12 @@ export default class Drawer extends Component<Props> {
     return false;
   }
 
-  onPressItem = ({ key, ...rest }: any) => {
+  onPressItem = ({ key, title }: any) => {
     const { navigation } = this.props;
     const resetAction = StackActions.reset({
       index: 0,
       actions: [
-        NavigationActions.navigate({ routeName: 'Board', params: rest, key })
+        NavigationActions.navigate({ routeName: 'Board', params: { title, key }, key })
       ]
     });
     navigation.dispatch(resetAction);
