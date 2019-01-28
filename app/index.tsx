@@ -53,7 +53,12 @@ const Container = createAppContainer(MainNav);
 
 const store = createStores();
 
-if (__DEV__) AsyncStorage.clear();
+AsyncStorage.getAllKeys((err, keys) => {
+  if (keys) {
+    const cachedKey = keys.filter(key => key.indexOf('@Post') > -1);
+    if (cachedKey.length) AsyncStorage.multiRemove(cachedKey);
+  }
+});
 
 export default function App() {
   return (

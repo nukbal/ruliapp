@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, SectionList, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, SectionList, Text, TouchableHighlight, View } from 'react-native';
 import { NavigationScreenProp, NavigationActions, StackActions, SafeAreaView } from 'react-navigation';
 import { primary } from '../../styles/color';
 
@@ -17,6 +17,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 1,
     borderColor: '#eee',
+  },
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    height: 60,
+    backgroundColor: primary,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 15,
+  },
+  headerText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
   }
 });
 
@@ -61,12 +77,15 @@ export default class Drawer extends Component<Props> {
       { title: '', data: boardList },
     ];
     return (
-      <SafeAreaView>
+      <View style={styles.wrapper}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>게시판</Text>
+        </View>
         <SectionList
           sections={sections}
           renderItem={this.renderItem}
         />
-      </SafeAreaView>
+      </View>
     );
   }
 }

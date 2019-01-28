@@ -93,7 +93,6 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
     yield AsyncStorage.setItem(`@Posts:${url}`, JSON.stringify(data));
     yield put(Actions.add(data));
   } catch (e) {
-    console.warn(e.message);
     yield put(BoardAction.remove(parent, key));
     yield put(Actions.remove(url));
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
