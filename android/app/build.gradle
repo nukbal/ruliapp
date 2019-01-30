@@ -134,7 +134,7 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-fast-image')
+    implementation project(':react-native-fs')
     compile project(':react-native-screens')
     compile project(':react-native-gesture-handler')
     compile project(':react-native-vector-icons')

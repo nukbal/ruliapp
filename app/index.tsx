@@ -1,9 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-// @ts-ignore
 import { createAppContainer } from 'react-navigation';
+
+import fs from 'react-native-fs';
 
 import BoardStack from './containers/Board';
 import DrawerScreen from './containers/Drawer';
@@ -11,7 +13,7 @@ import ConfigScreen from './containers/Settings';
 
 import { primary } from './styles/color';
 import createStores from './store';
-import { AsyncStorage } from 'react-native';
+import { IMG_PATH } from './config/constants';
 
 const MainNav = createBottomTabNavigator(
   {
@@ -48,6 +50,12 @@ const MainNav = createBottomTabNavigator(
     },
   }
 );
+
+fs.exists(IMG_PATH).then((exists) => {
+  if (!exists) {
+    fs.mkdir(IMG_PATH);
+  }
+});
 
 const Container = createAppContainer(MainNav);
 

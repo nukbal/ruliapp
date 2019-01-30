@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, SectionList, Text, TouchableHighlight, View } from 'react-native';
+import { StyleSheet, SectionList, Text, TouchableHighlight, View, SectionListData } from 'react-native';
 import { NavigationScreenProp, NavigationActions, StackActions, SafeAreaView } from 'react-navigation';
 import { primary } from '../../styles/color';
 
-import boardList from '../../config/BoardList';
+import { bestList, communityList, hobbyList, newsList } from '../../config/BoardList';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    height: 60,
+    height: 45,
     backgroundColor: primary,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -72,20 +72,33 @@ export default class Drawer extends Component<Props> {
     );
   }
 
+  renderHeader = ({ section: { title } }: { section: SectionListData<any> }) => {
+    return (
+      <View style={[styles.container, { backgroundColor: '#eee' }]}>
+        <Text style={{ fontWeight: 'bold' }}>{title}</Text>
+      </View>
+    );
+  }
+
   render() {
     const sections = [
-      { title: '', data: boardList },
+      { title: '뉴스', data: newsList },
+      { title: '베스트', data: bestList },
+      { title: '취미', data: hobbyList },
+      { title: '커뮤니티', data: communityList },
     ];
     return (
-      <View style={styles.wrapper}>
+      <SafeAreaView style={[styles.wrapper, { backgroundColor: primary }]}>
         <View style={styles.header}>
           <Text style={styles.headerText}>게시판</Text>
         </View>
         <SectionList
           sections={sections}
+          renderSectionHeader={this.renderHeader}
           renderItem={this.renderItem}
+          style={{ backgroundColor: 'white' }}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }

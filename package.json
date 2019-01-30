@@ -5,8 +5,8 @@
   "dependencies": {
     "query-string": "^6.2.0",
     "react": "16.7.0",
-    "react-native": "0.58.1",
-    "react-native-fast-image": "^5.1.2",
+    "react-native": "0.58.3",
+    "react-native-fs": "^2.13.3",
     "react-native-gesture-handler": "^1.0.15",
     "react-native-screens": "^1.0.0-alpha.22",
     "react-native-vector-icons": "^6.2.0",
@@ -24,6 +24,7 @@
     "@types/query-string": "^6.2.0",
     "@types/react": "^16.7.21",
     "@types/react-native": "^0.57.32",
+    "@types/react-native-fs": "^2.8.2",
     "@types/react-native-vector-icons": "^4.6.4",
     "@types/react-navigation": "^3.0.1",
     "@types/react-redux": "^7.0.1",
@@ -55,17 +56,13 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.(tsx?|ts?)$": "ts-jest"
+      "^.+\\.(tsx?|ts?)$": "babel-jest"
     },
-    "setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?|ts?)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
+      "js"
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",

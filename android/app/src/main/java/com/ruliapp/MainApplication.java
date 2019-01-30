@@ -3,7 +3,7 @@ package com.ruliapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.dylanvann.fastimage.FastImageViewPackage;
+import com.rnfs.RNFSPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -27,7 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new FastImageViewPackage(),
+            new RNFSPackage(),
             new RNScreensPackage(),
             new RNGestureHandlerPackage(),
             new VectorIconsPackage()
