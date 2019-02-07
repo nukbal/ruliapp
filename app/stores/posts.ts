@@ -70,7 +70,10 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
       headers: {
         Accept: 'text/html',
         'Content-Type': 'text/html',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
         'Accept-Encoding': 'gzip, deflate',
+        'Expires': 0,
         Referer: targetUrl,
       },
     };

@@ -11,14 +11,14 @@ interface HeaderType {
   image?: string;
 }
 
-function parseTitle(html: string) {
+export function parseTitle(html: string) {
   const startIdx = (html.indexOf('<title>') + 7);
   const endIdx = html.indexOf('</title', startIdx);
   const str = html.substring(startIdx, endIdx);
   return str.substring(0, str.indexOf(' | '));
 }
 
-function parsePostUser(parent: INode): HeaderType {
+export function parsePostUser(parent: INode): HeaderType {
   const record: any = {};
   let cursor;
   const userInfo = querySelector(parent, 'div.user_info');
@@ -43,7 +43,7 @@ function parsePostUser(parent: INode): HeaderType {
   return record;
 }
 
-function findContext(current: INode, key: string, style?: any): ContentRecord | undefined {
+export function findContext(current: INode, key: string, style?: any): ContentRecord | ContentRecord[] | undefined {
   const tagName = current.tagName;
 
   switch (tagName) {
@@ -59,6 +59,8 @@ function findContext(current: INode, key: string, style?: any): ContentRecord | 
       if (url.indexOf('//') === 0) {
         url = 'http://' + url.substring(2, url.length);
       }
+      url = url.replace('ruliweb.com/mo', 'ruliweb.net/ori');
+
       if (style) return { key, type: 'image', content: url, style };
       return { key, type: 'image', content: url };
     }
@@ -67,25 +69,23 @@ function findContext(current: INode, key: string, style?: any): ContentRecord | 
       if (!rows) return;
       const hasStyle = current.attrs && current.attrs.style;
 
-      const textArr = [];
+      let arr: ContentRecord[] = [];
 
       for (let i = 0, len = rows.length; i < len; i ++) {
-        const value = findContext(rows[i], `${key}_0`, hasStyle && current.attrs!.style);
-        if (value && value.type === 'image') {
-          return value;
-        } else if (value && value.type === 'text') {
-          textArr.push(value.content);
+        const value = findContext(rows[i], `${key}_${i}`, hasStyle && current.attrs!.style);
+        if (!value) continue;
+        if (Array.isArray(value)) {
+          arr = arr.concat(value);
+        } else {
+          arr.push(value);
         }
       }
-      if (textArr.length) {
-        return { key, type: 'text', content: textArr.join(' ') };
-      }
+      return arr.length > 1 ? arr : arr[0];
     }
   }
-  return;
 }
 
-function rowSelector(root: INode, pattern: string[]): INode[] | undefined {
+export function rowSelector(root: INode, pattern: string[]): INode[] | undefined {
   let res: INode[] = [];
 
   if (pattern.indexOf(root.tagName) > -1) return [root];
@@ -101,7 +101,7 @@ function rowSelector(root: INode, pattern: string[]): INode[] | undefined {
   }
 }
 
-function parsePostContents(parent: INode, prefix: string): ContentRecord | ContentRecord[] | undefined {
+export function parsePostContents(parent: INode, prefix: string): ContentRecord | ContentRecord[] | undefined {
   let res: ContentRecord[] = [];
   const rows = rowSelector(parent, ['p']);
   if (!rows) return;
@@ -111,9 +111,14 @@ function parsePostContents(parent: INode, prefix: string): ContentRecord | Conte
     const current = rows[i];
     const key = `${prefix}_${i}`;
     const value = findContext(current, key);
-    if (value) res.push(value);
+    if (!value) continue;
+
+    if (Array.isArray(value)) {
+      res = res.concat(value);
+    } else res.push(value);
   }
 
+  // @ts-ignore
   res = res.map((item, i) => { item.order = i; return item; });
 
   return res;
@@ -128,7 +133,7 @@ interface PostType {
 }
 
 
-export default function parsePost(htmlString: string, prefix: string): PostType | undefined {
+export default function parsePost(htmlString: string, prefix: string = ''): PostType | undefined {
   const startIndex = htmlString.indexOf('<!-- board_main start');
   const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
   let html = htmlString.substring(startIndex, endIndex);

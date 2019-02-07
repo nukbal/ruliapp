@@ -50,7 +50,8 @@
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "test": "node node_modules/jest/bin/jest.js",
+    "test:watch": "jest --watch --verbose false",
+    "test": "jest",
     "type-check": "tsc --noEmit",
     "xcode": "open ios/ruliapp.xcworkspace"
   },
@@ -63,10 +64,6 @@
       "ts",
       "tsx",
       "js"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^react-art$": "node-noop"
-    }
+    ]
   }
 }

@@ -30,7 +30,7 @@ export function parseBoardUrl(href: string) {
   return { id, url: query };
 }
 
-function formatBoardRow(node: INode): PostRecord | undefined {
+export function formatBoardRow(node: INode): PostRecord | undefined {
   // @ts-ignore
   const record: PostRecord = {};
 
