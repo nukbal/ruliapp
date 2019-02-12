@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { SafeAreaView, NavigationScreenProp, NavigationEventCallback } from 'react-navigation';
 import styles from './styles';
 import ImageCache from './ImageCache';
+import PostCache from './postCache';
 
 interface Props {
   navigation: NavigationScreenProp<any, { title: string, key: string }>;
@@ -39,6 +40,7 @@ export default class Setting extends Component<Props> {
           <Text style={styles.headerText}>게시판</Text>
         </View>
         <ImageCache />
+        <PostCache />
       </SafeAreaView>
     );
   }

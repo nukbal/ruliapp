@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableHighlight, Text, Alert, AsyncStorage } from 'react-native';
+import { TouchableOpacity, Text, Alert, AsyncStorage } from 'react-native';
 import fs from 'react-native-fs';
 import { IMG_PATH } from '../../config/constants';
 import cancel from '../../utils/cancel';
@@ -60,13 +60,12 @@ export default class ImageCache extends Component<any, { bytes: number }> {
 
   render() {
     return (
-      <TouchableHighlight
+      <TouchableOpacity
         style={styles.container}
         onPress={this.onPress}
-        underlayColor="#1A70DC"
       >
-        <Text>Image Cache : {Math.round(this.state.bytes / 1024)}KB</Text>
-      </TouchableHighlight>
+        <Text>캐시된 이미지: {Math.round(this.state.bytes / 1024)}KB</Text>
+      </TouchableOpacity>
     );
   }
 }

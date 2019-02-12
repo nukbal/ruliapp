@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createAppContainer } from 'react-navigation';
@@ -58,15 +57,7 @@ fs.exists(IMG_PATH).then((exists) => {
 });
 
 const Container = createAppContainer(MainNav);
-
 const store = createStores();
-
-AsyncStorage.getAllKeys((err, keys) => {
-  if (keys) {
-    const cachedKey = keys.filter(key => key.indexOf('@Post') > -1);
-    if (cachedKey.length) AsyncStorage.multiRemove(cachedKey);
-  }
-});
 
 export default function App() {
   return (
