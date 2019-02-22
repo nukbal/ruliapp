@@ -41,12 +41,8 @@ interface State {
 function setImageSize(image: { width: number, height: number }, screenWidth: number) {
   let width = screenWidth;
   let ratio = 1;
-  const half = Math.round(width / 2);
-  if (half >= image.width) {
-    ratio = half / image.width;
-    width = half;
-  } else if (width > image.width) {
-    ratio = image.width / width;
+  if (width > image.width) {
+    ratio = width / image.width;
     width = image.width;
   } else {
     ratio = width / image.width;

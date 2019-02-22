@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { Provider } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -50,19 +50,23 @@ const MainNav = createBottomTabNavigator(
   }
 );
 
-fs.exists(IMG_PATH).then((exists) => {
-  if (!exists) {
-    fs.mkdir(IMG_PATH);
-  }
-});
-
 const Container = createAppContainer(MainNav);
 const store = createStores();
 
-export default function App() {
-  return (
-    <Provider store={store}>
-      <Container />
-    </Provider>
-  );
+export default class App extends PureComponent {
+  componentDidMount() {
+    fs.exists(IMG_PATH).then((exists) => {
+      if (!exists) {
+        fs.mkdir(IMG_PATH);
+      }
+    });
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <Container />
+      </Provider>
+    );
+  }
 }
