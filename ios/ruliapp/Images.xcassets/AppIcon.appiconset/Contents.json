@@ -18,37 +18,37 @@
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "ruliapp@0.73x.png",
+      "filename" : "ruliapp-logo@0.73x.png",
       "scale" : "3x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "ruliapp@0.67x.png",
+      "filename" : "ruliapp-logo@0.67x.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "ruliapp.png",
+      "filename" : "ruliapp-logo.png",
       "scale" : "3x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "ruliapp.png",
+      "filename" : "ruliapp-logo.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "ruliapp@1.5x.png",
+      "filename" : "ruliapp-logo@1.5x.png",
       "scale" : "3x"
     },
     {
       "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "ruliapp@8.53x.png",
+      "filename" : "ruliapp-logo@8.53x.png",
       "scale" : "1x"
     }
   ],
