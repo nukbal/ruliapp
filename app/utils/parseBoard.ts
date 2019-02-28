@@ -1,7 +1,6 @@
 import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
 import parseDate from './parseDate';
 
-
 function parseTitle(html: string) {
   const startIdx = (html.indexOf('<title>') + 7);
   const endIdx = html.indexOf('</title', startIdx);
@@ -13,21 +12,34 @@ export function parseBoardUrl(href: string) {
   const url = href.replace('http://m.ruliweb.com', '').replace('/', '');
 
   let id = null;
+  let params = undefined;
   let cursor = url.indexOf('/board');
   let query = url;
 
   cursor = cursor + 7;
 
-  const startIdx = url.indexOf('/read/', cursor);
-  id = url.substring(startIdx + 6, url.length);
+  let startIdx = url.indexOf('/read/', cursor);
+  id = url.substring(startIdx > -1 ? startIdx + 6 : 0, url.length).replace('/list', '');
   if (id.indexOf('?') > 0) {
     id = id.substring(0, id.indexOf('?'));
   }
-  if (query.indexOf('?') > 0) {
-    query = query.substring(0, query.indexOf('?'));
+  const paramIdx = query.indexOf('?');
+  if (paramIdx > 0) {
+    params = query.substring(paramIdx + 1, query.length).split('&').reduce((acc, cur) => {
+      const res = {...acc};
+      if (cur) {
+        const param = cur.split('=');
+        if (param.length) {
+          // @ts-ignore
+          res[param[0]] = param[1];
+        }
+      }
+      return res;
+    }, {})
+    query = query.substring(0, paramIdx);
   }
 
-  return { id, url: query };
+  return { id, url: query, params };
 }
 
 export function formatBoardRow(node: INode): PostRecord | undefined {

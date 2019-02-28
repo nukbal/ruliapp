@@ -20,14 +20,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 200,
-  },
-  image: {
-    flex: 1,
   }
 });
 
 interface Props {
   source: { uri: string };
+  style?: any;
 }
 
 interface State {
@@ -54,6 +52,10 @@ function setImageSize(image: { width: number, height: number }, screenWidth: num
 function empty() {}
 
 export default class LazyImage extends Component<Props, State> {
+  static defaultProps = {
+    style: {},
+  };
+
   state = {
     uri: undefined,
     percent: 0,
@@ -152,7 +154,7 @@ export default class LazyImage extends Component<Props, State> {
     if (!(screenWidth > 0 && uri && size.width)) {
       return (
         <View
-          style={[styles.ImageContent, { backgroundColor: '#ededed' }]}
+          style={[styles.ImageContent, this.props.style, { backgroundColor: '#ededed' }]}
           onLayout={this.onLayout}
         >
           <ActivityIndicator />
@@ -163,7 +165,7 @@ export default class LazyImage extends Component<Props, State> {
 
     return (
       <Image
-        style={[styles.ImageContent, setImageSize(size, screenWidth)]}
+        style={[styles.ImageContent, this.props.style, setImageSize(size, screenWidth)]}
         source={{ uri }}
       />
     );

@@ -1,4 +1,4 @@
-import loadHtml, { INode, querySelectorAll, querySelector } from './htmlParser';
+import loadHtml, { INode, querySelector } from './htmlParser';
 import parseComment from './parseComment';
 import formatText from './formatText';
 
@@ -64,8 +64,12 @@ export function findContext(current: INode, key: string, style?: any): ContentRe
       if (style) return { key, type: 'image', content: url, style };
       return { key, type: 'image', content: url };
     }
+    case 'iframe': {
+      if (!current.attrs || !current.attrs.src) return;
+      return { key, type: 'object', content: current.attrs.src };
+    }
     case 'p': {
-      const rows = rowSelector(current, ['img', 'text']);
+      const rows = rowSelector(current, ['img', 'text', 'iframe']);
       if (!rows) return;
       const hasStyle = current.attrs && current.attrs.style;
 
