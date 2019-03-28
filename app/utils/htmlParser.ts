@@ -37,12 +37,12 @@ const kElementsClosedByClosing = {
   td: { tr: true, table: true },
   th: { tr: true, table: true }
 };
-const kBlockTextElements = {
-  script: true,
-  noscript: true,
-  style: true,
-  pre: true
-};
+// const kBlockTextElements = {
+//   script: true,
+//   noscript: true,
+//   style: true,
+//   pre: true
+// };
 
 function isWhitespace(raw?: string) {
   if (!raw) return;
@@ -132,33 +132,26 @@ function searchTree(node: INode, arr: string[]): INode | undefined {
 function findMatchNode(root: INode, pattern: string, all?: boolean) {
   const arr = pattern.split(' ');
   let node: any = root;
-  if (!node.childNodes) return;
+  if (!node.childNodes || !node.childNodes.length) return;
   if (!node.tagName) node = node.childNodes[0];
 
-  const tagName = arr[0].split(/[\.|\#]/);
-  node = searchTree(node, tagName);
-  if (!node) return;
-
   const arrLen = arr.length;
+  let cursor = node;
+  for (let z = 0; z < arrLen; z += 1) {
+    const current = arr[z].split(/[\.|\#]/);
+    const isLast = (z === arrLen - 1);
 
-  if (arrLen > 1 && node.childNodes && node.childNodes.length) {
-    let cursor = node;
-    for (let z = 1; z < arrLen; z += 1) {
-      const current = arr[z].split(/[\.|\#]/);
-      const isLast = (z === arrLen - 1);
+    cursor = searchTree(cursor, current);
 
-      cursor = searchTree(cursor, current);
-
-      if (isLast && all) {
-        const res = [];
-        while (cursor) {
-          if (isQueryContains(cursor, current)) res.push(cursor);
-          cursor = cursor.next;
-        }
-        return res;
-      } else if (isLast) {
-        return cursor;
+    if (isLast && all) {
+      const res = [];
+      while (cursor) {
+        if (isQueryContains(cursor, current)) res.push(cursor);
+        cursor = cursor.next;
       }
+      return res;
+    } else if (isLast) {
+      return cursor;
     }
   }
 
@@ -211,19 +204,19 @@ export default function parse(data: string): INode {
       stack.push(currentParent);
 
       // @ts-ignore
-      if (kBlockTextElements[match[2]]) {
-        // a little test to find next </script> or </style> ...
-        const closeMarkup = '</' + match[2] + '>';
-        const index = data.indexOf(closeMarkup, kMarkupPattern.lastIndex);
+      // if (kBlockTextElements[match[2]]) {
+      //   // a little test to find next </script> or </style> ...
+      //   const closeMarkup = '</' + match[2] + '>';
+      //   const index = data.indexOf(closeMarkup, kMarkupPattern.lastIndex);
 
-        if (index == -1) {
-          lastTextPos = kMarkupPattern.lastIndex = data.length + 1;
-        } else {
-          lastTextPos = kMarkupPattern.lastIndex = index + closeMarkup.length;
-          // @ts-ignore
-          match[1] = true;
-        }
-      }
+      //   if (index == -1) {
+      //     lastTextPos = kMarkupPattern.lastIndex = data.length + 1;
+      //   } else {
+      //     lastTextPos = kMarkupPattern.lastIndex = index + closeMarkup.length;
+      //     // @ts-ignore
+      //     match[1] = true;
+      //   }
+      // }
     }
     // </ or /> or <br> etc.
     // @ts-ignore

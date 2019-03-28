@@ -1,5 +1,6 @@
-import React, { PureComponent } from 'react';
-import { Text, StyleSheet, WebView } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, WebView, View } from 'react-native';
+import Video from 'react-native-video';
 import { listItem } from '../../styles/color';
 import LazyImage from '../LazyImage';
 
@@ -30,16 +31,33 @@ export default function ContentItem({ type, content }: ContentRecord) {
     }
     case 'object': {
       return (
-        <WebView
-          // @ts-ignore
-          source={{ uri: content }}
-          style={[styles.container, styles.media]}
-          javaScriptEnabled
-        />
+        <View style={styles.container}>
+          <WebView
+            // @ts-ignore
+            source={{ uri: content }}
+            style={styles.media}
+            javaScriptEnabled
+          />
+        </View>
       );
     }
     case 'image': {
-      return <LazyImage source={{ uri: content }} style={styles.container} />;
+      return (
+        <View style={styles.container}>
+          <LazyImage source={{ uri: content }} />
+        </View>
+      );
+    }
+    case 'video': {
+      return (
+        <Video
+          source={{ uri: content }}
+          style={[styles.container, styles.media]}
+          ignoreSilentSwitch="obey"
+          muted
+          repeat
+        />
+      );
     }
     default: {
       return <Text style={[styles.container, styles.text]}>{content}</Text>;

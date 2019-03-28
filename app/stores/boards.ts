@@ -31,7 +31,7 @@ export type Actions = ActionsUnion<typeof Actions>;
 export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
   const { key, params } = payload;
 
-  let targetUrl = `http://m.ruliweb.com/${key}`;
+  let targetUrl = `https://m.ruliweb.com/${key}`;
 
   if (params) {
     const query = qs.stringify(params);
@@ -44,10 +44,10 @@ export function* requestBoard({ payload }: ReturnType<typeof Actions.request>) {
     headers: {
       Accept: 'text/html',
       'Content-Type': 'text/html',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Cache-Control': 'no-cache, no-store',
       'Pragma': 'no-cache',
       'Accept-Encoding': 'gzip, deflate',
-      'Expires': 0,
+      'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1',
       Referer: targetUrl,
     }
   };

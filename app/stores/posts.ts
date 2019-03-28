@@ -60,20 +60,20 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
     return;
   }
 
-  StatusBar.setNetworkActivityIndicatorVisible(false);
+  StatusBar.setNetworkActivityIndicatorVisible(true);
   try {
     const targetUrl =
-      `http://m.ruliweb.com/${url}?search_type=name&search_key=%2F%2F%2F`;
+      `https://m.ruliweb.com/${url}?search_type=name&search_key=%2F%2F%2F`;
     const config = {
       method: 'GET',
       credentials: 'include',
       headers: {
         Accept: 'text/html',
         'Content-Type': 'text/html',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Cache-Control': 'no-cache, no-store',
         'Pragma': 'no-cache',
         'Accept-Encoding': 'gzip, deflate',
-        'Expires': 0,
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1',
         Referer: targetUrl,
       },
     };
@@ -98,6 +98,7 @@ export function* requestDetailSaga({ payload }: ReturnType<typeof Actions.reques
   } catch (e) {
     yield put(BoardAction.remove(parent, key));
     yield put(Actions.remove(url));
+    console.warn(e);
     Alert.alert('error', '해당 글이 존재하지 않습니다.');
   }
   StatusBar.setNetworkActivityIndicatorVisible(false);

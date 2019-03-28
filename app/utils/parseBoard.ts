@@ -9,7 +9,7 @@ function parseTitle(html: string) {
 }
 
 export function parseBoardUrl(href: string) {
-  const url = href.replace('http://m.ruliweb.com', '').replace('/', '');
+  const url = href.replace('https://m.ruliweb.com', '').replace('/', '');
 
   let id = null;
   let params = undefined;
@@ -117,14 +117,13 @@ export interface IParseBoard {
 
 export default function parseBoardList (htmlString: string, key: string): IParseBoard {
   const title = parseTitle(htmlString);
-  const startIndex = htmlString.indexOf('<table class="board_list_table"');
-  const endIndex = htmlString.indexOf('</table>', startIndex);
+  const startIndex = htmlString.indexOf('<!-- board_main start');
+  const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
   const html = htmlString.substring(startIndex, endIndex);
   const Nodes = loadHtml(html);
 
-  const boardNodes = querySelectorAll(Nodes, 'table.board_list_table tr.table_body');
-  if (!boardNodes) return { title, rows: [], notices: [] };
-
+  const boardNodes = querySelectorAll(Nodes, 'tr');
+  if (!boardNodes || !boardNodes.length) return { title, rows: [], notices: [] };
   const data = [];
 
   for (let i = 0; i < boardNodes.length; i += 1) {

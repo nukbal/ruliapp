@@ -3,7 +3,7 @@ import compress from '../compressUrl';
 describe('compress url', () => {
   it('jpg', () => {
     expect(compress('http://i2.ruliweb.com/img/12/34/56/aaabbbcccddd.jpg'))
-      .toEqual('i2ruliwebcomimg1901301689ebca90213f0b0.jpg');
+      .toEqual('i2ruliwebcomimg123456aaabbbcccddd.jpg');
   })
   it('png', () => {
     expect(compress('http://i2.ruliweb.com/img/12/34/56/aaabbbcccddd.png'))

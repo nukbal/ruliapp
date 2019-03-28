@@ -76,7 +76,7 @@ declare interface UserRecord {
 
 declare interface ContentRecord {
   key: string;
-  type: 'image' | 'object' | 'text' | 'reference';
+  type: 'image' | 'object' | 'text' | 'reference' | 'video';
   style?: any;
   content: string;
   /** only on image */

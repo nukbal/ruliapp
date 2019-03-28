@@ -50,6 +50,8 @@ export function findContext(current: INode, key: string, style?: any): ContentRe
     case 'text': {
       if (!current.value) return;
       const value = formatText(current.value);
+      if (value === 'GIF') return;
+
       if (style) return { key, type: 'text', content: value, style };
       return { key, type: 'text', content: value };
     }
@@ -57,7 +59,7 @@ export function findContext(current: INode, key: string, style?: any): ContentRe
       if (!current.attrs || !current.attrs.src) return;
       let url = current.attrs.src;
       if (url.indexOf('//') === 0) {
-        url = 'http://' + url.substring(2, url.length);
+        url = 'https://' + url.substring(2, url.length);
       }
       url = url.replace('ruliweb.com/mo', 'ruliweb.net/ori');
 
@@ -68,8 +70,16 @@ export function findContext(current: INode, key: string, style?: any): ContentRe
       if (!current.attrs || !current.attrs.src) return;
       return { key, type: 'object', content: current.attrs.src };
     }
+    case 'video': {
+      if (!current.attrs || !current.attrs.src) return;
+      let url = current.attrs.src;
+      if (url.indexOf('//') === 0) {
+        url = 'https://' + url.substring(2, url.length);
+      }
+      return { key, type: 'video', content: url };
+    }
     case 'p': {
-      const rows = rowSelector(current, ['img', 'text', 'iframe']);
+      const rows = rowSelector(current, ['img', 'text', 'iframe', 'video']);
       if (!rows) return;
       const hasStyle = current.attrs && current.attrs.style;
 
@@ -158,7 +168,7 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
 
   const mainNode = querySelector(Nodes, 'div.board_main div.board_main_view');
   if (mainNode) {
-    const source = querySelector(mainNode, 'a');
+    const source = querySelector(mainNode, 'div.source_url a');
     if (source && source.attrs) res.source = source.attrs.href;
   } else return;
   
