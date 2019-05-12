@@ -8,6 +8,7 @@ export default function compress(url: string) {
       .replace(/[^a-zA-Z0-9-_]/g, '');
     return safeStr + ext;
   }
+  // eslint-disable-next-line prefer-template
   return url
     .replace(/^(http|https)/g, '')
     .replace(/[^a-zA-Z0-9-_]/g, '') + '.jpg';

@@ -15,7 +15,7 @@ export default function parseDate(str: string): Date | undefined {
   date.setUTCSeconds(0);
   date.setUTCMinutes(0);
   date.setUTCHours(0);
-  
+
   if (len === 5) {
     return parseTime(date, str);
   }
@@ -25,7 +25,7 @@ export default function parseDate(str: string): Date | undefined {
 
   let year;
   if (yearStr.length < 4) {
-    year = parseInt('20' + yearStr, 10);
+    year = parseInt(`20${yearStr}`, 10);
   } else {
     year = parseInt(yearStr, 10);
   }

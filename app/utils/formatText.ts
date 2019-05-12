@@ -9,8 +9,7 @@ const charSet = {
   '&gt;': '>',
   '&lt;': '<',
   '&nbsp;': ' ',
-}
-
+};
 
 const regex = new RegExp(`(${Object.keys(charSet).join('|')})`, 'g');
 

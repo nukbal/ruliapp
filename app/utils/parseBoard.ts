@@ -12,13 +12,13 @@ export function parseBoardUrl(href: string) {
   const url = href.replace('https://m.ruliweb.com', '').replace('/', '');
 
   let id = null;
-  let params = undefined;
+  let params;
   let cursor = url.indexOf('/board');
   let query = url;
 
-  cursor = cursor + 7;
+  cursor += 7;
 
-  let startIdx = url.indexOf('/read/', cursor);
+  const startIdx = url.indexOf('/read/', cursor);
   id = url.substring(startIdx > -1 ? startIdx + 6 : 0, url.length).replace('/list', '');
   if (id.indexOf('?') > 0) {
     id = id.substring(0, id.indexOf('?'));
@@ -26,16 +26,17 @@ export function parseBoardUrl(href: string) {
   const paramIdx = query.indexOf('?');
   if (paramIdx > 0) {
     params = query.substring(paramIdx + 1, query.length).split('&').reduce((acc, cur) => {
-      const res = {...acc};
+      const res = { ...acc };
       if (cur) {
         const param = cur.split('=');
         if (param.length) {
           // @ts-ignore
+          // eslint-disable-next-line prefer-destructuring
           res[param[0]] = param[1];
         }
       }
       return res;
-    }, {})
+    }, {});
     query = query.substring(0, paramIdx);
   }
 
@@ -50,7 +51,7 @@ export function formatBoardRow(node: INode): PostRecord | undefined {
   const td = node.childNodes[0];
 
   if (!td.childNodes) return;
- 
+
   const titleDiv = td.childNodes[0];
   const infoDiv = td.childNodes[1];
 
@@ -85,7 +86,7 @@ export function formatBoardRow(node: INode): PostRecord | undefined {
 
   // count of comments
   cursor = querySelector(titleDiv, 'span.num text');
-  if (cursor && cursor.value) record.commentSize = parseInt(cursor.value);
+  if (cursor && cursor.value) record.commentSize = parseInt(cursor.value, 10);
 
   // author name
   cursor = querySelector(infoDiv, 'span.writer text');
@@ -109,13 +110,13 @@ export function formatBoardRow(node: INode): PostRecord | undefined {
   return record;
 }
 
-export interface IParseBoard { 
+export interface IParseBoard {
   title: string;
   rows: PostRecord[];
   notices: PostRecord[];
 }
 
-export default function parseBoardList (htmlString: string, key: string): IParseBoard {
+export default function parseBoardList(htmlString: string, key: string): IParseBoard {
   const title = parseTitle(htmlString);
   const startIndex = htmlString.indexOf('<!-- board_main start');
   const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
@@ -138,5 +139,5 @@ export default function parseBoardList (htmlString: string, key: string): IParse
     title,
     notices,
     rows,
-  }
+  };
 }

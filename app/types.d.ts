@@ -9,6 +9,10 @@ declare module 'react-navigation-stack' {
   const createStackNavigator = all.createStackNavigator;
 }
 
+declare module "console" {
+  export = console;
+}
+
 declare interface FSA<T extends string, P = undefined, M = undefined> {
   type: T;
   payload: P;

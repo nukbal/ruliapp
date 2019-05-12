@@ -32,10 +32,10 @@ export function parsePostUser(parent: INode): HeaderType {
 
     cursor = querySelector(userInfo, 'input#member_srl');
     if (cursor && cursor.attrs) record.id = cursor.attrs.value;
-  
+
     cursor = querySelector(userInfo, 'span.level strong text');
     if (cursor && cursor.value) record.level = parseInt(cursor.value, 10);
-  
+
     cursor = querySelector(userInfo, 'span.exp_text strong text');
     if (cursor && cursor.value) record.experience = parseInt(cursor.value.replace('%', ''), 10);
   }
@@ -43,8 +43,26 @@ export function parsePostUser(parent: INode): HeaderType {
   return record;
 }
 
-export function findContext(current: INode, key: string, style?: any): ContentRecord | ContentRecord[] | undefined {
-  const tagName = current.tagName;
+export function rowSelector(root: INode, pattern: string[]): INode[] | undefined {
+  let res: INode[] = [];
+
+  if (pattern.indexOf(root.tagName) > -1) return [root];
+  if (root.childNodes) {
+    let cursor;
+    for (let i = 0, len = root.childNodes.length; i < len; i += 1) {
+      cursor = rowSelector(root.childNodes[i], pattern);
+      if (cursor) {
+        res = res.concat(cursor);
+      }
+    }
+    return res;
+  }
+}
+
+export function findContext(
+  current: INode, key: string, style?: any,
+): ContentRecord | ContentRecord[] | undefined {
+  const { tagName } = current;
 
   switch (tagName) {
     case 'text': {
@@ -59,7 +77,7 @@ export function findContext(current: INode, key: string, style?: any): ContentRe
       if (!current.attrs || !current.attrs.src) return;
       let url = current.attrs.src;
       if (url.indexOf('//') === 0) {
-        url = 'https://' + url.substring(2, url.length);
+        url = `https://${url.substring(2, url.length)}`;
       }
       url = url.replace('ruliweb.com/mo', 'ruliweb.net/ori');
 
@@ -74,7 +92,7 @@ export function findContext(current: INode, key: string, style?: any): ContentRe
       if (!current.attrs || !current.attrs.src) return;
       let url = current.attrs.src;
       if (url.indexOf('//') === 0) {
-        url = 'https://' + url.substring(2, url.length);
+        url = `https://${url.substring(2, url.length)}`;
       }
       return { key, type: 'video', content: url };
     }
@@ -85,37 +103,25 @@ export function findContext(current: INode, key: string, style?: any): ContentRe
 
       let arr: ContentRecord[] = [];
 
-      for (let i = 0, len = rows.length; i < len; i ++) {
+      for (let i = 0, len = rows.length; i < len; i += 1) {
         const value = findContext(rows[i], `${key}_${i}`, hasStyle && current.attrs!.style);
-        if (!value) continue;
-        if (Array.isArray(value)) {
-          arr = arr.concat(value);
-        } else {
-          arr.push(value);
+        if (value) {
+          if (Array.isArray(value)) {
+            arr = arr.concat(value);
+          } else {
+            arr.push(value);
+          }
         }
       }
       return arr.length > 1 ? arr : arr[0];
     }
+    default:
   }
 }
 
-export function rowSelector(root: INode, pattern: string[]): INode[] | undefined {
-  let res: INode[] = [];
-
-  if (pattern.indexOf(root.tagName) > -1) return [root];
-  else if (root.childNodes) {
-    let cursor;
-    for (let i = 0, len = root.childNodes.length; i < len; i += 1) {
-      cursor = rowSelector(root.childNodes[i], pattern);
-      if (cursor) {
-        res = res.concat(cursor);
-      }
-    }
-    return res;
-  }
-}
-
-export function parsePostContents(parent: INode, prefix: string): ContentRecord | ContentRecord[] | undefined {
+export function parsePostContents(
+  parent: INode, prefix: string,
+): ContentRecord | ContentRecord[] | undefined {
   let res: ContentRecord[] = [];
   const rows = rowSelector(parent, ['p']);
   if (!rows) return;
@@ -125,15 +131,17 @@ export function parsePostContents(parent: INode, prefix: string): ContentRecord 
     const current = rows[i];
     const key = `${prefix}_${i}`;
     const value = findContext(current, key);
-    if (!value) continue;
-
-    if (Array.isArray(value)) {
-      res = res.concat(value);
-    } else res.push(value);
+    if (value) {
+      if (Array.isArray(value)) {
+        res = res.concat(value);
+      } else res.push(value);
+    }
   }
 
-  // @ts-ignore
-  res = res.map((item, i) => { item.order = i; return item; });
+  for (let i = 0; i < res.length; i += 1) {
+    // @ts-ignore
+    res[i].order = 1;
+  }
 
   return res;
 }
@@ -171,7 +179,7 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
     const source = querySelector(mainNode, 'div.source_url a');
     if (source && source.attrs) res.source = source.attrs.href;
   } else return;
-  
+
   const contentNode = querySelector(mainNode, 'div.view_content');
   if (contentNode) {
     res.contents = parsePostContents(contentNode, prefix);

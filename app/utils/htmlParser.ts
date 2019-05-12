@@ -1,4 +1,4 @@
-
+/* eslint-disable no-underscore-dangle, no-param-reassign, no-continue */
 export interface INode {
   tagName: string;
   attrs?: { [key: string]: any };
@@ -26,7 +26,7 @@ const kElementsClosedByOpening = {
   li: { li: true },
   p: { p: true, div: true },
   td: { td: true, th: true },
-  th: { td: true, th: true }
+  th: { td: true, th: true },
 };
 const kElementsClosedByClosing = {
   li: { ul: true, ol: true },
@@ -35,7 +35,7 @@ const kElementsClosedByClosing = {
   i: { div: true },
   p: { div: true },
   td: { tr: true, table: true },
-  th: { tr: true, table: true }
+  th: { tr: true, table: true },
 };
 // const kBlockTextElements = {
 //   script: true,
@@ -56,7 +56,7 @@ function TextNode(raw: string): INode {
 function HTMLNode(name: string = '', attrs?: any) {
   const _node: INode = { tagName: name };
   if (attrs) {
-    let queries = [];
+    const queries = [];
     const rest = { ...attrs };
     const len = Object.keys(rest).length;
     if (attrs.id) {
@@ -116,9 +116,8 @@ function searchTree(node: INode, arr: string[]): INode | undefined {
   if (!node) return;
 
   const isMatch = isQueryContains(node, arr);
-  if(isMatch) {
-    return node;
-  } else if (node.childNodes) {
+  if (isMatch) return node;
+  if (node.childNodes) {
     let cursor;
     for (let i = 0, len = node.childNodes.length; i < len; i += 1) {
       cursor = searchTree(node.childNodes[i], arr);
@@ -126,13 +125,13 @@ function searchTree(node: INode, arr: string[]): INode | undefined {
     }
     return cursor;
   }
-  return;
 }
 
 function findMatchNode(root: INode, pattern: string, all?: boolean) {
   const arr = pattern.split(' ');
   let node: any = root;
   if (!node.childNodes || !node.childNodes.length) return;
+  // eslint-disable-next-line prefer-destructuring
   if (!node.tagName) node = node.childNodes[0];
 
   const arrLen = arr.length;
@@ -150,7 +149,8 @@ function findMatchNode(root: INode, pattern: string, all?: boolean) {
         cursor = cursor.next;
       }
       return res;
-    } else if (isLast) {
+    }
+    if (isLast) {
       return cursor;
     }
   }
@@ -174,7 +174,8 @@ export default function parse(data: string): INode {
   const stack = [root];
   let lastTextPos = -1;
 
-  for (let match, text; match = kMarkupPattern.exec(data); ) {
+  // eslint-disable-next-line no-cond-assign
+  for (let match, text; match = kMarkupPattern.exec(data);) {
     if (lastTextPos > -1) {
       // if has content
       if (lastTextPos + match[0].length < kMarkupPattern.lastIndex) {
@@ -183,13 +184,14 @@ export default function parse(data: string): INode {
       }
     }
     lastTextPos = kMarkupPattern.lastIndex;
-    if (match[0][1] ==   '!') continue;
+    if (match[0][1] === '!') continue;
     match[2] = match[2].toLowerCase();
 
     // not </ tags
     if (!match[1]) {
       const attrs: { [key: string]: any } = {};
-      for (let attMatch; attMatch = kAttributePattern.exec(match[3]); ) {
+      // eslint-disable-next-line no-cond-assign
+      for (let attMatch; attMatch = kAttributePattern.exec(match[3]);) {
         attrs[attMatch[1]] = attMatch[3] || attMatch[4] || attMatch[5];
       }
       // @ts-ignore
@@ -202,27 +204,12 @@ export default function parse(data: string): INode {
       }
       currentParent = appendChild(currentParent, HTMLNode(match[2], attrs));
       stack.push(currentParent);
-
-      // @ts-ignore
-      // if (kBlockTextElements[match[2]]) {
-      //   // a little test to find next </script> or </style> ...
-      //   const closeMarkup = '</' + match[2] + '>';
-      //   const index = data.indexOf(closeMarkup, kMarkupPattern.lastIndex);
-
-      //   if (index == -1) {
-      //     lastTextPos = kMarkupPattern.lastIndex = data.length + 1;
-      //   } else {
-      //     lastTextPos = kMarkupPattern.lastIndex = index + closeMarkup.length;
-      //     // @ts-ignore
-      //     match[1] = true;
-      //   }
-      // }
     }
     // </ or /> or <br> etc.
     // @ts-ignore
     if (match[1] || match[4] || kSelfClosingElements[match[2]]) {
       while (true) {
-        if (currentParent.tagName == match[2]) {
+        if (currentParent.tagName === match[2]) {
           stack.pop();
           currentParent = stack[stack.length - 1];
           break;

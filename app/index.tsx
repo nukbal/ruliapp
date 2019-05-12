@@ -1,18 +1,22 @@
-import React, { PureComponent } from 'react';
-import { Provider } from 'react-redux';
+import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createAppContainer } from 'react-navigation';
 
 import fs from 'react-native-fs';
 
-import BoardStack from './containers/Board';
-import DrawerScreen from './containers/Drawer';
-import ConfigScreen from './containers/Settings';
+import BoardStack from './pages/Board';
+import DrawerScreen from './pages/Drawer';
+import ConfigScreen from './pages/Settings';
 
 import { primary } from './styles/color';
-import createStores from './store';
 import { IMG_PATH } from './config/constants';
+
+fs.exists(IMG_PATH).then((exists) => {
+  if (!exists) {
+    fs.mkdir(IMG_PATH);
+  }
+});
 
 const MainNav = createBottomTabNavigator(
   {
@@ -47,26 +51,7 @@ const MainNav = createBottomTabNavigator(
       activeTintColor: primary,
       inactiveTintColor: 'gray',
     },
-  }
+  },
 );
 
-const Container = createAppContainer(MainNav);
-const store = createStores();
-
-export default class App extends PureComponent {
-  componentDidMount() {
-    fs.exists(IMG_PATH).then((exists) => {
-      if (!exists) {
-        fs.mkdir(IMG_PATH);
-      }
-    });
-  }
-
-  render() {
-    return (
-      <Provider store={store}>
-        <Container />
-      </Provider>
-    );
-  }
-}
+export default createAppContainer(MainNav);
