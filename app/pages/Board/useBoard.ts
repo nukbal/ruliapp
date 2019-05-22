@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, Platform } from 'react-native';
 import qs from 'query-string';
 import parseBoardList, { IParseBoard } from '../../utils/parseBoard';
 
@@ -36,7 +36,7 @@ export default function useBoard(key: string) {
         Referer: targetUrl,
       },
     };
-    StatusBar.setNetworkActivityIndicatorVisible(true);
+    if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
 
     try {
       const response = await fetch(targetUrl, config);
@@ -53,7 +53,7 @@ export default function useBoard(key: string) {
     } catch (e) {
       // console.error(e);
     }
-    StatusBar.setNetworkActivityIndicatorVisible(false);
+    if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
 
     if (callback) callback();
   }, [key, list, lastRan]);

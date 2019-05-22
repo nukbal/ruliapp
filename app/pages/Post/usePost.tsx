@@ -39,7 +39,7 @@ export default function usePost(url: string, key: string) {
         return;
       }
 
-      StatusBar.setNetworkActivityIndicatorVisible(true);
+      if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
       try {
         const targetUrl = `https://m.ruliweb.com/${url}?search_type=name&search_key=%2F%2F%2F`;
         const config = {
@@ -84,7 +84,7 @@ export default function usePost(url: string, key: string) {
         Alert.alert('error', '해당 글이 존재하지 않습니다.');
       }
       setReady(true);
-      StatusBar.setNetworkActivityIndicatorVisible(false);
+      if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
     }
     loadPost();
   }, [url]);
@@ -113,7 +113,7 @@ export default function usePost(url: string, key: string) {
       },
     };
 
-    StatusBar.setNetworkActivityIndicatorVisible(true);
+    if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
     try {
       // @ts-ignore
       const response = await fetch('http://api.ruliweb.com/commentView', config);
@@ -130,7 +130,7 @@ export default function usePost(url: string, key: string) {
       //
     }
     setCommentLoading(false);
-    StatusBar.setNetworkActivityIndicatorVisible(false);
+    if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
   }, [url, key]);
 
   return { ...data, comment, ready, loadComment, isCommentLoading };
