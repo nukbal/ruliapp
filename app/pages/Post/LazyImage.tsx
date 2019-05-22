@@ -7,6 +7,7 @@ import {
   AsyncStorage,
   ActivityIndicator,
   LayoutChangeEvent,
+  Platform,
 } from 'react-native';
 import fs from 'react-native-fs';
 
@@ -77,10 +78,9 @@ export default function LazyImage({ source, style }: Props) {
           setUri(path);
           return;
         }
-
         if (isDone) return;
 
-        const path = `${IMG_PATH}/${compress(source.uri)}`;
+        const path = `${Platform.OS === 'ios' ? '' : 'file://'}${IMG_PATH}/${compress(source.uri)}`;
         const job = fs.downloadFile({
           fromUrl: source.uri,
           toFile: path,
@@ -89,18 +89,14 @@ export default function LazyImage({ source, style }: Props) {
         });
 
         await job.promise;
-        if (isDone) return;
-
         const { width, height } = await getImageSize(path);
-        if (isDone) return;
-
         await AsyncStorage.setItem(`@Image:${source.uri}`, JSON.stringify({ path, width, height }));
         if (isDone) return;
 
         setSize({ width, height });
         setUri(path);
       } catch (e) {
-        // console.warn(e);
+        // console.warn(e.message);
         setError(true);
       }
     }
