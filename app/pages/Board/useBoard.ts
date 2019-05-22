@@ -1,13 +1,15 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { StatusBar, Platform } from 'react-native';
 import qs from 'query-string';
+import arrayToObject from '../../utils/arrayToObject';
 import parseBoardList, { IParseBoard } from '../../utils/parseBoard';
 
 export default function useBoard(key: string) {
   const [page, setPage] = useState(1);
   const [pushing, setPushing] = useState(false);
   const [appending, setAppending] = useState(false);
-  const [list, setList] = useState<PostRecord[]>([]);
+  const [data, setData] = useState<{ [key: string]: PostRecord }>({});
+  const [list, setList] = useState<string[]>([]);
   const lastRan = useRef<number | null>(null);
 
   const request = useCallback(async (
@@ -43,12 +45,14 @@ export default function useBoard(key: string) {
       const htmlString = await response.text();
       const json: IParseBoard = parseBoardList(htmlString, key);
 
-      if (params.page === 1) setList(json.rows);
-      else {
-        const firstId = json.rows[0].key;
-        const idx = list.findIndex(item => item.key === firstId);
-        const newList = list.slice(0, idx);
-        setList([...newList, ...json.rows]);
+      if (params.page === 1) {
+        const keys = json.rows.map((item: PostRecord) => item.key);
+        setData(arrayToObject(json.rows));
+        setList(keys);
+      } else {
+        const keys = json.rows.map((item: PostRecord) => item.key);
+        setData(d => ({ ...d, ...arrayToObject(json.rows) }));
+        setList(lst => Array.from(new Set([...lst, ...keys])));
       }
     } catch (e) {
       // console.error(e);
@@ -56,7 +60,7 @@ export default function useBoard(key: string) {
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
 
     if (callback) callback();
-  }, [key, list, lastRan]);
+  }, [key, lastRan]);
 
   useEffect(() => {
     if (key) request();
@@ -79,5 +83,5 @@ export default function useBoard(key: string) {
     }
   }, [key, appending, list.length, page, request]);
 
-  return { list, request, onRefresh, onEndReached, pushing, appending };
+  return { data, list, request, onRefresh, onEndReached, pushing, appending };
 }

@@ -8,6 +8,7 @@ import {
   View,
   ListRenderItemInfo,
   Text,
+  Platform,
 } from 'react-native';
 
 // import SearchBar from './SearchBar';
@@ -44,14 +45,15 @@ interface Props {
 
 export default function Board({ navigation }: Props) {
   const boardId = navigation.state.params ? navigation.state.params.key : '';
-  const { list, onRefresh, onEndReached, pushing, appending } = useBoard(boardId);
+  const { list, data, onRefresh, onEndReached, pushing, appending } = useBoard(boardId);
 
-  const renderItem = useCallback(({ item, separators }: ListRenderItemInfo<PostRecord>) => {
+  const renderItem = useCallback(({ item, separators }: ListRenderItemInfo<string>) => {
     if (!item) return null;
 
+    const target = data[item];
     const onPress = () => {
       const { navigate } = navigation;
-      const { url, parent, key, subject } = item;
+      const { url, parent, key, subject } = target;
       navigate({ routeName: 'Post', params: { url, parent, key, subject } });
     };
 
@@ -60,10 +62,12 @@ export default function Board({ navigation }: Props) {
         onPress={onPress}
         onShowUnderlay={separators.highlight}
         onHideUnderlay={separators.unhighlight}
-        {...item}
+        {...target}
       />
     );
-  }, [navigation]);
+  }, [navigation, data]);
+
+  const extractKey = useCallback((item: string) => item, []);
 
   if (!boardId) {
     return (
@@ -77,8 +81,8 @@ export default function Board({ navigation }: Props) {
     <View style={styles.container}>
       <FlatList
         data={list}
+        keyExtractor={extractKey}
         renderItem={renderItem}
-        keyExtractor={(item: PostRecord) => item.key}
         ListEmptyComponent={<Placeholder />}
         refreshing={pushing}
         onRefresh={onRefresh}
@@ -86,10 +90,10 @@ export default function Board({ navigation }: Props) {
         getItemLayout={(_: any, index: number) => ({ length: 75, offset: 75 * index, index })}
         initialNumToRender={8}
         onEndReached={onEndReached}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={1}
         removeClippedSubviews
       />
-      <StatusBar barStyle="light-content" />
+      {Platform.OS === 'ios' && (<StatusBar barStyle="light-content" />)}
     </View>
   );
 }
