@@ -29,15 +29,8 @@ interface Props {
 }
 
 export function setImageSize(image: { width: number, height: number }, screenWidth: number) {
-  let width = screenWidth;
-  let ratio = 1;
-  if (width > image.width) {
-    ratio = width / image.width;
-    // eslint-disable-next-line prefer-destructuring
-    width = image.width;
-  } else {
-    ratio = width / image.width;
-  }
+  const width = screenWidth;
+  const ratio = width / image.width;
   // eslint-disable-next-line no-bitwise
   const height = ~~(image.height * ratio);
   return { width, height };
@@ -61,7 +54,8 @@ function LazyImage({ source, style }: Props) {
     { contentLength, bytesWritten }: fs.DownloadProgressCallbackResult,
   ) => {
     if (bytesWritten < contentLength) {
-      setPercent(Math.round(bytesWritten / contentLength * 100));
+      // eslint-disable-next-line no-bitwise
+      setPercent(~~(bytesWritten / contentLength * 100));
     }
   }, []);
 
@@ -135,6 +129,7 @@ function LazyImage({ source, style }: Props) {
     <Image
       style={[styles.ImageContent, style, imageSize]}
       source={{ uri }}
+      resizeMode="cover"
     />
   );
 }

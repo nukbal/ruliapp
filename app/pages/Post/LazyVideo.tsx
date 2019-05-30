@@ -42,7 +42,6 @@ function LazyVideo({ uri }: Props) {
       resizeMode="cover"
       muted
       repeat
-      paused={false}
       hideShutterView
       useTextureView={false}
     />
