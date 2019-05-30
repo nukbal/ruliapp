@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  text: {
+    color: 'black',
+  },
   header: {
     height: 45,
     backgroundColor: primary,
@@ -73,7 +76,7 @@ export default function Drawer({ navigation }: Props) {
         key={index}
         underlayColor="#1A70DC"
       >
-        <Text>{item.title}</Text>
+        <Text style={styles.text}>{item.title}</Text>
       </TouchableHighlight>
     );
   }, [onPressItem]);

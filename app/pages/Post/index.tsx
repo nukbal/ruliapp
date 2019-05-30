@@ -54,6 +54,10 @@ export default function Post({ navigation }: Props) {
 
   const renderContent = useCallback(({ item }: any) => <Contents {...item} />, []);
   const renderComment = useCallback(({ item }: any) => <Comments {...item} />, []);
+  const keyExtractor = useCallback(
+    (item: CommentRecord | ContentRecord, i: number) => item.key,
+    [],
+  );
 
   if (!ready) {
     return <View style={styles.container}><PostPlaceholder /></View>;
@@ -81,7 +85,7 @@ export default function Post({ navigation }: Props) {
         onRefresh={loadComment}
         renderSectionHeader={renderSectionHeader}
         renderSectionFooter={renderSectionFooter}
-        keyExtractor={(item: CommentRecord | ContentRecord, i: number) => item.key}
+        keyExtractor={keyExtractor}
         sections={sections}
         stickySectionHeadersEnabled={false}
       />

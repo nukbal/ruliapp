@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { memo, useEffect, useState, useMemo, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -50,7 +50,7 @@ function getImageSize(path: string) {
 }
 
 
-export default function LazyImage({ source, style }: Props) {
+function LazyImage({ source, style }: Props) {
   const [error, setError] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -72,13 +72,13 @@ export default function LazyImage({ source, style }: Props) {
       try {
         const checkCache = AsyncStorage.getItem(`@Image:${source.uri}`);
         const json = await checkCache;
+        if (isDone) return;
         if (json) {
           const { width, height, path } = JSON.parse(json);
           setSize({ width, height });
           setUri(path);
           return;
         }
-        if (isDone) return;
 
         const path = `${Platform.OS === 'ios' ? '' : 'file://'}${IMG_PATH}/${compress(source.uri)}`;
         const job = fs.downloadFile({
@@ -138,3 +138,11 @@ export default function LazyImage({ source, style }: Props) {
     />
   );
 }
+
+function isEqual(prev: Props, next: Props) {
+  return (
+    prev.source.uri === next.source.uri
+  );
+}
+
+export default memo(LazyImage, isEqual);

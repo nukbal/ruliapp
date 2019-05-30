@@ -1,8 +1,8 @@
 
 function parseTime(date: Date, str: string) {
   const timeArr = str.split(':');
-  date.setUTCHours(parseInt(timeArr[0], 10));
-  date.setUTCMinutes(parseInt(timeArr[1], 10));
+  date.setHours(parseInt(timeArr[0], 10));
+  date.setMinutes(parseInt(timeArr[1], 10));
   return date;
 }
 
@@ -11,10 +11,10 @@ export default function parseDate(str: string): Date | undefined {
   if (len === 0 || len < 5) return;
 
   const date = new Date();
-  date.setUTCMilliseconds(0);
-  date.setUTCSeconds(0);
-  date.setUTCMinutes(0);
-  date.setUTCHours(0);
+  date.setMilliseconds(0);
+  date.setSeconds(0);
+  date.setMinutes(0);
+  date.setHours(0);
 
   if (len === 5) {
     return parseTime(date, str);

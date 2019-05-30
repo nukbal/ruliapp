@@ -1,7 +1,7 @@
 
 function numeric(num: number) {
   const str = `0${num}`;
-  return str.substring(str.length - 2, str.length);
+  return str.slice(-2);
 }
 
 export default function format(d: Date | string) {

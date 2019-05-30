@@ -68,6 +68,10 @@ export default function Board({ navigation }: Props) {
   }, [navigation, data]);
 
   const extractKey = useCallback((item: string) => item, []);
+  const getItemLayout = useCallback(
+    (_: any, index: number) => ({ length: 75, offset: 75 * index, index }),
+    [],
+  );
 
   if (!boardId) {
     return (
@@ -87,7 +91,7 @@ export default function Board({ navigation }: Props) {
         refreshing={pushing}
         onRefresh={onRefresh}
         ListFooterComponent={appending ? AppendLoading : undefined}
-        getItemLayout={(_: any, index: number) => ({ length: 75, offset: 75 * index, index })}
+        getItemLayout={getItemLayout}
         initialNumToRender={8}
         onEndReached={onEndReached}
         onEndReachedThreshold={1}

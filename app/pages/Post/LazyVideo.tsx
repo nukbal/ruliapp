@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import Video, { OnLoadData } from 'react-native-video';
 import { StyleSheet, LayoutChangeEvent } from 'react-native';
 import { setImageSize } from './LazyImage';
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function LazyVideo({ uri }: Props) {
+function LazyVideo({ uri }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [isLoad, setLoad] = useState(false);
@@ -31,14 +31,28 @@ export default function LazyVideo({ uri }: Props) {
   }, []);
 
   return (
+    // @ts-ignore
     <Video
       source={{ uri }}
       onLoad={onLoad}
       onLayout={onLayout}
       style={[styles.container, (isLoad ? setImageSize(size, screenWidth) : { backgroundColor: '#ededed' })]}
       ignoreSilentSwitch="obey"
+      volume={0}
+      resizeMode="cover"
       muted
       repeat
+      paused={false}
+      hideShutterView
+      useTextureView={false}
     />
   );
 }
+
+function isEqual(prev: Props, next: Props) {
+  return (
+    prev.uri === next.uri
+  );
+}
+
+export default memo(LazyVideo, isEqual);

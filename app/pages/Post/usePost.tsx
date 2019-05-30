@@ -27,9 +27,11 @@ export default function usePost(url: string, key: string) {
   const [isCommentLoading, setCommentLoading] = useState(false);
 
   useEffect(() => {
+    let isDone = false;
     async function loadPost() {
       setReady(false);
       const cache = await AsyncStorage.getItem(`@Posts:${url}`);
+      if (isDone) return;
       if (cache) {
         // @ts-ignore
         const { comments, ...rest } = JSON.parse(cache);
@@ -63,15 +65,19 @@ export default function usePost(url: string, key: string) {
 
         // @ts-ignore
         const response = await fetch(targetUrl, config);
+        if (isDone) return;
         if (!response.ok) throw new Error('request failed');
 
         const htmlString = await response.text();
+        if (isDone) return;
+
         const json = parsePost(htmlString, '');
         if (!json) throw new Error('parse failed');
 
         const { comments, ...rest } = json;
 
         await AsyncStorage.setItem(`@Posts:${url}`, JSON.stringify(json));
+        if (isDone) return;
         // @ts-ignore
         setData({
           contents: rest.contents,
@@ -80,6 +86,7 @@ export default function usePost(url: string, key: string) {
         });
         setComments(comments);
       } catch (e) {
+        if (isDone) return;
         // console.warn(e);
         Alert.alert('error', '해당 글이 존재하지 않습니다.');
       }
@@ -87,6 +94,9 @@ export default function usePost(url: string, key: string) {
       if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
     }
     loadPost();
+    return () => {
+      isDone = true;
+    };
   }, [url]);
 
   const loadComment = useCallback(async () => {

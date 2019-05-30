@@ -11,6 +11,8 @@ export default function Placeholder() {
       <Item />
       <Item />
       <Item />
+      <Item />
+      <Item />
     </Fragment>
   );
 }

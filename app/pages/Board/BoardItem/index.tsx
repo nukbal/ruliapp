@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 import styles from './styles';
 import Placeholder from './placeholder';
@@ -18,8 +18,16 @@ function BoardItem(props: Props) {
     subject, user, commentSize, likes, views, date,
     onPress, onShowUnderlay, onHideUnderlay,
   } = props;
+  const dateStr = useMemo(
+    () => (
+      date
+        ? `${Fixed(date.getMonth() + 1)}/${Fixed(date.getDate())} ${Fixed(date.getHours())}:${Fixed(date.getMinutes())}`
+        : ''
+    ),
+    [date],
+  );
+
   if (!subject) return <Placeholder />;
-  const dateStr = date ? `${Fixed(date.getMonth() + 1)}/${Fixed(date.getDay())} ${Fixed(date.getHours())}:${Fixed(date.getMinutes())}` : '';
   return (
     <TouchableHighlight
       onPress={onPress}
