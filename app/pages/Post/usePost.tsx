@@ -103,20 +103,16 @@ export default function usePost(url: string, key: string) {
     setCommentLoading(true);
 
     const boardId = url.substring(url.indexOf('board/') + 6, url.indexOf('/read'));
-    const form = new FormData();
-    form.append('page', 1);
-    form.append('article_id', key);
-    form.append('board_id', boardId);
-    form.append('cmtimg', 1);
 
     const config = {
       method: 'POST',
-      body: form,
+      body: `page=1&article_id=${key}&board_id=${boardId}&cmtimg=1`,
       credentials: 'include',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json, text/javascript, */*; q=0.01',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Accept-Encoding': 'gzip, deflate',
+        origin: 'https://m.ruliweb.com',
         referer: `http://m.ruliweb.com/${url}`,
         'User-Agent':
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
@@ -126,7 +122,7 @@ export default function usePost(url: string, key: string) {
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
     try {
       // @ts-ignore
-      const response = await fetch('http://api.ruliweb.com/commentView', config);
+      const response = await fetch('https://api.ruliweb.com/commentView', config);
       const json = await response.json();
       if (json.success) {
         const comments = parseComment(json.view);
@@ -135,9 +131,10 @@ export default function usePost(url: string, key: string) {
           const post = JSON.parse(cache);
           AsyncStorage.setItem(`@Posts:${url}`, JSON.stringify({ ...post, comments }));
         }
+        setComments(comments);
       }
     } catch (e) {
-      //
+      // console.warn(e.message);
     }
     setCommentLoading(false);
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
