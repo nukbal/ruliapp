@@ -25,6 +25,7 @@ export const communityList = [
 export const gameList = [
   { key: 'ps/board/300421', title: 'PS 게임이야기' },
   { key: 'ps/board/299999', title: '인디게임' },
+  { key: 'pc/game/81745', title: '패스 오브 엑자일' },
 ];
 
 export const hobbyList = [

@@ -3,7 +3,7 @@ import { StyleSheet, SectionList, Text, TouchableHighlight, View, SectionListDat
 import { NavigationScreenProp, NavigationActions, StackActions, SafeAreaView } from 'react-navigation';
 import { primary } from '../../styles/color';
 
-import { bestList, communityList, hobbyList, newsList } from '../../config/BoardList';
+import { bestList, communityList, hobbyList, newsList, gameList } from '../../config/BoardList';
 
 const styles = StyleSheet.create({
   container: {
@@ -48,6 +48,7 @@ export default function Drawer({ navigation }: Props) {
     { title: '뉴스', data: newsList },
     { title: '베스트', data: bestList },
     { title: '취미', data: hobbyList },
+    { title: '게임', data: gameList },
     { title: '커뮤니티', data: communityList },
   ];
 
