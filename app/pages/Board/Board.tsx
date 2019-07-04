@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
+import styled from 'styled-components/native';
 import { NavigationScreenProp } from 'react-navigation';
 import {
-  StyleSheet,
   FlatList,
   StatusBar,
   ActivityIndicator,
@@ -18,20 +18,12 @@ import { darkBarkground } from '../../styles/color';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: darkBarkground,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-  infoPanel: {
-    paddingLeft: 8,
-    paddingRight: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});
+const Container = styled.View`
+  flex: 1;
+  background-color: ${darkBarkground};
+  align-items: stretch;
+  justify-content: center;
+`;
 
 const AppendLoading = (
   <View style={[itemStyles.container, { alignItems: 'center' }]}>
@@ -75,14 +67,14 @@ export default function Board({ navigation }: Props) {
 
   if (!boardId) {
     return (
-      <View style={[styles.container, { alignItems: 'center' }]}>
+      <Container style={{ alignItems: 'center' }}>
         <Text>Please select board</Text>
-      </View>
+      </Container>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <Container>
       <FlatList
         data={list}
         keyExtractor={extractKey}
@@ -98,7 +90,7 @@ export default function Board({ navigation }: Props) {
         removeClippedSubviews
       />
       {Platform.OS === 'ios' && (<StatusBar barStyle="light-content" />)}
-    </View>
+    </Container>
   );
 }
 

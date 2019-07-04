@@ -1,18 +1,12 @@
-import React, { memo, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { memo, useState, useMemo, useCallback } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  Image,
-  AsyncStorage,
   ActivityIndicator,
   LayoutChangeEvent,
-  Platform,
 } from 'react-native';
-import fs from 'react-native-fs';
-
-import compress from '../../utils/compressUrl';
-import { IMG_PATH } from '../../config/constants';
+import Image, { OnLoadEvent } from 'react-native-fast-image';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -36,12 +30,6 @@ export function setImageSize(image: { width: number, height: number }, screenWid
   return { width, height };
 }
 
-function getImageSize(path: string) {
-  return new Promise<{ width: number, height: number }>((done, error) => {
-    Image.getSize(path, (width, height) => { done({ width, height }); }, error);
-  });
-}
-
 
 function LazyImage({ source, style }: Props) {
   const [error, setError] = useState(false);
@@ -50,62 +38,15 @@ function LazyImage({ source, style }: Props) {
   const [percent, setPercent] = useState(0);
   const [uri, setUri] = useState<string | undefined>();
 
-  const onProgress = useCallback((
-    { contentLength, bytesWritten }: fs.DownloadProgressCallbackResult,
-  ) => {
-    if (bytesWritten < contentLength) {
-      // eslint-disable-next-line no-bitwise
-      setPercent(~~(bytesWritten / contentLength * 100));
-    }
-  }, []);
-
-  useEffect(() => {
-    let isDone = false;
-
-    async function loadImage() {
-      try {
-        const checkCache = AsyncStorage.getItem(`@Image:${source.uri}`);
-        const json = await checkCache;
-        if (isDone) return;
-        if (json) {
-          const { width, height, path } = JSON.parse(json);
-          setSize({ width, height });
-          setUri(path);
-          return;
-        }
-
-        const path = `${Platform.OS === 'ios' ? '' : 'file://'}${IMG_PATH}/${compress(source.uri)}`;
-        const job = fs.downloadFile({
-          fromUrl: source.uri,
-          toFile: path,
-          cacheable: false,
-          progress: onProgress,
-        });
-
-        await job.promise;
-        const { width, height } = await getImageSize(path);
-        await AsyncStorage.setItem(`@Image:${source.uri}`, JSON.stringify({ path, width, height }));
-        if (isDone) return;
-
-        setSize({ width, height });
-        setUri(path);
-      } catch (e) {
-        // console.warn(e.message);
-        setError(true);
-      }
-    }
-    loadImage();
-
-    return () => {
-      isDone = true;
-    };
-  }, [source.uri, onProgress]);
-
   const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
     setScreenWidth(nativeEvent.layout.width);
   }, []);
 
   const imageSize = useMemo(() => setImageSize(size, screenWidth), [size, screenWidth]);
+
+  const onLoad = ({ nativeEvent }: OnLoadEvent) => {
+    setSize(nativeEvent);
+  };
 
   if (error) {
     return (
@@ -130,6 +71,7 @@ function LazyImage({ source, style }: Props) {
       style={[styles.ImageContent, style, imageSize]}
       source={{ uri }}
       resizeMode="cover"
+      onLoad={onLoad}
     />
   );
 }
