@@ -7,10 +7,11 @@
     "react": "16.8.6",
     "react-native": "0.60.3",
     "react-native-fast-image": "^7.0.2",
+    "react-native-gesture-handler": "git://github.com/hyochan/react-native-gesture-handler.git#package-names",
+    "react-native-reanimated": "^1.1.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-video": "^4.4.3",
     "react-navigation": "^3.11.0",
-    "react-navigation-tabs": "^2.2.0",
     "styled-components": "^5.0.0-beta.8"
   },
   "devDependencies": {
@@ -42,6 +43,7 @@
     "eslint-plugin-react-hooks": "^1.6.1",
     "jest": "^24.8.0",
     "jest-react-native": "^18.0.0",
+    "jetifier": "^1.6.2",
     "metro-react-native-babel-preset": "^0.54.1",
     "react-test-renderer": "16.8.6",
     "typescript": "^3.5.2"
@@ -54,7 +56,8 @@
     "test:watch": "jest --watch --verbose false",
     "test": "jest",
     "lint": "eslint \"app/**\"",
-    "xcode": "open ios/ruliapp.xcworkspace"
+    "xcode": "open ios/ruliapp.xcworkspace",
+    "postinstall": "jetify"
   },
   "jest": {
     "transform": {
