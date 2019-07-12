@@ -66,14 +66,14 @@ export default function useBoard(key: string) {
     if (key) request();
   }, [key, request]);
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = () => {
     if (key && !pushing && list.length > 0) {
       setPushing(true);
       request({ page: 1 }, () => setPushing(false));
     }
-  }, [key, pushing, list.length, request]);
+  };
 
-  const onEndReached = useCallback(() => {
+  const onEndReached = () => {
     if (key && !appending && list.length > 0) {
       setAppending(true);
       request({ page: page + 1 }, () => {
@@ -81,7 +81,7 @@ export default function useBoard(key: string) {
         setAppending(false);
       });
     }
-  }, [key, appending, list.length, page, request]);
+  };
 
   return { data, list, request, onRefresh, onEndReached, pushing, appending };
 }
