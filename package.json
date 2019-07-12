@@ -5,11 +5,10 @@
   "dependencies": {
     "query-string": "^6.8.1",
     "react": "16.8.6",
-    "react-native": "0.60.0",
-    "react-native-fast-image": "^6.1.1",
-    "react-native-reanimated": "^1.1.0",
+    "react-native": "0.60.3",
+    "react-native-fast-image": "^7.0.2",
     "react-native-vector-icons": "^6.6.0",
-    "react-native-video": "^4.4.2",
+    "react-native-video": "^4.4.3",
     "react-navigation": "^3.11.0",
     "react-navigation-tabs": "^2.2.0",
     "styled-components": "^5.0.0-beta.8"
