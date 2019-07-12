@@ -55,17 +55,6 @@ function LazyImage({ source, style }: Props) {
       </View>
     );
   }
-  if (!(screenWidth > 0 && uri && size.width)) {
-    return (
-      <View
-        style={[styles.ImageContent, style, { backgroundColor: '#ededed' }]}
-        onLayout={onLayout}
-      >
-        <ActivityIndicator />
-        {percent ? (<Text>{percent || '0'}</Text>) : null}
-      </View>
-    );
-  }
   return (
     <Image
       style={[styles.ImageContent, style, imageSize]}

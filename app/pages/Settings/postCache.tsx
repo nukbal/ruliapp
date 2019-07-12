@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TouchableOpacity, Text, Alert, AsyncStorage } from 'react-native';
+import { TouchableOpacity, Text, Alert } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import styles from './styles';
 
 export default function ImageCache() {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, StyleSheet, WebView, View } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
+import WebView from 'react-native-webview';
 import { listItem } from '../../styles/color';
 import LazyImage from './LazyImage';
 import LazyVideo from './LazyVideo';
