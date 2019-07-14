@@ -1,7 +1,19 @@
 import React, { memo, useMemo } from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
+import styled from 'styled-components/native';
+import { View, Text } from 'react-native';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 import styles from './styles';
 import Placeholder from './placeholder';
+
+export const Container = styled(TouchableHighlight)`
+  height: 75;
+  padding-left: 15;
+  padding-right: 15;
+`;
+
+export const Title = styled.Text`
+  color: ${({ theme }) => theme.text};
+`;
 
 interface Props extends PostRecord {
   onPress: () => void;
@@ -29,23 +41,23 @@ function BoardItem(props: Props) {
 
   if (!subject) return <Placeholder />;
   return (
-    <TouchableHighlight
+    <Container
       onPress={onPress}
       onShowUnderlay={onShowUnderlay}
       onHideUnderlay={onHideUnderlay}
       underlayColor="#1A70DC"
     >
-      <View style={styles.container}>
+      <>
         <View style={styles.info}>
-          <Text style={styles.titleText} numberOfLines={1}>{subject}</Text>
+          <Title numberOfLines={1}>{subject}</Title>
         </View>
         <View style={styles.info}>
           <Text style={styles.itemText} numberOfLines={1}>
             {`${user.name} | 덧글 ${commentSize || 0} | 추천 ${likes} | 조회 ${views} | ${dateStr}`}
           </Text>
         </View>
-      </View>
-    </TouchableHighlight>
+      </>
+    </Container>
   );
 }
 

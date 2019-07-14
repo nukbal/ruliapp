@@ -1,63 +1,61 @@
 import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import styled from 'styled-components/native';
 import WebView from 'react-native-webview';
-import { listItem } from '../../styles/color';
 import LazyImage from './LazyImage';
 import LazyVideo from './LazyVideo';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: listItem,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    margin: 0,
-  },
-  text: {
-    color: 'black',
-    lineHeight: 21,
-    justifyContent: 'flex-start',
-  },
   media: {
     height: 200,
   },
 });
+const Container = styled.View`
+  background-color: ${({ theme }) => theme.background};
+  padding-top: 16;
+  padding-bottom: 16;
+  padding-left: 4;
+  padding-right: 4;
+`;
+const Txt = styled.Text`
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  line-height: 21;
+`;
 
 export default function ContentItem({ type, content }: ContentRecord) {
   if (!type || !content) return null;
 
   switch (type) {
     case 'reference': {
-      return <Text style={[styles.container, styles.text]}>{`출처: ${content}`}</Text>;
+      return <Txt>{`출처: ${content}`}</Txt>;
     }
     case 'object': {
       return (
-        <View style={styles.container}>
-          <WebView
-            // @ts-ignore
-            source={{ uri: content }}
-            style={styles.media}
-            javaScriptEnabled
-          />
-        </View>
+        <WebView
+          // @ts-ignore
+          source={{ uri: content }}
+          style={styles.media}
+          javaScriptEnabled
+        />
       );
     }
     case 'image': {
       return (
-        <View style={styles.container}>
+        <Container>
           <LazyImage source={{ uri: content }} />
-        </View>
+        </Container>
       );
     }
     case 'video': {
       return (
-        <View style={styles.container}>
+        <Container>
           <LazyVideo uri={content} />
-        </View>
+        </Container>
       );
     }
     default: {
-      return <Text style={[styles.container, styles.text]}>{content}</Text>;
+      return <Txt>{content}</Txt>;
     }
   }
 }

@@ -1,16 +1,20 @@
 import React from 'react';
 import { View } from 'react-native';
+import { Container } from './index';
+import Placeholder from '../../Placeholder';
 import styles from './styles';
 
 export default function BoardPlaceholder() {
   return (
-    <View style={styles.container}>
-      <View style={styles.info}>
-        <View style={[styles.placeholder, { width: '80%' }]} />
-      </View>
-      <View style={styles.info}>
-        <View style={[styles.placeholder, { width: '45%' }]} />
-      </View>
-    </View>
+    <Container>
+      <>
+        <View style={styles.info}>
+          <Placeholder width="80%" />
+        </View>
+        <View style={styles.info}>
+          <Placeholder width="50%" />
+        </View>
+      </>
+    </Container>
   );
 }

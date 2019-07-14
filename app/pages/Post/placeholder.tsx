@@ -1,32 +1,23 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
 import styles from './styles';
 import { styles as ContentStyle } from './Contents';
-
-const style = StyleSheet.create({
-  placeholder: {
-    backgroundColor: '#dedede',
-    marginBottom: 8,
-    height: 16,
-  },
-});
-
-const inlineStyle = [ContentStyle.container, style.placeholder];
+import Placeholder from '../Placeholder';
 
 export default function PostPlaceholder() {
   return (
-    <ScrollView>
+    <View>
       <View style={styles.title}>
-        <View style={[style.placeholder, { width: '65%', height: 20 }]} />
-        <View style={[style.placeholder, { width: '45%' }]} />
+        <Placeholder size={20} width="65%" />
+        <Placeholder width="45%" />
       </View>
       <View style={[ContentStyle.container, { paddingTop: 16, paddingBottom: 16 }]}>
-        <View style={[...inlineStyle, { width: '100%', height: 200 }]} />
-        <View style={[...inlineStyle, { width: '100%' }]} />
-        <View style={[...inlineStyle, { width: '100%' }]} />
-        <View style={[...inlineStyle, { width: '75%' }]} />
+        <Placeholder size={200} />
+        <Placeholder />
+        <Placeholder />
+        <Placeholder width="75%" />
       </View>
-    </ScrollView>
+    </View>
   );
 }

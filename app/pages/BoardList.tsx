@@ -1,30 +1,28 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components/native';
-import { SectionList, Text, TouchableHighlight, View, SectionListData } from 'react-native';
-import { NavigationScreenProp, SafeAreaView } from 'react-navigation';
-import Header from './Header';
-import { primary } from '../styles/color';
-
+import { SectionList, SectionListData } from 'react-native';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+import { NavigationScreenProp } from 'react-navigation';
+import AnimatedContent from './AnimatedContent';
 import { bestList, communityList, hobbyList, newsList, gameList } from '../config/BoardList';
-
-const List = styled(SectionList)`
-  padding-top: 45;
-  background-color: ${({ theme }) => theme.background};
-`;
 
 const Item = styled(TouchableHighlight)`
   height: 45;
   padding-left: 15;
   justify-content: center;
   border-bottom-width: 1;
-  border-color: #eee;
+  border-color: #444;
 `;
 
 const Label = styled.View`
   height: 45;
   padding-left: 15;
   justify-content: center;
-  background-color: #eee;
+  background-color: #444;
+`;
+
+const Txt = styled.Text`
+  color: ${({ theme }) => theme.text};
 `;
 
 interface Props {
@@ -42,7 +40,7 @@ const sections = [
 export default function Drawer({ navigation }: Props) {
   const renderHeader = useCallback(({ section: { title } }: { section: SectionListData<any> }) => (
     <Label>
-      <Text style={{ fontWeight: 'bold' }}>{title}</Text>
+      <Txt style={{ fontWeight: '600' }}>{title}</Txt>
     </Label>
   ), []);
 
@@ -59,19 +57,17 @@ export default function Drawer({ navigation }: Props) {
         key={index}
         underlayColor="#1A70DC"
       >
-        <Text>{item.title}</Text>
+        <Txt>{item.title}</Txt>
       </Item>
     );
   }, [onPressItem]);
 
   return (
-    <SafeAreaView>
-      <Header label="루리웹" />
-      <List
-        sections={sections}
-        renderSectionHeader={renderHeader}
-        renderItem={renderItem}
-      />
-    </SafeAreaView>
+    <AnimatedContent
+      title="루리웹"
+      sections={sections}
+      renderSectionHeader={renderHeader}
+      renderItem={renderItem}
+    />
   );
 }

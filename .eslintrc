@@ -1,8 +1,7 @@
 {
   "extends": [
-    "react-app",
-    "airbnb",
-    "@react-native-community"
+    "@react-native-community",
+    "airbnb"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": [
@@ -17,6 +16,7 @@
     }
   },
   "rules": {
+    "prettier/prettier": "off",
     "jsx-a11y/href-no-hash" : "off",
     "jsx-a11y/anchor-is-valid": [ "error", {
       "components": [ "Link" ],

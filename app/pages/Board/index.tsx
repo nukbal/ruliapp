@@ -1,38 +1,34 @@
-import React, { useCallback } from 'react';
-import styled from 'styled-components/native';
+import React, { useCallback, useMemo } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
-import {
-  FlatList,
-  StatusBar,
-  ActivityIndicator,
-  View,
-  ListRenderItemInfo,
-  Text,
-  Platform,
-} from 'react-native';
+import styled from 'styled-components/native';
+import { ActivityIndicator, ListRenderItemInfo } from 'react-native';
 
 // import SearchBar from './SearchBar';
 import BoardItem from './BoardItem';
-import itemStyles from './BoardItem/styles';
-import { darkBarkground } from '../../styles/color';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
 
-const Container = styled.View`
-  flex: 1;
-  background-color: ${darkBarkground};
-  align-items: stretch;
+import AnimatedContent from '../AnimatedContent';
+
+const Loading = styled.View`
+  height: 75;
+  background-color: ${({ theme }) => theme.background};
+  align-items: center;
   justify-content: center;
 `;
 
 const AppendLoading = (
-  <View style={[itemStyles.container, { alignItems: 'center' }]}>
+  <Loading>
     <ActivityIndicator />
-  </View>
+  </Loading>
 );
 
 function extractKey(item: string) {
   return item;
+}
+
+function getItemLayout(_: any, index: number) {
+  return { length: 75, offset: 75 * index, index };
 }
 
 interface Props {
@@ -63,43 +59,25 @@ export default function Board({ navigation }: Props) {
     );
   }, [navigation, data]);
 
-  const getItemLayout = useCallback(
-    (_: any, index: number) => ({ length: 75, offset: 75 * index, index }),
-    [],
-  );
-
-  if (!boardId) {
-    return (
-      <Container style={{ alignItems: 'center' }}>
-        <Text>Please select board</Text>
-      </Container>
-    );
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const title = useMemo(() => navigation.getParam('title'), [boardId]);
 
   return (
-    <Container>
-      <FlatList
-        data={list}
-        keyExtractor={extractKey}
-        renderItem={renderItem}
-        ListEmptyComponent={<Placeholder />}
-        refreshing={pushing}
-        onRefresh={onRefresh}
-        ListFooterComponent={appending ? AppendLoading : undefined}
-        getItemLayout={getItemLayout}
-        initialNumToRender={8}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={1}
-        removeClippedSubviews
-      />
-      {Platform.OS === 'ios' && (<StatusBar barStyle="light-content" />)}
-    </Container>
+    <AnimatedContent
+      title={title}
+      data={list}
+      keyExtractor={extractKey}
+      renderItem={renderItem}
+      ListEmptyComponent={<Placeholder />}
+      refreshing={pushing}
+      onRefresh={onRefresh}
+      ListFooterComponent={appending ? AppendLoading : undefined}
+      getItemLayout={getItemLayout}
+      initialNumToRender={8}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={1}
+      removeClippedSubviews
+      flat
+    />
   );
 }
-
-Board.navigationOptions = ({ navigation }: Props) => {
-  const title = navigation.getParam('title', 'Ruliapp');
-  return {
-    title: title || '',
-  };
-};
