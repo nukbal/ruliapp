@@ -61,12 +61,15 @@ export default function Post({ navigation }: Props) {
   return (
     <AnimatedContent
       title={navigation.state.params.subject}
-      refreshing={isCommentLoading}
-      onRefresh={loadComment}
-      renderSectionFooter={renderSectionFooter}
-      keyExtractor={keyExtractor}
-      sections={sections}
-      stickySectionHeadersEnabled={false}
-    />
+    >
+      <SectionList
+        refreshing={isCommentLoading}
+        onRefresh={loadComment}
+        renderSectionFooter={renderSectionFooter}
+        keyExtractor={keyExtractor}
+        sections={sections}
+        stickySectionHeadersEnabled={false}
+      />
+    </AnimatedContent>
   );
 }

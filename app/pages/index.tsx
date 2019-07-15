@@ -13,7 +13,7 @@ export default createStackNavigator({
   Post: {
     screen: PostScreen,
   },
-},{
+}, {
   initialRouteName: 'BoardList',
-  headerMode: 'none'
+  headerMode: 'none',
 });

@@ -63,11 +63,12 @@ export default function Drawer({ navigation }: Props) {
   }, [onPressItem]);
 
   return (
-    <AnimatedContent
-      title="루리웹"
-      sections={sections}
-      renderSectionHeader={renderHeader}
-      renderItem={renderItem}
-    />
+    <AnimatedContent title="루리웹">
+      <SectionList
+        sections={sections}
+        renderSectionHeader={renderHeader}
+        renderItem={renderItem}
+      />
+    </AnimatedContent>
   );
 }
