@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 6,
     marginBottom: 6,
-    backgroundColor: 'rgba(95,95,95,0.25)',
+    backgroundColor: 'rgba(100,100,100,0.25)',
   },
 });
 

@@ -10,9 +10,12 @@ import useBoard from './useBoard';
 
 import { FlatList } from 'react-native-gesture-handler';
 
+const List = styled(FlatList)`
+  background-color: ${({ theme }) => theme.background};
+`;
+
 const Loading = styled.View`
   height: 75;
-  background-color: ${({ theme }) => theme.background};
   align-items: center;
   justify-content: center;
 `;
@@ -59,13 +62,12 @@ export default function Board({ navigation }: Props) {
     );
   }, [navigation, data]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const title = useMemo(() => navigation.getParam('title'), [boardId]);
-
   return (
-    <FlatList
+    <List
       data={list}
+      // @ts-ignore
       keyExtractor={extractKey}
+      // @ts-ignore
       renderItem={renderItem}
       ListEmptyComponent={<Placeholder />}
       refreshing={pushing}

@@ -37,6 +37,8 @@ const Container = styled.View<{ child?: any }>`
   padding-left: ${({ child }) => (child ? 32 : 16)};
   padding-right: 16;
   justify-content: center;
+  border-bottom-color: ${({ theme }) => theme.border};
+  border-bottom-width: 1;
   background-color: ${({ child, theme }) => (child ? transparentize(0.825, theme.primary) : theme.background)};
 `;
 

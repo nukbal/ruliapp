@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 6,
     marginBottom: 6,
-    backgroundColor: 'rgba(95,95,95,0.25)',
+    backgroundColor: 'rgba(100,100,100,0.25)',
   },
 });
 
@@ -42,8 +42,9 @@ function LazyImage({ source }: Props) {
 
   if (error) {
     return (
-      <View style={styles.ImageContent}>
+      <View style={[styles.ImageContent, { height: 200, alignItems: 'center', justifyContent: 'center' }]}>
         <Text>불러오기 실패</Text>
+        <Text>{source.uri}</Text>
       </View>
     );
   }
