@@ -1,9 +1,8 @@
-import React, { memo, useState, useMemo, useCallback } from 'react';
+import React, { memo, useState, useMemo } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  ActivityIndicator,
   LayoutChangeEvent,
 } from 'react-native';
 import Image, { OnLoadEvent } from 'react-native-fast-image';
@@ -11,42 +10,35 @@ import Image, { OnLoadEvent } from 'react-native-fast-image';
 const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 200,
+    marginTop: 6,
+    marginBottom: 6,
+    backgroundColor: 'rgba(95,95,95,0.25)',
   },
 });
 
 interface Props {
   source: { uri: string };
-  style?: any;
 }
 
-export function setImageSize(image: { width: number, height: number }, screenWidth: number) {
+export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
   const width = screenWidth;
   const ratio = width / image.width;
   // eslint-disable-next-line no-bitwise
   const height = ~~(image.height * ratio);
-  return { width, height };
+  return height || 200;
 }
 
-
-function LazyImage({ source, style }: Props) {
+function LazyImage({ source }: Props) {
   const [error, setError] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [percent, setPercent] = useState(0);
-  const [uri, setUri] = useState<string | undefined>();
+  // const [percent, setPercent] = useState(0);
 
-  const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
-    setScreenWidth(nativeEvent.layout.width);
-  }, []);
+  const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
+  const onLoad = ({ nativeEvent }: OnLoadEvent) => setSize(nativeEvent);
+  const onError = () => setError(true);
 
-  const imageSize = useMemo(() => setImageSize(size, screenWidth), [size, screenWidth]);
-
-  const onLoad = ({ nativeEvent }: OnLoadEvent) => {
-    setSize(nativeEvent);
-  };
+  const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
 
   if (error) {
     return (
@@ -57,10 +49,12 @@ function LazyImage({ source, style }: Props) {
   }
   return (
     <Image
-      style={[styles.ImageContent, style, imageSize]}
-      source={{ uri }}
-      resizeMode="cover"
+      style={[styles.ImageContent, { height }]}
+      source={source}
+      resizeMode={Image.resizeMode.contain}
+      onLayout={onLayout}
       onLoad={onLoad}
+      onError={onError}
     />
   );
 }

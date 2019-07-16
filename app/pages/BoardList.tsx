@@ -1,24 +1,28 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components/native';
 import { SectionList, SectionListData } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { NavigationScreenProp } from 'react-navigation';
-import AnimatedContent from './AnimatedContent';
+import { transparentize } from 'polished';
 import { bestList, communityList, hobbyList, newsList, gameList } from '../config/BoardList';
+
+const List = styled(SectionList)`
+  background-color: ${({ theme }) => theme.background};
+`;
 
 const Item = styled(TouchableHighlight)`
   height: 45;
   padding-left: 15;
   justify-content: center;
+  border-bottom-color: ${({ theme }) => theme.border};
   border-bottom-width: 1;
-  border-color: #444;
 `;
 
 const Label = styled.View`
   height: 45;
   padding-left: 15;
   justify-content: center;
-  background-color: #444;
+  background-color: ${({ theme }) => transparentize(0.725, theme.primary)};
 `;
 
 const Txt = styled.Text`
@@ -37,12 +41,18 @@ const sections = [
   { title: '커뮤니티', data: communityList },
 ];
 
-export default function Drawer({ navigation }: Props) {
-  const renderHeader = useCallback(({ section: { title } }: { section: SectionListData<any> }) => (
+function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
+  return (
     <Label>
       <Txt style={{ fontWeight: '600' }}>{title}</Txt>
     </Label>
-  ), []);
+  );
+}
+
+export default function Drawer({ navigation }: Props) {
+  useEffect(() => {
+    navigation.setParams({ title: '루리웹' });
+  }, []);
 
   const onPressItem = useCallback(({ key, title }: any) => {
     const { navigate } = navigation;
@@ -63,12 +73,10 @@ export default function Drawer({ navigation }: Props) {
   }, [onPressItem]);
 
   return (
-    <AnimatedContent title="루리웹">
-      <SectionList
-        sections={sections}
-        renderSectionHeader={renderHeader}
-        renderItem={renderItem}
-      />
-    </AnimatedContent>
+    <List
+      sections={sections}
+      renderSectionHeader={renderHeader}
+      renderItem={renderItem}
+    />
   );
 }

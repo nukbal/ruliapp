@@ -9,6 +9,9 @@ export const Container = styled(TouchableHighlight)`
   height: 75;
   padding-left: 15;
   padding-right: 15;
+  background-color: ${({ theme }) => theme.background};
+  border-bottom-color: ${({ theme }) => theme.border};
+  border-bottom-width: 1;
 `;
 
 export const Title = styled.Text`

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@react-native-community/async-storage": "^1.5.1",
+    "polished": "^3.4.1",
     "query-string": "^6.8.1",
     "react": "16.8.6",
     "react-native": "0.60.3",

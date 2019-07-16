@@ -8,9 +8,10 @@ import MainRouter from './pages';
 const Container = createAppContainer(MainRouter);
 
 export default function App() {
+  const theme = darkTheme;
   return (
-    <ThemeProvider theme={darkTheme}>
-      <Container />
+    <ThemeProvider theme={theme}>
+      <Container screenProps={{ theme }} />
     </ThemeProvider>
   );
 }

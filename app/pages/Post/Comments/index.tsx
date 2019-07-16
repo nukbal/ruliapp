@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { transparentize } from 'polished';
 
 import { primary } from '../../../styles/color';
 import LazyImage from '../LazyImage';
@@ -33,10 +34,10 @@ export default function Comment(
 const Container = styled.View<{ child?: any }>`
   padding-top: 16;
   padding-bottom: 16;
-  padding-left: 16;
+  padding-left: ${({ child }) => (child ? 32 : 16)};
   padding-right: 16;
   justify-content: center;
-  margin-bottom: 1;
+  background-color: ${({ child, theme }) => (child ? transparentize(0.825, theme.primary) : theme.background)};
 `;
 
 const UserSection = styled.View`

@@ -8,7 +8,6 @@ import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
 
-import AnimatedContent from '../AnimatedContent';
 import { FlatList } from 'react-native-gesture-handler';
 
 const Loading = styled.View`
@@ -47,7 +46,7 @@ export default function Board({ navigation }: Props) {
     const onPress = () => {
       const { navigate } = navigation;
       const { url, parent, key, subject } = target;
-      navigate({ routeName: 'Post', params: { url, parent, key, subject } });
+      navigate({ routeName: 'Post', params: { url, parent, key, title: subject } });
     };
 
     return (
@@ -64,21 +63,19 @@ export default function Board({ navigation }: Props) {
   const title = useMemo(() => navigation.getParam('title'), [boardId]);
 
   return (
-    <AnimatedContent title={title}>
-      <FlatList
-        data={list}
-        keyExtractor={extractKey}
-        renderItem={renderItem}
-        ListEmptyComponent={<Placeholder />}
-        refreshing={pushing}
-        onRefresh={onRefresh}
-        ListFooterComponent={appending ? AppendLoading : undefined}
-        getItemLayout={getItemLayout}
-        initialNumToRender={8}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={1}
-        removeClippedSubviews
-      />
-    </AnimatedContent>
+    <FlatList
+      data={list}
+      keyExtractor={extractKey}
+      renderItem={renderItem}
+      ListEmptyComponent={<Placeholder />}
+      refreshing={pushing}
+      onRefresh={onRefresh}
+      ListFooterComponent={appending ? AppendLoading : undefined}
+      getItemLayout={getItemLayout}
+      initialNumToRender={8}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={1}
+      removeClippedSubviews
+    />
   );
 }

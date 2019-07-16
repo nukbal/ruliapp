@@ -8,19 +8,18 @@ import LazyVideo from './LazyVideo';
 export const styles = StyleSheet.create({
   media: {
     height: 200,
+    marginTop: 6,
+    marginBottom: 6,
   },
 });
-const Container = styled.View`
-  background-color: ${({ theme }) => theme.background};
+
+const Txt = styled.Text`
+  color: ${({ theme }) => theme.text};
+  line-height: 21;
   padding-top: 16;
   padding-bottom: 16;
   padding-left: 4;
   padding-right: 4;
-`;
-const Txt = styled.Text`
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.text};
-  line-height: 21;
 `;
 
 export default function ContentItem({ type, content }: ContentRecord) {
@@ -42,16 +41,12 @@ export default function ContentItem({ type, content }: ContentRecord) {
     }
     case 'image': {
       return (
-        <Container>
-          <LazyImage source={{ uri: content }} />
-        </Container>
+        <LazyImage source={{ uri: content }} />
       );
     }
     case 'video': {
       return (
-        <Container>
-          <LazyVideo uri={content} />
-        </Container>
+        <LazyVideo uri={content} />
       );
     }
     default: {

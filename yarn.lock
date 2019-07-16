@@ -5383,6 +5383,13 @@ pn@^1.1.0:
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
   integrity sha512-2qHaIQr2VLRFoxe2nASzsV6ef4yOOH+Fi9FBOVH6cqeSgUnoyySPZkxzLuzd+RYOQTRpROA0ztTMqxROKSb/nA==
 
+polished@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/polished/-/polished-3.4.1.tgz#1eb5597ec1792206365635811d465751f5cbf71c"
+  integrity sha512-GflTnlP5rrpDoigjczEkS6Ye7NDA4sFvAnlr5hSDrEvjiVj97Xzev3hZlLi3UB27fpxyTS9rWU64VzVLWkG+mg==
+  dependencies:
+    "@babel/runtime" "^7.4.5"
+
 posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
@@ -5590,10 +5597,10 @@ react-native-vector-icons@^6.6.0:
     prop-types "^15.6.2"
     yargs "^13.2.2"
 
-react-native-video@^4.4.3:
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-4.4.3.tgz#4fb5d05cad9420fa5c4c0d359381995543e03273"
-  integrity sha512-j3r99dygZ8SrO1ImEZ8LzUrO/GhlbfBNZrCP41x4YpDOKymQbqtt4UuBxJggKwu3rWe2TZCHOvytwVD3RMqbNg==
+react-native-video@^4.4.4:
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-4.4.4.tgz#e33da29990556a9b2d575d6b2e88190fc04d9b50"
+  integrity sha512-GzC9dqvEV3kPQDgfM41bxuhXK0pf6NF+/PSY0nCqzikaapUtOs/69gPHEoG0D6ykI5ru0TxKdc1ZYM6MfZfgRw==
   dependencies:
     keymirror "^0.1.1"
     prop-types "^15.5.10"

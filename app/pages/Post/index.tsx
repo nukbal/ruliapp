@@ -9,7 +9,11 @@ import Footer from './Footer';
 import Contents from './Contents';
 import Comments from './Comments';
 import usePost from './usePost';
-import AnimatedContent from '../AnimatedContent';
+import styled from 'styled-components/native';
+
+const List = styled(SectionList)`
+  background-color: ${({ theme }) => theme.background};
+`;
 
 type NaviProps = { url: string, parent: string, key: string, subject: string }
 
@@ -59,17 +63,13 @@ export default function Post({ navigation }: Props) {
     },
   ];
   return (
-    <AnimatedContent
-      title={navigation.state.params.subject}
-    >
-      <SectionList
-        refreshing={isCommentLoading}
-        onRefresh={loadComment}
-        renderSectionFooter={renderSectionFooter}
-        keyExtractor={keyExtractor}
-        sections={sections}
-        stickySectionHeadersEnabled={false}
-      />
-    </AnimatedContent>
+    <List
+      refreshing={isCommentLoading}
+      onRefresh={loadComment}
+      renderSectionFooter={renderSectionFooter}
+      keyExtractor={keyExtractor}
+      sections={sections}
+      stickySectionHeadersEnabled={false}
+    />
   );
 }
