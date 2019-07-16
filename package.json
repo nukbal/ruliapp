@@ -12,7 +12,7 @@
     "react-native-reanimated": "^1.1.0",
     "react-native-screens": "^1.0.0-alpha.23",
     "react-native-vector-icons": "^6.6.0",
-    "react-native-video": "^4.4.3",
+    "react-native-video": "^4.4.4",
     "react-native-webview": "^5.12.1",
     "react-navigation": "^3.11.1",
     "styled-components": "^5.0.0-beta.8"
