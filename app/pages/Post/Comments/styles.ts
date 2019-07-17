@@ -24,9 +24,10 @@ export default StyleSheet.create({
     flex: 1,
     paddingTop: 8,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-end',
   },
   iconText: {
-    paddingVertical: 6,
+    paddingHorizontal: 6,
   }
 });

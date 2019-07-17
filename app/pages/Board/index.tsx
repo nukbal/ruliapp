@@ -1,7 +1,6 @@
 import React, { useCallback, useContext } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
-import { View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { View, FlatList } from 'react-native';
 import { ActivityIndicator, ListRenderItemInfo } from 'react-native';
 
 // import SearchBar from './SearchBar';
@@ -67,7 +66,6 @@ export default function Board({ navigation }: Props) {
       onEndReached={onEndReached}
       onEndReachedThreshold={1}
       style={{ backgroundColor: theme.background }}
-      removeClippedSubviews
     />
   );
 }

@@ -24,7 +24,7 @@ export function setImageHeight(image: { width: number, height: number }, screenW
   const width = screenWidth;
   const ratio = width / image.width;
   // eslint-disable-next-line no-bitwise
-  const height = ~~(image.height * ratio);
+  const height = image.height * ratio;
   return height || 200;
 }
 
@@ -40,23 +40,19 @@ function LazyImage({ source }: Props) {
 
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
 
-  if (error) {
-    return (
-      <View style={[styles.ImageContent, { height: 200, alignItems: 'center', justifyContent: 'center' }]}>
-        <Text>불러오기 실패</Text>
-        <Text>{source.uri}</Text>
-      </View>
-    );
-  }
   return (
-    <Image
-      style={[styles.ImageContent, { height }]}
-      source={source}
-      resizeMode={Image.resizeMode.contain}
-      onLayout={onLayout}
-      onLoad={onLoad}
-      onError={onError}
-    />
+    <View style={styles.ImageContent}>
+      {error && <Text style={{ color: 'orange' }}>불러오기 실패</Text>}
+      {!error && (
+        <Image
+          style={{ height }}
+          source={source}
+          onLayout={onLayout}
+          onLoad={onLoad}
+          onError={onError}
+        />
+      )}
+    </View>
   );
 }
 

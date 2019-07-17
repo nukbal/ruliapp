@@ -10,6 +10,7 @@ import Contents from './Contents';
 import Comments from './Comments';
 import usePost from './usePost';
 import ThemeContext from '../../ThemeContext';
+import Placeholder from './placeholder';
 
 type NaviProps = { url: string, parent: string, key: string, subject: string }
 
@@ -44,6 +45,8 @@ export default function Post({ navigation }: Props) {
     }
     return null;
   }, [likes, dislikes, comment, params.url]);
+
+  if (!ready) return <Placeholder />;
 
   const sections: SectionListData<any>[] = [
     {

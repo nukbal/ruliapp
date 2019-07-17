@@ -46,7 +46,7 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
           <Icons name="chevron-left" size={24} color={theme.primary} />
         </TouchableOpacity>
       )}
-      <Text style={[styles.title, { color: theme.primary }]}>
+      <Text style={[styles.title, { color: theme.primary }]} numberOfLines={1}>
         {navigation.getParam('title', '')}
       </Text>
       {/* <TouchableOpacity onPress={toggleTheme}>
