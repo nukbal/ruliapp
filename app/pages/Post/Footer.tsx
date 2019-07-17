@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useContext } from 'react';
 import {
   View,
   Text,
@@ -7,15 +7,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
-import { primary } from '../../styles/color';
+import ThemeContext from '../../ThemeContext';
 
 const styles = StyleSheet.create({
   infoPanel: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: primary,
   },
   infoItem: {
     flex: 1,
@@ -41,8 +39,9 @@ interface Props {
 }
 
 function ContentFooter({ url, likes, dislikes, comments }: Props) {
+  const { theme } = useContext(ThemeContext);
   return (
-    <View style={styles.infoPanel}>
+    <View style={[styles.infoPanel, { backgroundColor: theme.primary }]}>
       {likes > 0 && (
         <View style={styles.infoItem}>
           <Icon name="thumb-up" size={20} color="white" />

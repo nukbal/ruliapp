@@ -1,29 +1,19 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
-import styled from 'styled-components/native';
+import { View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { ActivityIndicator, ListRenderItemInfo } from 'react-native';
 
 // import SearchBar from './SearchBar';
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
-
-import { FlatList } from 'react-native-gesture-handler';
-
-const List = styled(FlatList)`
-  background-color: ${({ theme }) => theme.background};
-`;
-
-const Loading = styled.View`
-  height: 75;
-  align-items: center;
-  justify-content: center;
-`;
+import ThemeContext from '../../ThemeContext';
 
 const AppendLoading = (
-  <Loading>
+  <View style={{ height: 75, alignItems: 'center', justifyContent: 'center' }}>
     <ActivityIndicator />
-  </Loading>
+  </View>
 );
 
 function extractKey(item: string) {
@@ -41,6 +31,7 @@ interface Props {
 export default function Board({ navigation }: Props) {
   const boardId = navigation.state.params ? navigation.state.params.key : '';
   const { list, data, onRefresh, onEndReached, pushing, appending } = useBoard(boardId);
+  const { theme } = useContext(ThemeContext);
 
   const renderItem = useCallback(({ item, separators }: ListRenderItemInfo<string>) => {
     if (!item) return null;
@@ -63,11 +54,9 @@ export default function Board({ navigation }: Props) {
   }, [navigation, data]);
 
   return (
-    <List
+    <FlatList
       data={list}
-      // @ts-ignore
       keyExtractor={extractKey}
-      // @ts-ignore
       renderItem={renderItem}
       ListEmptyComponent={<Placeholder />}
       refreshing={pushing}
@@ -77,6 +66,7 @@ export default function Board({ navigation }: Props) {
       initialNumToRender={8}
       onEndReached={onEndReached}
       onEndReachedThreshold={1}
+      style={{ backgroundColor: theme.background }}
       removeClippedSubviews
     />
   );

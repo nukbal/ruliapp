@@ -1,6 +1,8 @@
 export default {
   primary: '#1A70DC',
   background: '#ffffff',
+  backgroundSub: '#efefef',
   text: '#000000',
-  border: '#3d3d3d',
+  label: '#949ba2',
+  border: '#dfdfdf',
 };

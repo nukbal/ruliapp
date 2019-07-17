@@ -1,33 +1,24 @@
-import React, { useCallback, useEffect } from 'react';
-import styled from 'styled-components/native';
-import { SectionList, SectionListData } from 'react-native';
+import React, { useEffect, useContext } from 'react';
+import { StyleSheet, SectionList, SectionListData, Text, View } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { NavigationScreenProp } from 'react-navigation';
 import { transparentize } from 'polished';
 import { bestList, communityList, hobbyList, newsList, gameList } from '../config/BoardList';
+import ThemeContext from '../ThemeContext';
 
-const List = styled(SectionList)`
-  background-color: ${({ theme }) => theme.background};
-`;
-
-const Item = styled(TouchableHighlight)`
-  height: 45;
-  padding-left: 15;
-  justify-content: center;
-  border-bottom-color: ${({ theme }) => theme.border};
-  border-bottom-width: 1;
-`;
-
-const Label = styled.View`
-  height: 45;
-  padding-left: 15;
-  justify-content: center;
-  background-color: ${({ theme }) => transparentize(0.725, theme.primary)};
-`;
-
-const Txt = styled.Text`
-  color: ${({ theme }) => theme.text};
-`;
+const styles = StyleSheet.create({
+  item: {
+    height: 45,
+    paddingLeft: 15,
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+  },
+  label: {
+    height: 45,
+    paddingLeft: 15,
+    justifyContent: 'center',
+  },
+});
 
 interface Props {
   navigation: NavigationScreenProp<any>;
@@ -41,42 +32,46 @@ const sections = [
   { title: '커뮤니티', data: communityList },
 ];
 
-function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
-  return (
-    <Label>
-      <Txt style={{ fontWeight: '600' }}>{title}</Txt>
-    </Label>
-  );
-}
-
 export default function Drawer({ navigation }: Props) {
+  const { theme } = useContext(ThemeContext);
+
   useEffect(() => {
     navigation.setParams({ title: '루리웹' });
   }, []);
 
-  const onPressItem = useCallback(({ key, title }: any) => {
+  const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;
     navigate({ routeName: 'Board', params: { title, key }, key });
-  }, [navigation]);
+  };
 
-  const renderItem = useCallback(({ item, index }: any) => {
+  const renderItem = ({ item, index }: any) => {
     const onPress = () => onPressItem(item);
     return (
-      <Item
+      <TouchableHighlight
         onPress={onPress}
         key={index}
-        underlayColor="#1A70DC"
+        underlayColor={transparentize(0.65, theme.primary)}
+        style={[styles.item, { borderBottomColor: theme.border }]}
       >
-        <Txt>{item.title}</Txt>
-      </Item>
+        <Text style={{ color: theme.text }}>{item.title}</Text>
+      </TouchableHighlight>
     );
-  }, [onPressItem]);
+  };
+
+  function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
+    return (
+      <View style={[styles.label, { backgroundColor: theme.backgroundSub }]}>
+        <Text style={{ fontWeight: '600' }}>{title}</Text>
+      </View>
+    );
+  }
 
   return (
-    <List
+    <SectionList
       sections={sections}
       renderSectionHeader={renderHeader}
       renderItem={renderItem}
+      style={{ backgroundColor: theme.background }}
     />
   );
 }

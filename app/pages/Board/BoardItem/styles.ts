@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { listItem, labelText } from '../../../styles/color';
 
 export default StyleSheet.create({
   container: {
@@ -9,11 +8,9 @@ export default StyleSheet.create({
     paddingLeft: 15,
     paddingTop: 12,
     paddingBottom: 12,
-    backgroundColor: listItem,
     alignItems: 'baseline',
     justifyContent: 'center',
     borderBottomWidth: 1,
-    borderColor: '#eee',
   },
   info: {
     flex: 1,
@@ -27,16 +24,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
-  titleText: {
-    color: 'black',
-  },
   itemText: {
     marginLeft: 3,
     fontSize: 13,
-    color: labelText,
-  },
-  placeholder: {
-    backgroundColor: '#dedede',
-    height: 16,
   },
 });

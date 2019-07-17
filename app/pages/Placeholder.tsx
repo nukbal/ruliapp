@@ -1,11 +1,22 @@
-import styled from 'styled-components/native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
-export default styled.View<{ width?: string, size?: number }>`
-  height: ${({ size }) => size || 15};
-  flex: 1;
-  ${({ width }) => (width ? { width } : undefined)}
-  background-color: rgba(100,100,100,0.25);
-  border-radius: 2;
-  opacity: 0.25;
-  margin-bottom: 8;
-`;
+const styles = StyleSheet.create({
+  container: {
+    height: 15,
+    flex: 1,
+    backgroundColor: 'rgba(100, 100, 100, 0.25)',
+    borderRadius: 2,
+    opacity: 0.25,
+    marginBottom: 8,
+  },
+});
+
+interface Props {
+  size?: string | number;
+  width?: string | number;
+}
+
+export default function Placeholder({ size, width }: Props) {
+  return <View style={[styles.container, { height: size, width }]} />;
+}

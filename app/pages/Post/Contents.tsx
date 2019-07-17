@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import styled from 'styled-components/native';
+import React, { useContext } from 'react';
+import { StyleSheet, Text } from 'react-native';
 import WebView from 'react-native-webview';
 import LazyImage from './LazyImage';
 import LazyVideo from './LazyVideo';
+import ThemeContext from '../../ThemeContext';
 
 export const styles = StyleSheet.create({
   media: {
@@ -11,23 +11,24 @@ export const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 6,
   },
+  text: {
+    lineHeight: 21,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+  },
 });
 
-const Txt = styled.Text`
-  color: ${({ theme }) => theme.text};
-  line-height: 21;
-  padding-top: 16;
-  padding-bottom: 16;
-  padding-left: 4;
-  padding-right: 4;
-`;
+function Content({ children }: { children: string }) {
+  const { theme } = useContext(ThemeContext);
+  return <Text style={[styles.text, { color: theme.text }]}>{children}</Text>
+}
 
 export default function ContentItem({ type, content }: ContentRecord) {
   if (!type || !content) return null;
 
   switch (type) {
     case 'reference': {
-      return <Txt>{`출처: ${content}`}</Txt>;
+      return <Content>{`출처: ${content}`}</Content>;
     }
     case 'object': {
       return (
@@ -50,7 +51,7 @@ export default function ContentItem({ type, content }: ContentRecord) {
       );
     }
     default: {
-      return <Txt>{content}</Txt>;
+      return <Content>{content}</Content>;
     }
   }
 }
