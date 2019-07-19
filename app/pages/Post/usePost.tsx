@@ -1,5 +1,6 @@
 import { useCallback, useState, useEffect } from 'react';
-import { AsyncStorage, StatusBar, Alert, Platform } from 'react-native';
+import { StatusBar, Alert, Platform } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import parsePost from '../../utils/parsePost';
 import parseComment from '../../utils/parseComment';
 

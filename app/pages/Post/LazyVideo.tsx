@@ -1,7 +1,7 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useMemo, useState, useCallback } from 'react';
 import Video, { OnLoadData } from 'react-native-video';
 import { StyleSheet, LayoutChangeEvent } from 'react-native';
-import { setImageSize } from './LazyImage';
+import { setImageHeight } from './LazyImage';
 
 interface Props {
   uri: string;
@@ -10,9 +10,9 @@ interface Props {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 200,
+    marginTop: 6,
+    marginBottom: 6,
+    backgroundColor: 'rgba(100,100,100,0.25)',
   },
 });
 
@@ -30,15 +30,16 @@ function LazyVideo({ uri }: Props) {
     setLoad(true);
   }, []);
 
+  const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
+
   return (
     // @ts-ignore
     <Video
       source={{ uri }}
       onLoad={onLoad}
       onLayout={onLayout}
-      style={[styles.container, (isLoad ? setImageSize(size, screenWidth) : { backgroundColor: '#ededed' })]}
+      style={[styles.container, { height }]}
       ignoreSilentSwitch="obey"
-      volume={0}
       resizeMode="cover"
       muted
       repeat

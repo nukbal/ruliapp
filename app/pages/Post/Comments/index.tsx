@@ -1,42 +1,41 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { transparentize } from 'polished';
 
 import LazyImage from '../LazyImage';
-import styles from './styles';
-import { primary } from '../../../styles/color';
 import formatDate from '../../../utils/formatDate';
+import styles from './styles';
+import ThemeContext from '../../../ThemeContext';
 
 export default function Comment(
-  { user, content, time, likes, dislike, image, best, child }: CommentRecord,
+  { user, content, time, likes = 0, dislike = 0, image, best, child }: CommentRecord,
 ) {
-  const containerStyle: any = [styles.container];
-  if (child) containerStyle.push({ paddingLeft: 32, backgroundColor: '#F6FBFE' });
+  const { theme } = useContext(ThemeContext);
+  const containerStyle = [styles.container, { borderColor: theme.border }];
+  const textStyle = { color: theme.text };
+  
+  if (child) {
+    // @ts-ignore
+    containerStyle.push({ paddingLeft: 28, backgroundColor: transparentize(0.825, theme.primary) });
+  }
+
   return (
     <View style={containerStyle}>
       <View style={styles.UserContainer}>
-        <View style={styles.horizontal}>
-          <Text style={styles.UserText}>
-            {user.name}
-          </Text>
-          {best && (<Text style={styles.bestText}>BEST</Text>)}
-        </View>
-        {time && (<Text style={styles.timeText}>{formatDate(time)}</Text>)}
+        <Text style={[styles.UserText, textStyle]}>{user.name}</Text>
+        {time && (<Text style={textStyle}>{formatDate(time)}</Text>)}
       </View>
       {image && (<View style={styles.UserContainer}><LazyImage source={{ uri: image }} /></View>)}
-      <View style={styles.CommentContainer}>
-        <Text style={styles.CommentText}>{content || ''}</Text>
+      <View style={[styles.UserContainer, { paddingVertical: 6 }]}>
+        <Text style={textStyle}>{content || ''}</Text>
       </View>
       <View style={styles.infoContainer}>
-        {likes > 0 && (<Icon name="thumb-up" size={20} color={primary} />)}
-        {likes > 0 && (<Text style={[styles.UserText, { marginLeft: 6 }]}>{likes}</Text>)}
+        {likes > 0 && (<Icon name="thumb-up" size={20} color={theme.primary} />)}
+        {likes > 0 && (<Text style={[styles.iconText, textStyle]}>{likes}</Text>)}
         {dislike > 0 && (<Icon name="thumb-down" size={20} color="red" />)}
-        {dislike > 0 && (<Text style={[styles.UserText, { marginLeft: 6 }]}>{dislike}</Text>)}
+        {dislike > 0 && (<Text style={[styles.iconText, textStyle]}>{dislike}</Text>)}
       </View>
     </View>
   );
 }
-Comment.defaultProps = {
-  likes: 0,
-  dislike: 0,
-};

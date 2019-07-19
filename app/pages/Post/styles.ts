@@ -1,10 +1,8 @@
 import { StyleSheet } from 'react-native';
-import { darkBarkground, primary } from '../../styles/color';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: darkBarkground,
     justifyContent: 'flex-start',
   },
   headerIcon: {
@@ -28,7 +26,6 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: primary,
   },
   infoItem: {
     flex: 1,

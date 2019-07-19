@@ -1,57 +1,25 @@
-import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
+import React, { useEffect, useState } from 'react';
 import { createAppContainer } from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
+import { ThemeProvider } from './ThemeContext';
+import MainRouter from './pages';
 
-import fs from 'react-native-fs';
+const Container = createAppContainer(MainRouter);
 
-import BoardStack from './pages/Board';
-import DrawerScreen from './pages/Drawer';
-import ConfigScreen from './pages/Settings';
+export default function App() {
+  useEffect(() => {
+    AsyncStorage.getAllKeys((err, keys) => {
+      if (err) return;
+      if (keys) {
+        AsyncStorage
+          .multiRemove(keys.filter(key => key.indexOf('@Post') > -1))
+      }
+    });
+  }, []);
 
-import { primary } from './styles/color';
-import { IMG_PATH } from './config/constants';
-
-fs.exists(IMG_PATH).then((exists) => {
-  if (!exists) {
-    fs.mkdir(IMG_PATH);
-  }
-});
-
-const MainNav = createBottomTabNavigator(
-  {
-    Board: { screen: BoardStack },
-    List: { screen: DrawerScreen },
-    Settings: { screen: ConfigScreen, title: 'Settings' },
-  },
-  {
-    // @ts-ignore
-    defaultNavigationOptions: ({ navigation }) => ({
-      // @ts-ignore
-      tabBarIcon: ({ horizontal, tintColor }) => {
-        const { routeName } = navigation.state;
-        const size = horizontal ? 20 : 25;
-        switch (routeName) {
-          case 'Board': {
-            return <Icon name="dashboard" size={size} color={tintColor!} />;
-          }
-          case 'List': {
-            return <Icon name="list" size={size} color={tintColor!} />;
-          }
-          case 'Settings': {
-            return <Icon name="settings" size={size} color={tintColor!} />;
-          }
-          default: {
-            return null;
-          }
-        }
-      },
-    }),
-    tabBarOptions: {
-      activeTintColor: primary,
-      inactiveTintColor: 'gray',
-    },
-  },
-);
-
-export default createAppContainer(MainNav);
+  return (
+    <ThemeProvider>
+      <Container />
+    </ThemeProvider>
+  );
+}

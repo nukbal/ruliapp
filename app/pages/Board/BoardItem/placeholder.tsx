@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View } from 'react-native';
+import Placeholder from '../../Placeholder';
 import styles from './styles';
+import ThemeContext from '../../../ThemeContext';
 
 export default function BoardPlaceholder() {
+  const { theme } = useContext(ThemeContext);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.info}>
-        <View style={[styles.placeholder, { width: '80%' }]} />
+        <Placeholder width="80%" />
       </View>
       <View style={styles.info}>
-        <View style={[styles.placeholder, { width: '45%' }]} />
+        <Placeholder width="50%" />
       </View>
     </View>
   );
