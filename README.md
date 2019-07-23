@@ -1,9 +1,11 @@
 # ruliapp
 
-<img src="image/board.png" height="350px">
-<img src="image/board_dark.png" height="350px">
-<img src="image/post.png" height="350px">
-<img src="image/post_dark.png" height="350px">
+<div style="display:flex;justify-content:space-around;">
+  <img src="image/board.png" height="350px">
+  <img src="image/board_dark.png" height="350px">
+  <img src="image/post.png" height="350px">
+  <img src="image/post_dark.png" height="350px">
+</div>
 
 심심해서 만들어보는 루리웹
 
