@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import WebView from 'react-native-webview';
+import ShareCard from './ShareCard';
 import LazyImage from './LazyImage';
 import LazyVideo from './LazyVideo';
 import ThemeContext from '../../ThemeContext';
@@ -32,12 +32,7 @@ export default function ContentItem({ type, content }: ContentRecord) {
     }
     case 'object': {
       return (
-        <WebView
-          // @ts-ignore
-          source={{ uri: content }}
-          style={styles.media}
-          javaScriptEnabled
-        />
+        <ShareCard uri={content} />
       );
     }
     case 'image': {

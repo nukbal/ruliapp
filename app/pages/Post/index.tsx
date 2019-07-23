@@ -53,13 +53,11 @@ export default function Post({ navigation }: Props) {
       index: 0,
       data: contents,
       renderItem: renderContent,
-      removeClippedSubviews: true,
     },
     {
       index: 1,
       data: comment,
       renderItem: renderComment,
-      removeClippedSubviews: true,
     },
   ];
   return (
@@ -71,6 +69,7 @@ export default function Post({ navigation }: Props) {
       sections={sections}
       stickySectionHeadersEnabled={false}
       style={{ backgroundColor: theme.background }}
+      removeClippedSubviews
     />
   );
 }

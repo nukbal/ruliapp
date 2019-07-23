@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { StyleSheet, View, Text, Platform, StatusBar } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+    flex: 1,
     fontWeight: 'bold',
   },
 });
@@ -26,12 +27,13 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
     StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content');
   }
 
-  let headerHeight = getStatusBarHeight();
+  const statusBarHeight = useMemo(getStatusBarHeight, []);
+  let headerHeight = 0;
   if (Platform.OS === 'ios') {
     if (!Platform.isPad) {
-      headerHeight += 32;
+      headerHeight = 38;
     } else {
-      headerHeight += 44;
+      headerHeight = 44;
     }
   } else if (Platform.OS === 'android') {
     headerHeight = 56;
@@ -39,8 +41,14 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
     headerHeight = 64;
   }
 
+  const headStyle = {
+    height: (statusBarHeight + headerHeight),
+    backgroundColor: theme.background,
+    paddingTop: statusBarHeight,
+  };
+
   return (
-    <View style={[styles.container, { height: headerHeight, backgroundColor: theme.background }]}>
+    <View style={[styles.container, headStyle]}>
       {!navigation.isFirstRouteInParent() && (
         <TouchableOpacity onPress={back}>
           <Icons name="chevron-left" size={24} color={theme.primary} />
@@ -49,9 +57,9 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
       <Text style={[styles.title, { color: theme.primary }]} numberOfLines={1}>
         {navigation.getParam('title', '')}
       </Text>
-      {/* <TouchableOpacity onPress={toggleTheme}>
+      <TouchableOpacity onPress={toggleTheme}>
         <Icons name="brightness-medium" size={24} color={theme.primary} />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 }

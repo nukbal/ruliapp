@@ -1,16 +1,18 @@
-import React, { memo, useState, useMemo } from 'react';
+import React, { memo, useState, useMemo, useEffect } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   LayoutChangeEvent,
   ActivityIndicator,
+  Image as ReactImage,
 } from 'react-native';
 import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 
 const styles = StyleSheet.create({
   ImageContent: {
     flex: 1,
+    width: '100%',
     marginTop: 6,
     marginBottom: 6,
     backgroundColor: 'rgba(100,100,100,0.25)',
@@ -49,16 +51,20 @@ function LazyImage({ source }: Props) {
   const [percent, setPercent] = useState(0);
 
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
-  const onLoad = ({ nativeEvent }: OnLoadEvent) => setSize(nativeEvent);
-  const onLoadEnd = () => setReady(true);
+  const onLoad = ({ nativeEvent }: OnLoadEvent) => {
+    setSize(nativeEvent);
+    setReady(true);
+  };
   const onError = () => setError(true);
 
-  const onProgress = ({ nativeEvent }: OnProgressEvent) => setPercent(~~((nativeEvent.loaded / nativeEvent.total) * 100));
+  const onProgress = ({ nativeEvent }: OnProgressEvent) => {
+    setPercent(~~((nativeEvent.loaded / nativeEvent.total) * 100));
+  };
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
 
   return (
-    <View style={styles.ImageContent}>
-      {error && <Text style={styles.text}>불러오기 실패</Text>}
+    <View style={styles.ImageContent} onLayout={onLayout}>
+      {error && <View style={styles.message}><Text style={styles.text}>불러오기 실패</Text></View>}
       {!ready && (
         <View style={styles.message}>
           <ActivityIndicator />
@@ -68,9 +74,7 @@ function LazyImage({ source }: Props) {
       <Image
         style={{ height }}
         source={source}
-        onLayout={onLayout}
         onLoad={onLoad}
-        onLoadEnd={onLoadEnd}
         onError={onError}
         onProgress={onProgress}
       />
