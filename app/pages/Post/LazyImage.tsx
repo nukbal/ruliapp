@@ -5,9 +5,12 @@ import {
   Text,
   LayoutChangeEvent,
   ActivityIndicator,
-  Image as ReactImage,
+  Image,
+  ImageLoadEventData,
+  NativeSyntheticEvent,
+  PixelRatio,
 } from 'react-native';
-import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
+// import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -40,6 +43,7 @@ export function setImageHeight(image: { width: number, height: number }, screenW
   const ratio = width / image.width;
   // eslint-disable-next-line no-bitwise
   const height = image.height * ratio;
+  console.warn(ratio);
   return height || 200;
 }
 
@@ -48,18 +52,16 @@ function LazyImage({ source }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [ready, setReady] = useState(false);
-  const [percent, setPercent] = useState(0);
 
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
-  const onLoad = ({ nativeEvent }: OnLoadEvent) => {
-    setSize(nativeEvent);
+  const onLoad = ({ nativeEvent }: NativeSyntheticEvent<ImageLoadEventData>) => {
+    setSize({
+      width: PixelRatio.getPixelSizeForLayoutSize(nativeEvent.source.width),
+      height: PixelRatio.getPixelSizeForLayoutSize(nativeEvent.source.height),
+    });
     setReady(true);
   };
   const onError = () => setError(true);
-
-  const onProgress = ({ nativeEvent }: OnProgressEvent) => {
-    setPercent(~~((nativeEvent.loaded / nativeEvent.total) * 100));
-  };
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
 
   return (
@@ -68,7 +70,6 @@ function LazyImage({ source }: Props) {
       {!ready && (
         <View style={styles.message}>
           <ActivityIndicator />
-          <Text style={styles.text}>{percent}</Text>
         </View>
       )}
       <Image
@@ -76,7 +77,7 @@ function LazyImage({ source }: Props) {
         source={source}
         onLoad={onLoad}
         onError={onError}
-        onProgress={onProgress}
+        resizeMethod="auto"
       />
     </View>
   );
