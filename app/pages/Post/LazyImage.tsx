@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo, useEffect } from 'react';
+import React, { memo, useState, useMemo, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,8 +9,8 @@ import {
   ImageLoadEventData,
   NativeSyntheticEvent,
   PixelRatio,
+  Platform,
 } from 'react-native';
-// import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -43,7 +43,6 @@ export function setImageHeight(image: { width: number, height: number }, screenW
   const ratio = width / image.width;
   // eslint-disable-next-line no-bitwise
   const height = image.height * ratio;
-  console.warn(ratio);
   return height || 200;
 }
 
@@ -52,6 +51,7 @@ function LazyImage({ source }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [ready, setReady] = useState(false);
+  const [percent, setPercent] = useState(0);
 
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
   const onLoad = ({ nativeEvent }: NativeSyntheticEvent<ImageLoadEventData>) => {
@@ -63,6 +63,7 @@ function LazyImage({ source }: Props) {
   };
   const onError = () => setError(true);
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
+  const onProgress = useCallback(({ nativeEvent }: any) => setPercent(Math.round(nativeEvent.loaded / nativeEvent.total)), []);
 
   return (
     <View style={styles.ImageContent} onLayout={onLayout}>
@@ -70,13 +71,16 @@ function LazyImage({ source }: Props) {
       {!ready && (
         <View style={styles.message}>
           <ActivityIndicator />
+          {Platform.OS === 'ios' && (<Text style={styles.text}>{percent}</Text>)}
         </View>
       )}
       <Image
         style={{ height }}
         source={source}
         onLoad={onLoad}
+        onProgress={onProgress}
         onError={onError}
+        progressiveRenderingEnabled
         resizeMethod="auto"
       />
     </View>
