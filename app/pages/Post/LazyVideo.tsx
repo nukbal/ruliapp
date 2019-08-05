@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useState, useCallback } from 'react';
 import Video, { OnLoadData } from 'react-native-video';
 import { StyleSheet, LayoutChangeEvent } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { setImageHeight } from './LazyImage';
 
 interface Props {
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
 function LazyVideo({ uri }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [isLoad, setLoad] = useState(false);
+  const [pause, setPause] = useState(true);
 
   const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
     setScreenWidth(nativeEvent.layout.width);
@@ -27,25 +28,30 @@ function LazyVideo({ uri }: Props) {
 
   const onLoad = useCallback(({ naturalSize }: OnLoadData) => {
     setSize({ width: naturalSize.width, height: naturalSize.height });
-    setLoad(true);
   }, []);
 
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
+  const onPress = useCallback(() => setPause(p => !p), []);
 
   return (
-    // @ts-ignore
-    <Video
-      source={{ uri }}
-      onLoad={onLoad}
+    <TouchableOpacity
+      style={styles.container}
       onLayout={onLayout}
-      style={[styles.container, { height }]}
-      ignoreSilentSwitch="obey"
-      resizeMode="cover"
-      muted
-      repeat
-      hideShutterView
-      useTextureView={false}
-    />
+      onPress={onPress}
+      activeOpacity={0.65}
+    >
+      <Video
+        source={{ uri }}
+        onLoad={onLoad}
+        style={{ height, flex: 1 }}
+        ignoreSilentSwitch="obey"
+        resizeMode="cover"
+        paused={pause}
+        muted
+        repeat
+        useTextureView={false}
+      />
+    </TouchableOpacity>
   );
 }
 
