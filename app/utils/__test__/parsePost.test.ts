@@ -194,7 +194,7 @@ describe('html parser', () => {
     expect(data).toEqual({
       comments: [],
       contents: [
-        { type: 'text', key: '_1_0', order: 0, content: '.' },
+        { type: 'text', key: '_1_0', content: '.' },
       ],
       source: 'http://path/to/reference',
       subject: 'test title',
@@ -313,14 +313,14 @@ describe('html parser', () => {
     expect(data).toEqual({
       comments: [],
       contents: [
-        { type: 'text', key: '_0_0', order: 0, content: 'paragraph 1' },
-        { type: 'text', key: '_2_0', order: 1, content: '문장 2' },
-        { type: 'text', key: '_3_0', order: 2, content: '문장 3-1' },
-        { type: 'text', key: '_3_1', order: 3, content: '문장 3-2 ' },
-        { type: 'text', key: '_4_0', order: 4, content: '문장 4 ' },
-        { type: 'image', key: '_5_0', order: 5, content: 'https://path/to/image.jpg' },
-        { type: 'text', key: '_5_1', order: 6, content: '이미지 설명문' },
-        { type: 'text', key: '_5_2', order: 7, content: '추가 문장' },
+        { type: 'text', key: '_0_0', content: 'paragraph 1' },
+        { type: 'text', key: '_2_0', content: '문장 2' },
+        { type: 'text', key: '_3_0', content: '문장 3-1' },
+        { type: 'text', key: '_3_1', content: '문장 3-2 ' },
+        { type: 'text', key: '_4_0', content: '문장 4 ' },
+        { type: 'image', key: '_5_0', content: 'https://path/to/image.jpg' },
+        { type: 'text', key: '_5_1', content: '이미지 설명문' },
+        { type: 'text', key: '_5_2', content: '추가 문장' },
       ],
       source: 'http://path/to/reference',
       subject: 'test title',
@@ -535,7 +535,7 @@ describe('html parser', () => {
     expect(data).toEqual({
       comments: [],
       contents: [
-        { type: 'video', key: '_0_0', order: 0, content: 'https://i3.ruliweb.com/ori/19/03/28/169c279261e417ce4.mp4' },
+        { type: 'video', key: '_0_0', content: 'https://i3.ruliweb.com/ori/19/03/28/169c279261e417ce4.mp4' },
       ],
       subject: 'git animation test',
       user: {

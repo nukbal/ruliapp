@@ -9,38 +9,25 @@ function parseTitle(html: string) {
 }
 
 export function parseBoardUrl(href: string) {
-  const url = href.replace('https://m.ruliweb.com', '').replace('/', '');
-
+  let url = (
+    href
+      .replace('://m.ruliweb.com/', '')
+      .replace('https', '')
+      .replace('http', '')
+  );
   let id = null;
-  let params;
-  let cursor = url.indexOf('/board');
-  let query = url;
 
-  cursor += 7;
-
-  const startIdx = url.indexOf('/read/', cursor);
-  id = url.substring(startIdx > -1 ? startIdx + 6 : 0, url.length).replace('/list', '');
-  if (id.indexOf('?') > 0) {
-    id = id.substring(0, id.indexOf('?'));
-  }
-  const paramIdx = query.indexOf('?');
-  if (paramIdx > 0) {
-    params = query.substring(paramIdx + 1, query.length).split('&').reduce((acc, cur) => {
-      const res = { ...acc };
-      if (cur) {
-        const param = cur.split('=');
-        if (param.length) {
-          // @ts-ignore
-          // eslint-disable-next-line prefer-destructuring
-          res[param[0]] = param[1];
-        }
-      }
-      return res;
-    }, {});
-    query = query.substring(0, paramIdx);
+  if (url.indexOf('?') > -1) {
+    url = url.substring(0, url.indexOf('?'));
   }
 
-  return { id, url: query, params };
+  if (url.indexOf('/read/') > -1) {
+    id = url.substring(url.indexOf('/read/') + 6, url.length);
+  } else {
+    id = url;
+  }
+
+  return { id, url };
 }
 
 export function formatBoardRow(node: INode): PostRecord | undefined {
@@ -129,11 +116,11 @@ export default function parseBoardList(htmlString: string, key: string): IParseB
 
   for (let i = 0; i < boardNodes.length; i += 1) {
     const temp = formatBoardRow(boardNodes[i]);
-    if (temp) data.push({ ...temp, parent: key });
+    if (temp) data.push(temp);
   }
 
-  const rows = data.filter(item => !item.isNotice);
-  const notices = data.filter(item => item.isNotice);
+  const rows = data.filter((item) => !item.isNotice);
+  const notices = data.filter((item) => item.isNotice);
 
   return {
     title,

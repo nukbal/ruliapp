@@ -105,6 +105,48 @@ describe('html parser', () => {
               </div>
             </td>
           </tr>
+          <tr class="comment_element normal child" id="ct_999999">
+            <td class="is_child">
+					    <i class="icon_reply icon-mail-reply icon-rotate-180"></i>
+				    </td>
+				<td class="comment">
+				  <div class="text_wrapper">
+					  <span class="p_nick">테스트유저 2</span>
+							<br>
+							<span class="text">비추 덧덧글 테스트....
+줄바꿈 테스트</span>
+					</div>
+
+					<div class="user row">
+						<div class="user_inner_wrapper">
+							<input type="hidden" class="member_srl" value="123458">
+							<strong class="nick">테스트유저3</strong>
+              <span class="ip"> | 111.111.***.*** </span>
+              <span class="time"> | 19.01.31 20:02</span>
+						</div>
+					</div>
+					<div class="control row">
+						<div class="col col_4">
+              <button class="btn_reply" value="999999">
+                <i class="icon-level-up icon-rotate-90"></i> 답글
+              </button>
+            </div>
+            <div class="col col_8">
+          		<span class="control_box">
+                <button class="btn_dislike r_col col_4" value="999999">
+                  <i class="icon icon-thumbs-down-alt"></i>
+                  <span class="num">10</span>
+                </button>
+                <button class="btn_like r_col col_4" value="999999">
+                  <i class="icon icon-thumbs-up-alt"></i>
+                  <span class="num">1</span>
+                </button>
+                <button class="btn_report r_col col_4" value="999999">신고</button>
+              </span>
+						</div>
+					</div>
+				</td>
+			</tr>
       </tbody>
       </table>
       </div>
@@ -113,17 +155,31 @@ describe('html parser', () => {
     </div>
     `;
     const data = parser(html);
-    expect(data).toHaveLength(2);
+    expect(data).toHaveLength(3);
     expect(data[0]).toEqual({
       content: '덧글 내용 1',
       dislike: 10,
       key: 'ct_1111111',
       likes: 34,
-      time: new Date('2019-01-31T19:12:00.000Z'),
+      time: new Date('2019-01-31T10:12:00.000Z'),
       user: {
         id: '123456',
         ip: '111.111.***.***',
         name: '테스트 유저1'
+      },
+    });
+    expect(data[2]).toEqual({
+      content: '비추 덧덧글 테스트....\n줄바꿈 테스트',
+      dislike: 10,
+      key: 'ct_999999',
+      child: 'ct_111112',
+      reply: '테스트유저 2',
+      likes: 1,
+      time: new Date('2019-01-31T11:02:00.000Z'),
+      user: {
+        id: '123458',
+        ip: '111.111.***.***',
+        name: '테스트유저3'
       },
     });
   });

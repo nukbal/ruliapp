@@ -20,6 +20,11 @@ function formatComment(node: INode): CommentRecord | undefined {
       }
       current = current.prev;
     }
+
+    const replyNode = querySelector(node, 'span.p_nick text');
+    if (replyNode) {
+      record.reply = replyNode.value;
+    }
   }
 
   const textNode = querySelector(node, 'div.text_wrapper');

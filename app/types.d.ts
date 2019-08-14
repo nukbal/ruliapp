@@ -59,6 +59,7 @@ declare interface PostRecord {
 declare interface CommentRecord {
   key: string;
   child?: string;
+  reply?: string;
   best?: boolean;
   content: string;
   user: UserRecord;

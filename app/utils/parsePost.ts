@@ -138,11 +138,6 @@ export function parsePostContents(
     }
   }
 
-  for (let i = 0; i < res.length; i += 1) {
-    // @ts-ignore
-    res[i].order = 1;
-  }
-
   return res;
 }
 
