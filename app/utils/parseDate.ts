@@ -1,20 +1,24 @@
 
+function setKstOffset(date: Date) {
+  return new Date(date.getTime() - (9 * 60 * 60 * 1000));
+}
+
 function parseTime(date: Date, str: string) {
   const timeArr = str.split(':');
-  date.setHours(parseInt(timeArr[0], 10));
-  date.setMinutes(parseInt(timeArr[1], 10));
-  return date;
+  date.setUTCHours(parseInt(timeArr[0], 10));
+  date.setUTCMinutes(parseInt(timeArr[1], 10));
+  return setKstOffset(date);
 }
 
 export default function parseDate(str: string): Date | undefined {
   const len = str.length;
-  if (len === 0 || len < 5) return;
+  if (len < 5) return;
 
   const date = new Date();
-  date.setMilliseconds(0);
-  date.setSeconds(0);
-  date.setMinutes(0);
-  date.setHours(0);
+  date.setUTCMilliseconds(0);
+  date.setUTCSeconds(0);
+  date.setUTCMinutes(0);
+  date.setUTCHours(0);
 
   if (len === 5) {
     return parseTime(date, str);
@@ -36,5 +40,5 @@ export default function parseDate(str: string): Date | undefined {
   if (timeStr) {
     return parseTime(date, timeStr);
   }
-  return date;
+  return setKstOffset(date);
 }
