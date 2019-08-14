@@ -28,6 +28,6 @@ export function ThemeProvider({ children }: any) {
       {Children.only(children)}
     </ThemeContext.Provider>
   );
-};
+}
 
 export default ThemeContext;

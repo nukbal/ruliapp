@@ -3,7 +3,7 @@ import Item from './BoardItem/placeholder';
 
 export default function Placeholder() {
   return (
-    <Fragment>
+    <>
       <Item />
       <Item />
       <Item />
@@ -13,6 +13,6 @@ export default function Placeholder() {
       <Item />
       <Item />
       <Item />
-    </Fragment>
+    </>
   );
 }

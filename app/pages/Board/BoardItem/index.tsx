@@ -1,10 +1,10 @@
 import React, { memo, useMemo, useContext } from 'react';
 import { View, Text } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { transparentize } from 'polished';
 import styles from './styles';
 import Placeholder from './placeholder';
 import ThemeContext from '../../../ThemeContext';
-import { transparentize } from 'polished';
 
 interface Props extends PostRecord {
   onPress: () => void;

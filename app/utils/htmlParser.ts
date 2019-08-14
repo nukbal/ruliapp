@@ -105,9 +105,9 @@ function appendChild(parent: INode, child: INode) {
 }
 
 function isQueryContains(node: INode, arr: string[]) {
-  const query = ' ' + node.tagName + ' ' + (node.q ? `${node.q} ` : '');
+  const query = ` ${node.tagName} ${node.q ? `${node.q} ` : ''}`;
   for (let i = 0, len = arr.length; i < len; i += 1) {
-    if (query.indexOf(' ' + arr[i] + ' ') === -1) return false;
+    if (query.indexOf(` ${arr[i]} `) === -1) return false;
   }
   return true;
 }

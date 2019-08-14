@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 4,
     top: 6,
-  }
+  },
 });
 
 export default function ShareCard({ uri }: Props) {
@@ -55,17 +55,17 @@ export default function ShareCard({ uri }: Props) {
       fetch(uri, { method: 'get' })
         .then((res) => res.text())
         .then((html) => {
-            const startIdx = html.indexOf('"embedded_player_response":');
-            const endIdx = html.indexOf('}",', startIdx);
-            const json = JSON.parse(JSON.parse(html.substring(startIdx + 27, endIdx + 2)));
-            setData({
-              title: json.embedPreview.thumbnailPreviewRenderer.title.runs[0].text,
-              image: json.embedPreview.thumbnailPreviewRenderer.defaultThumbnail.thumbnails[1],
-              url: (
-                'https://www.youtube.com/watch?v='
-                + json.embedPreview.thumbnailPreviewRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint.videoId
-              ),
-            });
+          const startIdx = html.indexOf('"embedded_player_response":');
+          const endIdx = html.indexOf('}",', startIdx);
+          const json = JSON.parse(JSON.parse(html.substring(startIdx + 27, endIdx + 2)));
+          setData({
+            title: json.embedPreview.thumbnailPreviewRenderer.title.runs[0].text,
+            image: json.embedPreview.thumbnailPreviewRenderer.defaultThumbnail.thumbnails[1],
+            url: (
+              `https://www.youtube.com/watch?v=${
+                json.embedPreview.thumbnailPreviewRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint.videoId}`
+            ),
+          });
           setReady(true);
         })
         .catch((e) => { console.warn(e.message); });
@@ -73,7 +73,7 @@ export default function ShareCard({ uri }: Props) {
       setData({ ...data, title: uri });
       setReady(true);
     }
-  }, []);
+  }, [data, uri]);
 
   const onPress = () => {
     Linking.openURL(data.url || uri).catch((err) => console.error('An error occurred', err));

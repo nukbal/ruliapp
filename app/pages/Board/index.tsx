@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
-import { View, FlatList } from 'react-native';
-import { ActivityIndicator, ListRenderItemInfo } from 'react-native';
+import { View, FlatList, ActivityIndicator, ListRenderItemInfo } from 'react-native';
+
 
 // import SearchBar from './SearchBar';
 import BoardItem from './BoardItem';

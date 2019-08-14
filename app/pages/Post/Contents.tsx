@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
 
 function Content({ children }: { children: string }) {
   const { theme } = useContext(ThemeContext);
-  return <Text style={[styles.text, { color: theme.text }]}>{children}</Text>
+  return <Text style={[styles.text, { color: theme.text }]}>{children}</Text>;
 }
 
 export default function ContentItem({ type, content }: ContentRecord) {

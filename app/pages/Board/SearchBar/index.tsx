@@ -18,14 +18,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 51,
     padding: 8,
-    flexWrap: 'wrap', 
-    flexDirection:'row',
-    alignItems: 'center'
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputWrapper: {
-    flexWrap: 'wrap', 
+    flexWrap: 'wrap',
     alignItems: 'flex-start',
-    flexDirection:'row',
+    flexDirection: 'row',
     padding: 8,
     borderRadius: 8,
     backgroundColor: '#e5e5e5',
@@ -35,9 +35,9 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   filter: {
-    flexWrap: 'wrap', 
+    flexWrap: 'wrap',
     alignItems: 'flex-start',
-    flexDirection:'row',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   cancelText: {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     padding: 8,
     textAlign: 'center',
-  }
+  },
 });
 
 const AnimatedView = animated(View);
@@ -176,7 +176,7 @@ function SearchBar({ keyboardType, returnKeyType, onChange, onSubmit }: Props) {
 //     }
 //     this.onBlur();
 //   }
-  
+
 //   onClear = () => {
 //     this.setState({ value: '' });
 //   }

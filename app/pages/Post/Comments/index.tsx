@@ -14,7 +14,7 @@ export default function Comment(
   const { theme } = useContext(ThemeContext);
   const containerStyle = [styles.container, { borderColor: theme.border }];
   const textStyle = { color: theme.text };
-  
+
   if (child) {
     // @ts-ignore
     containerStyle.push({ paddingLeft: 28, backgroundColor: transparentize(0.825, theme.primary) });

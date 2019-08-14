@@ -5,11 +5,13 @@ import {
   Text,
   LayoutChangeEvent,
   ActivityIndicator,
-  Image,
-  ImageLoadEventData,
-  NativeSyntheticEvent,
   PixelRatio,
-  Platform,
+  Image,
+  NativeSyntheticEvent,
+
+  ImageLoadEventData,
+  ImageProgressEventDataIOS,
+  ImageErrorEventData,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -47,7 +49,7 @@ export function setImageHeight(image: { width: number, height: number }, screenW
 }
 
 function LazyImage({ source }: Props) {
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [ready, setReady] = useState(false);
@@ -61,17 +63,26 @@ function LazyImage({ source }: Props) {
     });
     setReady(true);
   };
-  const onError = () => setError(true);
+  const onError = (e: NativeSyntheticEvent<ImageErrorEventData>) => setError(`${e}`);
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
-  const onProgress = useCallback(({ nativeEvent }: any) => setPercent(Math.round(nativeEvent.loaded / nativeEvent.total)), []);
+  const onProgress = useCallback(
+    ({ nativeEvent }: NativeSyntheticEvent<ImageProgressEventDataIOS>) =>
+      setPercent(Math.round((nativeEvent.loaded / nativeEvent.total) * 100)),
+    [],
+  );
 
   return (
     <View style={styles.ImageContent} onLayout={onLayout}>
-      {error && <View style={styles.message}><Text style={styles.text}>불러오기 실패</Text></View>}
+      {error && (
+        <View style={styles.message}>
+          <Text style={styles.text}>불러오기 실패</Text>
+          <Text style={styles.text}>{error}</Text>
+        </View>
+      )}
       {!ready && (
         <View style={styles.message}>
           <ActivityIndicator />
-          {Platform.OS === 'ios' && (<Text style={styles.text}>{percent}</Text>)}
+          <Text style={styles.text}>{percent}</Text>
         </View>
       )}
       <Image
@@ -80,8 +91,6 @@ function LazyImage({ source }: Props) {
         onLoad={onLoad}
         onProgress={onProgress}
         onError={onError}
-        progressiveRenderingEnabled
-        resizeMethod="auto"
       />
     </View>
   );

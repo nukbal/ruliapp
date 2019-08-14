@@ -51,8 +51,8 @@ export default function useBoard(key: string) {
         setList(keys);
       } else {
         const keys = json.rows.map((item: PostRecord) => item.key);
-        setData(d => ({ ...d, ...arrayToObject(json.rows) }));
-        setList(lst => Array.from(new Set([...lst, ...keys])));
+        setData((d) => ({ ...d, ...arrayToObject(json.rows) }));
+        setList((lst) => Array.from(new Set([...lst, ...keys])));
       }
     } catch (e) {
       // console.error(e);

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 function LazyVideo({ uri }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [pause, setPause] = useState(true);
+  const [pause, setPause] = useState(false);
 
   const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
     setScreenWidth(nativeEvent.layout.width);
@@ -31,7 +31,7 @@ function LazyVideo({ uri }: Props) {
   }, []);
 
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
-  const onPress = useCallback(() => setPause(p => !p), []);
+  const onPress = useCallback(() => setPause((p) => !p), []);
 
   return (
     <TouchableOpacity

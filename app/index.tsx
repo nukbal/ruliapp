@@ -12,7 +12,7 @@ export default function App() {
       if (err) return;
       if (keys) {
         AsyncStorage
-          .multiRemove(keys.filter(key => key.indexOf('@Post') > -1))
+          .multiRemove(keys.filter((key) => key.indexOf('@Post') > -1));
       }
     });
   }, []);

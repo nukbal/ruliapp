@@ -37,7 +37,7 @@ export default function Drawer({ navigation }: Props) {
 
   useEffect(() => {
     navigation.setParams({ title: '루리웹' });
-  }, []);
+  }, [navigation]);
 
   const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;
