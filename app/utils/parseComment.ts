@@ -3,14 +3,18 @@ import parseDate from './parseDate';
 import formatText from './formatText';
 
 function formatComment(node: INode): CommentRecord | undefined {
-  // @ts-ignore
-  const record: CommentRecord = {};
-  record.user = { id: '', name: '' };
+  const record: CommentRecord = {
+    key: '', content: '', user: { id: '', name: '' }, likes: 0, dislike: 0,
+  };
 
   if (!node.q) return;
   let cursor;
-
   record.key = node.q.substring(0, node.q.indexOf(' '));
+  if (record.key === 'comment_element') {
+    record.isDeleted = true;
+    return record;
+  }
+
   if (node.q.indexOf('child') > -1) {
     let current = node.prev;
     while (current) {

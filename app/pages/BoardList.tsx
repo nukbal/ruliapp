@@ -32,12 +32,12 @@ const sections = [
   { title: '커뮤니티', data: communityList },
 ];
 
-export default function Drawer({ navigation }: Props) {
+export default function BoardList({ navigation }: Props) {
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     navigation.setParams({ title: '루리웹' });
-  }, [navigation]);
+  }, []);
 
   const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;

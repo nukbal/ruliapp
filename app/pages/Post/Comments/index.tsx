@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { transparentize } from 'polished';
@@ -9,22 +9,40 @@ import styles from './styles';
 import ThemeContext from '../../../ThemeContext';
 
 export default function Comment(
-  { user, content, time, likes = 0, dislike = 0, image, best, child }: CommentRecord,
+  { user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted }: CommentRecord,
 ) {
   const { theme } = useContext(ThemeContext);
+
+  const timeText = useMemo(() => time ? formatDate(time) : '', [time]);
   const containerStyle = [styles.container, { borderColor: theme.border }];
   const textStyle = { color: theme.text };
 
+  if (isDeleted) {
+    return (
+      <View style={containerStyle}>
+        <View style={styles.UserContainer}>
+          <Text style={textStyle}>삭제된 댓글입니다.</Text>
+        </View>
+      </View>
+    );
+  }
+
   if (child) {
     // @ts-ignore
-    containerStyle.push({ paddingLeft: 28, backgroundColor: transparentize(0.825, theme.primary) });
+    containerStyle.push({ paddingLeft: 28, paddingTop: 25, backgroundColor: transparentize(0.825, theme.primary) });
   }
 
   return (
     <View style={containerStyle}>
+      {reply && (
+        <View style={styles.replyContainer}>
+          <Icon name="insert-comment" size={12} color={theme.text} />
+          <Text style={[styles.replyText, textStyle]}>{reply}</Text>
+        </View>
+      )}
       <View style={styles.UserContainer}>
         <Text style={[styles.UserText, textStyle]}>{user.name}</Text>
-        {time && (<Text style={textStyle}>{formatDate(time)}</Text>)}
+        {timeText && (<Text style={textStyle}>{timeText}</Text>)}
       </View>
       {image && (<View style={styles.UserContainer}><LazyImage source={{ uri: image }} /></View>)}
       <View style={[styles.UserContainer, { paddingVertical: 6 }]}>

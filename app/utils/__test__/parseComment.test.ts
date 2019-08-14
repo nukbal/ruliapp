@@ -146,7 +146,16 @@ describe('html parser', () => {
 						</div>
 					</div>
 				</td>
-			</tr>
+      </tr>
+      <tr class="comment_element normal parent">
+          <td class="comment" colspan="2">
+              <div class="text_wrapper">
+                  <br>
+                  <span style="color: #aaa;">삭제된 댓글입니다.</span>
+                  <br><br>
+              </div>
+          </td>
+      </tr>
       </tbody>
       </table>
       </div>
@@ -155,7 +164,7 @@ describe('html parser', () => {
     </div>
     `;
     const data = parser(html);
-    expect(data).toHaveLength(3);
+    expect(data).toHaveLength(4);
     expect(data[0]).toEqual({
       content: '덧글 내용 1',
       dislike: 10,
@@ -180,6 +189,17 @@ describe('html parser', () => {
         id: '123458',
         ip: '111.111.***.***',
         name: '테스트유저3'
+      },
+    });
+    expect(data[3]).toEqual({
+      key: 'comment_element',
+      isDeleted: true,
+      content: '',
+      likes: 0,
+      dislike: 0,
+      user: {
+        id: '',
+        name: ''
       },
     });
   });

@@ -67,6 +67,7 @@ declare interface CommentRecord {
   time?: Date;
   likes: number;
   dislike: number;
+  isDeleted?: boolean;
 }
 
 declare interface UserRecord {
