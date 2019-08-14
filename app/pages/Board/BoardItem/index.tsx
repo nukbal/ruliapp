@@ -38,7 +38,7 @@ function BoardItem(props: Props) {
       onShowUnderlay={onShowUnderlay}
       onHideUnderlay={onHideUnderlay}
       underlayColor={transparentize(0.65, theme.primary)}
-      style={[styles.container, { backgroundColor: theme.background }]}
+      style={[styles.container, { backgroundColor: theme.background, borderColor: theme.border }]}
     >
       <>
         <View style={styles.info}>
