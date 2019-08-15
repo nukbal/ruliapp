@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     marginBottom: 6,
   },
   text: {
-    lineHeight: 21,
+    lineHeight: 26,
     paddingHorizontal: 16,
     paddingVertical: 4,
   },

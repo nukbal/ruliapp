@@ -11,8 +11,8 @@ import ThemeContext from '../../ThemeContext';
 
 interface Props {
   url: string;
-  likes: number;
-  dislikes: number;
+  likes?: number;
+  dislikes?: number;
   comments: number;
 }
 
@@ -25,13 +25,13 @@ function ContentFooter({ url, likes, dislikes, comments }: Props) {
 
   return (
     <View style={[styles.infoPanel, { backgroundColor: theme.primary }]}>
-      {likes > 0 && (
+      {likes !== undefined && (
         <View style={styles.infoItem}>
           <Icon name="thumb-up" size={20} color="white" />
           <Text style={styles.infoText}>{likes}</Text>
         </View>
       )}
-      {dislikes > 0 && (
+      {dislikes !== undefined && (
         <View style={styles.infoItem}>
           <Icon name="thumb-down" size={20} color="white" />
           <Text style={styles.infoText}>{dislikes}</Text>
@@ -50,8 +50,6 @@ function ContentFooter({ url, likes, dislikes, comments }: Props) {
   );
 }
 ContentFooter.defaultProps = {
-  likes: 0,
-  dislikes: 0,
   comments: 0,
 };
 

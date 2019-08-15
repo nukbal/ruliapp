@@ -292,6 +292,14 @@ describe('html parser', () => {
               <br style="text-size-adjust: none; box-sizing: border-box;">
               추가 문장
             </p>
+						<p style="text-align: center;">
+							<b>굵은 글씨 </b>
+							<span style="font-size: 18px; font-family:" 맑은="" 고딕",="" "malgun="" gothic";"="">
+								<b>
+									<span style="font-size: 18px; color: #ff0000;">빨간 글씨</span>
+								</b>
+							</span>
+						</p>
 					</div>
 				</div>
           <div class="row">
@@ -332,7 +340,7 @@ describe('html parser', () => {
         name: 'Post User',
       }
     });
-  });
+	});
 
   it('with gif animation', () => {
     const html = `
@@ -407,7 +415,7 @@ describe('html parser', () => {
                 <span class="img_load_mp4 btn_light clickable col" data-link="//i3.ruliweb.com/ori/19/03/28/169c279261e417ce4.gif">GIF</span>
               </span>
             </p>
-            <p>&nbsp;</p>
+						<p>&nbsp;</p>
             <p>&nbsp;</p>
 					</div>
 				</div>
@@ -455,13 +463,13 @@ describe('html parser', () => {
 							</li>
 							<li class="col">
 								<div class="sns_icon">
-									<div class="url_copy" data-clipboard-text="https://m.ruliweb.com/best/board/300143/read/41710773">URL</div>
+									<div class="url_copy" data-clipboard-text="https://m.ruliweb.com/best/board/123/read/123123123">URL</div>
 								</div>
 								<div class="sns_desc">복사</div>
 							</li>
 							<li class="col">
 								<div class="sns_icon">
-									<a href="javascript:app.sns_share('facebook', 'https://m.ruliweb.com/best/board/300143/read/41710773');">
+									<a href="javascript:app.sns_share('facebook', 'https://m.ruliweb.com/best/board/123/read/123123123');">
 										<i class="icon_facebook_60"></i>
 									</a>
 								</div>
@@ -469,7 +477,7 @@ describe('html parser', () => {
 							</li>
 							<li class="col">
 								<div class="sns_icon">
-									<a href="javascript:app.sns_share('twitter', 'https://m.ruliweb.com/best/board/300143/read/41710773');">
+									<a href="javascript:app.sns_share('twitter', 'https://m.ruliweb.com/best/board/123/read/123123123');">
 										<i class="icon_twitter_60"></i>
 								</div>
 								<div class="sns_desc">트위터</div>
@@ -477,7 +485,7 @@ describe('html parser', () => {
 							</li>
 							<li class="col">
 								<div class="sns_icon">
-                                    <a href="javascript:app.sns_share('naver', 'https://m.ruliweb.com/best/board/300143/read/41710773');" tabindex="-1" title="네이버">
+                                    <a href="javascript:app.sns_share('naver', 'https://m.ruliweb.com/best/board/123/read/123123123');" tabindex="-1" title="네이버">
                                         <img id="naver" src="https://ssl.pstatic.net/share/images/appicon/naver_square_30x30.png" alt="네이버로공유" width="30" height="30">
                                     </a>
 								</div>
@@ -489,10 +497,10 @@ describe('html parser', () => {
                     <i class="icon_kakaotalk_60"></i>
                     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
                     <script type='text/javascript'>
-                      Kakao.init('8496679d80f0c5d13041c128a8343eda');
+                      Kakao.init('kakao-token-here');
                       Kakao.Link.createScrapButton({
                         container: '#kakao-link-btn',
-                        requestUrl: 'https://m.ruliweb.com/best/board/300143/read/41710773'
+                        requestUrl: 'https://m.ruliweb.com/best/board/123/read/123123123'
                       });
                     </script>
 									</a>
@@ -501,7 +509,7 @@ describe('html parser', () => {
 							</li>
 							<li class="col">
 								<div class="sns_icon">
-									<a href="javascript:app.sns_share('kakao', 'https://m.ruliweb.com/best/board/300143/read/41710773');">
+									<a href="javascript:app.sns_share('kakao', 'https://m.ruliweb.com/best/board/123/read/123123123');">
 										<i class="icon_kakao_60"></i>
 									</a>
 								</div>
@@ -513,7 +521,7 @@ describe('html parser', () => {
 					<br>
 					<div class="btn_wrapper article_func_wrapper row">
 						<div class="col col_2">
-							<a class="btn_list btn_default btn_light" href="https://m.ruliweb.com/best/board/300143?">목록</a>
+							<a class="btn_list btn_default btn_light" href="https://m.ruliweb.com/best/board/123?">목록</a>
 						</div>
 						<div class="col col_2 r_col">
 															<div class="btn_default btn_light" onclick="app.invalid_popup();">삭제</div>

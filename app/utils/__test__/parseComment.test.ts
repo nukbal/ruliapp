@@ -243,7 +243,7 @@ describe('html parser', () => {
         key: 'ct_123123',
         time: new Date('2019-08-15T06:27:00.000Z'),
         content: '덧글 내용123',
-        image: 'http://i2.ruliweb.com/cmt/17/09/28/123123123.mp4',
+        image: 'https://i2.ruliweb.com/cmt/17/09/28/123123123.mp4',
         likes: 0,
         dislike: 0,
         user: {

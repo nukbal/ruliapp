@@ -42,7 +42,7 @@ function formatComment(node: INode): CommentRecord | undefined {
   if (!cursor) cursor = querySelector(textNode, 'video');
   if (cursor && cursor.attrs) {
     let url = cursor.attrs.src;
-    if (url.indexOf('//') === 0) url = `http:${url}`;
+    if (url.indexOf('//') === 0) url = `https:${url}`;
     record.image = url;
   }
 

@@ -1,5 +1,5 @@
-import React, { memo, useMemo, useState, useCallback } from 'react';
-import Video, { OnLoadData } from 'react-native-video';
+import React, { memo, useMemo, useState } from 'react';
+import Video, { OnLoadData, LoadError } from 'react-native-video';
 import { StyleSheet, LayoutChangeEvent } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { setImageHeight } from './LazyImage';
@@ -17,21 +17,17 @@ const styles = StyleSheet.create({
   },
 });
 
-function LazyVideo({ source: { uri } }: Props) {
+function LazyVideo({ source }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [pause, setPause] = useState(false);
 
-  const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
-    setScreenWidth(nativeEvent.layout.width);
-  }, []);
-
-  const onLoad = useCallback(({ naturalSize }: OnLoadData) => {
-    setSize({ width: naturalSize.width, height: naturalSize.height });
-  }, []);
+  const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
+  const onLoad = ({ naturalSize }: OnLoadData) => setSize({ width: naturalSize.width, height: naturalSize.height });
+  const onPress = () => setPause((p) => !p);
+  const onError = ({ error }: LoadError) => { console.warn(source.uri, error) };
 
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
-  const onPress = useCallback(() => setPause((p) => !p), []);
 
   return (
     <TouchableOpacity
@@ -41,9 +37,10 @@ function LazyVideo({ source: { uri } }: Props) {
       activeOpacity={0.65}
     >
       <Video
-        source={{ uri }}
+        source={source}
         onLoad={onLoad}
-        style={{ height, flex: 1 }}
+        onError={onError}
+        style={{ height }}
         ignoreSilentSwitch="obey"
         resizeMode="cover"
         paused={pause}

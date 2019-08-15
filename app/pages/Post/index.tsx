@@ -1,8 +1,7 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
 import {
-  SectionList,
-  SectionListData,
+  FlatList,
 } from 'react-native';
 
 import Footer from './Footer';
@@ -22,7 +21,6 @@ function keyExtractor(item: CommentRecord | ContentRecord) {
   return item.key;
 }
 
-const renderContent = ({ item }: any) => <Contents {...item} />;
 const renderComment = ({ item }: any) => <Comments {...item} />;
 
 export default function Post({ navigation }: Props) {
@@ -32,44 +30,30 @@ export default function Post({ navigation }: Props) {
   } = usePost(params.url, params.key);
   const { theme } = useContext(ThemeContext);
 
-  const renderSectionFooter = useCallback(({ section }: { section: SectionListData<any> }) => {
-    if (section.index === 0) {
-      return (
-        <Footer
+  const header = useMemo(() => (
+    <>
+      {contents.map(item => <Contents key={item.key} {...item} />)}
+      <Footer
           likes={likes}
           dislikes={dislikes}
           comments={comment.length}
           url={`http://m.ruliweb.com/${params.url}`}
         />
-      );
-    }
-    return null;
-  }, [likes, dislikes, comment, params.url]);
+    </>
+  ), [contents.length]);
 
   if (!ready) return <Placeholder />;
 
-  const sections: SectionListData<any>[] = [
-    {
-      index: 0,
-      data: contents,
-      renderItem: renderContent,
-    },
-    {
-      index: 1,
-      data: comment,
-      renderItem: renderComment,
-      removeClippedSubviews: true,
-    },
-  ];
   return (
-    <SectionList
+    <FlatList
+      data={comment}
+      renderItem={renderComment}
+      keyExtractor={keyExtractor}
+      ListHeaderComponent={header}
       refreshing={isCommentLoading}
       onRefresh={loadComment}
-      renderSectionFooter={renderSectionFooter}
-      keyExtractor={keyExtractor}
-      sections={sections}
-      stickySectionHeadersEnabled={false}
       style={{ backgroundColor: theme.background }}
+      removeClippedSubviews
     />
   );
 }
