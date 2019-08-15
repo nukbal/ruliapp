@@ -42,7 +42,7 @@ export default function ContentItem({ type, content }: ContentRecord) {
     }
     case 'video': {
       return (
-        <LazyVideo uri={content} />
+        <LazyVideo source={{ uri: content }} />
       );
     }
     default: {

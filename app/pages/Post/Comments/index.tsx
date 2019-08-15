@@ -7,6 +7,7 @@ import LazyImage from '../LazyImage';
 import formatDate from '../../../utils/formatDate';
 import styles from './styles';
 import ThemeContext from '../../../ThemeContext';
+import LazyVideo from '../LazyVideo';
 
 export default function Comment(
   { user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted }: CommentRecord,
@@ -32,6 +33,8 @@ export default function Comment(
     containerStyle.push({ paddingLeft: 28, paddingTop: 25, backgroundColor: transparentize(0.825, theme.primary) });
   }
 
+  const Media = image && image.indexOf('.mp4') !== -1 ? LazyVideo : LazyImage;
+
   return (
     <View style={containerStyle}>
       {reply && (
@@ -44,7 +47,11 @@ export default function Comment(
         <Text style={[styles.UserText, textStyle]}>{user.name}</Text>
         {timeText && (<Text style={textStyle}>{timeText}</Text>)}
       </View>
-      {image && (<View style={styles.UserContainer}><LazyImage source={{ uri: image }} /></View>)}
+      {image && (
+        <View style={styles.UserContainer}>
+          <Media source={{ uri: image }} />
+        </View>
+      )}
       <View style={[styles.UserContainer, { paddingVertical: 6 }]}>
         <Text style={textStyle}>{content || ''}</Text>
       </View>

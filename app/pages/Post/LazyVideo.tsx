@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { setImageHeight } from './LazyImage';
 
 interface Props {
-  uri: string;
+  source: { uri: string; }
 }
 
 const styles = StyleSheet.create({
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function LazyVideo({ uri }: Props) {
+function LazyVideo({ source: { uri } }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [pause, setPause] = useState(false);
@@ -57,7 +57,7 @@ function LazyVideo({ uri }: Props) {
 
 function isEqual(prev: Props, next: Props) {
   return (
-    prev.uri === next.uri
+    prev.source.uri === next.source.uri
   );
 }
 
