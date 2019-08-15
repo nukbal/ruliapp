@@ -31,7 +31,7 @@ export default StyleSheet.create({
   replyContainer: {
     position: 'absolute',
     top: 3,
-    left: 8,
+    left: 16,
     flexDirection: 'row',
     alignItems: 'center',
     opacity: 0.85,

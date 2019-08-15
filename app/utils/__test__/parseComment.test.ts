@@ -203,4 +203,55 @@ describe('html parser', () => {
       },
     });
   });
+
+  it('with video', () => {
+    const html = `
+      <div class="board_bottom">
+      <div class="comment_container">
+        <div class="comment_wrapper theme_default">
+          <div class="comment_count_wrapper row">
+            <table class="comment_table">
+              <tbody>
+              <tr class="comment_element normal parent" id="ct_123123">
+								<td class="comment" colspan="2">
+                  <div class="text_wrapper">
+                    <span class="inline_block relative gifct">
+                      <video autoplay="" loop="" muted="" playsinline="" src="//i2.ruliweb.com/cmt/17/09/28/123123123.mp4"></video>
+                    </span>
+									  <span class="text">덧글 내용123</span>
+					        </div>
+                  <div class="user row">
+                    <div class="user_inner_wrapper">
+                      <input type="hidden" class="member_srl" value="999999">
+                      <strong class="nick">유저</strong>
+                      <span class="ip"> | 111.222.***.*** </span>
+                      <span class="time"> | 19.08.15 15:27</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      </div>
+    `;
+    const data = parser(html);
+    expect(data).toEqual([
+      {
+        key: 'ct_123123',
+        time: new Date('2019-08-15T06:27:00.000Z'),
+        content: '덧글 내용123',
+        image: 'http://i2.ruliweb.com/cmt/17/09/28/123123123.mp4',
+        likes: 0,
+        dislike: 0,
+        user: {
+          id: '999999',
+          name: '유저',
+          ip: '111.222.***.***',
+        },
+      }
+    ]);
+  })
 });
