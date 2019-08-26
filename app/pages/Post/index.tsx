@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 
 import Footer from './Footer';
-import Contents from './Contents';
+import Contents, { ContentRow } from './Contents';
 import Comments from './Comments';
 import usePost from './usePost';
 import ThemeContext from '../../ThemeContext';
@@ -32,15 +32,20 @@ export default function Post({ navigation }: Props) {
 
   const header = useMemo(() => (
     <>
-      {contents.map(item => <Contents key={item.key} {...item} />)}
+      {contents.map((item) => (
+        Array.isArray(item)
+          // @ts-ignore
+          ? <ContentRow key={`row${item[0].key}`} row={item} />
+          : <Contents key={item.key} {...item} />
+      ))}
       <Footer
-          likes={likes}
-          dislikes={dislikes}
-          comments={comment.length}
-          url={`http://m.ruliweb.com/${params.url}`}
-        />
+        likes={likes}
+        dislikes={dislikes}
+        comments={comment.length}
+        url={`http://m.ruliweb.com/${params.url}`}
+      />
     </>
-  ), [contents.length]);
+  ), [comment.length, contents, dislikes, likes, params.url]);
 
   if (!ready) return <Placeholder />;
 

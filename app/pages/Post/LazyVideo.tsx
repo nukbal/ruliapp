@@ -25,7 +25,7 @@ function LazyVideo({ source }: Props) {
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
   const onLoad = ({ naturalSize }: OnLoadData) => setSize({ width: naturalSize.width, height: naturalSize.height });
   const onPress = () => setPause((p) => !p);
-  const onError = ({ error }: LoadError) => { console.warn(source.uri, error) };
+  const onError = ({ error }: LoadError) => { console.warn(source.uri, error); };
 
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
 

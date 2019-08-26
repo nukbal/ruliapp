@@ -43,7 +43,7 @@ export default function useBoard(key: string) {
     try {
       const response = await fetch(targetUrl, config);
       const htmlString = await response.text();
-      const json: IParseBoard = parseBoardList(htmlString, key);
+      const json: IParseBoard = parseBoardList(htmlString);
 
       if (params.page === 1) {
         const keys = json.rows.map((item: PostRecord) => item.key);
@@ -60,11 +60,12 @@ export default function useBoard(key: string) {
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
 
     if (callback) callback();
-  }, [key, lastRan]);
+  }, [key]);
 
   useEffect(() => {
     if (key) request();
-  }, [key, request]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
 
   const onRefresh = () => {
     if (key && !pushing && list.length > 0) {

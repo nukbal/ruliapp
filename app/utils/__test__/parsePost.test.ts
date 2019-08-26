@@ -198,6 +198,7 @@ describe('html parser', () => {
       ],
       source: 'http://path/to/reference',
       subject: 'test title',
+			likes: 4,
       user: {
         experience: 68,
         id: '123123',
@@ -322,16 +323,25 @@ describe('html parser', () => {
       comments: [],
       contents: [
         { type: 'text', key: '_0_0', content: 'paragraph 1' },
-        { type: 'text', key: '_2_0', content: '문장 2' },
-        { type: 'text', key: '_3_0', content: '문장 3-1' },
-        { type: 'text', key: '_3_1', content: '문장 3-2 ' },
-        { type: 'text', key: '_4_0', content: '문장 4 ' },
-        { type: 'image', key: '_5_0', content: 'https://path/to/image.jpg' },
-        { type: 'text', key: '_5_1', content: '이미지 설명문' },
-        { type: 'text', key: '_5_2', content: '추가 문장' },
+				{ type: 'text', key: '_2_0', content: '문장 2' },
+				[
+					{ type: 'text', key: '_3_0', content: '문장 3-1' },
+					{ type: 'text', key: '_3_1', content: '문장 3-2 ' },
+				],
+				{ type: 'text', key: '_4_0', content: '문장 4 ' },
+				[
+					{ type: 'image', key: '_5_0', content: 'https://path/to/image.jpg' },
+					{ type: 'text', key: '_5_1', content: '이미지 설명문' },
+					{ type: 'text', key: '_5_2', content: '추가 문장' },
+				],
+				[
+					{ type: 'text', key: '_6_0', content: '굵은 글씨' },
+					{ type: 'text', key: '_6_1', content: '빨간 글씨' },
+				],
       ],
       source: 'http://path/to/reference',
-      subject: 'test title',
+			subject: 'test title',
+			likes: 17,
       user: {
         experience: 68,
         id: '1076219',
@@ -546,6 +556,8 @@ describe('html parser', () => {
         { type: 'video', key: '_0_0', content: 'https://i3.ruliweb.com/ori/19/03/28/169c279261e417ce4.mp4' },
       ],
       subject: 'git animation test',
+			likes: 23,
+			dislikes: 0,
       user: {
         experience: 68,
         id: '123123',

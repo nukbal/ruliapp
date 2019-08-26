@@ -43,7 +43,6 @@ interface Props {
 export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
   const width = screenWidth;
   const ratio = width / image.width;
-  // eslint-disable-next-line no-bitwise
   const height = image.height * ratio;
   return height || 200;
 }
@@ -66,8 +65,7 @@ function LazyImage({ source }: Props) {
   const onError = (e: NativeSyntheticEvent<ImageErrorEventData>) => setError(`${e}`);
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
   const onProgress = useCallback(
-    ({ nativeEvent }: NativeSyntheticEvent<ImageProgressEventDataIOS>) =>
-      setPercent(Math.round((nativeEvent.loaded / nativeEvent.total) * 100)),
+    ({ nativeEvent }: NativeSyntheticEvent<ImageProgressEventDataIOS>) => setPercent(Math.round((nativeEvent.loaded / nativeEvent.total) * 100)),
     [],
   );
 

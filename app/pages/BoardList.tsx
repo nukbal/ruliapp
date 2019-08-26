@@ -18,6 +18,9 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     justifyContent: 'center',
   },
+  boldText: {
+    fontWeight: '600',
+  },
 });
 
 interface Props {
@@ -37,6 +40,7 @@ export default function BoardList({ navigation }: Props) {
 
   useEffect(() => {
     navigation.setParams({ title: '루리웹' });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onPressItem = ({ key, title }: any) => {
@@ -61,7 +65,7 @@ export default function BoardList({ navigation }: Props) {
   function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
     return (
       <View style={[styles.label, { backgroundColor: theme.backgroundSub }]}>
-        <Text style={{ fontWeight: '600' }}>{title}</Text>
+        <Text style={styles.boldText}>{title}</Text>
       </View>
     );
   }

@@ -121,8 +121,8 @@ export function findContext(
 
 export function parsePostContents(
   parent: INode, prefix: string,
-): ContentRecord | ContentRecord[] | undefined {
-  let res: ContentRecord[] = [];
+): Array<ContentRecord | ContentRecord[]> | undefined {
+  const res: Array<ContentRecord | ContentRecord[]> = [];
   const rows = rowSelector(parent, ['p']);
   if (!rows) return;
 
@@ -132,9 +132,7 @@ export function parsePostContents(
     const key = `${prefix}_${i}`;
     const value = findContext(current, key);
     if (value) {
-      if (Array.isArray(value)) {
-        res = res.concat(value);
-      } else res.push(value);
+      res.push(value);
     }
   }
 
@@ -145,7 +143,9 @@ interface PostType {
   subject: string;
   user: ReturnType<typeof parsePostUser>;
   source?: string;
-  contents: ContentRecord[];
+  likes?: number;
+  dislikes?: number;
+  contents: Array<ContentRecord | ContentRecord[]>;
   comments: CommentRecord[];
 }
 
@@ -159,7 +159,7 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
   }
 
   const Nodes = loadHtml(html);
-  const res: any = {};
+  const res: PostType = { subject: '', user: { name: '', id: '' }, contents: [], comments: [] };
 
   res.subject = parseTitle(htmlString);
   if (!res.subject) return;
@@ -177,8 +177,18 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
 
   const contentNode = querySelector(mainNode, 'div.view_content');
   if (contentNode) {
-    res.contents = parsePostContents(contentNode, prefix);
-  } else return;
+    res.contents = parsePostContents(contentNode, prefix) || [];
+  }
+
+  const likesNode = querySelector(mainNode, 'span.like_value text');
+  if (likesNode && likesNode.value) {
+    res.likes = parseInt(likesNode.value, 10);
+  }
+
+  const dislikeNode = querySelector(mainNode, 'span.dislike_value text');
+  if (dislikeNode && dislikeNode.value) {
+    res.dislikes = parseInt(dislikeNode.value, 10);
+  }
 
   const cmtStartIdx = htmlString.indexOf('<!-- board_bottom start', endIndex);
   const cmtEndIdx = htmlString.indexOf('<!-- board_bottom end', cmtStartIdx);

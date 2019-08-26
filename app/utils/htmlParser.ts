@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle, no-param-reassign, no-continue */
+/* eslint-disable no-param-reassign, no-continue */
 export interface INode {
   tagName: string;
   attrs?: { [key: string]: any };
@@ -137,7 +137,7 @@ function findMatchNode(root: INode, pattern: string, all?: boolean) {
   const arrLen = arr.length;
   let cursor = node;
   for (let z = 0; z < arrLen; z += 1) {
-    const current = arr[z].split(/[\.|\#]/);
+    const current = arr[z].split(/[.|#]/);
     const isLast = (z === arrLen - 1);
 
     cursor = searchTree(cursor, current);

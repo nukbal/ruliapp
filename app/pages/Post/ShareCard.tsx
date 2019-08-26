@@ -51,28 +51,37 @@ export default function ShareCard({ uri }: Props) {
   const [data, setData] = useState<DataType>({ title: '', image: null, url: '' });
 
   useEffect(() => {
+    let isUnmount = false;
     if (uri.indexOf('youtube.com') > -1) {
       fetch(uri, { method: 'get' })
-        .then((res) => res.text())
+        .then((res) => (isUnmount ? '' : res.text()))
         .then((html) => {
+          if (isUnmount) return;
+
           const startIdx = html.indexOf('"embedded_player_response":');
-          const endIdx = html.indexOf('}",', startIdx);
-          const json = JSON.parse(JSON.parse(html.substring(startIdx + 27, endIdx + 2)));
-          setData({
-            title: json.embedPreview.thumbnailPreviewRenderer.title.runs[0].text,
-            image: json.embedPreview.thumbnailPreviewRenderer.defaultThumbnail.thumbnails[1],
-            url: (
-              `https://www.youtube.com/watch?v=${
-                json.embedPreview.thumbnailPreviewRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint.videoId}`
-            ),
-          });
+          const endIdx = html.indexOf('}"', startIdx);
+          if (startIdx > 0 && endIdx > 0) {
+            const target = html.substring(startIdx + 27, endIdx + 2);
+            const json = JSON.parse(JSON.parse(target));
+            setData({
+              title: json.embedPreview.thumbnailPreviewRenderer.title.runs[0].text,
+              image: json.embedPreview.thumbnailPreviewRenderer.defaultThumbnail.thumbnails[1],
+              url: (
+                `https://www.youtube.com/watch?v=${
+                  json.embedPreview.thumbnailPreviewRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint.videoId}`
+              ),
+            });
+          }
           setReady(true);
         })
-        .catch((e) => { console.warn(e.message); });
+        .catch((e) => { console.warn('share', e.message); });
     } else {
       setData({ ...data, title: uri });
       setReady(true);
     }
+    return () => {
+      isUnmount = true;
+    };
   }, [data, uri]);
 
   const onPress = () => {

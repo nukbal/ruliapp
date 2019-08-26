@@ -82,7 +82,7 @@ describe('parsing board', () => {
 		</div><!-- board_main end -->
     `;
     MockDate.set(Date.UTC(2018, 9, 11));
-    const data = parser(html, '');
+    const data = parser(html);
     expect(data).toEqual({
 		 title: 'test board',
 		 notices: [],

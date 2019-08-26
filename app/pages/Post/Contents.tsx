@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import ShareCard from './ShareCard';
 import LazyImage from './LazyImage';
 import LazyVideo from './LazyVideo';
@@ -21,6 +21,14 @@ export const styles = StyleSheet.create({
 function Content({ children }: { children: string }) {
   const { theme } = useContext(ThemeContext);
   return <Text style={[styles.text, { color: theme.text }]}>{children}</Text>;
+}
+
+export function ContentRow({ row }: { row: ContentRecord[] }) {
+  return (
+    <View>
+      {row.map((item) => <ContentItem key={item.key} {...item} />)}
+    </View>
+  );
 }
 
 export default function ContentItem({ type, content }: ContentRecord) {

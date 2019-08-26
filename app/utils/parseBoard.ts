@@ -103,7 +103,7 @@ export interface IParseBoard {
   notices: PostRecord[];
 }
 
-export default function parseBoardList(htmlString: string, key: string): IParseBoard {
+export default function parseBoardList(htmlString: string): IParseBoard {
   const title = parseTitle(htmlString);
   const startIndex = htmlString.indexOf('<!-- board_main start');
   const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);

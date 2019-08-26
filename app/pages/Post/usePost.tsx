@@ -5,11 +5,11 @@ import parsePost from '../../utils/parsePost';
 import parseComment from '../../utils/parseComment';
 
 interface DataType {
-  contents: ContentRecord[];
+  contents: Array<ContentRecord | ContentRecord[]>;
   source?: string | undefined;
   views: number;
-  likes: number;
-  dislikes: number;
+  likes?: number;
+  dislikes?: number;
   date: Date | null;
   userName: string;
 }
@@ -18,8 +18,6 @@ export default function usePost(url: string, key: string) {
   const [data, setData] = useState<DataType>({
     contents: [],
     views: 0,
-    likes: 0,
-    dislikes: 0,
     date: null,
     userName: '',
   });
