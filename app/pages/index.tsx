@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import BoardStack from './Board';
 import BoardList from './BoardList';
 import PostScreen from './Post';
