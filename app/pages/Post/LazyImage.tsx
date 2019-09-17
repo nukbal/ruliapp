@@ -1,18 +1,14 @@
-import React, { memo, useState, useMemo, useCallback } from 'react';
+import React, { memo, useState, useMemo, useCallback, useContext } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   LayoutChangeEvent,
   ActivityIndicator,
-  PixelRatio,
-  Image,
-  NativeSyntheticEvent,
-
-  ImageLoadEventData,
-  ImageProgressEventDataIOS,
-  ImageErrorEventData,
+  ImageSourcePropType,
 } from 'react-native';
+import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
+import ThemeContext from '../../ThemeContext';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -20,10 +16,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 6,
     marginBottom: 6,
+    padding: 0,
     backgroundColor: 'rgba(100,100,100,0.25)',
-  },
-  text: {
-    color: 'orange',
   },
   message: {
     position: 'absolute',
@@ -37,7 +31,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  source: { uri: string };
+  source: ImageSourcePropType;
 }
 
 export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
@@ -48,6 +42,7 @@ export function setImageHeight(image: { width: number, height: number }, screenW
 }
 
 function LazyImage({ source }: Props) {
+  const { theme } = useContext(ThemeContext);
   const [error, setError] = useState<string | null>(null);
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -55,36 +50,36 @@ function LazyImage({ source }: Props) {
   const [percent, setPercent] = useState(0);
 
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
-  const onLoad = ({ nativeEvent }: NativeSyntheticEvent<ImageLoadEventData>) => {
-    setSize({
-      width: PixelRatio.getPixelSizeForLayoutSize(nativeEvent.source.width),
-      height: PixelRatio.getPixelSizeForLayoutSize(nativeEvent.source.height),
-    });
+  const onLoad = ({ nativeEvent }: OnLoadEvent) => {
+    setSize(nativeEvent);
     setReady(true);
   };
-  const onError = (e: NativeSyntheticEvent<ImageErrorEventData>) => setError(`${e}`);
+  const onError = () => setError('이미지 로딩에 실패하였습니다.');
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
   const onProgress = useCallback(
-    ({ nativeEvent }: NativeSyntheticEvent<ImageProgressEventDataIOS>) => setPercent(Math.round((nativeEvent.loaded / nativeEvent.total) * 100)),
+    ({ nativeEvent }: OnProgressEvent) => setPercent(Math.round((nativeEvent.loaded / nativeEvent.total) * 100)),
     [],
   );
+
+  const textStyle = useMemo(() => ({ color: theme.primary }), []);
 
   return (
     <View style={styles.ImageContent} onLayout={onLayout}>
       {error && (
         <View style={styles.message}>
-          <Text style={styles.text}>불러오기 실패</Text>
-          <Text style={styles.text}>{error}</Text>
+          <Text style={textStyle}>불러오기 실패</Text>
+          <Text style={textStyle}>{error}</Text>
         </View>
       )}
       {!ready && (
         <View style={styles.message}>
-          <ActivityIndicator />
-          <Text style={styles.text}>{percent}</Text>
+          <ActivityIndicator color={theme.primary} />
+          <Text style={textStyle}>{percent}</Text>
         </View>
       )}
       <Image
         style={{ height }}
+        // @ts-ignore
         source={source}
         onLoad={onLoad}
         onProgress={onProgress}
@@ -96,6 +91,7 @@ function LazyImage({ source }: Props) {
 
 function isEqual(prev: Props, next: Props) {
   return (
+    // @ts-ignore
     prev.source.uri === next.source.uri
   );
 }

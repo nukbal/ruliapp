@@ -1,11 +1,11 @@
 import React, { memo, useMemo, useState } from 'react';
 import Video, { OnLoadData, LoadError } from 'react-native-video';
-import { StyleSheet, LayoutChangeEvent } from 'react-native';
+import { StyleSheet, LayoutChangeEvent, ImageSourcePropType } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { setImageHeight } from './LazyImage';
 
 interface Props {
-  source: { uri: string; }
+  source: ImageSourcePropType;
 }
 
 const styles = StyleSheet.create({
@@ -37,6 +37,7 @@ function LazyVideo({ source }: Props) {
       activeOpacity={0.65}
     >
       <Video
+        // @ts-ignore
         source={source}
         onLoad={onLoad}
         onError={onError}

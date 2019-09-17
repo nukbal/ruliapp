@@ -1,7 +1,8 @@
-import React, { useMemo, useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
 import {
-  FlatList,
+  SectionList,
+  SectionListData,
 } from 'react-native';
 
 import Footer from './Footer';
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function keyExtractor(item: CommentRecord | ContentRecord) {
+  if (Array.isArray(item)) return item[0].key;
   return item.key;
 }
 
@@ -30,35 +32,50 @@ export default function Post({ navigation }: Props) {
   } = usePost(params.url, params.key);
   const { theme } = useContext(ThemeContext);
 
-  const header = useMemo(() => (
-    <>
-      {contents.map((item) => (
-        Array.isArray(item)
-          // @ts-ignore
-          ? <ContentRow key={`row${item[0].key}`} row={item} />
-          : <Contents key={item.key} {...item} />
-      ))}
-      <Footer
-        likes={likes}
-        dislikes={dislikes}
-        comments={comment.length}
-        url={`http://m.ruliweb.com/${params.url}`}
-      />
-    </>
-  ), [comment.length, contents, dislikes, likes, params.url]);
+  const renderContent = useCallback(({ item }: any) => {
+    if (Array.isArray(item)) {
+      return <ContentRow row={item} />;
+    }
+    return <Contents {...item} url={`http://m.ruliweb.com/${params.url}`} />;
+  }, [params.url]);
+
+  const renderSectionFooter = useCallback(({ section }: { section: SectionListData<any> }) => {
+    if (section.index === 0) {
+      return (
+        <Footer
+          likes={likes}
+          dislikes={dislikes}
+          comments={comment.length}
+          url={`http://m.ruliweb.com/${params.url}`}
+        />
+      );
+    }
+    return null;
+  }, [comment.length, dislikes, likes, params.url]);
 
   if (!ready) return <Placeholder />;
 
+  const sections: SectionListData<any>[] = [
+    {
+      index: 0,
+      data: contents,
+      renderItem: renderContent,
+    },
+    {
+      index: 1,
+      data: comment,
+      renderItem: renderComment,
+    },
+  ];
+
   return (
-    <FlatList
-      data={comment}
-      renderItem={renderComment}
+    <SectionList
+      sections={sections}
       keyExtractor={keyExtractor}
-      ListHeaderComponent={header}
+      renderSectionFooter={renderSectionFooter}
       refreshing={isCommentLoading}
       onRefresh={loadComment}
       style={{ backgroundColor: theme.background }}
-      removeClippedSubviews
     />
   );
 }

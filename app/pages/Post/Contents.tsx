@@ -26,12 +26,12 @@ function Content({ children }: { children: string }) {
 export function ContentRow({ row }: { row: ContentRecord[] }) {
   return (
     <View>
-      {row.map((item) => <ContentItem key={item.key} {...item} />)}
+      {row.map((item) => <Content key={item.key}>{item.content}</Content>)}
     </View>
   );
 }
 
-export default function ContentItem({ type, content }: ContentRecord) {
+export default function ContentItem({ type, content, url }: ContentRecord & { url: string }) {
   if (!type || !content) return null;
 
   switch (type) {
@@ -45,12 +45,12 @@ export default function ContentItem({ type, content }: ContentRecord) {
     }
     case 'image': {
       return (
-        <LazyImage source={{ uri: content }} />
+        <LazyImage source={{ uri: content, headers: { referer: url } }} />
       );
     }
     case 'video': {
       return (
-        <LazyVideo source={{ uri: content }} />
+        <LazyVideo source={{ uri: content, headers: { referer: url } }} />
       );
     }
     default: {
