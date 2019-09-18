@@ -20,12 +20,14 @@ const styles = StyleSheet.create({
 });
 
 export default function Header({ navigation }: { navigation: NavigationScreenProp<any> }) {
-  const { theme, toggleTheme, isDark } = useContext(ThemeContext);
+  const { theme, isDark } = useContext(ThemeContext);
   const back = () => navigation.goBack();
 
   if (Platform.OS === 'ios') {
     StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content');
   }
+
+  const openSetting = () => navigation.navigate('Settings', { title: '설정' });
 
   const statusBarHeight = useMemo(getStatusBarHeight, []);
   let headerHeight = 0;
@@ -57,9 +59,11 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
       <Text style={[styles.title, { color: theme.primary }]} numberOfLines={1}>
         {navigation.getParam('title', '')}
       </Text>
-      <TouchableOpacity onPress={toggleTheme}>
-        <Icons name="brightness-medium" size={24} color={theme.primary} />
-      </TouchableOpacity>
+      {navigation.state.routeName !== 'Settings' && (
+        <TouchableOpacity onPress={openSetting}>
+          <Icons name="tune" size={24} color={theme.primary} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

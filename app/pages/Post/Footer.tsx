@@ -1,4 +1,4 @@
-import React, { memo, useContext } from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ interface Props {
   comments: number;
 }
 
-function ContentFooter({ url, likes, dislikes, comments }: Props) {
+export default function ContentFooter({ url, likes, dislikes, comments = 0 }: Props) {
   const { theme } = useContext(ThemeContext);
 
   const open = () => {
@@ -49,8 +49,3 @@ function ContentFooter({ url, likes, dislikes, comments }: Props) {
     </View>
   );
 }
-ContentFooter.defaultProps = {
-  comments: 0,
-};
-
-export default memo(ContentFooter);
