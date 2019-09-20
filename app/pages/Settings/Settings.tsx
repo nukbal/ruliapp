@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { NavigationScreenProp } from 'react-navigation';
 import ThemeContext from '../../ThemeContext';
+import AuthContext, { Actions } from '../../AuthContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -57,23 +58,51 @@ const styles = StyleSheet.create({
 
 export default function Settings({ navigation }: { navigation: NavigationScreenProp<any> }) {
   const { isDark, theme, toggleTheme } = useContext(ThemeContext);
+  const { isLogined, userInfo, dispatch } = useContext(AuthContext);
 
   const report = () => Linking.openURL('https://github.com/nukbal/ruliapp/issues').catch(() => {});
   const login = () => navigation.navigate('Login');
+  const logout = () => dispatch(Actions.clear());
 
   return (
     <ScrollView style={{ backgroundColor: theme.background }}>
 
       <Text style={[styles.label, { color: theme.primary }]}>계정</Text>
-      <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={login}>
-        <View style={styles.itemHeader}>
-          <Icons name="account-circle" size={24} color={theme.label} style={styles.iconStyle} />
-          <Text style={[styles.itemText, { color: theme.text }]}>
-            로그인
-          </Text>
-        </View>
-        <Icons name="arrow-forward" size={24} color={theme.label} />
-      </TouchableOpacity>
+      {!isLogined && (
+        <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={login}>
+          <View style={styles.itemHeader}>
+            <Icons name="account-circle" size={24} color={theme.label} style={styles.iconStyle} />
+            <Text style={[styles.itemText, { color: theme.text }]}>
+              로그인
+            </Text>
+          </View>
+          <Icons name="arrow-forward" size={24} color={theme.label} />
+        </TouchableOpacity>
+      )}
+      {isLogined && (
+        <>
+          <View style={[styles.item, styles.itemHeader, { borderColor: theme.border }]}>
+            <Text style={[styles.itemText, { color: theme.text }]}>
+              {userInfo.name}
+              님
+            </Text>
+          </View>
+          <View style={[styles.item, styles.itemHeader, { borderColor: theme.border }]}>
+            <Text style={[styles.itemText, { color: theme.text }]}>
+              {userInfo.attends}일
+            </Text>
+          </View>
+          <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={logout}>
+            <View style={styles.itemHeader}>
+              <Icons name="exit-to-app" size={24} color={theme.label} style={styles.iconStyle} />
+              <Text style={[styles.itemText, { color: theme.text }]}>
+                로그아웃
+              </Text>
+            </View>
+            <Icons name="arrow-forward" size={24} color={theme.label} />
+          </TouchableOpacity>
+        </>
+      )}
 
       <Text style={[styles.label, { color: theme.primary }]}>표시</Text>
       <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={toggleTheme}>

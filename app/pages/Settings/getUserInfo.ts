@@ -1,4 +1,5 @@
-import parser, { querySelector } from '../../utils/htmlParser';
+import parser, { querySelector, querySelectorAll } from '../../utils/htmlParser';
+import { AuthContext } from '../../AuthContext';
 
 const config = {
   method: 'GET',
@@ -30,11 +31,45 @@ export default async function getUserInfo() {
     html = html.substring(startIdx, endIdx);
     html += '</table></div>';
 
+    // @ts-ignore
+    const data: AuthContext['userInfo'] = {};
     const Node = parser(html);
-    const name = querySelector(Node, '.profile_img');
-    console.log(name);
+    let cursor;
 
-    return {};
+    cursor = querySelector(Node, 'profile_img');
+    if (cursor) data.avatar = cursor.attrs!.src;
+
+    cursor = querySelector(Node, 'nick_name info_value text');
+    if (cursor) data.name = cursor.value!;
+
+    cursor = querySelectorAll(Node, 'member_srl');
+    if (cursor && cursor.length) {
+      cursor = querySelector(cursor[1], 'info_value text');
+      if (cursor) data.id = cursor.value!;
+    }
+
+    cursor = querySelector(Node, 'level info_value text');
+    if (cursor) data.level = parseInt(cursor.value!, 10);
+
+    cursor = querySelectorAll(Node, 'exp');
+    if (cursor && cursor.length) {
+      let cc = querySelector(cursor[0], 'info_value text');
+      if (cc) data.expNow = cc.value!;
+
+      cc = querySelector(cursor[1], 'info_value text');
+      if (cc) data.expLeft = cc.value!;
+    }
+
+    cursor = querySelector(Node, 'attend info_value text');
+    if (cursor) data.attends = parseInt(cursor.value!, 10);
+
+    // cursor = querySelectorAll(Node, 'user_activity tr');
+    // if (cursor && cursor.length) {
+    //   let cc = querySelector(cursor[1], 'activity_value text');
+    //   console.log(cc);
+    // }
+
+    return data;
   } catch (e) {
     throw new Error('로그인 정보 취득에 실패하였습니다.');
   }

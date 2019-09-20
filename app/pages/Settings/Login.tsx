@@ -10,12 +10,16 @@ export default function Login({ navigation }: { navigation: NavigationScreenProp
   const { dispatch } = useContext(AuthContext);
   const view = useRef<WebView | null>(null);
   const onNavChange = (e: WebViewNavigation) => {
-    if (view.current && e.url.indexOf('http://user.ruliweb.com/login_result?sid=') === 0) {
-      view.current.stopLoading();
+    if (view.current && e.url.indexOf('login_result?sid=') > -1) {
       getUserInfo()
-        .then((data) => dispatch(Actions.login(data)))
-        .catch((err) => Alert.alert(err.message))
-        .finally(() => navigation.goBack());
+        .then((data) => {
+          dispatch(Actions.login(data));
+          navigation.goBack();
+        })
+        .catch((err) => {
+          Alert.alert(err.message);
+          navigation.goBack();
+        });
     }
   };
 

@@ -23,6 +23,13 @@ describe('get user info', () => {
       likeCount: 555,
     });
   })
+
+  it('not logined', () => {
+    nock('https://bbs.ruliweb.com')
+      .get('/member/mypage')
+      .reply(302, '');
+    expect(getUserInfo()).resolves.toThrowError();
+  })
 })
 
 

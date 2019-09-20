@@ -1,4 +1,5 @@
-import React, { Children, createContext, useReducer } from 'react';
+import React, { Children, createContext, useReducer, useEffect } from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import { createAction, ActionsUnion } from './utils/createAction';
 
 interface State {
@@ -34,7 +35,7 @@ interface State {
   };
 }
 
-interface AuthContext extends State {
+export interface AuthContext extends State {
   dispatch: () => void;
 }
 
@@ -67,9 +68,11 @@ const initState = {
 function reducer(state: State, action: Actions) {
   switch (action.type) {
     case 'LOGIN': {
+      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
       return { userInfo: action.payload, isLogined: true, lastLogined: Date.now() };
     }
     case 'CLEAR': {
+      AsyncStorage.removeItem('userInfo');
       return initState;
     }
     default: {
@@ -83,6 +86,13 @@ const AuthContext = createContext<AuthContext>({});
 
 export function AuthProvider({ children }: any) {
   const [state, dispatch] = useReducer(reducer, initState);
+
+  useEffect(() => {
+    AsyncStorage.getItem('userInfo').then((info) => {
+      if (info) dispatch(Actions.login(JSON.parse(info)));
+    });
+  }, []);
+
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
       {Children.only(children)}
