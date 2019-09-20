@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, SectionList, SectionListData, Text, View } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { NavigationScreenProp } from 'react-navigation';
@@ -37,11 +37,6 @@ const sections = [
 
 export default function BoardList({ navigation }: Props) {
   const { theme } = useContext(ThemeContext);
-
-  useEffect(() => {
-    navigation.setParams({ title: '루리웹' });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;

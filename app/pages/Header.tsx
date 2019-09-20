@@ -27,7 +27,7 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
     StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content');
   }
 
-  const openSetting = () => navigation.navigate('Settings', { title: '설정' });
+  const openSetting = () => navigation.navigate('Settings');
 
   const statusBarHeight = useMemo(getStatusBarHeight, []);
   let headerHeight = 0;

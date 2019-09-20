@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Text, Linking, Alert } from 'react-native';
-import SafeView from 'react-native-safe-area-view';
+import React, { useContext } from 'react';
+import { StyleSheet, ScrollView, View, Text, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { NavigationScreenProp } from 'react-navigation';
@@ -59,16 +58,12 @@ const styles = StyleSheet.create({
 export default function Settings({ navigation }: { navigation: NavigationScreenProp<any> }) {
   const { isDark, theme, toggleTheme } = useContext(ThemeContext);
 
-  useEffect(() => {
-    navigation.setParams({ title: '설정' });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const report = () => Linking.openURL('https://github.com/nukbal/ruliapp/issues').catch(() => {});
-  const login = () => Alert.alert('아직 준비중인 기능입니다.');
+  const login = () => navigation.navigate('Login');
 
   return (
     <ScrollView style={{ backgroundColor: theme.background }}>
+
       <Text style={[styles.label, { color: theme.primary }]}>계정</Text>
       <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={login}>
         <View style={styles.itemHeader}>
@@ -79,6 +74,7 @@ export default function Settings({ navigation }: { navigation: NavigationScreenP
         </View>
         <Icons name="arrow-forward" size={24} color={theme.label} />
       </TouchableOpacity>
+
       <Text style={[styles.label, { color: theme.primary }]}>표시</Text>
       <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={toggleTheme}>
         <View style={styles.itemHeader}>
@@ -89,11 +85,13 @@ export default function Settings({ navigation }: { navigation: NavigationScreenP
         </View>
         <Text style={[styles.itemText, { color: theme.label }]}>{isDark ? '다크' : '라이트'}</Text>
       </TouchableOpacity>
+
       <Text style={[styles.label, { color: theme.primary }]}>기타</Text>
       <TouchableOpacity style={[styles.item, styles.itemHeader, { borderColor: theme.border }]} onPress={report}>
         <Icons name="bug-report" size={24} color={theme.label} style={styles.iconStyle} />
         <Text style={[styles.itemText, { color: theme.text }]}>Report Issues</Text>
       </TouchableOpacity>
+
     </ScrollView>
   );
 }

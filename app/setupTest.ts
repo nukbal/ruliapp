@@ -3,6 +3,9 @@ import '@testing-library/jest-native/extend-expect';
 // @ts-ignore
 import MockAsyncStorage from 'mock-async-storage';
 
+// @ts-ignore
+global.fetch = require('node-fetch');
+
 const mockImpl = new MockAsyncStorage();
 jest.mock('@react-native-community/async-storage', () => mockImpl);
 
