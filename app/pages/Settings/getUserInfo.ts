@@ -1,5 +1,6 @@
 import parser, { querySelector, querySelectorAll } from '../../utils/htmlParser';
 import { AuthContext } from '../../AuthContext';
+import { USER_AGENT } from '../../config/constants';
 
 const config = {
   method: 'GET',
@@ -10,8 +11,7 @@ const config = {
     'Cache-Control': 'no-cache, no-store',
     Pragma: 'no-cache',
     'Accept-Encoding': 'gzip, deflate',
-    'User-Agent':
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 11_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1',
+    'User-Agent': USER_AGENT,
   },
 };
 
@@ -36,17 +36,19 @@ export default async function getUserInfo() {
     const Node = parser(html);
     let cursor;
 
+    cursor = querySelectorAll(Node, 'member_srl');
+    if (cursor && cursor.length) {
+      cursor = querySelector(cursor[1], 'info_value text');
+      if (cursor) data.id = cursor.value!;
+    } else {
+      throw new Error('비로그인 상태입니다.');
+    }
+
     cursor = querySelector(Node, 'profile_img');
     if (cursor) data.avatar = cursor.attrs!.src;
 
     cursor = querySelector(Node, 'nick_name info_value text');
     if (cursor) data.name = cursor.value!;
-
-    cursor = querySelectorAll(Node, 'member_srl');
-    if (cursor && cursor.length) {
-      cursor = querySelector(cursor[1], 'info_value text');
-      if (cursor) data.id = cursor.value!;
-    }
 
     cursor = querySelector(Node, 'level info_value text');
     if (cursor) data.level = parseInt(cursor.value!, 10);

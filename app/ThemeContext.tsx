@@ -6,6 +6,7 @@ interface ThemeContext {
   theme: Readonly<{
     primary: string;
     background: string;
+    backgroundLight: string;
     backgroundSub: string;
     text: string;
     label: string;

@@ -3,10 +3,11 @@ import { StyleSheet, ScrollView, View, Text, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { NavigationScreenProp } from 'react-navigation';
-import ThemeContext from '../../ThemeContext';
-import AuthContext, { Actions } from '../../AuthContext';
 
-const styles = StyleSheet.create({
+import ThemeContext from '../../ThemeContext';
+import UserPanel from './UserPanel';
+
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: '100%',
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
+    marginBottom: 1,
   },
   itemHeader: {
     flexDirection: 'row',
@@ -51,61 +52,26 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     alignItems: 'center',
   },
-  boldText: {
-    fontWeight: '600',
+  divide: {
+    marginBottom: 25,
   },
 });
 
 export default function Settings({ navigation }: { navigation: NavigationScreenProp<any> }) {
   const { isDark, theme, toggleTheme } = useContext(ThemeContext);
-  const { isLogined, userInfo, dispatch } = useContext(AuthContext);
 
   const report = () => Linking.openURL('https://github.com/nukbal/ruliapp/issues').catch(() => {});
-  const login = () => navigation.navigate('Login');
-  const logout = () => dispatch(Actions.clear());
+
+  const itemStyle = [styles.item, { backgroundColor: theme.backgroundLight }];
 
   return (
     <ScrollView style={{ backgroundColor: theme.background }}>
 
-      <Text style={[styles.label, { color: theme.primary }]}>계정</Text>
-      {!isLogined && (
-        <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={login}>
-          <View style={styles.itemHeader}>
-            <Icons name="account-circle" size={24} color={theme.label} style={styles.iconStyle} />
-            <Text style={[styles.itemText, { color: theme.text }]}>
-              로그인
-            </Text>
-          </View>
-          <Icons name="arrow-forward" size={24} color={theme.label} />
-        </TouchableOpacity>
-      )}
-      {isLogined && (
-        <>
-          <View style={[styles.item, styles.itemHeader, { borderColor: theme.border }]}>
-            <Text style={[styles.itemText, { color: theme.text }]}>
-              {userInfo.name}
-              님
-            </Text>
-          </View>
-          <View style={[styles.item, styles.itemHeader, { borderColor: theme.border }]}>
-            <Text style={[styles.itemText, { color: theme.text }]}>
-              {userInfo.attends}일
-            </Text>
-          </View>
-          <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={logout}>
-            <View style={styles.itemHeader}>
-              <Icons name="exit-to-app" size={24} color={theme.label} style={styles.iconStyle} />
-              <Text style={[styles.itemText, { color: theme.text }]}>
-                로그아웃
-              </Text>
-            </View>
-            <Icons name="arrow-forward" size={24} color={theme.label} />
-          </TouchableOpacity>
-        </>
-      )}
+      <UserPanel navigation={navigation} />
 
-      <Text style={[styles.label, { color: theme.primary }]}>표시</Text>
-      <TouchableOpacity style={[styles.item, { borderColor: theme.border }]} onPress={toggleTheme}>
+      <View style={styles.divide} />
+
+      <TouchableOpacity style={itemStyle} onPress={toggleTheme}>
         <View style={styles.itemHeader}>
           <Icons name="filter-hdr" size={24} color={theme.label} style={styles.iconStyle} />
           <Text style={[styles.itemText, { color: theme.text }]}>
@@ -115,8 +81,9 @@ export default function Settings({ navigation }: { navigation: NavigationScreenP
         <Text style={[styles.itemText, { color: theme.label }]}>{isDark ? '다크' : '라이트'}</Text>
       </TouchableOpacity>
 
-      <Text style={[styles.label, { color: theme.primary }]}>기타</Text>
-      <TouchableOpacity style={[styles.item, styles.itemHeader, { borderColor: theme.border }]} onPress={report}>
+      <View style={styles.divide} />
+
+      <TouchableOpacity style={[...itemStyle, styles.itemHeader]} onPress={report}>
         <Icons name="bug-report" size={24} color={theme.label} style={styles.iconStyle} />
         <Text style={[styles.itemText, { color: theme.text }]}>Report Issues</Text>
       </TouchableOpacity>

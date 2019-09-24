@@ -3,6 +3,7 @@ import { StatusBar, Alert, Platform } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import parsePost from '../../utils/parsePost';
 import parseComment from '../../utils/parseComment';
+import { USER_AGENT } from '../../config/constants';
 
 interface DataType {
   contents: Array<ContentRecord | ContentRecord[]>;
@@ -52,8 +53,7 @@ export default function usePost(url: string, key: string) {
             'Cache-Control': 'no-cache, no-store',
             Pragma: 'no-cache',
             'Accept-Encoding': 'gzip, deflate',
-            'User-Agent':
-              'Mozilla/5.0 (iPhone; CPU iPhone OS 11_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1',
+            'User-Agent': USER_AGENT,
             Referer: targetUrl,
           },
         };
@@ -113,8 +113,7 @@ export default function usePost(url: string, key: string) {
         'Accept-Encoding': 'gzip, deflate',
         origin: 'https://m.ruliweb.com',
         referer: `http://m.ruliweb.com/${url}`,
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+        'User-Agent': USER_AGENT,
       },
     };
 

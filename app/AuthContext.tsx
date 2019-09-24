@@ -1,6 +1,7 @@
 import React, { Children, createContext, useReducer, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import { createAction, ActionsUnion } from './utils/createAction';
+import getUserInfo from './pages/Settings/getUserInfo';
 
 interface State {
   isLogined: boolean;
@@ -89,7 +90,16 @@ export function AuthProvider({ children }: any) {
 
   useEffect(() => {
     AsyncStorage.getItem('userInfo').then((info) => {
-      if (info) dispatch(Actions.login(JSON.parse(info)));
+      if (info) {
+        dispatch(Actions.login(JSON.parse(info)));
+
+        // check real login info from server
+        if (!__DEV__) {
+          getUserInfo()
+            .then((data) => dispatch(Actions.login(data)))
+            .catch(() => dispatch(Actions.clear()));
+        }
+      }
     });
   }, []);
 
