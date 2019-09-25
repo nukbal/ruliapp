@@ -59,7 +59,7 @@ function isEqual(prev: Props, next: Props) {
   return (
     // @ts-ignore
     prev.source.uri === next.source.uri
-    && prev.showing === next.showing
+    && prev.viewable === next.viewable
   );
 }
 

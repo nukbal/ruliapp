@@ -40,7 +40,7 @@ export default function Post({ navigation }: Props) {
   }, [url]);
 
   const renderComment = useCallback(
-    ({ item }: any) => <Comments {...item} id={item.key} viewable={cache.current.has(item.key)} />,
+    ({ item }: any) => <Comments {...item} id={item.key} />,
     [],
   );
 
@@ -59,8 +59,7 @@ export default function Post({ navigation }: Props) {
   }, [comment.length, dislikes, likes, url]);
 
   const onViewItemChange = useCallback(({ viewableItems }: any) => {
-    cache.current = new Set(viewableItems.filter((item: any) => item.isViewable).map((item: any) => item.item.key));
-    console.log(cache.current);
+    cache.current = new Set(viewableItems.filter((item: any) => item.isViewable).map(keyExtractor));
   }, []);
 
   if (!ready) return <Placeholder />;
