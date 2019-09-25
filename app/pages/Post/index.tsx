@@ -36,10 +36,13 @@ export default function Post({ navigation }: Props) {
     if (Array.isArray(item)) {
       return <ContentRow row={item} />;
     }
-    return <Contents {...item} url={url} showing={cache.current.has(item.key)} />;
+    return <Contents {...item} url={url} viewable={cache.current.has(item.key)} />;
   }, [url]);
 
-  const renderComment = useCallback(({ item }: any) => <Comments {...item}  showing={cache.current.has(item.key)} />, []);
+  const renderComment = useCallback(
+    ({ item }: any) => <Comments {...item} id={item.key} viewable={cache.current.has(item.key)} />,
+    [],
+  );
 
   const renderSectionFooter = useCallback(({ section }: { section: SectionListData<any> }) => {
     if (section.index === 0) {
@@ -55,9 +58,10 @@ export default function Post({ navigation }: Props) {
     return null;
   }, [comment.length, dislikes, likes, url]);
 
-  const onViewItemChange = ({ viewableItems }: any) => {
+  const onViewItemChange = useCallback(({ viewableItems }: any) => {
     cache.current = new Set(viewableItems.filter((item: any) => item.isViewable).map((item: any) => item.item.key));
-  };
+    console.log(cache.current);
+  }, []);
 
   if (!ready) return <Placeholder />;
 

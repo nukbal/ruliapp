@@ -11,15 +11,16 @@ import ThemeContext from '../../../ThemeContext';
 
 export default function Comment(
   {
-    user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted,
-    showing,
-  }: CommentRecord & { showing: boolean },
+    id, user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted,
+    viewable,
+  }: CommentRecord & { id: string; viewable: boolean },
 ) {
   const { theme } = useContext(ThemeContext);
 
   const timeText = useMemo(() => (time ? formatDate(time) : ''), [time]);
   const containerStyle = [styles.container, { borderColor: theme.border }];
   const textStyle = { color: theme.text };
+  console.log('cmt', id, viewable);
 
   if (isDeleted) {
     return (
@@ -50,7 +51,7 @@ export default function Comment(
         <Text style={[styles.UserText, textStyle]}>{user.name}</Text>
         {timeText && (<Text style={textStyle}>{timeText}</Text>)}
       </View>
-      {image && <Media source={{ uri: image }} showing={showing} />}
+      {image && <Media source={{ uri: image }} viewable={viewable} />}
       <View style={[styles.UserContainer, { paddingVertical: 6 }]}>
         <Text style={textStyle}>{content || ''}</Text>
       </View>

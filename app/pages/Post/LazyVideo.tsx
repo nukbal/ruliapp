@@ -6,7 +6,7 @@ import { setImageHeight } from './LazyImage';
 
 interface Props {
   source: ImageSourcePropType;
-  showing?: boolean;
+  viewable?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function LazyVideo({ source, showing }: Props) {
+function LazyVideo({ source, viewable }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [pause, setPause] = useState(false);
@@ -37,7 +37,7 @@ function LazyVideo({ source, showing }: Props) {
       onPress={onPress}
       activeOpacity={0.65}
     >
-      {showing && (
+      {viewable && (
         <Video
           // @ts-ignore
           source={source}

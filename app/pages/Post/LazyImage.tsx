@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   source: ImageSourcePropType;
-  showing?: boolean;
+  viewable?: boolean;
 }
 
 export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
@@ -42,7 +42,7 @@ export function setImageHeight(image: { width: number, height: number }, screenW
   return height || 200;
 }
 
-function LazyImage({ source, showing }: Props) {
+function LazyImage({ source, viewable }: Props) {
   const { theme } = useContext(ThemeContext);
   const [error, setError] = useState<string | null>(null);
   const [screenWidth, setScreenWidth] = useState(0);
@@ -81,7 +81,7 @@ function LazyImage({ source, showing }: Props) {
           <Text style={textStyle}>{percent}</Text>
         </View>
       )}
-      {showing && (
+      {(viewable || (!viewable && percent !== 0)) && (
         <Image
           style={{ height }}
           // @ts-ignore
