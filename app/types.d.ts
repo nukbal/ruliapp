@@ -1,9 +1,5 @@
 declare module '*.txt';
 
-declare module 'react-navigation-tabs' {
-  import * as all from 'react-navigation';
-  const createBottomTabNavigator = all.createBottomTabNavigator;
-}
 declare module 'react-navigation-stack' {
   import * as all from 'react-navigation';
   const createStackNavigator = all.createStackNavigator;
@@ -11,13 +7,6 @@ declare module 'react-navigation-stack' {
 
 declare module "console" {
   export = console;
-}
-
-declare interface FSA<T extends string, P = undefined, M = undefined> {
-  type: T;
-  payload: P;
-  meta: M;
-  error?: boolean;
 }
 
 declare type ActionCallback<T = any> = (error?: boolean, json?: any) => void;

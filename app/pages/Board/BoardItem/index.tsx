@@ -1,7 +1,5 @@
 import React, { memo, useMemo, useContext } from 'react';
-import { View, Text } from 'react-native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
-import { transparentize } from 'polished';
+import { View, Text, TouchableHighlight } from 'react-native';
 import styles from './styles';
 import Placeholder from './placeholder';
 import ThemeContext from '../../../ThemeContext';
@@ -16,7 +14,7 @@ function Fixed(n: number) {
   return `0${n}`.slice(-2);
 }
 
-function BoardItem(props: Props) {
+export default function BoardItem(props: Props) {
   const {
     subject, user, commentSize, likes, views, date,
     onPress, onShowUnderlay, onHideUnderlay,
@@ -37,7 +35,7 @@ function BoardItem(props: Props) {
       onPress={onPress}
       onShowUnderlay={onShowUnderlay}
       onHideUnderlay={onHideUnderlay}
-      underlayColor={transparentize(0.65, theme.primary)}
+      underlayColor={theme.primaryHover}
       style={[styles.container, { backgroundColor: theme.background, borderColor: theme.border }]}
     >
       <>
@@ -53,11 +51,3 @@ function BoardItem(props: Props) {
     </TouchableHighlight>
   );
 }
-
-function isEqual(prev: Props, next: Props) {
-  return prev.subject === next.subject
-    && prev.views === next.views
-    && prev.commentSize === next.commentSize
-    && prev.likes === next.likes;
-}
-export default memo(BoardItem, isEqual);

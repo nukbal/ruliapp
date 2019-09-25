@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   source: ImageSourcePropType;
+  viewable?: boolean;
 }
 
 export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
@@ -41,7 +42,7 @@ export function setImageHeight(image: { width: number, height: number }, screenW
   return height || 200;
 }
 
-function LazyImage({ source }: Props) {
+function LazyImage({ source, viewable }: Props) {
   const { theme } = useContext(ThemeContext);
   const [error, setError] = useState<string | null>(null);
   const [screenWidth, setScreenWidth] = useState(0);
@@ -61,10 +62,13 @@ function LazyImage({ source }: Props) {
     [],
   );
 
-  const textStyle = useMemo(() => ({ color: theme.primary }), []);
+  const textStyle = { color: theme.primary };
 
   return (
-    <View style={styles.ImageContent} onLayout={onLayout}>
+    <View
+      style={[styles.ImageContent, { height }]}
+      onLayout={onLayout}
+    >
       {error && (
         <View style={styles.message}>
           <Text style={textStyle}>불러오기 실패</Text>
@@ -77,14 +81,16 @@ function LazyImage({ source }: Props) {
           <Text style={textStyle}>{percent}</Text>
         </View>
       )}
-      <Image
-        style={{ height }}
-        // @ts-ignore
-        source={source}
-        onLoad={onLoad}
-        onProgress={onProgress}
-        onError={onError}
-      />
+      {(viewable || (!viewable && percent !== 0)) && (
+        <Image
+          style={{ height }}
+          // @ts-ignore
+          source={source}
+          onLoad={onLoad}
+          onProgress={onProgress}
+          onError={onError}
+        />
+      )}
     </View>
   );
 }
@@ -93,6 +99,7 @@ function isEqual(prev: Props, next: Props) {
   return (
     // @ts-ignore
     prev.source.uri === next.source.uri
+    && prev.viewable === next.viewable
   );
 }
 

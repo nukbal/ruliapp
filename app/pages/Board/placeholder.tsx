@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Item from './BoardItem/placeholder';
 
 export default function Placeholder() {

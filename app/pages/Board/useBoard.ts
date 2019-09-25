@@ -3,6 +3,7 @@ import { StatusBar, Platform } from 'react-native';
 import qs from 'query-string';
 import arrayToObject from '../../utils/arrayToObject';
 import parseBoardList, { IParseBoard } from '../../utils/parseBoard';
+import { USER_AGENT } from '../../config/constants';
 
 export default function useBoard(key: string) {
   const [page, setPage] = useState(1);
@@ -34,7 +35,7 @@ export default function useBoard(key: string) {
         'Cache-Control': 'no-cache, no-store',
         Pragma: 'no-cache',
         'Accept-Encoding': 'gzip, deflate',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1',
+        'User-Agent': USER_AGENT,
         Referer: targetUrl,
       },
     };

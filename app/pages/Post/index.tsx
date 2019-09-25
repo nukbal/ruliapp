@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
 import {
   SectionList,
@@ -23,21 +23,26 @@ function keyExtractor(item: CommentRecord | ContentRecord) {
   return item.key;
 }
 
-const renderComment = ({ item }: any) => <Comments {...item} />;
-
 export default function Post({ navigation }: Props) {
   const { params } = navigation.state;
   const {
     likes, dislikes, contents, comment, ready, isCommentLoading, loadComment,
   } = usePost(params.url, params.key);
+  const cache = useRef(new Set());
   const { theme } = useContext(ThemeContext);
+  const url = `http://m.ruliweb.com/${params.url}`;
 
   const renderContent = useCallback(({ item }: any) => {
     if (Array.isArray(item)) {
       return <ContentRow row={item} />;
     }
-    return <Contents {...item} url={`http://m.ruliweb.com/${params.url}`} />;
-  }, [params.url]);
+    return <Contents {...item} url={url} viewable={cache.current.has(item.key)} />;
+  }, [url]);
+
+  const renderComment = useCallback(
+    ({ item }: any) => <Comments {...item} id={item.key} />,
+    [],
+  );
 
   const renderSectionFooter = useCallback(({ section }: { section: SectionListData<any> }) => {
     if (section.index === 0) {
@@ -46,12 +51,16 @@ export default function Post({ navigation }: Props) {
           likes={likes}
           dislikes={dislikes}
           comments={comment.length}
-          url={`http://m.ruliweb.com/${params.url}`}
+          url={url}
         />
       );
     }
     return null;
-  }, [comment.length, dislikes, likes, params.url]);
+  }, [comment.length, dislikes, likes, url]);
+
+  const onViewItemChange = useCallback(({ viewableItems }: any) => {
+    cache.current = new Set(viewableItems.filter((item: any) => item.isViewable).map(keyExtractor));
+  }, []);
 
   if (!ready) return <Placeholder />;
 
@@ -75,6 +84,7 @@ export default function Post({ navigation }: Props) {
       renderSectionFooter={renderSectionFooter}
       refreshing={isCommentLoading}
       onRefresh={loadComment}
+      onViewableItemsChanged={onViewItemChange}
       style={{ backgroundColor: theme.background }}
     />
   );

@@ -1,25 +1,24 @@
-import React, { useEffect, useContext } from 'react';
-import { StyleSheet, SectionList, SectionListData, Text, View } from 'react-native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import React, { useContext } from 'react';
+import { StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { transparentize } from 'polished';
 import { bestList, communityList, hobbyList, newsList, gameList } from '../config/BoardList';
 import ThemeContext from '../ThemeContext';
 
 const styles = StyleSheet.create({
   item: {
-    height: 45,
+    height: 50,
     paddingLeft: 15,
     justifyContent: 'center',
-    borderBottomWidth: 1,
+    marginBottom: 1,
   },
   label: {
-    height: 45,
+    height: 50,
     paddingLeft: 15,
     justifyContent: 'center',
   },
   boldText: {
     fontWeight: '600',
+    fontSize: 16,
   },
 });
 
@@ -38,11 +37,6 @@ const sections = [
 export default function BoardList({ navigation }: Props) {
   const { theme } = useContext(ThemeContext);
 
-  useEffect(() => {
-    navigation.setParams({ title: '루리웹' });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;
     navigate({ routeName: 'Board', params: { title, key }, key });
@@ -54,8 +48,8 @@ export default function BoardList({ navigation }: Props) {
       <TouchableHighlight
         onPress={onPress}
         key={index}
-        underlayColor={transparentize(0.65, theme.primary)}
-        style={[styles.item, { borderBottomColor: theme.border }]}
+        underlayColor={theme.primaryHover}
+        style={[styles.item, { backgroundColor: theme.backgroundLight }]}
       >
         <Text style={{ color: theme.text }}>{item.title}</Text>
       </TouchableHighlight>
@@ -64,8 +58,8 @@ export default function BoardList({ navigation }: Props) {
 
   function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
     return (
-      <View style={[styles.label, { backgroundColor: theme.backgroundSub }]}>
-        <Text style={styles.boldText}>{title}</Text>
+      <View style={styles.label}>
+        <Text style={[styles.boldText, { color: theme.text }]}>{title}</Text>
       </View>
     );
   }
@@ -76,6 +70,7 @@ export default function BoardList({ navigation }: Props) {
       renderSectionHeader={renderHeader}
       renderItem={renderItem}
       style={{ backgroundColor: theme.background }}
+      stickySectionHeadersEnabled={false}
     />
   );
 }

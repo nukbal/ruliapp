@@ -6,11 +6,13 @@ import BoardList from './BoardList';
 import PostScreen from './Post';
 import Header from './Header';
 
-import Settings from './Settings';
+import Settings from './Settings/Settings';
+import Login from './Settings/Login';
 
 export default createStackNavigator({
   BoardList: {
     screen: BoardList,
+    params: { title: '루리웹' },
   },
   Board: {
     screen: BoardStack,
@@ -20,11 +22,15 @@ export default createStackNavigator({
   },
   Settings: {
     screen: Settings,
+    params: { title: '설정' },
+  },
+  Login: {
+    screen: Login,
+    params: { title: '로그인' },
   },
 }, {
   initialRouteName: 'BoardList',
   defaultNavigationOptions: ({ navigation }: any) => ({
-    title: navigation.getParam('title', ''),
     header: <Header navigation={navigation} />,
   }),
 });

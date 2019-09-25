@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, memo } from 'react';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { transparentize } from 'polished';
@@ -9,8 +9,14 @@ import formatDate from '../../../utils/formatDate';
 import styles from './styles';
 import ThemeContext from '../../../ThemeContext';
 
-export default function Comment(
-  { user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted }: CommentRecord,
+interface Props extends CommentRecord {
+  id: string;
+}
+
+function Comment(
+  {
+    id, user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted,
+  }: Props,
 ) {
   const { theme } = useContext(ThemeContext);
 
@@ -47,7 +53,7 @@ export default function Comment(
         <Text style={[styles.UserText, textStyle]}>{user.name}</Text>
         {timeText && (<Text style={textStyle}>{timeText}</Text>)}
       </View>
-      {image && <Media source={{ uri: image }} />}
+      {image && <Media source={{ uri: image }} viewable />}
       <View style={[styles.UserContainer, { paddingVertical: 6 }]}>
         <Text style={textStyle}>{content || ''}</Text>
       </View>
@@ -60,3 +66,14 @@ export default function Comment(
     </View>
   );
 }
+
+function isEqual(prev: Props, next: Props) {
+  return (
+    prev.likes === next.likes
+    && prev.dislike === next.dislike
+    && prev.isDeleted === next.isDeleted
+    && prev.viewable === next.viewable
+  );
+}
+
+export default memo(Comment, isEqual);
