@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Alert, Text, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Alert, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import Image from 'react-native-fast-image';
 import Icons from 'react-native-vector-icons/MaterialIcons';
@@ -51,15 +50,21 @@ export default function UserPanel({ navigation }: { navigation: NavigationScreen
 
   if (!isLogined) {
     return (
-      <TouchableOpacity style={[SettingStyle.item, { borderColor: theme.border }]} onPress={login}>
-        <View style={SettingStyle.itemHeader}>
-          <Icons name="account-circle" size={24} color={theme.label} style={SettingStyle.iconStyle} />
-          <Text style={[SettingStyle.itemText, { color: theme.text }]}>
-            로그인
-          </Text>
-        </View>
-        <Icons name="arrow-forward" size={24} color={theme.label} />
-      </TouchableOpacity>
+      <TouchableHighlight
+        style={[SettingStyle.item, { backgroundColor: theme.backgroundLight }]}
+        underlayColor={theme.themeHover}
+        onPress={login}
+      >
+        <>
+          <View style={SettingStyle.itemHeader}>
+            <Icons name="account-circle" size={24} color={theme.label} style={SettingStyle.iconStyle} />
+            <Text style={[SettingStyle.itemText, { color: theme.text }]}>
+              로그인
+            </Text>
+          </View>
+          <Icons name="arrow-forward" size={24} color={theme.label} />
+        </>
+      </TouchableHighlight>
     );
   }
 
@@ -76,15 +81,21 @@ export default function UserPanel({ navigation }: { navigation: NavigationScreen
           </Text>
         </View>
       </View>
-      <TouchableOpacity style={[SettingStyle.item, { backgroundColor: theme.backgroundLight }]} onPress={logout}>
-        <View style={SettingStyle.itemHeader}>
-          <Icons name="exit-to-app" size={24} color={theme.label} style={SettingStyle.iconStyle} />
-          <Text style={[SettingStyle.itemText, { color: theme.text }]}>
-            로그아웃
-          </Text>
-        </View>
-        <Icons name="arrow-forward" size={24} color={theme.label} />
-      </TouchableOpacity>
+      <TouchableHighlight
+        style={[SettingStyle.item, { backgroundColor: theme.backgroundLight }]}
+        underlayColor={theme.themeHover}
+        onPress={logout}
+      >
+        <>
+          <View style={SettingStyle.itemHeader}>
+            <Icons name="exit-to-app" size={24} color={theme.label} style={SettingStyle.iconStyle} />
+            <Text style={[SettingStyle.itemText, { color: theme.text }]}>
+              로그아웃
+            </Text>
+          </View>
+          <Icons name="arrow-forward" size={24} color={theme.label} />
+        </>
+      </TouchableHighlight>
     </>
   );
 }

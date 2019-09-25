@@ -10,7 +10,10 @@ import styles from './styles';
 import ThemeContext from '../../../ThemeContext';
 
 export default function Comment(
-  { user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted }: CommentRecord,
+  {
+    user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted,
+    showing,
+  }: CommentRecord & { showing: boolean },
 ) {
   const { theme } = useContext(ThemeContext);
 
@@ -47,7 +50,7 @@ export default function Comment(
         <Text style={[styles.UserText, textStyle]}>{user.name}</Text>
         {timeText && (<Text style={textStyle}>{timeText}</Text>)}
       </View>
-      {image && <Media source={{ uri: image }} />}
+      {image && <Media source={{ uri: image }} showing={showing} />}
       <View style={[styles.UserContainer, { paddingVertical: 6 }]}>
         <Text style={textStyle}>{content || ''}</Text>
       </View>

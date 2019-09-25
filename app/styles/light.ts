@@ -1,5 +1,8 @@
+import { transparentize } from 'polished';
+
 export default {
   primary: '#1A70DC',
+  primaryHover: transparentize(0.65, '#1A70DC'),
   background: '#ffffff',
   backgroundLight: '#eee',
   backgroundSub: '#efefef',

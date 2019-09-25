@@ -31,7 +31,7 @@ export function ContentRow({ row }: { row: ContentRecord[] }) {
   );
 }
 
-export default function ContentItem({ type, content, url }: ContentRecord & { url: string }) {
+export default function ContentItem({ type, content, url, showing }: ContentRecord & { url: string; showing: boolean }) {
   if (!type || !content) return null;
 
   switch (type) {
@@ -45,12 +45,12 @@ export default function ContentItem({ type, content, url }: ContentRecord & { ur
     }
     case 'image': {
       return (
-        <LazyImage source={{ uri: content, headers: { referer: url } }} />
+        <LazyImage source={{ uri: content, headers: { referer: url } }} showing={showing} />
       );
     }
     case 'video': {
       return (
-        <LazyVideo source={{ uri: content, headers: { referer: url } }} />
+        <LazyVideo source={{ uri: content, headers: { referer: url } }} showing={showing} />
       );
     }
     default: {

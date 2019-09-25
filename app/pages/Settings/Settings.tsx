@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, ScrollView, View, Text, Linking } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, ScrollView, View, Text, Linking, TouchableHighlight } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -25,7 +24,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   item: {
-    height: 45,
+    height: 50,
     paddingHorizontal: 25,
     flexDirection: 'row',
     alignItems: 'center',
@@ -71,22 +70,34 @@ export default function Settings({ navigation }: { navigation: NavigationScreenP
 
       <View style={styles.divide} />
 
-      <TouchableOpacity style={itemStyle} onPress={toggleTheme}>
-        <View style={styles.itemHeader}>
-          <Icons name="filter-hdr" size={24} color={theme.label} style={styles.iconStyle} />
-          <Text style={[styles.itemText, { color: theme.text }]}>
-            테마
-          </Text>
-        </View>
-        <Text style={[styles.itemText, { color: theme.label }]}>{isDark ? '다크' : '라이트'}</Text>
-      </TouchableOpacity>
+      <TouchableHighlight
+        style={itemStyle}
+        underlayColor={theme.primaryHover}
+        onPress={toggleTheme}
+      >
+        <>
+          <View style={styles.itemHeader}>
+            <Icons name="filter-hdr" size={24} color={theme.label} style={styles.iconStyle} />
+            <Text style={[styles.itemText, { color: theme.text }]}>
+              테마
+            </Text>
+          </View>
+          <Text style={[styles.itemText, { color: theme.label }]}>{isDark ? '다크' : '라이트'}</Text>
+        </>
+      </TouchableHighlight>
 
       <View style={styles.divide} />
 
-      <TouchableOpacity style={[...itemStyle, styles.itemHeader]} onPress={report}>
-        <Icons name="bug-report" size={24} color={theme.label} style={styles.iconStyle} />
-        <Text style={[styles.itemText, { color: theme.text }]}>Report Issues</Text>
-      </TouchableOpacity>
+      <TouchableHighlight
+        style={[...itemStyle, styles.itemHeader]}
+        underlayColor={theme.primaryHover}
+        onPress={report}
+      >
+        <>
+          <Icons name="bug-report" size={24} color={theme.label} style={styles.iconStyle} />
+          <Text style={[styles.itemText, { color: theme.text }]}>Report Issues</Text>
+        </>
+      </TouchableHighlight>
 
     </ScrollView>
   );

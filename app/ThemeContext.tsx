@@ -5,6 +5,7 @@ import darkTheme from './styles/dark';
 interface ThemeContext {
   theme: Readonly<{
     primary: string;
+    primaryHover: string;
     background: string;
     backgroundLight: string;
     backgroundSub: string;

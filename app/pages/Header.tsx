@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react';
-import { StyleSheet, View, Text, Platform, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { getStatusBarHeight } from 'react-native-safe-area-view';
 import ThemeContext from '../ThemeContext';

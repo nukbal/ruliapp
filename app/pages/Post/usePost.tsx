@@ -95,6 +95,7 @@ export default function usePost(url: string, key: string) {
     loadPost();
     return () => {
       isDone = true;
+      if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
     };
   }, [url]);
 
