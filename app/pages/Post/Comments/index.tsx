@@ -16,7 +16,7 @@ interface Props extends CommentRecord {
 
 function Comment(
   {
-    user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted,
+    user, content, time, likes = 0, dislike = 0, image, reply, isDeleted,
   }: Props,
 ) {
   const { theme } = useContext(ThemeContext);
@@ -35,7 +35,7 @@ function Comment(
     );
   }
 
-  if (child) {
+  if (reply) {
     // @ts-ignore
     containerStyle.push({ paddingLeft: 28, paddingTop: 25, backgroundColor: transparentize(0.825, theme.primary) });
   }

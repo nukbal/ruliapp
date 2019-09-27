@@ -1,8 +1,7 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, Text, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import { getStatusBarHeight } from 'react-native-safe-area-view';
 import ThemeContext from '../ThemeContext';
 
 const styles = StyleSheet.create({
@@ -28,7 +27,7 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
 
   const openSetting = () => navigation.navigate('Settings');
 
-  const statusBarHeight = useMemo(getStatusBarHeight, []);
+  const statusBarHeight = 0;
   let headerHeight = 0;
   if (Platform.OS === 'ios') {
     if (!Platform.isPad) {
