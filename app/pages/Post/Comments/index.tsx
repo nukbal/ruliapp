@@ -11,11 +11,12 @@ import ThemeContext from '../../../ThemeContext';
 
 interface Props extends CommentRecord {
   id: string;
+  viewable?: boolean;
 }
 
 function Comment(
   {
-    id, user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted,
+    user, content, time, likes = 0, dislike = 0, image, child, reply, isDeleted,
   }: Props,
 ) {
   const { theme } = useContext(ThemeContext);

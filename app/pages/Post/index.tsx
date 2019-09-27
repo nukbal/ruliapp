@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
 import {
   SectionList,
@@ -28,21 +28,18 @@ export default function Post({ navigation }: Props) {
   const {
     likes, dislikes, contents, comment, ready, isCommentLoading, loadComment,
   } = usePost(params.url, params.key);
-  const cache = useRef(new Set());
   const { theme } = useContext(ThemeContext);
   const url = `http://m.ruliweb.com/${params.url}`;
 
-  const renderContent = useCallback(({ item }: any) => {
-    if (Array.isArray(item)) {
-      return <ContentRow row={item} />;
+  const renderItems = useCallback(({ item, section }: any) => {
+    if (section.index === 0) {
+      if (Array.isArray(item)) {
+        return <ContentRow row={item} />;
+      }
+      return <Contents {...item} url={url} />;
     }
-    return <Contents {...item} url={url} viewable={cache.current.has(item.key)} />;
+    return <Comments {...item} id={item.key} />;
   }, [url]);
-
-  const renderComment = useCallback(
-    ({ item }: any) => <Comments {...item} id={item.key} />,
-    [],
-  );
 
   const renderSectionFooter = useCallback(({ section }: { section: SectionListData<any> }) => {
     if (section.index === 0) {
@@ -58,33 +55,24 @@ export default function Post({ navigation }: Props) {
     return null;
   }, [comment.length, dislikes, likes, url]);
 
-  const onViewItemChange = useCallback(({ viewableItems }: any) => {
-    cache.current = new Set(viewableItems.filter((item: any) => item.isViewable).map(keyExtractor));
-  }, []);
-
   if (!ready) return <Placeholder />;
-
-  const sections: SectionListData<any>[] = [
-    {
-      index: 0,
-      data: contents,
-      renderItem: renderContent,
-    },
-    {
-      index: 1,
-      data: comment,
-      renderItem: renderComment,
-    },
-  ];
 
   return (
     <SectionList
-      sections={sections}
+      sections={[
+        { index: 0, data: contents },
+        { index: 1, data: comment },
+      ]}
+      renderItem={renderItems}
       keyExtractor={keyExtractor}
       renderSectionFooter={renderSectionFooter}
       refreshing={isCommentLoading}
       onRefresh={loadComment}
-      onViewableItemsChanged={onViewItemChange}
+      viewabilityConfig={{
+        waitForInteraction: false,
+        itemVisiblePercentThreshold: 25,
+      }}
+      removeClippedSubviews
       style={{ backgroundColor: theme.background }}
     />
   );

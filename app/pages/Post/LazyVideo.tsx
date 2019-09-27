@@ -1,7 +1,6 @@
 import React, { memo, useMemo, useState } from 'react';
 import Video, { OnLoadData } from 'react-native-video';
-import { StyleSheet, LayoutChangeEvent, ImageSourcePropType } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, LayoutChangeEvent, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { setImageHeight } from './LazyImage';
 
 interface Props {

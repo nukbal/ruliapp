@@ -12,12 +12,12 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
   label: {
-    height: 50,
+    height: 40,
     paddingLeft: 15,
     justifyContent: 'center',
   },
   boldText: {
-    fontWeight: '600',
+    fontWeight: '900',
     fontSize: 16,
   },
 });

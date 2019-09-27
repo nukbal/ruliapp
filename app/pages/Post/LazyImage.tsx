@@ -81,16 +81,14 @@ function LazyImage({ source, viewable }: Props) {
           <Text style={textStyle}>{percent}</Text>
         </View>
       )}
-      {(viewable || (!viewable && percent !== 0)) && (
-        <Image
-          style={{ height }}
-          // @ts-ignore
-          source={source}
-          onLoad={onLoad}
-          onProgress={onProgress}
-          onError={onError}
-        />
-      )}
+      <Image
+        style={{ height }}
+        // @ts-ignore
+        source={source}
+        onLoad={onLoad}
+        onProgress={onProgress}
+        onError={onError}
+      />
     </View>
   );
 }
