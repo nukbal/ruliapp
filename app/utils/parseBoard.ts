@@ -47,10 +47,10 @@ export function formatBoardRow(node: INode): PostRecord | undefined {
 
   let cursor;
 
-  if (node.q!.indexOf('notice') > -1) record.isNotice = true;
+  if (node.attrs!.class!.indexOf('notice') > -1) record.isNotice = true;
 
   // board title
-  cursor = querySelector(titleDiv, 'a.subject_link');
+  cursor = querySelector(titleDiv, '.subject_link');
   if (cursor && cursor.attrs) {
     const { id, url } = parseBoardUrl(cursor.attrs.href!);
     if (!id) return;
@@ -72,26 +72,26 @@ export function formatBoardRow(node: INode): PostRecord | undefined {
   // }
 
   // count of comments
-  cursor = querySelector(titleDiv, 'span.num text');
+  cursor = querySelector(titleDiv, '.num text');
   if (cursor && cursor.value) record.commentSize = parseInt(cursor.value, 10);
 
   // author name
-  cursor = querySelector(infoDiv, 'span.writer text');
+  cursor = querySelector(infoDiv, '.writer text');
   // @ts-ignore
   if (cursor) record.user = { name: cursor.value! };
 
   // view counts
-  cursor = querySelector(infoDiv, 'span.hit text');
+  cursor = querySelector(infoDiv, '.hit text');
   if (cursor && cursor.value) record.views = parseInt(cursor.value.replace('조회 ', ''), 10);
 
   // posted date/time
-  cursor = querySelector(infoDiv, 'span.time text');
+  cursor = querySelector(infoDiv, '.time text');
   if (cursor && cursor.value) {
     const dateStr = cursor.value.replace('날짜 ', '');
     record.date = parseDate(dateStr);
   }
 
-  cursor = querySelector(infoDiv, 'span.recomd text');
+  cursor = querySelector(infoDiv, '.recomd text');
   if (cursor && cursor.value) record.likes = parseInt(cursor.value!.replace('추천 ', ''), 10);
 
   return record;

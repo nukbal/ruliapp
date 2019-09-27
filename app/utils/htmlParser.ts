@@ -1,32 +1,38 @@
-/* eslint-disable no-param-reassign, no-continue */
+/* eslint-disable no-param-reassign, no-continue, prefer-destructuring, no-cond-assign */
 export interface INode {
   tagName: string;
   attrs?: { [key: string]: any };
-  id?: string;
-  /** query attributes (classname or id) */
-  q?: string;
   value?: string;
-  childNodes?: INode[];
-  next?: INode;
-  prev?: INode;
+  parent?: INode;
+  childNodes: INode[];
 }
 
-const kMarkupPattern = /<!--[^]*?(?=-->)-->|<(\/?)([a-z][a-z0-9]*)\s*([^>]*?)(\/?)>/gi;
-const kAttributePattern = /\b(id|class|href|value|src)\s*=\s*("([^"]+)"|'([^']+)'|(\S+))/ig;
+const kMarkupPattern = /<!--[^]*?(?=-->)-->|<(\/?)([a-z][-.0-9_a-z]*)\s*([^>]*?)(\/?)>/ig;
+const kAttributePattern = /(^|\s)(id|class|href|src|value|style)\s*=\s*("([^"]+)"|'([^']+)'|(\S+))/ig;
 const kSelfClosingElements = {
-  meta: true,
-  img: true,
-  link: false,
-  input: true,
   area: true,
+  base: true,
   br: true,
+  col: true,
   hr: true,
+  img: true,
+  input: true,
+  link: true,
+  meta: true,
+  source: true,
 };
 const kElementsClosedByOpening = {
   li: { li: true },
   p: { p: true, div: true },
+  b: { div: true },
   td: { td: true, th: true },
   th: { td: true, th: true },
+  h1: { h1: true },
+  h2: { h2: true },
+  h3: { h3: true },
+  h4: { h4: true },
+  h5: { h5: true },
+  h6: { h6: true },
 };
 const kElementsClosedByClosing = {
   li: { ul: true, ol: true },
@@ -37,12 +43,6 @@ const kElementsClosedByClosing = {
   td: { tr: true, table: true },
   th: { tr: true, table: true },
 };
-// const kBlockTextElements = {
-//   script: true,
-//   noscript: true,
-//   style: true,
-//   pre: true
-// };
 
 function isWhitespace(raw?: string) {
   if (!raw) return;
@@ -50,121 +50,76 @@ function isWhitespace(raw?: string) {
 }
 
 function TextNode(raw: string): INode {
-  return { tagName: 'text', value: raw };
+  return { tagName: 'text', value: raw, childNodes: [] };
 }
 
-function HTMLNode(name: string = '', attrs?: any) {
-  const _node: INode = { tagName: name };
-  if (attrs) {
-    const queries = [];
-    const rest = { ...attrs };
-    const len = Object.keys(rest).length;
-    if (attrs.id) {
-      queries.push(attrs.id);
-      delete rest.id;
-    }
-    if (attrs.class) {
-      queries.push(attrs.class);
-      delete rest.class;
-    }
-    if (len > 0) _node.attrs = rest;
-    _node.q = queries.join(' ');
-  }
-  _node.childNodes = [];
+function HTMLNode(name: string = 'root', attrs: { [key: string]: any }) {
+  const _node: INode = { tagName: name, childNodes: [] };
+  if (Object.keys(attrs).length) _node.attrs = attrs;
   return _node;
 }
 
-function appendTextChild(parent: INode, raw?: string) {
-  if (parent.childNodes && raw) {
-    const text = raw.trim();
-    if (text !== '' && !isWhitespace(text)) {
-      const prevNode = parent.childNodes[parent.childNodes.length - 1];
-      const child = TextNode(text);
-      if (prevNode) {
-        child.prev = prevNode;
-        prevNode.next = child;
-      }
-      parent.childNodes.push(child);
-    }
-  }
-  return parent;
+function appendChild(parent: INode, childNodes: INode) {
+  childNodes.parent = parent;
+  parent.childNodes.push(childNodes);
+  return childNodes;
 }
 
-function appendChild(parent: INode, child: INode) {
-  if (parent.childNodes) {
-    const prevNode = parent.childNodes[parent.childNodes.length - 1];
-    if (prevNode) {
-      child.prev = prevNode;
-      prevNode.next = child;
-    }
-    parent.childNodes.push(child);
-  } else {
-    parent.childNodes = [child];
+function isQueryContains(node: INode, arr: string) {
+  let query = ` ${node.tagName} `;
+
+  if (node.attrs) {
+    if (node.attrs.class) query += ` .${node.attrs.class.split(' ').join(' .')} `;
+    if (node.attrs.id) query += ` #${node.attrs.id} `;
   }
-  return child;
+  // console.log(query, '<contains>', arr);
+  return query.indexOf(` ${arr} `) > -1;
 }
 
-function isQueryContains(node: INode, arr: string[]) {
-  const query = ` ${node.tagName} ${node.q ? `${node.q} ` : ''}`;
-  for (let i = 0, len = arr.length; i < len; i += 1) {
-    if (query.indexOf(` ${arr[i]} `) === -1) return false;
-  }
-  return true;
-}
-
-function searchTree(node: INode, arr: string[]): INode | undefined {
-  if (!node) return;
-
-  const isMatch = isQueryContains(node, arr);
-  if (isMatch) return node;
-  if (node.childNodes) {
-    let cursor;
-    for (let i = 0, len = node.childNodes.length; i < len; i += 1) {
-      cursor = searchTree(node.childNodes[i], arr);
-      if (cursor) break;
-    }
-    return cursor;
-  }
-}
-
-function findMatchNode(root: INode, pattern: string, all?: boolean) {
+function findMatchNode(node: INode, pattern: string, all?: boolean): INode[] | null {
+  if (!node) return null;
+  if (!node.childNodes.length) return null;
   const arr = pattern.split(' ');
-  let node: any = root;
-  if (!node.childNodes || !node.childNodes.length) return;
-  // eslint-disable-next-line prefer-destructuring
-  if (!node.tagName) node = node.childNodes[0];
-
-  const arrLen = arr.length;
-  let cursor = node;
-  for (let z = 0; z < arrLen; z += 1) {
-    const current = arr[z].split(/[.|#]/);
-    const isLast = (z === arrLen - 1);
-
-    cursor = searchTree(cursor, current);
-
-    if (isLast && all) {
-      const res = [];
-      while (cursor) {
-        if (isQueryContains(cursor, current)) res.push(cursor);
-        cursor = cursor.next;
+  const res: INode[] = [];
+  const stack: Array<{ 0: INode, 1: 0 | 1, 2: boolean }> = [];
+  let arrIdx = 0;
+  for (let i = 0; i < node.childNodes.length; i++) {
+    stack.push([node.childNodes[i], 0, false]);
+    while (stack.length) {
+      const cur = stack[stack.length - 1];
+      const el = cur[0];
+      if (cur[1] === 0) {
+        if (cur[2] = isQueryContains(el, arr[arrIdx])) {
+          arrIdx++;
+          // if matched all
+          if (arrIdx === arr.length) {
+            res.push(el);
+            if (all) {
+              arrIdx--;
+              stack.pop();
+              continue;
+            } else break;
+          }
+        }
       }
-      return res;
+      if (cur[1] < el.childNodes.length) {
+        stack.push([el.childNodes[cur[1]++], 0, false]);
+      } else {
+        if (cur[2]) arrIdx--;
+        stack.pop();
+      }
     }
-    if (isLast) {
-      return cursor;
-    }
+    if (res.length && !all) break;
   }
-
-  return node;
+  return res;
 }
 
-export function querySelector(parent: INode, pattern: string): INode | undefined {
-  // @ts-ignore
-  return findMatchNode(parent, pattern);
+export function querySelector(parent: INode, pattern: string): INode | null {
+  const nodes = findMatchNode(parent, pattern);
+  return nodes ? nodes[0] : null;
 }
 
-export function querySelectorAll(parent: INode, pattern: string): INode[] | undefined {
-  // @ts-ignore
+export function querySelectorAll(parent: INode, pattern: string): INode[] | null {
   return findMatchNode(parent, pattern, true);
 }
 
@@ -174,25 +129,24 @@ export default function parse(data: string): INode {
   const stack = [root];
   let lastTextPos = -1;
 
-  // eslint-disable-next-line no-cond-assign
-  for (let match, text; match = kMarkupPattern.exec(data);) {
+  for (let match; match = kMarkupPattern.exec(data);) {
     if (lastTextPos > -1) {
       // if has content
       if (lastTextPos + match[0].length < kMarkupPattern.lastIndex) {
-        text = data.substring(lastTextPos, kMarkupPattern.lastIndex - match[0].length);
-        currentParent = appendTextChild(currentParent, text);
+        const text = data.substring(lastTextPos, kMarkupPattern.lastIndex - match[0].length).trim();
+        if (text && !isWhitespace(text)) appendChild(currentParent, TextNode(text));
       }
     }
     lastTextPos = kMarkupPattern.lastIndex;
+    // skip comment
     if (match[0][1] === '!') continue;
     match[2] = match[2].toLowerCase();
 
-    // not </ tags
+    // current cursor is not an closing tag
     if (!match[1]) {
       const attrs: { [key: string]: any } = {};
-      // eslint-disable-next-line no-cond-assign
       for (let attMatch; attMatch = kAttributePattern.exec(match[3]);) {
-        attrs[attMatch[1]] = attMatch[3] || attMatch[4] || attMatch[5];
+        attrs[attMatch[2]] = attMatch[4] || attMatch[5] || attMatch[6];
       }
       // @ts-ignore
       if (!match[4] && kElementsClosedByOpening[currentParent.tagName]) {

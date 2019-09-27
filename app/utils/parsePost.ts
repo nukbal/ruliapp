@@ -21,22 +21,22 @@ export function parseTitle(html: string) {
 export function parsePostUser(parent: INode): HeaderType {
   const record: any = {};
   let cursor;
-  const userInfo = querySelector(parent, 'div.user_info');
+  const userInfo = querySelector(parent, '.user_info');
 
   if (userInfo) {
-    cursor = querySelector(userInfo, 'img.profile_img_m');
+    cursor = querySelector(userInfo, '.profile_img_m');
     if (cursor && cursor.attrs) record.image = cursor.attrs.src;
 
-    cursor = querySelector(userInfo, 'a.nick strong text');
+    cursor = querySelector(userInfo, '.nick strong text');
     if (cursor && cursor.value) record.name = cursor.value;
 
-    cursor = querySelector(userInfo, 'input#member_srl');
+    cursor = querySelector(userInfo, '#member_srl');
     if (cursor && cursor.attrs) record.id = cursor.attrs.value;
 
-    cursor = querySelector(userInfo, 'span.level strong text');
+    cursor = querySelector(userInfo, '.level strong text');
     if (cursor && cursor.value) record.level = parseInt(cursor.value, 10);
 
-    cursor = querySelector(userInfo, 'span.exp_text strong text');
+    cursor = querySelector(userInfo, '.exp_text strong text');
     if (cursor && cursor.value) record.experience = parseInt(cursor.value.replace('%', ''), 10);
   }
 
@@ -70,7 +70,7 @@ export function findContext(
       const value = formatText(current.value);
       if (value === 'GIF') return;
 
-      if (style) return { key, type: 'text', content: value, style };
+      // if (style) return { key, type: 'text', content: value, style };
       return { key, type: 'text', content: value };
     }
     case 'img': {
@@ -81,7 +81,7 @@ export function findContext(
       }
       url = url.replace('ruliweb.com/mo', 'ruliweb.net/ori');
 
-      if (style) return { key, type: 'image', content: url, style };
+      // if (style) return { key, type: 'image', content: url, style };
       return { key, type: 'image', content: url };
     }
     case 'iframe': {
@@ -164,28 +164,28 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
   res.subject = parseTitle(htmlString);
   if (!res.subject) return;
 
-  const headerNode = querySelector(Nodes, 'div.board_main div.board_main_top');
+  const headerNode = querySelector(Nodes, '.board_main .board_main_top');
   if (headerNode) {
     res.user = parsePostUser(headerNode);
   }
 
-  const mainNode = querySelector(Nodes, 'div.board_main div.board_main_view');
+  const mainNode = querySelector(Nodes, '.board_main .board_main_view');
   if (mainNode) {
-    const source = querySelector(mainNode, 'div.source_url a');
+    const source = querySelector(mainNode, '.source_url a');
     if (source && source.attrs) res.source = source.attrs.href;
   } else return;
 
-  const contentNode = querySelector(mainNode, 'div.view_content');
+  const contentNode = querySelector(mainNode, '.view_content');
   if (contentNode) {
     res.contents = parsePostContents(contentNode, prefix) || [];
   }
 
-  const likesNode = querySelector(mainNode, 'span.like_value text');
+  const likesNode = querySelector(mainNode, '.like_value text');
   if (likesNode && likesNode.value) {
     res.likes = parseInt(likesNode.value, 10);
   }
 
-  const dislikeNode = querySelector(mainNode, 'span.dislike_value text');
+  const dislikeNode = querySelector(mainNode, '.dislike_value text');
   if (dislikeNode && dislikeNode.value) {
     res.dislikes = parseInt(dislikeNode.value, 10);
   }

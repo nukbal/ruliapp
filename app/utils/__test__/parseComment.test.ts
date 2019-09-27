@@ -181,7 +181,6 @@ describe('html parser', () => {
       content: '비추 덧덧글 테스트....\n줄바꿈 테스트',
       dislike: 10,
       key: 'ct_999999',
-      child: 'ct_111112',
       reply: '테스트유저 2',
       likes: 1,
       time: new Date('2019-01-31T11:02:00.000Z'),
@@ -192,7 +191,7 @@ describe('html parser', () => {
       },
     });
     expect(data[3]).toEqual({
-      key: 'comment_element',
+      key: 'deleted',
       isDeleted: true,
       content: '',
       likes: 0,

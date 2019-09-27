@@ -36,40 +36,39 @@ export default async function getUserInfo() {
     const Node = parser(html);
     let cursor;
 
-    cursor = querySelectorAll(Node, 'member_srl');
+    cursor = querySelectorAll(Node, '.member_srl .info_value text');
     if (cursor && cursor.length) {
-      cursor = querySelector(cursor[1], 'info_value text');
-      if (cursor) data.id = cursor.value!;
+      data.id = cursor[1].value!;
     } else {
       throw new Error('비로그인 상태입니다.');
     }
 
-    cursor = querySelector(Node, 'profile_img');
+    cursor = querySelector(Node, '.profile_img');
     if (cursor) data.avatar = cursor.attrs!.src;
 
-    cursor = querySelector(Node, 'nick_name info_value text');
+    cursor = querySelector(Node, '.nick_name .info_value text');
     if (cursor) data.name = cursor.value!;
 
-    cursor = querySelector(Node, 'level info_value text');
+    cursor = querySelector(Node, '.level .info_value text');
     if (cursor) data.level = parseInt(cursor.value!, 10);
 
-    cursor = querySelectorAll(Node, 'exp');
+    cursor = querySelectorAll(Node, '.exp .info_value text');
     if (cursor && cursor.length) {
-      let cc = querySelector(cursor[0], 'info_value text');
-      if (cc) data.expNow = cc.value!;
-
-      cc = querySelector(cursor[1], 'info_value text');
-      if (cc) data.expLeft = cc.value!;
+      data.expNow = cursor[0].value!;
+      data.expLeft = cursor[1].value!;
     }
 
-    cursor = querySelector(Node, 'attend info_value text');
+    cursor = querySelector(Node, '.attend .info_value text');
     if (cursor) data.attends = parseInt(cursor.value!, 10);
 
-    // cursor = querySelectorAll(Node, 'user_activity tr');
-    // if (cursor && cursor.length) {
-    //   let cc = querySelector(cursor[1], 'activity_value text');
-    //   console.log(cc);
-    // }
+    cursor = querySelectorAll(Node, '.user_activity .activity_value text');
+    if (cursor && cursor.length) {
+      data.postCount = parseInt(cursor[0].value!, 10);
+      data.postDelCount = parseInt(cursor[1].value!, 10);
+      data.commentCount = parseInt(cursor[2].value!, 10);
+      data.commentDelCount = parseInt(cursor[3].value!, 10);
+      data.likeCount = parseInt(cursor[4].value!, 10);
+    }
 
     return data;
   } catch (e) {
