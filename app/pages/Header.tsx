@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View, Text, Platform, StatusBar, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import ThemeContext from '../ThemeContext';
@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 8,
   },
   title: {
@@ -27,9 +28,10 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
 
   const openSetting = () => navigation.navigate('Settings');
 
-  const statusBarHeight = 0;
+  let statusBarHeight = 0;
   let headerHeight = 0;
   if (Platform.OS === 'ios') {
+    statusBarHeight = 14;
     if (!Platform.isPad) {
       headerHeight = 38;
     } else {
@@ -49,14 +51,11 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
 
   return (
     <View style={[styles.container, headStyle]}>
-      {!navigation.isFirstRouteInParent() && (
+      {!navigation.isFirstRouteInParent() ? (
         <TouchableOpacity onPress={back}>
           <Icons name="chevron-left" size={24} color={theme.primary} />
         </TouchableOpacity>
-      )}
-      <Text style={[styles.title, { color: theme.primary }]} numberOfLines={1}>
-        {navigation.getParam('title', '')}
-      </Text>
+      ) : <View />}
       {navigation.state.routeName !== 'Settings' && (
         <TouchableOpacity onPress={openSetting}>
           <Icons name="tune" size={24} color={theme.primary} />

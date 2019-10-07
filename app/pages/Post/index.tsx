@@ -11,6 +11,7 @@ import Comments from './Comments';
 import usePost from './usePost';
 import ThemeContext from '../../ThemeContext';
 import Placeholder from './placeholder';
+import Title from '../Title';
 
 type NaviProps = { url: string, parent: string, key: string, subject: string }
 
@@ -55,7 +56,14 @@ export default function Post({ navigation }: Props) {
     return null;
   }, [comment.length, dislikes, likes, url]);
 
-  if (!ready) return <Placeholder />;
+  if (!ready) {
+    return (
+      <>
+        <Title label={params.title} />
+        <Placeholder />
+      </>
+    );
+  }
 
   return (
     <SectionList
@@ -63,6 +71,7 @@ export default function Post({ navigation }: Props) {
         { index: 0, data: contents },
         { index: 1, data: comment },
       ]}
+      ListHeaderComponent={<Title label={params.title} />}
       renderItem={renderItems}
       keyExtractor={keyExtractor}
       renderSectionFooter={renderSectionFooter}

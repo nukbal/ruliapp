@@ -61,7 +61,7 @@ export default function Settings({ navigation }: { navigation: NavigationScreenP
 
   const report = () => Linking.openURL('https://github.com/nukbal/ruliapp/issues').catch(() => {});
 
-  const itemStyle = [styles.item, { backgroundColor: theme.backgroundLight }];
+  const itemStyle = [styles.item, { backgroundColor: theme.background }];
 
   return (
     <ScrollView style={{ backgroundColor: theme.background }}>

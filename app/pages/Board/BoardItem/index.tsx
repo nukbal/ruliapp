@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useContext } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 import styles from './styles';
 import Placeholder from './placeholder';
@@ -36,7 +36,7 @@ export default function BoardItem(props: Props) {
       onShowUnderlay={onShowUnderlay}
       onHideUnderlay={onHideUnderlay}
       underlayColor={theme.primaryHover}
-      style={[styles.container, { backgroundColor: theme.background, borderColor: theme.border }]}
+      style={[styles.container, { backgroundColor: theme.background }]}
     >
       <>
         <View style={styles.info}>

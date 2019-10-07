@@ -7,6 +7,7 @@ import { View, FlatList, ActivityIndicator, ListRenderItemInfo } from 'react-nat
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
+import Title from '../Title';
 import ThemeContext from '../../ThemeContext';
 
 const AppendLoading = (
@@ -57,6 +58,7 @@ export default function Board({ navigation }: Props) {
       data={list}
       keyExtractor={extractKey}
       renderItem={renderItem}
+      ListHeaderComponent={<Title label={navigation.state.params.title} />}
       ListEmptyComponent={<Placeholder />}
       refreshing={pushing}
       onRefresh={onRefresh}

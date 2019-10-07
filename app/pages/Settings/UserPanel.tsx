@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
-import { View, Alert, Text, StyleSheet, TouchableHighlight } from 'react-native';
+import { View, Alert, Text, StyleSheet, TouchableHighlight, Image } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import Image from 'react-native-fast-image';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
 import ThemeContext from '../../ThemeContext';
@@ -51,7 +50,7 @@ export default function UserPanel({ navigation }: { navigation: NavigationScreen
   if (!isLogined) {
     return (
       <TouchableHighlight
-        style={[SettingStyle.item, { backgroundColor: theme.backgroundLight }]}
+        style={[SettingStyle.item, { backgroundColor: theme.background }]}
         underlayColor={theme.themeHover}
         onPress={login}
       >
@@ -82,7 +81,7 @@ export default function UserPanel({ navigation }: { navigation: NavigationScreen
         </View>
       </View>
       <TouchableHighlight
-        style={[SettingStyle.item, { backgroundColor: theme.backgroundLight }]}
+        style={[SettingStyle.item, { backgroundColor: theme.background }]}
         underlayColor={theme.themeHover}
         onPress={logout}
       >

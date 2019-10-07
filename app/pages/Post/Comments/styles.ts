@@ -5,9 +5,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    marginBottom: 1,
     justifyContent: 'center',
-    borderBottomWidth: 1,
     position: 'relative',
   },
   UserContainer: {
@@ -30,7 +28,7 @@ export default StyleSheet.create({
   },
   replyContainer: {
     position: 'absolute',
-    top: 3,
+    top: 6,
     left: 16,
     flexDirection: 'row',
     alignItems: 'center',

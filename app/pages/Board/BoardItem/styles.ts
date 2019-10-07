@@ -10,7 +10,6 @@ export default StyleSheet.create({
     paddingBottom: 12,
     alignItems: 'baseline',
     justifyContent: 'center',
-    borderBottomWidth: 1,
   },
   info: {
     flex: 1,

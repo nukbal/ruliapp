@@ -22,7 +22,7 @@ function Comment(
   const { theme } = useContext(ThemeContext);
 
   const timeText = useMemo(() => (time ? formatDate(time) : ''), [time]);
-  const containerStyle = [styles.container, { borderColor: theme.border }];
+  const containerStyle = [styles.container];
   const textStyle = { color: theme.text };
 
   if (isDeleted) {

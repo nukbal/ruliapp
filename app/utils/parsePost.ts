@@ -164,12 +164,12 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
   res.subject = parseTitle(htmlString);
   if (!res.subject) return;
 
-  const headerNode = querySelector(Nodes, '.board_main .board_main_top');
+  const headerNode = querySelector(Nodes, '.board_main_top');
   if (headerNode) {
     res.user = parsePostUser(headerNode);
   }
 
-  const mainNode = querySelector(Nodes, '.board_main .board_main_view');
+  const mainNode = querySelector(Nodes, '.board_main_view');
   if (mainNode) {
     const source = querySelector(mainNode, '.source_url a');
     if (source && source.attrs) res.source = source.attrs.href;

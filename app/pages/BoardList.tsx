@@ -3,6 +3,7 @@ import { StyleSheet, SectionList, SectionListData, Text, View, TouchableHighligh
 import { NavigationScreenProp } from 'react-navigation';
 import { bestList, communityList, hobbyList, newsList, gameList } from '../config/BoardList';
 import ThemeContext from '../ThemeContext';
+import Title from './Title';
 
 const styles = StyleSheet.create({
   item: {
@@ -13,8 +14,10 @@ const styles = StyleSheet.create({
   },
   label: {
     height: 40,
-    paddingLeft: 15,
+    paddingLeft: 8,
+    marginHorizontal: 8,
     justifyContent: 'center',
+    borderBottomWidth: 1,
   },
   boldText: {
     fontWeight: '900',
@@ -49,7 +52,7 @@ export default function BoardList({ navigation }: Props) {
         onPress={onPress}
         key={index}
         underlayColor={theme.primaryHover}
-        style={[styles.item, { backgroundColor: theme.backgroundLight }]}
+        style={[styles.item, { backgroundColor: theme.background }]}
       >
         <Text style={{ color: theme.text }}>{item.title}</Text>
       </TouchableHighlight>
@@ -58,7 +61,7 @@ export default function BoardList({ navigation }: Props) {
 
   function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
     return (
-      <View style={styles.label}>
+      <View style={[styles.label, { borderColor: theme.border }]}>
         <Text style={[styles.boldText, { color: theme.text }]}>{title}</Text>
       </View>
     );
@@ -67,6 +70,7 @@ export default function BoardList({ navigation }: Props) {
   return (
     <SectionList
       sections={sections}
+      ListHeaderComponent={<Title label="루리웹" />}
       renderSectionHeader={renderHeader}
       renderItem={renderItem}
       style={{ backgroundColor: theme.background }}

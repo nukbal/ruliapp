@@ -6,6 +6,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import { USER_AGENT } from '../../config/constants';
 import AuthContext, { Actions } from '../../AuthContext';
 import ThemeContext from '../../ThemeContext';
+import Title from '../Title';
 
 import getUserInfo from './getUserInfo';
 
@@ -20,6 +21,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderRadius: 4,
     backgroundColor: 'rgba(100,100,100,0.125)',
+  },
+  button: {
+    paddingVertical: 8,
   },
 });
 
@@ -61,6 +65,7 @@ export default function Login({ navigation }: { navigation: NavigationScreenProp
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Title label="로그인" />
       <TextInput
         value={userId}
         onChangeText={setUserId}
@@ -83,7 +88,12 @@ export default function Login({ navigation }: { navigation: NavigationScreenProp
         placeholderTextColor={theme.label}
         style={[styles.input, { color: theme.text }]}
       />
-      <Button title="로그인" onPress={submit} />
+      <Button
+        title="로그인"
+        onPress={submit}
+        color={theme.primary}
+        disabled={!userId || !pass}
+      />
     </View>
   );
 }

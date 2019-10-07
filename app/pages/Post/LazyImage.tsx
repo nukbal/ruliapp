@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo, useCallback, useContext } from 'react';
+import React, { memo, useState, useMemo, useContext } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,8 +6,10 @@ import {
   LayoutChangeEvent,
   ActivityIndicator,
   ImageSourcePropType,
+  ImageLoadEventData,
+  NativeSyntheticEvent,
+  Image,
 } from 'react-native';
-import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 import ThemeContext from '../../ThemeContext';
 
 const styles = StyleSheet.create({
@@ -42,25 +44,20 @@ export function setImageHeight(image: { width: number, height: number }, screenW
   return height || 200;
 }
 
-function LazyImage({ source, viewable }: Props) {
+function LazyImage({ source }: Props) {
   const { theme } = useContext(ThemeContext);
   const [error, setError] = useState<string | null>(null);
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [ready, setReady] = useState(false);
-  const [percent, setPercent] = useState(0);
 
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
-  const onLoad = ({ nativeEvent }: OnLoadEvent) => {
-    setSize(nativeEvent);
+  const onLoad = ({ nativeEvent }: NativeSyntheticEvent<ImageLoadEventData>) => {
+    setSize(nativeEvent.source);
     setReady(true);
   };
   const onError = () => setError('이미지 로딩에 실패하였습니다.');
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
-  const onProgress = useCallback(
-    ({ nativeEvent }: OnProgressEvent) => setPercent(Math.round((nativeEvent.loaded / nativeEvent.total) * 100)),
-    [],
-  );
 
   const textStyle = { color: theme.primary };
 
@@ -78,15 +75,12 @@ function LazyImage({ source, viewable }: Props) {
       {!ready && (
         <View style={styles.message}>
           <ActivityIndicator color={theme.primary} />
-          <Text style={textStyle}>{percent}</Text>
         </View>
       )}
       <Image
         style={{ height }}
-        // @ts-ignore
         source={source}
         onLoad={onLoad}
-        onProgress={onProgress}
         onError={onError}
       />
     </View>
