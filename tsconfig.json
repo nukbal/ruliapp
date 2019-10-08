@@ -1,23 +1,28 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "esnext",
-    "moduleResolution": "node",
-    "jsx": "react",
     "allowJs": true,
-    "noEmit": true,
-    "strict": true,
-    "pretty": true,
-    "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
-    "lib": ["esnext"]
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "downlevelIteration": true,
+    "lib": [
+      "esnext"
+    ],
+    "jsx": "preserve"
   },
   "include": [
     "app"
   ],
   "exclude": [
-    "node_modules",
     "ios",
     "android"
   ]

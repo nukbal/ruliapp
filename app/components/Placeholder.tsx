@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     height: 15,
     width: '100%',
     backgroundColor: 'rgba(100, 100, 100, 0.25)',
-    borderRadius: 2,
+    borderRadius: 4,
     marginBottom: 8,
   },
 });

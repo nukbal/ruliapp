@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, View, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+
 import ThemeContext from '../ThemeContext';
 
 const styles = StyleSheet.create({

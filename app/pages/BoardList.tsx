@@ -1,27 +1,32 @@
 import React, { useContext } from 'react';
 import { StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { bestList, communityList, hobbyList, newsList, gameList } from '../config/BoardList';
-import ThemeContext from '../ThemeContext';
-import Title from './Title';
+
+import { bestList, communityList, hobbyList, newsList, gameList } from 'app/config/BoardList';
+import ThemeContext from 'app/ThemeContext';
+import Title from 'app/components/Title';
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 8,
+  },
   item: {
-    height: 50,
+    height: 55,
     paddingLeft: 15,
     justifyContent: 'center',
-    marginBottom: 1,
   },
   label: {
-    height: 40,
     paddingLeft: 8,
-    marginHorizontal: 8,
+    paddingVertical: 14,
+    marginTop: 6,
     justifyContent: 'center',
-    borderBottomWidth: 1,
   },
-  boldText: {
+  labelText: {
     fontWeight: '900',
-    fontSize: 16,
+    fontSize: 18,
+  },
+  footer: {
+    borderBottomWidth: 1,
   },
 });
 
@@ -61,10 +66,14 @@ export default function BoardList({ navigation }: Props) {
 
   function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
     return (
-      <View style={[styles.label, { borderColor: theme.border }]}>
-        <Text style={[styles.boldText, { color: theme.text }]}>{title}</Text>
+      <View style={styles.label}>
+        <Text style={[styles.labelText, { color: theme.primaryLight }]}>{title}</Text>
       </View>
     );
+  }
+
+  function renderFooter() {
+    return <View style={[styles.footer, { borderColor: theme.border }]} />;
   }
 
   return (
@@ -72,8 +81,9 @@ export default function BoardList({ navigation }: Props) {
       sections={sections}
       ListHeaderComponent={<Title label="루리웹" />}
       renderSectionHeader={renderHeader}
+      renderSectionFooter={renderFooter}
       renderItem={renderItem}
-      style={{ backgroundColor: theme.background }}
+      style={[styles.container, { backgroundColor: theme.background }]}
       stickySectionHeadersEnabled={false}
     />
   );

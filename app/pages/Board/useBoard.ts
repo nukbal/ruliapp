@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { StatusBar, Platform } from 'react-native';
 import qs from 'query-string';
-import arrayToObject from '../../utils/arrayToObject';
-import parseBoardList, { IParseBoard } from '../../utils/parseBoard';
-import { USER_AGENT } from '../../config/constants';
+import arrayToObject from 'app/utils/arrayToObject';
+import parseBoardList, { IParseBoard } from 'app/utils/parseBoard';
+import { USER_AGENT } from 'app/config/constants';
 
 export default function useBoard(key: string) {
   const [page, setPage] = useState(1);

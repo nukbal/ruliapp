@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { View } from 'react-native';
-import Placeholder from '../../Placeholder';
+
+import Placeholder from 'app/components/Placeholder';
+import ThemeContext from 'app/ThemeContext';
+
 import styles from './styles';
-import ThemeContext from '../../../ThemeContext';
 
 export default function BoardPlaceholder() {
   const { theme } = useContext(ThemeContext);

@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import { View } from 'react-native';
 
+import Placeholder from 'app/components/Placeholder';
+import ThemeContext from 'app/ThemeContext';
+
 import styles from './styles';
-import Placeholder from '../Placeholder';
 import Comments from './Comments/placeholder';
-import ThemeContext from '../../ThemeContext';
 
 export default function PostPlaceholder() {
   const { theme } = useContext(ThemeContext);

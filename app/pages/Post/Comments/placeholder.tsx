@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import Placeholder from '../../Placeholder';
+
+import Placeholder from 'app/components/Placeholder';
 import styles from './styles';
 
 export default function CommentPlaceholder() {

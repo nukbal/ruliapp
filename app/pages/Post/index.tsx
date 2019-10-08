@@ -5,13 +5,14 @@ import {
   SectionListData,
 } from 'react-native';
 
+import Title from 'app/components/Title';
+
 import Footer from './Footer';
 import Contents, { ContentRow } from './Contents';
 import Comments from './Comments';
 import usePost from './usePost';
 import ThemeContext from '../../ThemeContext';
 import Placeholder from './placeholder';
-import Title from '../Title';
 
 type NaviProps = { url: string, parent: string, key: string, subject: string }
 

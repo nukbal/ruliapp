@@ -2,13 +2,13 @@ import React, { useCallback, useContext } from 'react';
 import { NavigationScreenProp } from 'react-navigation';
 import { View, FlatList, ActivityIndicator, ListRenderItemInfo } from 'react-native';
 
+import Title from 'app/components/Title';
+import ThemeContext from 'app/ThemeContext';
 
 // import SearchBar from './SearchBar';
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
-import Title from '../Title';
-import ThemeContext from '../../ThemeContext';
 
 const AppendLoading = (
   <View style={{ height: 75, alignItems: 'center', justifyContent: 'center' }}>

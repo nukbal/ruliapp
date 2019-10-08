@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import ThemeContext from '../ThemeContext';
+
+import ThemeContext from 'app/ThemeContext';
 
 const styles = StyleSheet.create({
   container: {

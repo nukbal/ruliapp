@@ -3,10 +3,10 @@ import { Alert, View, Button, StyleSheet } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { TextInput } from 'react-native-gesture-handler';
 
-import { USER_AGENT } from '../../config/constants';
-import AuthContext, { Actions } from '../../AuthContext';
-import ThemeContext from '../../ThemeContext';
-import Title from '../Title';
+import { USER_AGENT } from 'app/config/constants';
+import AuthContext, { Actions } from 'app/AuthContext';
+import ThemeContext from 'app/ThemeContext';
+import Title from 'app/components/Title';
 
 import getUserInfo from './getUserInfo';
 

@@ -1,8 +1,10 @@
 import React, { useMemo, useContext } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
+
+import ThemeContext from 'app/ThemeContext';
+
 import styles from './styles';
 import Placeholder from './placeholder';
-import ThemeContext from '../../../ThemeContext';
 
 interface Props extends PostRecord {
   onPress: () => void;
@@ -40,7 +42,7 @@ export default function BoardItem(props: Props) {
     >
       <>
         <View style={styles.info}>
-          <Text numberOfLines={1} style={{ color: theme.text }}>{subject}</Text>
+          <Text numberOfLines={1} style={[styles.subjectText, { color: theme.text }]}>{subject}</Text>
         </View>
         <View style={styles.info}>
           <Text style={[styles.itemText, { color: theme.label }]} numberOfLines={1}>

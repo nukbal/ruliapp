@@ -27,4 +27,7 @@ export default StyleSheet.create({
     marginLeft: 3,
     fontSize: 13,
   },
+  subjectText: {
+    fontWeight: '500',
+  },
 });
