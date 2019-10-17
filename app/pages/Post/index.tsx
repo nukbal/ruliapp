@@ -36,7 +36,7 @@ export default function Post({ navigation }: Props) {
   const renderItems = useCallback(({ item, section }: any) => {
     if (section.index === 0) {
       if (Array.isArray(item)) {
-        return <ContentRow row={item} />;
+        return <ContentRow row={item} url={url} />;
       }
       return <Contents {...item} url={url} />;
     }

@@ -131,7 +131,9 @@ export function parsePostContents(
     const current = rows[i];
     const key = `${prefix}_${i}`;
     const value = findContext(current, key);
-    if (value) res.push(value);
+    if (value) {
+      res.push(value);
+    }
   }
 
   res = res.filter((item) => item !== undefined);
@@ -161,7 +163,9 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
   const res: PostType = { subject: '', user: { name: '', id: '' }, contents: [], comments: [] };
 
   res.subject = parseTitle(htmlString);
-  if (!res.subject) return;
+  if (!res.subject) {
+    throw new Error('no subject found');
+  }
 
   const headerNode = querySelector(Nodes, '.board_main_top');
   if (headerNode) {
@@ -172,7 +176,9 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
   if (mainNode) {
     const source = querySelector(mainNode, '.source_url a');
     if (source && source.attrs) res.source = source.attrs.href;
-  } else return;
+  } else {
+    throw new Error('no content found');
+  }
 
   const contentNode = querySelector(mainNode, '.view_content');
   if (contentNode) {

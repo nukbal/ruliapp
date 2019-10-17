@@ -23,10 +23,10 @@ function Content({ children }: { children: string }) {
   return <Text style={[styles.text, { color: theme.text }]}>{children}</Text>;
 }
 
-export function ContentRow({ row }: { row: ContentRecord[] }) {
+export function ContentRow({ row, url }: { row: ContentRecord[]; url: string; }) {
   return (
     <View>
-      {row.map((item) => <Content key={item.key}>{item.content}</Content>)}
+      {row.map((item) => <ContentItem key={item.key} {...item} url={url} />)}
     </View>
   );
 }

@@ -566,5 +566,45 @@ describe('html parser', () => {
         name: 'Post User',
       }
     });
-  })
+	})
+	
+	it('multiple images on single paragraph', () => {
+		const html = `
+		<title>test | ruliapp</title>
+		<!-- board_main start -->
+		<div class="board_main_top"></div>
+		<div class="board_main_view">
+			<div class="view_content">
+				<div class="row">
+					<p></p>
+					<p style="text-align: center;">
+						<a href="http://image/path/1"><img src="http://image/path/1" /></a>
+						<br /><br />
+						<a href="http://image/path/2"><img src="http://image/path/2" /></a>
+						<br />
+						<a href="http://image/path/3"><img src="http://image/path/3" /></a>
+						<a href="http://image/path/4"><img src="http://image/path/4" /></a>
+						<a href="http://image/path/5"><img src="http://image/path/5" /></a>
+					</p>
+					<p>&nbsp;</p>
+					<p>&nbsp;</p>
+				</div>
+			</div>
+		</div>
+		<!-- board_main end -->
+		`;
+    const data = parser(html, '');
+    expect(data).toEqual({
+      comments: [],
+      contents: [[
+        { type: 'image', key: '_1_0', content: 'http://image/path/1' },
+        { type: 'image', key: '_1_1', content: 'http://image/path/2' },
+        { type: 'image', key: '_1_2', content: 'http://image/path/3' },
+        { type: 'image', key: '_1_3', content: 'http://image/path/4' },
+        { type: 'image', key: '_1_4', content: 'http://image/path/5' },
+			]],
+      subject: 'test',
+      user: {},
+    });
+	})
 });
