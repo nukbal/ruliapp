@@ -1,5 +1,6 @@
 import React, { Children, createContext, useReducer, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import { AUTH_TIMEOUT } from './config/constants';
 import { createAction, ActionsUnion } from './utils/createAction';
 import getUserInfo from './pages/Settings/getUserInfo';
 
@@ -69,8 +70,9 @@ const initState = {
 function reducer(state: State, action: Actions) {
   switch (action.type) {
     case 'LOGIN': {
-      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
-      return { userInfo: action.payload, isLogined: true, lastLogined: Date.now() };
+      const value = { userInfo: action.payload, lastLogined: Date.now() };
+      AsyncStorage.setItem('userInfo', JSON.stringify(value));
+      return { ...value, isLogined: true };
     }
     case 'CLEAR': {
       AsyncStorage.removeItem('userInfo');
@@ -90,15 +92,15 @@ export function AuthProvider({ children }: any) {
 
   useEffect(() => {
     AsyncStorage.getItem('userInfo').then((info) => {
-      if (info) {
-        dispatch(Actions.login(JSON.parse(info)));
+      if (!info) return;
+      const { userInfo, lastLogined } = JSON.parse(info);
+      dispatch(Actions.login(userInfo));
 
-        // check real login info from server
-        if (!__DEV__) {
-          getUserInfo()
-            .then((data) => dispatch(Actions.login(data)))
-            .catch(() => dispatch(Actions.clear()));
-        }
+      // check real login info from server
+      if (lastLogined - Date.now() > AUTH_TIMEOUT) {
+        getUserInfo()
+          .then((data) => dispatch(Actions.login(data)))
+          .catch(() => dispatch(Actions.clear()));
       }
     });
   }, []);
