@@ -1,4 +1,4 @@
-package com.ruliapp;
+package com.nukbal.ruliapp;
 
 import android.os.Bundle;
 import com.facebook.react.ReactFragmentActivity;

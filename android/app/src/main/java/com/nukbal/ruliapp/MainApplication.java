@@ -1,4 +1,4 @@
-package com.ruliapp;
+package com.nukbal.ruliapp;
 
 import android.app.Application;
 import android.content.Context;
