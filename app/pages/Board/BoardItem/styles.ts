@@ -2,32 +2,30 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
-    height: 75,
-    paddingRight: 15,
-    paddingLeft: 15,
-    paddingTop: 12,
-    paddingBottom: 12,
-    alignItems: 'baseline',
-    justifyContent: 'center',
+    height: 72,
+    padding: 16,
+    flexDirection: 'column',
   },
   info: {
-    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
   },
-  item: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  subInfo: {
+    height: 20,
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   itemText: {
-    marginLeft: 3,
-    fontSize: 13,
+    fontSize: 12,
+    flexShrink: 1,
+  },
+  metaText: {
+    textAlign: 'right',
+    marginLeft: 16,
   },
   subjectText: {
-    fontWeight: '500',
+    flex: 1,
+    fontSize: 16,
+    flexShrink: 1,
   },
 });

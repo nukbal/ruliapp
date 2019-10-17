@@ -30,6 +30,7 @@ export default createStackNavigator({
   },
 }, {
   initialRouteName: 'BoardList',
+  headerMode: 'screen',
   defaultNavigationOptions: ({ navigation }: any) => ({
     header: <Header navigation={navigation} />,
   }),

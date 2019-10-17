@@ -5,12 +5,14 @@ import ThemeContext from 'app/ThemeContext';
 
 const styles = StyleSheet.create({
   container: {
+    minHeight: 52,
     paddingLeft: 8,
-    paddingBottom: 18,
-    paddingRight: 18,
+    paddingRight: 16,
+    paddingTop: 4,
   },
   title: {
     fontSize: 28,
+    letterSpacing: -0.6,
     fontWeight: 'bold',
   },
 });

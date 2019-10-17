@@ -5,7 +5,7 @@ export default {
   primaryHover: transparentize(0.65, '#1A70DC'),
   primaryLight: tint(0.25, '#1A70DC'),
   background: '#ffffff',
-  backgroundLight: '#eee',
+  backgroundLight: '#dfdfdf',
   backgroundSub: '#efefef',
   text: '#0a0c0d',
   label: '#919496',

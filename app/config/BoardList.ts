@@ -10,8 +10,10 @@ export const newsList = [
 ];
 
 export const bestList = [
+  { key: 'best/selection', title: '힛갤' },
   { key: 'best/humor', title: 'BEST - 일반유머' },
   { key: 'best/hobby', title: 'BEST - 취미 갤러리' },
+  // { key: 'best/hit_history', title: '오른쪽 베스트' },
 ];
 
 export const communityList = [
@@ -26,9 +28,11 @@ export const gameList = [
   { key: 'ps/board/300421', title: 'PS 게임이야기' },
   { key: 'ps/board/299999', title: '인디게임' },
   { key: 'pc/game/81745', title: '패스 오브 엑자일' },
+  { key: 'family/4526/board/109995', title: '롤 정보게시판' },
+  { key: 'family/4454/board/100159', title: '와우 정보게시판' },
 ];
 
 export const hobbyList = [
   { key: 'news/board/11', title: '리뷰/읽을거리' },
-  { key: 'family/4454/board/100159', title: '와우 정보게시판' },
+  { key: 'family/212/board/1010', title: '만화' },
 ];

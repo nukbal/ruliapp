@@ -3,7 +3,8 @@ import { StyleSheet, ScrollView, View, Text, Linking, TouchableHighlight } from 
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { NavigationScreenProp } from 'react-navigation';
 
-import ThemeContext from '../../ThemeContext';
+import ThemeContext from 'app/ThemeContext';
+import Title from 'app/components/Title';
 import UserPanel from './UserPanel';
 
 export const styles = StyleSheet.create({
@@ -11,21 +12,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingTop: 8,
-    marginBottom: 8,
-  },
-  headerTitle: {
-    fontSize: 18,
-    flex: 1,
-    fontWeight: 'bold',
-  },
   item: {
-    height: 50,
-    paddingHorizontal: 25,
+    height: 48,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -37,15 +26,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   iconStyle: {
-    paddingRight: 10,
-  },
-  label: {
-    paddingVertical: 15,
-    paddingLeft: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    fontSize: 16,
+    paddingRight: 32,
   },
   itemText: {
     fontWeight: '500',
@@ -65,6 +46,7 @@ export default function Settings({ navigation }: { navigation: NavigationScreenP
 
   return (
     <ScrollView style={{ backgroundColor: theme.background }}>
+      <Title label="설정" />
 
       <UserPanel navigation={navigation} />
 

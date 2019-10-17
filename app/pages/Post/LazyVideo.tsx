@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useState } from 'react';
 import Video, { OnLoadData } from 'react-native-video';
-import { StyleSheet, LayoutChangeEvent, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import { StyleSheet, LayoutChangeEvent, ImageSourcePropType, TouchableWithoutFeedback } from 'react-native';
 import { setImageHeight } from './LazyImage';
 
 interface Props {
@@ -30,11 +30,10 @@ function LazyVideo({ source, viewable }: Props) {
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
 
   return (
-    <TouchableOpacity
+    <TouchableWithoutFeedback
       style={[styles.container, { height }]}
       onLayout={onLayout}
       onPress={onPress}
-      activeOpacity={0.65}
     >
       {viewable && (
         <Video
@@ -50,7 +49,7 @@ function LazyVideo({ source, viewable }: Props) {
           useTextureView={false}
         />
       )}
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 }
 

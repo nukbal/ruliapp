@@ -122,7 +122,7 @@ export function findContext(
 export function parsePostContents(
   parent: INode, prefix: string,
 ): Array<ContentRecord | ContentRecord[]> | undefined {
-  const res: Array<ContentRecord | ContentRecord[]> = [];
+  let res: Array<ContentRecord | ContentRecord[]> = [];
   const rows = rowSelector(parent, ['p']);
   if (!rows) return;
 
@@ -131,11 +131,10 @@ export function parsePostContents(
     const current = rows[i];
     const key = `${prefix}_${i}`;
     const value = findContext(current, key);
-    if (value) {
-      res.push(value);
-    }
+    if (value) res.push(value);
   }
 
+  res = res.filter((item) => item !== undefined);
   return res;
 }
 

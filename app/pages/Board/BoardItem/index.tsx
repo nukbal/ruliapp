@@ -43,10 +43,11 @@ export default function BoardItem(props: Props) {
       <>
         <View style={styles.info}>
           <Text numberOfLines={1} style={[styles.subjectText, { color: theme.text }]}>{subject}</Text>
+          <Text style={[styles.itemText, styles.metaText, { color: theme.label }]}>{dateStr}</Text>
         </View>
-        <View style={styles.info}>
+        <View style={[styles.info, styles.subInfo]}>
           <Text style={[styles.itemText, { color: theme.label }]} numberOfLines={1}>
-            {`${user.name} | 덧글 ${commentSize || 0} | 추천 ${likes} | 조회 ${views} | ${dateStr}`}
+            {`${user.name} | 덧글 ${commentSize || 0} | 추천 ${likes} | 조회 ${views}`}
           </Text>
         </View>
       </>

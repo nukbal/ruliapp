@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View, Platform, StatusBar, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet, View, Platform, StatusBar, TouchableOpacity,
+} from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
@@ -54,7 +56,7 @@ export default function Header({ navigation }: { navigation: NavigationScreenPro
     <View style={[styles.container, headStyle]}>
       {!navigation.isFirstRouteInParent() ? (
         <TouchableOpacity onPress={back}>
-          <Icons name="chevron-left" size={24} color={theme.primary} />
+          <Icons name="chevron-left" size={32} color={theme.primary} />
         </TouchableOpacity>
       ) : <View />}
       {navigation.state.routeName !== 'Settings' && (
