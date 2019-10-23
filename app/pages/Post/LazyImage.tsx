@@ -9,6 +9,8 @@ import {
   ImageLoadEventData,
   NativeSyntheticEvent,
   Image,
+  Dimensions,
+  Platform,
 } from 'react-native';
 import ThemeContext from '../../ThemeContext';
 
@@ -58,6 +60,11 @@ function LazyImage({ source }: Props) {
   };
   const onError = () => setError('이미지 로딩에 실패하였습니다.');
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
+  const resizeMethod = useMemo(() => {
+    if (Platform.OS === 'ios') return 'auto';
+    const screenHeight = Dimensions.get('screen').height;
+    return height > screenHeight ? 'resize' : 'auto';
+  }, [height]);
 
   const textStyle = { color: theme.primary };
 
@@ -82,6 +89,7 @@ function LazyImage({ source }: Props) {
         source={source}
         onLoad={onLoad}
         onError={onError}
+        resizeMethod={resizeMethod}
       />
     </View>
   );
