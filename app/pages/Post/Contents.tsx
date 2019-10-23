@@ -50,7 +50,7 @@ export default function ContentItem({ type, content, url }: ContentRecord & { ur
     }
     case 'video': {
       return (
-        <LazyVideo source={{ uri: content, headers: { referer: url } }} viewable />
+        <LazyVideo source={{ uri: content }} viewable />
       );
     }
     default: {

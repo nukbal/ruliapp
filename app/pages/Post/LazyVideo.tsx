@@ -44,9 +44,10 @@ function LazyVideo({ source, viewable }: Props) {
           ignoreSilentSwitch="obey"
           resizeMode="cover"
           paused={pause}
+          allowsExternalPlayback={false}
+          hideShutterView
           muted
           repeat
-          useTextureView={false}
         />
       )}
     </TouchableWithoutFeedback>

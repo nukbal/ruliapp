@@ -1,5 +1,9 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  // @ts-ignore
+  TransitionPresets,
+} from 'react-navigation-stack';
 
 import BoardStack from './Board';
 import BoardList from './BoardList';
@@ -30,8 +34,9 @@ export default createStackNavigator({
   },
 }, {
   initialRouteName: 'BoardList',
-  headerMode: 'screen',
+  headerMode: 'float',
   defaultNavigationOptions: ({ navigation }: any) => ({
-    header: <Header navigation={navigation} />,
+    header: () => <Header navigation={navigation} />,
+    ...TransitionPresets.SlideFromRightIOS,
   }),
 });

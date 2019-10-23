@@ -32,7 +32,7 @@ export function parseBoardUrl(href: string) {
 
 export function formatBoardRow(node: INode): PostRecord | undefined {
   // @ts-ignore
-  const record: PostRecord = {};
+  const record: PostRecord = { user: {} };
 
   if (!node.childNodes) return;
   const td = node.childNodes[0];
