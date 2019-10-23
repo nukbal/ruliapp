@@ -1,7 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import {
-  StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight, Platform,
-  BackHandler,
+  StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight,
 } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -46,23 +45,6 @@ const sections = [
 
 export default function BoardList({ navigation }: Props) {
   const { theme } = useContext(ThemeContext);
-
-  useEffect(() => {
-    if (Platform.OS !== 'android') return;
-
-    let back: ReturnType<typeof BackHandler.addEventListener> | undefined;
-    const focusSub = navigation.addListener('didFocus', () => {
-      back = BackHandler.addEventListener('hardwareBackPress', BackHandler.exitApp);
-    });
-    const blurSub = navigation.addListener('willBlur', () => {
-      if (back) back.remove();
-    });
-    return () => {
-      if (back) back.remove();
-      focusSub.remove();
-      blurSub.remove();
-    };
-  }, [navigation]);
 
   const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;
