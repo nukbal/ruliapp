@@ -96,6 +96,7 @@ export function findContext(
       }
       return { key, type: 'video', content: url };
     }
+    case 'div':
     case 'p': {
       const rows = rowSelector(current, ['img', 'text', 'iframe', 'video']);
       if (!rows) return;
@@ -123,7 +124,7 @@ export function parsePostContents(
   parent: INode, prefix: string,
 ): Array<ContentRecord | ContentRecord[]> | undefined {
   let res: Array<ContentRecord | ContentRecord[]> = [];
-  const rows = rowSelector(parent, ['p']);
+  const rows = rowSelector(parent, ['p', 'div']);
   if (!rows) return;
 
   const rowLen = rows.length;
