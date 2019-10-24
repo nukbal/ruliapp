@@ -45,6 +45,7 @@ function LazyVideo({ source, viewable }: Props) {
           resizeMode="cover"
           paused={pause}
           allowsExternalPlayback={false}
+          disableFocus
           hideShutterView
           muted
           repeat
