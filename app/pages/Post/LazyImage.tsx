@@ -1,17 +1,14 @@
-import React, { memo, useState, useMemo, useContext } from 'react';
+import React, { memo, useMemo, useContext, useCallback, useReducer } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   LayoutChangeEvent,
-  ActivityIndicator,
   ImageSourcePropType,
-  ImageLoadEventData,
-  NativeSyntheticEvent,
-  Image,
-  Dimensions,
-  Platform,
 } from 'react-native';
+// @ts-ignore
+import ProgressBar from 'react-native-progress/Bar';
+import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 import ThemeContext from '../../ThemeContext';
 
 const styles = StyleSheet.create({
@@ -40,31 +37,55 @@ interface Props {
 }
 
 export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
-  const width = screenWidth;
-  const ratio = width / image.width;
-  const height = image.height * ratio;
+  const ratio = image.height / image.width;
+  const height = screenWidth * ratio;
   return height || 200;
+}
+
+const initState = {
+  error: null as string | null,
+  layoutWidth: 0,
+  progress: 0,
+  size: { width: 0, height: 0 },
+  ready: false,
+};
+
+function reducer(state: typeof initState, action: any) {
+  switch (action.type) {
+    case 'SIZE': {
+      return { ...state, size: action.payload, ready: true };
+    }
+    case 'PROGRESS': {
+      return { ...state, progress: action.payload };
+    }
+    case 'LAYOUT': {
+      return { ...state, layoutWidth: action.payload };
+    }
+    case 'ERROR': {
+      return { ...state, error: action.payload };
+    }
+    default: {
+      return state;
+    }
+  }
 }
 
 function LazyImage({ source }: Props) {
   const { theme } = useContext(ThemeContext);
-  const [error, setError] = useState<string | null>(null);
-  const [screenWidth, setScreenWidth] = useState(0);
-  const [size, setSize] = useState({ width: 0, height: 0 });
-  const [ready, setReady] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initState);
+  const { error, layoutWidth, progress, size, ready } = state;
 
-  const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
-  const onLoad = ({ nativeEvent }: NativeSyntheticEvent<ImageLoadEventData>) => {
-    setSize(nativeEvent.source);
-    setReady(true);
-  };
-  const onError = () => setError('이미지 로딩에 실패하였습니다.');
-  const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
-  const resizeMethod = useMemo(() => {
-    if (Platform.OS === 'ios') return 'auto';
-    const screenHeight = Dimensions.get('screen').height;
-    return height > screenHeight ? 'resize' : 'auto';
-  }, [height]);
+  const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
+    dispatch({ type: 'LAYOUT', payload: nativeEvent.layout.width });
+  }, []);
+  const onLoad = useCallback(({ nativeEvent }: OnLoadEvent) => {
+    dispatch({ type: 'SIZE', payload: nativeEvent });
+  }, []);
+  const onProgress = useCallback(({ nativeEvent }: OnProgressEvent) => {
+    dispatch({ type: 'PROGRESS', payload: nativeEvent.loaded / nativeEvent.total });
+  }, []);
+  const onError = useCallback(() => dispatch({ type: 'ERROR', payload: '이미지 로딩에 실패하였습니다.' }), []);
+  const height = useMemo(() => setImageHeight(size, layoutWidth), [size, layoutWidth]);
 
   const textStyle = { color: theme.primary };
 
@@ -81,15 +102,22 @@ function LazyImage({ source }: Props) {
       )}
       {!ready && (
         <View style={styles.message}>
-          <ActivityIndicator color={theme.primary} />
+          <ProgressBar
+            color={theme.primary}
+            borderColor={theme.primary}
+            progress={progress}
+            useNativeDriver
+          />
         </View>
       )}
       <Image
-        style={{ height }}
+        style={ready ? { height } : undefined}
+        // @ts-ignore
         source={source}
         onLoad={onLoad}
         onError={onError}
-        resizeMethod={resizeMethod}
+        onProgress={onProgress}
+        resizeMode="cover"
       />
     </View>
   );
