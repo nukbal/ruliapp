@@ -6,9 +6,9 @@ import {
   LayoutChangeEvent,
   ImageSourcePropType,
 } from 'react-native';
-// @ts-ignore
-import ProgressBar from 'react-native-progress/Bar';
+// import ProgressBar from 'react-native-progress/Bar';
 import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
+import ProgressBar from 'app/components/ProgressBar';
 import ThemeContext from '../../ThemeContext';
 
 const styles = StyleSheet.create({
@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 6,
     padding: 0,
-    backgroundColor: 'rgba(100,100,100,0.25)',
   },
   message: {
     position: 'absolute',
@@ -88,10 +87,11 @@ function LazyImage({ source }: Props) {
   const height = useMemo(() => setImageHeight(size, layoutWidth), [size, layoutWidth]);
 
   const textStyle = { color: theme.primary };
+  const backgroundColor = ready ? 'transparent' : 'rgba(100,100,100,0.25)';
 
   return (
     <View
-      style={[styles.ImageContent, { height }]}
+      style={[styles.ImageContent, { height, backgroundColor }]}
       onLayout={onLayout}
     >
       {error && (
@@ -104,9 +104,7 @@ function LazyImage({ source }: Props) {
         <View style={styles.message}>
           <ProgressBar
             color={theme.primary}
-            borderColor={theme.primary}
             progress={progress}
-            useNativeDriver
           />
         </View>
       )}
@@ -117,7 +115,7 @@ function LazyImage({ source }: Props) {
         onLoad={onLoad}
         onError={onError}
         onProgress={onProgress}
-        resizeMode="cover"
+        resizeMode="contain"
       />
     </View>
   );

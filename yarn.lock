@@ -972,15 +972,6 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@react-native-community/art@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/art/-/art-1.0.1.tgz#3066b3177c06453547b7199d532309b91d090c3b"
-  integrity sha512-1pVkvCsZQf7pf9BMXm+oD0LoQHJ8FRHo6VvOOJ8jRn5rpcOFThn8S5AO1qKL5JIjlxiM4e7umnR8+MsMy+pdKA==
-  dependencies:
-    art "^0.10.3"
-    invariant "^2.2.4"
-    prop-types "^15.7.2"
-
 "@react-native-community/async-storage@^1.6.2":
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/@react-native-community/async-storage/-/async-storage-1.6.2.tgz#a19ca7149c4dfe8216f2330e6b1ebfe2d075ef92"
@@ -1618,7 +1609,7 @@ array-unique@^0.3.2:
   resolved "https://registry.yarnpkg.com/array-unique/-/array-unique-0.3.2.tgz#a894b75d4bc4f6cd679ef3244a9fd8f46ae2d428"
   integrity sha1-qJS3XUvE9s1nnvMkSp/Y9Gri1Cg=
 
-art@^0.10.0, art@^0.10.3:
+art@^0.10.0:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/art/-/art-0.10.3.tgz#b01d84a968ccce6208df55a733838c96caeeaea2"
   integrity sha512-HXwbdofRTiJT6qZX/FnchtldzJjS3vkLJxQilc3Xj+ma2MXjY4UAyQ0ls1XZYVnDvVIBiFZbC6QsvtW86TD6tQ==
@@ -5968,14 +5959,6 @@ react-native-gesture-handler@^1.4.1:
     hammerjs "^2.0.8"
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
-    prop-types "^15.7.2"
-
-react-native-progress@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-4.0.0.tgz#dbbfec346c15a058e68804a5fb6793bf2b18599b"
-  integrity sha512-N6bhIros3rcPqQH371knVAn9Kb5EW4hxqtxzwO2xCTHwLm4X13DXUqJBoO5a//lv7aVrdOkLh5ew3kCV7alhGA==
-  dependencies:
-    "@react-native-community/art" "^1.0.1"
     prop-types "^15.7.2"
 
 react-native-reanimated@^1.3.0:
