@@ -35,16 +35,13 @@ export default function Post({ navigation }: Props) {
 
   const renderItems = useCallback(({ item, section }: any) => {
     if (section.index === 0) {
-      if (Array.isArray(item)) {
-        return <ContentRow row={item} url={url} />;
-      }
       return <Contents {...item} url={url} />;
     }
     return <Comments {...item} id={item.key} />;
   }, [url]);
 
-  const renderSectionFooter = useCallback(({ section }: { section: SectionListData<any> }) => {
-    if (section.index === 0) {
+  const renderSectionHeader = useCallback(({ section }: { section: SectionListData<any> }) => {
+    if (section.index === 1) {
       return (
         <Footer
           likes={likes}
@@ -75,7 +72,8 @@ export default function Post({ navigation }: Props) {
       ListHeaderComponent={<Title label={params.title} />}
       renderItem={renderItems}
       keyExtractor={keyExtractor}
-      renderSectionFooter={renderSectionFooter}
+      renderSectionHeader={renderSectionHeader}
+      stickySectionHeadersEnabled={false}
       refreshing={isCommentLoading}
       onRefresh={loadComment}
       viewabilityConfig={{

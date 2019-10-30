@@ -194,7 +194,7 @@ describe('html parser', () => {
     expect(data).toEqual({
       comments: [],
       contents: [
-        { type: 'text', key: '_1_0', content: '.' },
+        { type: 'text', key: '_0_0', content: '.' },
       ],
       source: 'http://path/to/reference',
       subject: 'test title',
@@ -322,22 +322,12 @@ describe('html parser', () => {
     expect(data).toEqual({
       comments: [],
       contents: [
-        { type: 'text', key: '_0_0', content: 'paragraph 1' },
-				{ type: 'text', key: '_2_0', content: '문장 2' },
-				[
-					{ type: 'text', key: '_3_0', content: '문장 3-1' },
-					{ type: 'text', key: '_3_1', content: '문장 3-2 ' },
-				],
-				{ type: 'text', key: '_4_0', content: '문장 4 ' },
-				[
-					{ type: 'image', key: '_5_0', content: 'https://path/to/image.jpg' },
-					{ type: 'text', key: '_5_1', content: '이미지 설명문' },
-					{ type: 'text', key: '_5_2', content: '추가 문장' },
-				],
-				[
-					{ type: 'text', key: '_6_0', content: '굵은 글씨' },
-					{ type: 'text', key: '_6_1', content: '빨간 글씨' },
-				],
+        { type: 'text', key: '_0_0', content: 'paragraph 1 문장 2' },
+				{ type: 'text', key: '_0_2', content: '문장 3-1 문장 3-2 ' },
+				{ type: 'text', key: '_0_4', content: '문장 4 ' },
+				{ type: 'image', key: '_0_5', content: 'https://path/to/image.jpg' },
+				{ type: 'text', key: '_0_6', content: '이미지 설명문 추가 문장' },
+				{ type: 'text', key: '_0_8', content: '굵은 글씨 빨간 글씨' },
       ],
       source: 'http://path/to/reference',
 			subject: 'test title',
@@ -596,13 +586,13 @@ describe('html parser', () => {
     const data = parser(html, '');
     expect(data).toEqual({
       comments: [],
-      contents: [[
-        { type: 'image', key: '_1_0', content: 'http://image/path/1' },
-        { type: 'image', key: '_1_1', content: 'http://image/path/2' },
-        { type: 'image', key: '_1_2', content: 'http://image/path/3' },
-        { type: 'image', key: '_1_3', content: 'http://image/path/4' },
-        { type: 'image', key: '_1_4', content: 'http://image/path/5' },
-			]],
+      contents: [
+        { type: 'image', key: '_0_0', content: 'http://image/path/1' },
+        { type: 'image', key: '_0_1', content: 'http://image/path/2' },
+        { type: 'image', key: '_0_2', content: 'http://image/path/3' },
+        { type: 'image', key: '_0_3', content: 'http://image/path/4' },
+        { type: 'image', key: '_0_4', content: 'http://image/path/5' },
+			],
       subject: 'test',
       user: {},
     });

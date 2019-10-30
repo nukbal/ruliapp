@@ -60,7 +60,7 @@ export function rowSelector(root: INode, pattern: string[]): INode[] | undefined
 }
 
 export function findContext(
-  current: INode, key: string, style?: any,
+  current: INode, key: string,
 ): ContentRecord | ContentRecord[] | undefined {
   const { tagName } = current;
 
@@ -100,12 +100,12 @@ export function findContext(
     case 'p': {
       const rows = rowSelector(current, ['img', 'text', 'iframe', 'video']);
       if (!rows) return;
-      const hasStyle = current.attrs && current.attrs.style;
+      // const hasStyle = current.attrs && current.attrs.style;
 
       let arr: ContentRecord[] = [];
 
       for (let i = 0, len = rows.length; i < len; i += 1) {
-        const value = findContext(rows[i], `${key}_${i}`, hasStyle && current.attrs!.style);
+        const value = findContext(rows[i], `${key}_${i}`);
         if (value) {
           if (Array.isArray(value)) {
             arr = arr.concat(value);
@@ -114,6 +114,19 @@ export function findContext(
           }
         }
       }
+
+      let idx = 0;
+      while (idx < arr.length) {
+        const value = arr[idx];
+        if (!value) break;
+        if (value.type === 'text' && arr[idx + 1] && arr[idx + 1].type === 'text') {
+          value.content += ` ${arr[idx + 1].content}`;
+          delete arr[idx + 1];
+          idx++;
+        }
+        idx++;
+      }
+      arr = arr.filter((item) => item !== undefined);
       return arr.length > 1 ? arr : arr[0];
     }
     default: {}
@@ -133,11 +146,13 @@ export function parsePostContents(
     const key = `${prefix}_${i}`;
     const value = findContext(current, key);
     if (value) {
-      res.push(value);
+      if (Array.isArray(value)) {
+        res = res.concat(value);
+      } else {
+        res.push(value);
+      }
     }
   }
-
-  res = res.filter((item) => item !== undefined);
   return res;
 }
 
