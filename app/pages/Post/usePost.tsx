@@ -20,6 +20,8 @@ export default function usePost(url: string, key: string) {
     contents: [],
     views: 0,
     date: null,
+    likes: undefined,
+    dislikes: undefined,
     userName: '',
   });
   const [comment, setComments] = useState<CommentRecord[]>([]);

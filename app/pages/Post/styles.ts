@@ -22,23 +22,4 @@ export default StyleSheet.create({
     color: 'black',
     fontSize: 18,
   },
-  infoPanel: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  infoItem: {
-    flex: 1,
-    padding: 8,
-    paddingTop: 12,
-    paddingBottom: 12,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  infoText: {
-    marginLeft: 6,
-    fontWeight: 'bold',
-    color: 'white',
-  },
 });

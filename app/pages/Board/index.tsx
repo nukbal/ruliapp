@@ -1,18 +1,20 @@
 import React, { useCallback, useContext } from 'react';
-import { NavigationScreenProp } from 'react-navigation';
-import { View, FlatList, ActivityIndicator, ListRenderItemInfo } from 'react-native';
+import { View, FlatList, ListRenderItemInfo, StyleProp, ViewStyle } from 'react-native';
 
 import Title from 'app/components/Title';
 import ThemeContext from 'app/ThemeContext';
+import ProgressBar from 'app/components/ProgressBar';
 
 // import SearchBar from './SearchBar';
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
 
+const loadingStyle: StyleProp<ViewStyle> = { height: 75, alignItems: 'center', justifyContent: 'center' };
+
 const AppendLoading = (
-  <View style={{ height: 75, alignItems: 'center', justifyContent: 'center' }}>
-    <ActivityIndicator />
+  <View style={loadingStyle}>
+    <ProgressBar indetermate />
   </View>
 );
 
@@ -25,11 +27,12 @@ function getItemLayout(_: any, index: number) {
 }
 
 interface Props {
-  navigation: NavigationScreenProp<any, { title: string, key: string }>;
+  route: any;
+  navigation: any;
 }
 
-export default function Board({ navigation }: Props) {
-  const boardId = navigation.state.params ? navigation.state.params.key : '';
+export default function Board({ route, navigation }: Props) {
+  const boardId = route.params ? route.params.key : '';
   const { list, data, onRefresh, onEndReached, pushing, appending } = useBoard(boardId);
   const { theme } = useContext(ThemeContext);
 
@@ -40,7 +43,7 @@ export default function Board({ navigation }: Props) {
     const onPress = () => {
       const { navigate } = navigation;
       const { url, parent, key, subject } = target;
-      navigate({ routeName: 'Post', params: { url, parent, key, title: subject } });
+      navigate('Post', { url, parent, key, title: subject });
     };
 
     return (
@@ -58,10 +61,17 @@ export default function Board({ navigation }: Props) {
       data={list}
       keyExtractor={extractKey}
       renderItem={renderItem}
-      ListHeaderComponent={<Title label={navigation.state.params.title} />}
+      ListHeaderComponent={<Title label={route.params.title} />}
       ListEmptyComponent={<Placeholder />}
       refreshing={pushing}
       onRefresh={onRefresh}
+      // refreshControl={(
+      //   <RefreshControl
+      //     refreshing={pushing}
+      //     onRefresh={onRefresh}
+      //     enabled
+      //   />
+      // )}
       ListFooterComponent={appending ? AppendLoading : undefined}
       getItemLayout={getItemLayout}
       initialNumToRender={8}

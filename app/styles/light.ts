@@ -1,9 +1,9 @@
 import { transparentize, tint } from 'polished';
 
 export default {
-  primary: '#1A70DC',
-  primaryHover: transparentize(0.65, '#1A70DC'),
-  primaryLight: tint(0.25, '#1A70DC'),
+  primary: '#b3d6fc',
+  primaryHover: transparentize(0.65, '#b3d6fc'),
+  primaryLight: tint(0.25, '#b3d6fc'),
   background: '#ffffff',
   backgroundLight: '#dfdfdf',
   backgroundSub: '#efefef',

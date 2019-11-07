@@ -1,5 +1,4 @@
 import React, { useCallback, useContext } from 'react';
-import { NavigationScreenProp } from 'react-navigation';
 import {
   SectionList,
   SectionListData,
@@ -8,16 +7,17 @@ import {
 import Title from 'app/components/Title';
 
 import Footer from './Footer';
-import Contents, { ContentRow } from './Contents';
+import Contents from './Contents';
 import Comments from './Comments';
 import usePost from './usePost';
-import ThemeContext from '../../ThemeContext';
 import Placeholder from './placeholder';
+import ThemeContext from '../../ThemeContext';
 
-type NaviProps = { url: string, parent: string, key: string, subject: string }
+type NaviProps = { url: string, parent: string, key: string, subject: string };
 
 interface Props {
-  navigation: NavigationScreenProp<any, NaviProps>;
+  route: any;
+  navigation: any;
 }
 
 function keyExtractor(item: CommentRecord | ContentRecord) {
@@ -25,20 +25,20 @@ function keyExtractor(item: CommentRecord | ContentRecord) {
   return item.key;
 }
 
-export default function Post({ navigation }: Props) {
-  const { params } = navigation.state;
+export default function Post({ route }: Props) {
+  const { title, url, key } = route.params;
   const {
     likes, dislikes, contents, comment, ready, isCommentLoading, loadComment,
-  } = usePost(params.url, params.key);
+  } = usePost(url, key);
   const { theme } = useContext(ThemeContext);
-  const url = `http://m.ruliweb.com/${params.url}`;
+  const path = `http://m.ruliweb.com/${url}`;
 
   const renderItems = useCallback(({ item, section }: any) => {
     if (section.index === 0) {
-      return <Contents {...item} url={url} />;
+      return <Contents {...item} url={path} />;
     }
     return <Comments {...item} id={item.key} />;
-  }, [url]);
+  }, [path]);
 
   const renderSectionHeader = useCallback(({ section }: { section: SectionListData<any> }) => {
     if (section.index === 1) {
@@ -48,20 +48,14 @@ export default function Post({ navigation }: Props) {
           dislikes={dislikes}
           comments={comment.length}
           url={url}
+          disabled={!ready}
         />
       );
     }
     return null;
-  }, [comment.length, dislikes, likes, url]);
+  }, [comment.length, dislikes, likes, url, ready]);
 
-  if (!ready) {
-    return (
-      <>
-        <Title label={params.title} />
-        <Placeholder />
-      </>
-    );
-  }
+  if (!ready) return <Placeholder />;
 
   return (
     <SectionList
@@ -69,7 +63,7 @@ export default function Post({ navigation }: Props) {
         { index: 0, data: contents },
         { index: 1, data: comment },
       ]}
-      ListHeaderComponent={<Title label={params.title} />}
+      ListHeaderComponent={<Title label={title} />}
       renderItem={renderItems}
       keyExtractor={keyExtractor}
       renderSectionHeader={renderSectionHeader}

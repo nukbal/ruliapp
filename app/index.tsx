@@ -1,11 +1,8 @@
 import React, { useEffect } from 'react';
-import { createAppContainer } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { ThemeProvider } from './ThemeContext';
 import { AuthProvider } from './AuthContext';
 import MainRouter from './pages';
-
-const Container = createAppContainer(MainRouter);
 
 export default function App() {
   useEffect(() => {
@@ -21,7 +18,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Container />
+        <MainRouter />
       </AuthProvider>
     </ThemeProvider>
   );

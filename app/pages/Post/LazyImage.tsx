@@ -9,6 +9,7 @@ import {
 // import ProgressBar from 'react-native-progress/Bar';
 import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 import ProgressBar from 'app/components/ProgressBar';
+import { DEFAULT_IMAGE_SIZE } from 'app/config/constants';
 import ThemeContext from '../../ThemeContext';
 
 const styles = StyleSheet.create({
@@ -38,7 +39,7 @@ interface Props {
 export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
   const ratio = image.height / image.width;
   const height = screenWidth * ratio;
-  return height || 200;
+  return height || DEFAULT_IMAGE_SIZE;
 }
 
 const initState = {
@@ -104,6 +105,7 @@ function LazyImage({ source }: Props) {
         <View style={styles.message}>
           <ProgressBar
             color={theme.primary}
+            indetermate={progress === 0}
             progress={progress}
           />
         </View>

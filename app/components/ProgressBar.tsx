@@ -6,6 +6,7 @@ interface Props {
   progress?: number;
   color?: string;
   width?: number;
+  height?: number;
   indetermate?: boolean;
 }
 
@@ -33,7 +34,7 @@ function runLoading(indetermate: boolean, width: number, size: number) {
   const config = {
     duration: 1350,
     toValue: 1,
-    easing: Easing.inOut(Easing.ease),
+    easing: Easing.linear,
   };
   const ratio = width / 100;
 
@@ -99,21 +100,22 @@ function runProgress(value: number, cache: number, width: number) {
 }
 
 export default function ProgressBar({
-  progress = 0, indetermate = false, color = 'red', width = 100,
+  progress = 0, indetermate = false, color = 'red', width = 100, height = 6,
 }: Props) {
   const cache = useRef(progress);
   const transX = useMemo(() => runLoading(indetermate, width, progress), [indetermate, width, progress]);
-  const size = useMemo(() => runProgress(progress, cache.current, width), [width, progress]);
+  let size = useMemo(() => runProgress(progress, cache.current, width), [width, progress]);
+  if (indetermate) size = new Value(0.1 * width);
 
   useEffect(() => {
     cache.current = progress;
   }, [progress]);
 
   return (
-    <View style={[styles.container, { width }]}>
+    <View style={[styles.container, { width, borderRadius: height }]}>
       <Animated.View
         style={[
-          styles.bar,
+          { borderRadius: height, height },
           {
             backgroundColor: color,
             width: size,
@@ -129,12 +131,7 @@ export default function ProgressBar({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 6,
     backgroundColor: 'rgba(100,100,100,0.65)',
     overflow: 'hidden',
-  },
-  bar: {
-    height: 6,
-    borderRadius: 6,
   },
 });

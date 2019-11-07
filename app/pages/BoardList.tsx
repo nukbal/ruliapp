@@ -48,7 +48,7 @@ export default function BoardList({ navigation }: Props) {
 
   const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;
-    navigate({ routeName: 'Board', params: { title, key }, key });
+    navigate('Board', { title, key });
   };
 
   const renderItem = ({ item, index }: any) => {
