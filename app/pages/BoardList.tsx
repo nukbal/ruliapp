@@ -57,7 +57,7 @@ export default function BoardList({ navigation }: Props) {
       <TouchableHighlight
         onPress={onPress}
         key={index}
-        underlayColor={theme.primaryHover}
+        underlayColor={theme.hover}
         style={[styles.item, { backgroundColor: theme.background }]}
       >
         <Text style={[styles.itemText, { color: theme.text }]}>{item.title}</Text>
@@ -68,7 +68,7 @@ export default function BoardList({ navigation }: Props) {
   function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
     return (
       <View style={styles.label}>
-        <Text style={[styles.labelText, { color: theme.primaryLight }]}>{title}</Text>
+        <Text style={[styles.labelText, { color: theme.text }]}>{title}</Text>
       </View>
     );
   }

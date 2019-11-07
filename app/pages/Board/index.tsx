@@ -1,22 +1,14 @@
 import React, { useCallback, useContext } from 'react';
-import { View, FlatList, ListRenderItemInfo, StyleProp, ViewStyle } from 'react-native';
+import { FlatList, ListRenderItemInfo } from 'react-native';
 
 import Title from 'app/components/Title';
 import ThemeContext from 'app/ThemeContext';
-import ProgressBar from 'app/components/ProgressBar';
+import AppendLoading from 'app/components/AppendLoading';
 
 // import SearchBar from './SearchBar';
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
-
-const loadingStyle: StyleProp<ViewStyle> = { height: 75, alignItems: 'center', justifyContent: 'center' };
-
-const AppendLoading = (
-  <View style={loadingStyle}>
-    <ProgressBar indetermate />
-  </View>
-);
 
 function extractKey(item: string) {
   return item;
@@ -72,7 +64,7 @@ export default function Board({ route, navigation }: Props) {
       //     enabled
       //   />
       // )}
-      ListFooterComponent={appending ? AppendLoading : undefined}
+      ListFooterComponent={appending ? <AppendLoading /> : undefined}
       getItemLayout={getItemLayout}
       initialNumToRender={8}
       onEndReached={onEndReached}

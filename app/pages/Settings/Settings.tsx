@@ -54,7 +54,7 @@ export default function Settings({ navigation }: { navigation: NavigationScreenP
 
       <TouchableHighlight
         style={itemStyle}
-        underlayColor={theme.primaryHover}
+        underlayColor={theme.hover}
         onPress={toggleTheme}
       >
         <>
@@ -72,7 +72,7 @@ export default function Settings({ navigation }: { navigation: NavigationScreenP
 
       <TouchableHighlight
         style={[...itemStyle, styles.itemHeader]}
-        underlayColor={theme.primaryHover}
+        underlayColor={theme.hover}
         onPress={report}
       >
         <>

@@ -37,7 +37,7 @@ export default function BoardItem(props: Props) {
       onPress={onPress}
       onShowUnderlay={onShowUnderlay}
       onHideUnderlay={onHideUnderlay}
-      underlayColor={theme.primaryHover}
+      underlayColor={theme.hover}
       style={[styles.container, { backgroundColor: theme.background }]}
     >
       <>

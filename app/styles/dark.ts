@@ -1,13 +1,12 @@
-import { transparentize, tint } from 'polished';
+import { primary, gray } from './colors';
 
 export default {
-  primary: '#b3d6fc',
-  primaryHover: transparentize(0.65, '#b3d6fc'),
-  primaryLight: tint(0.25, '#b3d6fc'),
-  background: '#000',
-  backgroundLight: '#191919',
-  backgroundSub: '#919496',
-  text: '#d3d4d5',
-  label: '#65696c',
-  border: '#393e42',
+  primary,
+  background: gray[1000],
+  backgroundLight: gray[800],
+  backgroundSub: gray[900],
+  text: gray[400],
+  label: gray[600],
+  border: gray[800],
+  hover: gray[800],
 };

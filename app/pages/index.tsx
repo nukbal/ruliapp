@@ -17,6 +17,13 @@ const Main = createNativeStackNavigator();
 
 function BoardRoute() {
   const { theme } = useContext(ThemeContext);
+  let marginTop: number | undefined;
+  if (Platform.OS === 'ios') {
+    marginTop = 60;
+    if (Platform.isPad) {
+      marginTop = 75;
+    }
+  }
   return (
     <Main.Navigator
       initialRouteName="BoardList"
@@ -35,7 +42,7 @@ function BoardRoute() {
           </TouchableOpacity>
         ),
         contentStyle: {
-          marginTop: Platform.OS === 'ios' ? 60 : undefined,
+          marginTop,
           backgroundColor: 'transparent',
         },
       })}
@@ -58,7 +65,7 @@ export default function Router() {
           presentation: 'modal',
           contentStyle: {
             backgroundColor: theme.background,
-            paddingTop: route.name !== 'Main' ? 32 : 0,
+            paddingTop: (Platform.OS !== 'ios' && route.name !== 'Main') ? 32 : 0,
           },
         })}
       >

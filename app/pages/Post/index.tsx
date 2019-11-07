@@ -13,8 +13,6 @@ import usePost from './usePost';
 import Placeholder from './placeholder';
 import ThemeContext from '../../ThemeContext';
 
-type NaviProps = { url: string, parent: string, key: string, subject: string };
-
 interface Props {
   route: any;
   navigation: any;
@@ -47,13 +45,12 @@ export default function Post({ route }: Props) {
           likes={likes}
           dislikes={dislikes}
           comments={comment.length}
-          url={url}
-          disabled={!ready}
+          url={path}
         />
       );
     }
     return null;
-  }, [comment.length, dislikes, likes, url, ready]);
+  }, [comment.length, dislikes, likes, path]);
 
   if (!ready) return <Placeholder />;
 

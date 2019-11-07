@@ -14,17 +14,16 @@ interface Props {
   likes?: number;
   dislikes?: number;
   comments: number;
-  disabled: boolean;
 }
 
-export default function ContentFooter({ url, likes, dislikes, comments = 0, disabled }: Props) {
+export default function ContentFooter({ url, likes, dislikes, comments = 0 }: Props) {
   const { theme } = useContext(ThemeContext);
 
   const open = () => {
     Linking.openURL(url).catch((err) => console.error('An error occurred', err));
   };
 
-  const color = disabled ? theme.backgroundSub : theme.primary;
+  const color = theme.primary;
   const textStyle = [styles.infoText, { color }];
 
   return (
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    marginVertical: 4,
+    marginVertical: 8,
     borderTopWidth: 1,
     borderBottomWidth: 1,
   },

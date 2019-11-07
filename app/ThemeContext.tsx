@@ -6,13 +6,13 @@ import darkTheme from './styles/dark';
 interface ThemeContext {
   theme: Readonly<{
     primary: string;
-    primaryHover: string;
     background: string;
     backgroundLight: string;
     backgroundSub: string;
     text: string;
     label: string;
     border: string;
+    hover: string;
   }>;
   isDark: boolean;
   toggleTheme: () => void;
