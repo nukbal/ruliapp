@@ -1,7 +1,6 @@
 import React, { useContext, useState, useRef, useEffect, useCallback } from 'react';
-import { StyleSheet, Modal, Dimensions, LayoutChangeEvent } from 'react-native';
+import { StyleSheet, Modal, Dimensions, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native';
 import Ani, { Easing } from 'react-native-reanimated';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import ThemeContext from 'app/ThemeContext';
 
@@ -20,18 +19,18 @@ export default function BottomSheet({ show, children, onClose }: any) {
   useEffect(() => {
     const config = {
       duration: 250,
-      easing: Easing.inOut(Easing.ease),
+      easing: Easing.bezier(0.50, 0, 1, 1),
     };
 
     if (show) {
       setVisible(true);
-      opacity.current.setValue(0);
+      opacity.current.setValue(new Value(0));
     }
 
     if (show && h) {
-      timing(opacity.current, { ...config, toValue: 0.65 }).start();
+      timing(opacity.current, { ...config, toValue: new Value(0.65) }).start();
     } else if (h) {
-      timing(opacity.current, { ...config, toValue: 0 })
+      timing(opacity.current, { ...config, toValue: new Value(0) })
         .start(({ finished }) => {
           if (finished) setVisible(false);
         });
@@ -49,13 +48,13 @@ export default function BottomSheet({ show, children, onClose }: any) {
       transparent
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <Ani.View style={[styles.backdrop, { width, height, opacity: opacity.current }]} />
+        <Ani.View style={[styles.backdrop, { backgroundColor: theme.gray[50], width, height, opacity: opacity.current }]} />
       </TouchableWithoutFeedback>
       <Ani.View
         style={[
           styles.content,
           {
-            backgroundColor: theme.backgroundLight,
+            backgroundColor: theme.gray[100],
             transform: [{
               translateY: opacity.current.interpolate({
                 inputRange: [0, 0.65],

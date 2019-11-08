@@ -1,39 +1,50 @@
 import React, { Children, createContext, useState, useCallback, useEffect } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import lightTheme from './styles/light';
-import darkTheme from './styles/dark';
+import theme from './styles';
+
+type themeMode = 'black' | 'dark' | 'light' | 'white';
+interface ColorType {
+  400: string;
+  500: string;
+  600: string;
+  700: string;
+}
+
+interface GrayType extends ColorType {
+  50: string;
+  75: string;
+  100: string;
+  200: string;
+  300: string;
+  800: string;
+  900: string;
+}
 
 interface ThemeContext {
   theme: Readonly<{
-    primary: string;
-    background: string;
-    backgroundLight: string;
-    backgroundSub: string;
-    text: string;
-    label: string;
-    border: string;
-    hover: string;
+    primary: ColorType;
+    gray: GrayType;
+    red: ColorType;
   }>;
-  isDark: boolean;
-  toggleTheme: () => void;
+  mode: themeMode;
+  setThemeMode: (mode: themeMode) => void;
 }
 
 // @ts-ignore
 const ThemeContext = createContext<ThemeContext>({});
 
 export function ThemeProvider({ children }: any) {
-  const [isDark, setDarkMode] = useState(true);
+  const [mode, setMode] = useState<themeMode>('black');
 
   useEffect(() => {
     if (Platform.OS === 'ios') {
-      StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content');
+      StatusBar.setBarStyle(['black', 'dark'].indexOf(mode) > -1 ? 'light-content' : 'dark-content');
     }
-  }, [isDark]);
+  }, [mode]);
 
-  const toggleTheme = useCallback(() => setDarkMode(!isDark), [isDark]);
-  const theme = isDark ? darkTheme : lightTheme;
+  const setThemeMode = useCallback((str: themeMode) => setMode(str), []);
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, isDark }}>
+    <ThemeContext.Provider value={{ theme: theme[mode], setThemeMode, mode }}>
       {Children.only(children)}
     </ThemeContext.Provider>
   );

@@ -8,7 +8,7 @@ export default function AppendLoading() {
   const { theme } = useContext(ThemeContext);
   return (
     <View style={styles.container}>
-      <ProgressBar indetermate color={theme.primary} />
+      <ProgressBar indetermate color={theme.primary[400]} />
     </View>
   );
 }

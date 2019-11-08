@@ -4,8 +4,8 @@ import Icons from 'react-native-vector-icons/MaterialIcons';
 import { NavigationScreenProp } from 'react-navigation';
 
 import ThemeContext from 'app/ThemeContext';
-import Title from 'app/components/Title';
 import UserPanel from './UserPanel';
+import ThemeButton from './ThemeButton';
 
 export const styles = StyleSheet.create({
   container: {
@@ -14,10 +14,11 @@ export const styles = StyleSheet.create({
   },
   item: {
     height: 48,
-    padding: 16,
+    paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: 'transparent',
     marginBottom: 1,
   },
   itemHeader: {
@@ -38,46 +39,27 @@ export const styles = StyleSheet.create({
 });
 
 export default function Settings({ navigation }: { navigation: NavigationScreenProp<any> }) {
-  const { isDark, theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   const report = () => Linking.openURL('https://github.com/nukbal/ruliapp/issues').catch(() => {});
-
-  const itemStyle = [styles.item, { backgroundColor: theme.background }];
-
   return (
-    <ScrollView style={{ backgroundColor: theme.background }}>
-      <Title label="설정" />
-
+    <ScrollView>
       <UserPanel navigation={navigation} />
 
       <View style={styles.divide} />
 
-      <TouchableHighlight
-        style={itemStyle}
-        underlayColor={theme.hover}
-        onPress={toggleTheme}
-      >
-        <>
-          <View style={styles.itemHeader}>
-            <Icons name="filter-hdr" size={24} color={theme.label} style={styles.iconStyle} />
-            <Text style={[styles.itemText, { color: theme.text }]}>
-              테마
-            </Text>
-          </View>
-          <Text style={[styles.itemText, { color: theme.label }]}>{isDark ? '다크' : '라이트'}</Text>
-        </>
-      </TouchableHighlight>
+      <ThemeButton />
 
       <View style={styles.divide} />
 
       <TouchableHighlight
-        style={[...itemStyle, styles.itemHeader]}
-        underlayColor={theme.hover}
+        style={[styles.item, styles.itemHeader]}
+        underlayColor={theme.gray[500]}
         onPress={report}
       >
         <>
-          <Icons name="bug-report" size={24} color={theme.label} style={styles.iconStyle} />
-          <Text style={[styles.itemText, { color: theme.text }]}>Report Issues</Text>
+          <Icons name="bug-report" size={20} color={theme.gray[800]} style={styles.iconStyle} />
+          <Text style={[styles.itemText, { color: theme.gray[800] }]}>Report Issues</Text>
         </>
       </TouchableHighlight>
 

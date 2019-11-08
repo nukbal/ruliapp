@@ -72,7 +72,7 @@ export default function Post({ route }: Props) {
         itemVisiblePercentThreshold: 25,
       }}
       removeClippedSubviews
-      style={{ backgroundColor: theme.background }}
+      style={{ backgroundColor: theme.gray[100] }}
     />
   );
 }

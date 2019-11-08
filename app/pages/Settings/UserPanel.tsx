@@ -50,18 +50,18 @@ export default function UserPanel({ navigation }: { navigation: NavigationScreen
   if (!isLogined) {
     return (
       <TouchableHighlight
-        style={[SettingStyle.item, { backgroundColor: theme.background }]}
-        underlayColor={theme.themeHover}
+        style={SettingStyle.item}
+        underlayColor={theme.gray[400]}
         onPress={login}
       >
         <>
           <View style={SettingStyle.itemHeader}>
-            <Icons name="account-circle" size={24} color={theme.label} style={SettingStyle.iconStyle} />
-            <Text style={[SettingStyle.itemText, { color: theme.text }]}>
+            <Icons name="account-circle" size={20} color={theme.gray[800]} style={SettingStyle.iconStyle} />
+            <Text style={[SettingStyle.itemText, { color: theme.gray[800] }]}>
               로그인
             </Text>
           </View>
-          <Icons name="arrow-forward" size={24} color={theme.label} />
+          <Icons name="arrow-forward" size={20} color={theme.gray[800]} />
         </>
       </TouchableHighlight>
     );
@@ -72,27 +72,27 @@ export default function UserPanel({ navigation }: { navigation: NavigationScreen
       <View style={[SettingStyle.item, SettingStyle.itemHeader, styles.panel]}>
         {userInfo.avatar && <Image source={{ uri: userInfo.avatar }} style={styles.avatar} />}
         <View>
-          <Text style={[styles.userText, { color: theme.text }]}>
+          <Text style={[styles.userText, { color: theme.gray[800] }]}>
             {userInfo.name}
           </Text>
-          <Text style={[SettingStyle.itemHeader, styles.userStatusText, { color: theme.text }]}>
+          <Text style={[SettingStyle.itemHeader, styles.userStatusText, { color: theme.gray[800] }]}>
             {`${userInfo.level}Lv. (${userInfo.expNow}% / ${userInfo.expLeft}) ${userInfo.attends}일`}
           </Text>
         </View>
       </View>
       <TouchableHighlight
-        style={[SettingStyle.item, { backgroundColor: theme.background }]}
-        underlayColor={theme.themeHover}
+        style={SettingStyle.item}
+        underlayColor={theme.gray[400]}
         onPress={logout}
       >
         <>
           <View style={SettingStyle.itemHeader}>
-            <Icons name="exit-to-app" size={24} color={theme.label} style={SettingStyle.iconStyle} />
-            <Text style={[SettingStyle.itemText, { color: theme.text }]}>
+            <Icons name="exit-to-app" size={18} color={theme.gray[800]} style={SettingStyle.iconStyle} />
+            <Text style={[SettingStyle.itemText, { color: theme.gray[800] }]}>
               로그아웃
             </Text>
           </View>
-          <Icons name="arrow-forward" size={24} color={theme.label} />
+          <Icons name="arrow-forward" size={18} color={theme.gray[800]} />
         </>
       </TouchableHighlight>
     </>

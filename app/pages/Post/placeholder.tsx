@@ -12,12 +12,15 @@ export default function PostPlaceholder() {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[{ padding: 8, paddingTop: 16 }]}>
+        <Placeholder size={32} />
+      </View>
+      <View style={[{ padding: 8, paddingTop: 16 }]}>
         <Placeholder size={200} />
         <Placeholder />
         <Placeholder />
         <Placeholder width="75%" />
       </View>
-      <View style={[styles.infoPanel, { flex: 0, backgroundColor: theme.primary, opacity: 0.65, height: 50 }]} />
+      <View style={[{ flex: 0, backgroundColor: theme.primary[600], opacity: 0.65, height: 50 }]} />
       <View>
         <Comments />
         <Comments />

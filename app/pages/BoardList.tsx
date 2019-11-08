@@ -57,10 +57,10 @@ export default function BoardList({ navigation }: Props) {
       <TouchableHighlight
         onPress={onPress}
         key={index}
-        underlayColor={theme.hover}
-        style={[styles.item, { backgroundColor: theme.background }]}
+        underlayColor={theme.gray[200]}
+        style={styles.item}
       >
-        <Text style={[styles.itemText, { color: theme.text }]}>{item.title}</Text>
+        <Text style={[styles.itemText, { color: theme.gray[800] }]}>{item.title}</Text>
       </TouchableHighlight>
     );
   };
@@ -68,13 +68,13 @@ export default function BoardList({ navigation }: Props) {
   function renderHeader({ section: { title } }: { section: SectionListData<any> }) {
     return (
       <View style={styles.label}>
-        <Text style={[styles.labelText, { color: theme.text }]}>{title}</Text>
+        <Text style={[styles.labelText, { color: theme.gray[800] }]}>{title}</Text>
       </View>
     );
   }
 
   function renderFooter() {
-    return <View style={[styles.footer, { borderColor: theme.border }]} />;
+    return <View style={[styles.footer, { borderColor: theme.gray[300] }]} />;
   }
 
   return (
@@ -84,7 +84,6 @@ export default function BoardList({ navigation }: Props) {
       renderSectionHeader={renderHeader}
       renderSectionFooter={renderFooter}
       renderItem={renderItem}
-      style={{ backgroundColor: theme.background }}
       stickySectionHeadersEnabled={false}
     />
   );

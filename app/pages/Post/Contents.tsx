@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import ShareCard from './ShareCard';
 import LazyImage from './LazyImage';
 import LazyVideo from './LazyVideo';
-import ThemeContext from '../../ThemeContext';
+import Text from '../../components/Text';
 
 export const styles = StyleSheet.create({
   media: {
@@ -12,23 +12,17 @@ export const styles = StyleSheet.create({
     marginBottom: 6,
   },
   text: {
-    lineHeight: 26,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     paddingVertical: 4,
   },
 });
 
-function Content({ children }: { children: string }) {
-  const { theme } = useContext(ThemeContext);
-  return <Text style={[styles.text, { color: theme.text }]}>{children}</Text>;
-}
-
-export default function ContentItem({ type, content, url }: ContentRecord & { url: string; viewable?: boolean }) {
+export default function ContentItem({ type, content, url }: ContentRecord & { url: string; }) {
   if (!type || !content) return null;
 
   switch (type) {
     case 'reference': {
-      return <Content>{`출처: ${content}`}</Content>;
+      return <Text style={[styles.text]}>{`출처: ${content}`}</Text>;
     }
     case 'object': {
       return (
@@ -37,16 +31,16 @@ export default function ContentItem({ type, content, url }: ContentRecord & { ur
     }
     case 'image': {
       return (
-        <LazyImage source={{ uri: content, headers: { referer: url } }} viewable />
+        <LazyImage source={{ uri: content, headers: { referer: url } }} />
       );
     }
     case 'video': {
       return (
-        <LazyVideo source={{ uri: content }} viewable />
+        <LazyVideo source={{ uri: content }} />
       );
     }
     default: {
-      return <Content>{content}</Content>;
+      return <Text style={[styles.text]}>{content}</Text>;
     }
   }
 }

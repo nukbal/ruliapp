@@ -6,7 +6,6 @@ import { TextInput } from 'react-native-gesture-handler';
 import { USER_AGENT } from 'app/config/constants';
 import AuthContext, { Actions } from 'app/AuthContext';
 import ThemeContext from 'app/ThemeContext';
-import Title from 'app/components/Title';
 
 import getUserInfo from './getUserInfo';
 
@@ -64,8 +63,7 @@ export default function Login({ navigation }: { navigation: NavigationScreenProp
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Title label="로그인" />
+    <View style={styles.container}>
       <TextInput
         value={userId}
         onChangeText={setUserId}
@@ -74,8 +72,8 @@ export default function Login({ navigation }: { navigation: NavigationScreenProp
         textContentType="username"
         keyboardType="email-address"
         autoCapitalize="none"
-        placeholderTextColor={theme.label}
-        style={[styles.input, { color: theme.text }]}
+        placeholderTextColor={theme.gray[600]}
+        style={[styles.input, { color: theme.gray[800] }]}
       />
       <TextInput
         value={pass}
@@ -85,13 +83,13 @@ export default function Login({ navigation }: { navigation: NavigationScreenProp
         textContentType="password"
         autoCapitalize="none"
         secureTextEntry
-        placeholderTextColor={theme.label}
-        style={[styles.input, { color: theme.text }]}
+        placeholderTextColor={theme.gray[600]}
+        style={[styles.input, { color: theme.gray[800] }]}
       />
       <Button
         title="로그인"
         onPress={submit}
-        color={theme.primary}
+        color={theme.primary[400]}
         disabled={!userId || !pass}
       />
     </View>

@@ -37,16 +37,16 @@ export default function BoardItem(props: Props) {
       onPress={onPress}
       onShowUnderlay={onShowUnderlay}
       onHideUnderlay={onHideUnderlay}
-      underlayColor={theme.hover}
-      style={[styles.container, { backgroundColor: theme.background }]}
+      underlayColor={theme.gray[400]}
+      style={[styles.container, { backgroundColor: theme.gray[100] }]}
     >
       <>
         <View style={styles.info}>
-          <Text numberOfLines={1} style={[styles.subjectText, { color: theme.text }]}>{subject}</Text>
-          <Text style={[styles.itemText, styles.metaText, { color: theme.label }]}>{dateStr}</Text>
+          <Text numberOfLines={1} style={[styles.subjectText, { color: theme.gray[800] }]}>{subject}</Text>
+          <Text style={[styles.itemText, styles.metaText, { color: theme.gray[700] }]}>{dateStr}</Text>
         </View>
         <View style={[styles.info, styles.subInfo]}>
-          <Text style={[styles.itemText, { color: theme.label }]} numberOfLines={1}>
+          <Text style={[styles.itemText, { color: theme.gray[700] }]} numberOfLines={1}>
             {`${user.name} | 덧글 ${commentSize || 0} | 추천 ${likes} | 조회 ${views}`}
           </Text>
         </View>

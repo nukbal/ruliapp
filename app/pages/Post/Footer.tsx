@@ -23,11 +23,11 @@ export default function ContentFooter({ url, likes, dislikes, comments = 0 }: Pr
     Linking.openURL(url).catch((err) => console.error('An error occurred', err));
   };
 
-  const color = theme.primary;
-  const textStyle = [styles.infoText, { color }];
+  const color = theme.primary[600];
+  const textStyle = [styles.infoText, { color: theme.gray[800] }];
 
   return (
-    <View style={[styles.infoPanel, { borderColor: theme.border }]}>
+    <View style={[styles.infoPanel, { borderColor: theme.gray[300] }]}>
       {likes !== undefined && (
         <View style={styles.infoItem}>
           <Icon name="thumb-up" size={20} color={color} />

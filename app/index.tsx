@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { NavigationNativeContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { ThemeProvider } from './ThemeContext';
 import { AuthProvider } from './AuthContext';
@@ -16,10 +17,12 @@ export default function App() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <MainRouter />
-      </AuthProvider>
-    </ThemeProvider>
+    <NavigationNativeContainer>
+      <ThemeProvider>
+        <AuthProvider>
+          <MainRouter />
+        </AuthProvider>
+      </ThemeProvider>
+    </NavigationNativeContainer>
   );
 }

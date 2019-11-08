@@ -1,12 +1,28 @@
-import { primary, gray } from './colors';
 
 export default {
-  primary,
-  background: gray[1000],
-  backgroundLight: gray[800],
-  backgroundSub: gray[900],
-  text: gray[400],
-  label: gray[600],
-  border: gray[800],
-  hover: gray[800],
+  primary: {
+    400: '#2680eb',
+    500: '#378ef0',
+    600: '#4b9cf5',
+    700: '#5aa9fa',
+  },
+  gray: {
+    50: '#252525',
+    75: '#2f2f2f',
+    100: '#323232',
+    200: '#3e3e3e',
+    300: '#4a4a4a',
+    400: '#5a5a5a',
+    500: '#6e6e6e',
+    600: '#909090',
+    700: '#b9b9b9',
+    800: '#e3e3e3',
+    900: '#ffffff',
+  },
+  red: {
+    400: '#e34850',
+    500: '#ec5b62',
+    600: '#f76d74',
+    700: '#ff7b82',
+  },
 };

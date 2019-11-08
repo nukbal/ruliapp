@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { TouchableOpacity, Platform } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import { NavigationNativeContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import BoardStack from './Board';
@@ -14,36 +13,38 @@ import ThemeContext from '../ThemeContext';
 
 const Root = createNativeStackNavigator();
 const Main = createNativeStackNavigator();
+const Config = createNativeStackNavigator();
+
+let marginTop: number | undefined;
+if (Platform.OS === 'ios') {
+  marginTop = 60;
+  if (Platform.isPad) {
+    marginTop = 75;
+  }
+}
 
 function BoardRoute() {
   const { theme } = useContext(ThemeContext);
-  let marginTop: number | undefined;
-  if (Platform.OS === 'ios') {
-    marginTop = 60;
-    if (Platform.isPad) {
-      marginTop = 75;
-    }
-  }
   return (
     <Main.Navigator
       initialRouteName="BoardList"
       screenOptions={({ navigation }) => ({
         headerHideShadow: true,
         headerStyle: {
-          backgroundColor: theme.background,
-          paddingRight: 8,
+          backgroundColor: theme.gray[100],
         },
-        headerTintColor: theme.primary,
         headerTitle: '',
         headerBackTitle: '',
         headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-            <Icons name="tune" size={24} color={theme.primary} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Config')}
+          >
+            <Icons name="tune" size={24} color={theme.primary[600]} />
           </TouchableOpacity>
         ),
         contentStyle: {
           marginTop,
-          backgroundColor: 'transparent',
+          backgroundColor: theme.gray[100],
         },
       })}
     >
@@ -54,25 +55,51 @@ function BoardRoute() {
   );
 }
 
+function ConfigRouter() {
+  const { theme } = useContext(ThemeContext);
+  return (
+    <Config.Navigator
+      initialRouteName="Settings"
+      screenOptions={({ navigation }) => ({
+        headerHideShadow: true,
+        headerTintColor: theme.gray[800],
+        headerStyle: {
+          backgroundColor: theme.gray[100],
+        },
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Main')}
+          >
+            <Icons name="close" size={24} color={theme.gray[800]} />
+          </TouchableOpacity>
+        ),
+        contentStyle: {
+          marginTop,
+          backgroundColor: theme.gray[100],
+        },
+      })}
+    >
+      <Config.Screen name="Settings" component={Settings} options={{ headerTitle: '설정' }} />
+      <Config.Screen name="Login" component={Login} options={{ headerTitle: '로그인' }} />
+    </Config.Navigator>
+  );
+}
+
 export default function Router() {
   const { theme } = useContext(ThemeContext);
   return (
-    <NavigationNativeContainer>
-      <Root.Navigator
-        initialRouteName="Main"
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          presentation: 'modal',
-          contentStyle: {
-            backgroundColor: theme.background,
-            paddingTop: (Platform.OS !== 'ios' && route.name !== 'Main') ? 32 : 0,
-          },
-        })}
-      >
-        <Root.Screen name="Main" component={BoardRoute} />
-        <Root.Screen name="Settings" component={Settings} />
-        <Root.Screen name="Login" component={Login} />
-      </Root.Navigator>
-    </NavigationNativeContainer>
+    <Root.Navigator
+      initialRouteName="Main"
+      screenOptions={{
+        headerShown: false,
+        presentation: 'transparentModal',
+        contentStyle: {
+          backgroundColor: theme.gray[100],
+        },
+      }}
+    >
+      <Root.Screen name="Main" component={BoardRoute} />
+      <Root.Screen name="Config" component={ConfigRouter} />
+    </Root.Navigator>
   );
 }

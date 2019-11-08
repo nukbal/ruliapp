@@ -6,7 +6,6 @@ import {
   LayoutChangeEvent,
   ImageSourcePropType,
 } from 'react-native';
-// import ProgressBar from 'react-native-progress/Bar';
 import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 import ProgressBar from 'app/components/ProgressBar';
 import { DEFAULT_IMAGE_SIZE } from 'app/config/constants';
@@ -33,7 +32,6 @@ const styles = StyleSheet.create({
 
 interface Props {
   source: ImageSourcePropType;
-  viewable?: boolean;
 }
 
 export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
@@ -87,8 +85,8 @@ function LazyImage({ source }: Props) {
   const onError = useCallback(() => dispatch({ type: 'ERROR', payload: '이미지 로딩에 실패하였습니다.' }), []);
   const height = useMemo(() => setImageHeight(size, layoutWidth), [size, layoutWidth]);
 
-  const textStyle = { color: theme.primary };
-  const backgroundColor = ready ? 'transparent' : 'rgba(100,100,100,0.25)';
+  const textStyle = { color: theme.primary[600] };
+  const backgroundColor = ready ? 'transparent' : theme.gray[300];
 
   return (
     <View
@@ -101,10 +99,10 @@ function LazyImage({ source }: Props) {
           <Text style={textStyle}>{error}</Text>
         </View>
       )}
-      {!ready && (
+      {!ready && !error && (
         <View style={styles.message}>
           <ProgressBar
-            color={theme.primary}
+            color={theme.primary[600]}
             indetermate={progress === 0}
             progress={progress}
           />
@@ -127,7 +125,6 @@ function isEqual(prev: Props, next: Props) {
   return (
     // @ts-ignore
     prev.source.uri === next.source.uri
-    && prev.viewable === next.viewable
   );
 }
 

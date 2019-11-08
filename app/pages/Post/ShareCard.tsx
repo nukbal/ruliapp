@@ -98,14 +98,14 @@ export default function ShareCard({ uri }: Props) {
 
   return (
     <TouchableOpacity
-      style={[styles.container, { borderColor: theme.border }, data.image ? {} : { minHeight: 0 }]}
+      style={[styles.container, { borderColor: theme.gray[300] }, data.image ? {} : { minHeight: 0 }]}
       onPress={onPress}
       activeOpacity={0.75}
     >
       {data.image && <Image source={{ uri: data.image.url }} />}
-      <View style={[styles.info, data.image ? { borderColor: theme.border, borderTopWidth: 1, paddingTop: 6 } : {}]}>
-        <Text numberOfLines={2} style={[styles.title, { color: theme.text }]}>{data.title}</Text>
-        <Icon name="launch" size={16} color={theme.primary} style={styles.icon} />
+      <View style={[styles.info, data.image ? { borderColor: theme.gray[300], borderTopWidth: 1, paddingTop: 6 } : {}]}>
+        <Text numberOfLines={2} style={[styles.title, { color: theme.gray[800] }]}>{data.title}</Text>
+        <Icon name="launch" size={16} color={theme.primary[600]} style={styles.icon} />
       </View>
     </TouchableOpacity>
   );
