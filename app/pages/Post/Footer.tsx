@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,24 +7,25 @@ import {
   StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ThemeContext from '../../ThemeContext';
+import { useSelector } from 'react-redux';
+import { getTheme } from 'app/stores/theme';
+import { getPostMeta } from 'app/stores/post';
 
 interface Props {
   url: string;
-  likes?: number;
-  dislikes?: number;
-  comments: number;
 }
 
-export default function ContentFooter({ url, likes, dislikes, comments = 0 }: Props) {
-  const { theme } = useContext(ThemeContext);
+export default function ContentFooter({ url }: Props) {
+  const theme = useSelector(getTheme);
+  const { likes, dislikes, commentSize } = useSelector(getPostMeta(url));
 
   const open = () => {
-    Linking.openURL(url).catch((err) => console.error('An error occurred', err));
+    const path = `http://m.ruliweb.com/${url}`;
+    Linking.openURL(path).catch((err) => console.error('An error occurred', err));
   };
 
-  const color = theme.primary[600];
-  const textStyle = [styles.infoText, { color: theme.gray[800] }];
+  const color = theme.gray[800];
+  const textStyle = [styles.infoText, { color }];
 
   return (
     <View style={[styles.infoPanel, { borderColor: theme.gray[300] }]}>
@@ -40,10 +41,10 @@ export default function ContentFooter({ url, likes, dislikes, comments = 0 }: Pr
           <Text style={textStyle}>{dislikes}</Text>
         </View>
       )}
-      {comments > 0 && (
+      {commentSize !== undefined && (
         <View style={styles.infoItem}>
           <Icon name="message" size={20} color={color} />
-          <Text style={textStyle}>{comments}</Text>
+          <Text style={textStyle}>{commentSize}</Text>
         </View>
       )}
       <TouchableOpacity style={styles.infoItem} onPress={open}>

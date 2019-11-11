@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import {
   StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight,
 } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 
 import { bestList, communityList, hobbyList, newsList, gameList } from 'app/config/BoardList';
-import ThemeContext from 'app/ThemeContext';
 import Title from 'app/components/Title';
+import { getTheme } from 'app/stores/theme';
 
 const styles = StyleSheet.create({
   item: {
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  navigation: NavigationScreenProp<any>;
+  navigation: any;
 }
 
 const sections = [
@@ -44,7 +44,7 @@ const sections = [
 ];
 
 export default function BoardList({ navigation }: Props) {
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
 
   const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;
@@ -57,7 +57,7 @@ export default function BoardList({ navigation }: Props) {
       <TouchableHighlight
         onPress={onPress}
         key={index}
-        underlayColor={theme.gray[200]}
+        underlayColor={theme.gray[100]}
         style={styles.item}
       >
         <Text style={[styles.itemText, { color: theme.gray[800] }]}>{item.title}</Text>

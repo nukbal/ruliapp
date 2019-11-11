@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
-
-import ThemeContext from '../ThemeContext';
+import { useSelector } from 'react-redux';
+import { getTheme } from 'app/stores/theme';
 import ProgressBar from './ProgressBar';
 
 export default function AppendLoading() {
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
   return (
     <View style={styles.container}>
       <ProgressBar indetermate color={theme.primary[400]} />

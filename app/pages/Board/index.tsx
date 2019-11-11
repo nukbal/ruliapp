@@ -24,27 +24,25 @@ interface Props {
 
 export default function Board({ route, navigation }: Props) {
   const boardId = route.params ? route.params.key : '';
-  const { list, data, onRefresh, onEndReached, pushing, appending } = useBoard(boardId);
+  const { list, onRefresh, onEndReached, pushing, appending } = useBoard(boardId);
 
   const renderItem = useCallback(({ item, separators }: ListRenderItemInfo<string>) => {
     if (!item) return null;
 
-    const target = data[item];
     const onPress = () => {
       const { navigate } = navigation;
-      const { url, parent, key, subject } = target;
-      navigate('Post', { url, parent, key, title: subject });
+      navigate('Post', { url: item });
     };
 
     return (
       <BoardItem
+        id={item}
         onPress={onPress}
         onShowUnderlay={separators.highlight}
         onHideUnderlay={separators.unhighlight}
-        {...target}
       />
     );
-  }, [navigation, data]);
+  }, [navigation]);
 
   return (
     <FlatList

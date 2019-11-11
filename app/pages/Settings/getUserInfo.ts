@@ -1,6 +1,6 @@
-import parser, { querySelector, querySelectorAll } from '../../utils/htmlParser';
-import { AuthContext } from '../../AuthContext';
-import { USER_AGENT } from '../../config/constants';
+import parser, { querySelector, querySelectorAll } from 'app/utils/htmlParser';
+import { UserState } from 'app/stores/user';
+import { USER_AGENT } from 'app/config/constants';
 
 const config = {
   method: 'GET',
@@ -32,7 +32,7 @@ export default async function getUserInfo() {
     html += '</table></div>';
 
     // @ts-ignore
-    const data: AuthContext['userInfo'] = {};
+    const data: UserState['userInfo'] = {};
     const Node = parser(html);
     let cursor;
 

@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useContext, useCallback, useReducer } from 'react';
+import React, { memo, useMemo, useCallback, useReducer } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,10 +6,12 @@ import {
   LayoutChangeEvent,
   ImageSourcePropType,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
+
 import ProgressBar from 'app/components/ProgressBar';
 import { DEFAULT_IMAGE_SIZE } from 'app/config/constants';
-import ThemeContext from '../../ThemeContext';
+import { getTheme } from 'app/stores/theme';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -69,7 +71,7 @@ function reducer(state: typeof initState, action: any) {
 }
 
 function LazyImage({ source }: Props) {
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
   const [state, dispatch] = useReducer(reducer, initState);
   const { error, layoutWidth, progress, size, ready } = state;
 

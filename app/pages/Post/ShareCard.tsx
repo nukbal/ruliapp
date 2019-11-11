@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { StyleSheet, View, Text, ActivityIndicator, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { getTheme } from 'app/stores/theme';
 import Image from './LazyImage';
-import ThemeContext from '../../ThemeContext';
 
 interface Props {
   uri: string;
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
 });
 
 export default function ShareCard({ uri }: Props) {
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
   const [ready, setReady] = useState(false);
   const [data, setData] = useState<DataType>({ title: '', image: null, url: '' });
 

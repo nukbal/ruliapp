@@ -1,9 +1,8 @@
-import React, { useCallback, useContext } from 'react';
-import {
-  SectionList,
-  SectionListData,
-} from 'react-native';
+import React, { useCallback } from 'react';
+import { SectionList } from 'react-native';
+import { useSelector } from 'react-redux';
 
+import { getTheme } from 'app/stores/theme';
 import Title from 'app/components/Title';
 
 import Footer from './Footer';
@@ -11,7 +10,6 @@ import Contents from './Contents';
 import Comments from './Comments';
 import usePost from './usePost';
 import Placeholder from './placeholder';
-import ThemeContext from '../../ThemeContext';
 
 interface Props {
   route: any;
@@ -24,11 +22,11 @@ function keyExtractor(item: CommentRecord | ContentRecord) {
 }
 
 export default function Post({ route }: Props) {
-  const { title, url, key } = route.params;
+  const { url } = route.params;
   const {
-    likes, dislikes, contents, comment, ready, isCommentLoading, loadComment,
-  } = usePost(url, key);
-  const { theme } = useContext(ThemeContext);
+    subject, contents, comments, ready, isCommentLoading, loadComment,
+  } = usePost(url);
+  const theme = useSelector(getTheme);
   const path = `http://m.ruliweb.com/${url}`;
 
   const renderItems = useCallback(({ item, section }: any) => {
@@ -38,32 +36,21 @@ export default function Post({ route }: Props) {
     return <Comments {...item} id={item.key} />;
   }, [path]);
 
-  const renderSectionHeader = useCallback(({ section }: { section: SectionListData<any> }) => {
-    if (section.index === 1) {
-      return (
-        <Footer
-          likes={likes}
-          dislikes={dislikes}
-          comments={comment.length}
-          url={path}
-        />
-      );
-    }
-    return null;
-  }, [comment.length, dislikes, likes, path]);
-
   if (!ready) return <Placeholder />;
 
   return (
     <SectionList
       sections={[
         { index: 0, data: contents },
-        { index: 1, data: comment },
+        { index: 1, data: comments },
       ]}
-      ListHeaderComponent={<Title label={title} />}
+      ListHeaderComponent={<Title label={subject} />}
       renderItem={renderItems}
       keyExtractor={keyExtractor}
-      renderSectionHeader={renderSectionHeader}
+      renderSectionHeader={({ section }) => {
+        if (section.index === 1) return <Footer url={url} />;
+        return null;
+      }}
       stickySectionHeadersEnabled={false}
       refreshing={isCommentLoading}
       onRefresh={loadComment}
@@ -72,7 +59,7 @@ export default function Post({ route }: Props) {
         itemVisiblePercentThreshold: 25,
       }}
       removeClippedSubviews
-      style={{ backgroundColor: theme.gray[100] }}
+      style={{ backgroundColor: theme.gray[50] }}
     />
   );
 }

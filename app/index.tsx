@@ -1,28 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { Provider } from 'react-redux';
 import { NavigationNativeContainer } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
-import { ThemeProvider } from './ThemeContext';
-import { AuthProvider } from './AuthContext';
+import { PersistGate } from 'redux-persist/integration/react';
 import MainRouter from './pages';
+import createStores from './store';
 
 export default function App() {
-  useEffect(() => {
-    AsyncStorage.getAllKeys((err, keys) => {
-      if (err) return;
-      if (keys) {
-        AsyncStorage
-          .multiRemove(keys.filter((key) => key.indexOf('@Post') > -1));
-      }
-    });
-  }, []);
-
+  const { store, persistor } = createStores();
   return (
-    <NavigationNativeContainer>
-      <ThemeProvider>
-        <AuthProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationNativeContainer>
           <MainRouter />
-        </AuthProvider>
-      </ThemeProvider>
-    </NavigationNativeContainer>
+        </NavigationNativeContainer>
+      </PersistGate>
+    </Provider>
   );
 }

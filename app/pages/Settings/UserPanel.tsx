@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Alert, Text, StyleSheet, TouchableHighlight, Image } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux';
 
-import ThemeContext from '../../ThemeContext';
-import AuthContext, { Actions } from '../../AuthContext';
+import { getTheme } from 'app/stores/theme';
+import { getUserInfo, getLoginStatus, Actions } from 'app/stores/user';
+
 import { styles as SettingStyle } from './Settings';
 
 const styles = StyleSheet.create({
@@ -27,9 +28,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function UserPanel({ navigation }: { navigation: NavigationScreenProp<any> }) {
-  const { theme } = useContext(ThemeContext);
-  const { userInfo, dispatch, isLogined } = useContext(AuthContext);
+export default function UserPanel({ navigation }: { navigation: any }) {
+  const dispatch = useDispatch();
+  const theme = useSelector(getTheme);
+  const isLogined = useSelector(getLoginStatus);
+  const userInfo = useSelector(getUserInfo);
 
   const login = () => navigation.navigate('Login');
   const logout = () => Alert.alert('로그아웃', '로그아웃 하시겠습니까?', [

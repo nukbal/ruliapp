@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Text as Warpper, TextProps } from 'react-native';
-import ThemeContext from 'app/ThemeContext';
+import { useSelector } from 'react-redux';
+import { getTheme } from 'app/stores/theme';
 import { fontSize } from 'app/styles/static';
 
 interface Props extends TextProps {
@@ -15,10 +16,11 @@ export default function Text({
   children, color = 'gray', shade = 700, size = 100, style = [],
   ...rest
 }: Props) {
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
   return (
     <Warpper
       style={[{
+        // @ts-ignore
         color: theme[color][shade],
         fontSize: fontSize[size],
       }, ...style]}

@@ -30,9 +30,9 @@ export function parseBoardUrl(href: string) {
   return { id, url };
 }
 
-export function formatBoardRow(node: INode): PostRecord | undefined {
+export function formatBoardRow(node: INode): PostItemRecord | undefined {
   // @ts-ignore
-  const record: PostRecord = { user: {} };
+  const record: PostItemRecord = { user: {} };
 
   if (!node.childNodes) return;
   const td = node.childNodes[0];
@@ -47,7 +47,7 @@ export function formatBoardRow(node: INode): PostRecord | undefined {
 
   let cursor;
 
-  if (node.attrs!.class!.indexOf('notice') > -1) record.isNotice = true;
+  // if (node.attrs!.class!.indexOf('notice') > -1) record.isNotice = true;
 
   // board title
   cursor = querySelector(titleDiv, '.subject_link');
@@ -99,8 +99,8 @@ export function formatBoardRow(node: INode): PostRecord | undefined {
 
 export interface IParseBoard {
   title: string;
-  rows: PostRecord[];
-  notices: PostRecord[];
+  rows: PostItemRecord[];
+  notices: PostItemRecord[];
 }
 
 export default function parseBoardList(htmlString: string): IParseBoard {
@@ -119,12 +119,12 @@ export default function parseBoardList(htmlString: string): IParseBoard {
     if (temp) data.push(temp);
   }
 
-  const rows = data.filter((item) => !item.isNotice);
-  const notices = data.filter((item) => item.isNotice);
+  // const rows = data.filter((item) => !item.isNotice);
+  // const notices = data.filter((item) => item.isNotice);
 
   return {
     title,
-    notices,
-    rows,
+    notices: [],
+    rows: data,
   };
 }

@@ -1,13 +1,15 @@
-import React, { useContext, useMemo, memo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useSelector } from 'react-redux';
+
+import { getTheme } from 'app/stores/theme';
+import Text from 'app/components/Text';
+import formatDate from 'app/utils/formatDate';
 
 import LazyImage from '../LazyImage';
 import LazyVideo from '../LazyVideo';
-import Text from '../../../components/Text';
-import formatDate from '../../../utils/formatDate';
 import styles from './styles';
-import ThemeContext from '../../../ThemeContext';
 
 interface Props extends CommentRecord {
   id: string;
@@ -19,7 +21,7 @@ function Comment(
     user, content, time, likes = 0, dislike = 0, image, reply, isDeleted,
   }: Props,
 ) {
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
 
   const timeText = useMemo(() => (time ? formatDate(time) : ''), [time]);
   const containerStyle = [styles.container];
@@ -36,7 +38,7 @@ function Comment(
 
   if (reply) {
     // @ts-ignore
-    containerStyle.push({ paddingLeft: 28, paddingTop: 25, backgroundColor: theme.backgroundSub });
+    containerStyle.push({ paddingLeft: 28, paddingTop: 25, backgroundColor: theme.gray[75] });
   }
 
   const Media = ((image && image.indexOf('.mp4') !== -1) ? LazyVideo : LazyImage);

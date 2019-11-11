@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function LazyVideo({ source, viewable }: Props) {
+function LazyVideo({ source }: Props) {
   const [screenWidth, setScreenWidth] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [pause, setPause] = useState(false);
@@ -35,22 +35,20 @@ function LazyVideo({ source, viewable }: Props) {
       onLayout={onLayout}
       onPress={onPress}
     >
-      {viewable && (
-        <Video
-          // @ts-ignore
-          source={source}
-          onLoad={onLoad}
-          style={{ height }}
-          ignoreSilentSwitch="obey"
-          resizeMode="cover"
-          paused={pause}
-          allowsExternalPlayback={false}
-          disableFocus
-          hideShutterView
-          muted
-          repeat
-        />
-      )}
+      <Video
+        // @ts-ignore
+        source={source}
+        onLoad={onLoad}
+        style={{ height }}
+        ignoreSilentSwitch="obey"
+        resizeMode="cover"
+        paused={pause}
+        allowsExternalPlayback={false}
+        disableFocus
+        hideShutterView
+        muted
+        repeat
+      />
     </TouchableWithoutFeedback>
   );
 }

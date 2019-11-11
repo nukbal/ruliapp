@@ -1,15 +1,20 @@
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import { useSelector, useDispatch } from 'react-redux';
 
+import { getTheme, getThemeMode, Actions } from 'app/stores/theme';
 import BottomSheet from 'app/components/BottomSheet';
+
 import { styles } from './Settings';
-import ThemeContext from '../../ThemeContext';
 
 const icons = ['brightness-1', 'brightness-2', 'brightness-4', 'brightness-5'];
 
 export default function ThemeButton() {
-  const { mode, theme, setThemeMode } = useContext(ThemeContext);
+  const dispatch = useDispatch();
+  const mode = useSelector(getThemeMode);
+  const theme = useSelector(getTheme);
+
   const [show, setShow] = useState(false);
   const toggleMenu = () => setShow(!show);
   const currentMode = useMemo(() => {
@@ -20,7 +25,7 @@ export default function ThemeButton() {
   }, [mode]);
 
   const onPress = (name: any) => () => {
-    setThemeMode(name);
+    dispatch(Actions.setMode(name));
     setShow(false);
   };
 

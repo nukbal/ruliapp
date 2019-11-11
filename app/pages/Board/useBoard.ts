@@ -1,15 +1,16 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { StatusBar, Platform } from 'react-native';
 import qs from 'query-string';
-import arrayToObject from 'app/utils/arrayToObject';
 import parseBoardList, { IParseBoard } from 'app/utils/parseBoard';
 import { USER_AGENT } from 'app/config/constants';
+import { Actions } from 'app/stores/post';
 
 export default function useBoard(key: string) {
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [pushing, setPushing] = useState(false);
   const [appending, setAppending] = useState(false);
-  const [data, setData] = useState<{ [key: string]: PostRecord }>({});
   const [list, setList] = useState<string[]>([]);
   const lastRan = useRef<number | null>(null);
 
@@ -46,13 +47,11 @@ export default function useBoard(key: string) {
       const htmlString = await response.text();
       const json: IParseBoard = parseBoardList(htmlString);
 
+      const keys = json.rows.map((item: PostItemRecord) => item.url);
+      dispatch(Actions.setList(json.rows));
       if (params.page === 1) {
-        const keys = json.rows.map((item: PostRecord) => item.key);
-        setData(arrayToObject(json.rows));
         setList(keys);
       } else {
-        const keys = json.rows.map((item: PostRecord) => item.key);
-        setData((d) => ({ ...d, ...arrayToObject(json.rows) }));
         setList((lst) => Array.from(new Set([...lst, ...keys])));
       }
     } catch (e) {
@@ -61,7 +60,7 @@ export default function useBoard(key: string) {
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
 
     if (callback) callback();
-  }, [key]);
+  }, [dispatch, key]);
 
   useEffect(() => {
     if (key) request();
@@ -85,5 +84,5 @@ export default function useBoard(key: string) {
     }
   };
 
-  return { data, list, request, onRefresh, onEndReached, pushing, appending };
+  return { list, request, onRefresh, onEndReached, pushing, appending };
 }

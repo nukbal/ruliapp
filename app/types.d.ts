@@ -1,14 +1,4 @@
 declare module '*.txt';
-
-declare module 'react-navigation-stack' {
-  import * as all from 'react-navigation';
-  const createStackNavigator = all.createStackNavigator;
-}
-
-declare module "console" {
-  export = console;
-}
-
 declare type ActionCallback<T = any> = (error?: boolean, json?: any) => void;
 
 
@@ -27,22 +17,33 @@ declare interface BoardRecord {
   updated?: Date;
 }
 
-declare interface PostRecord {
+declare interface UserRecord {
+  name: string;
+  id: string;
+  level?: number;
+  experience?: number;
+  age?: number;
+  image?: string;
+}
+
+declare interface PostItemRecord {
   key: string;
   url: string;
-  parent: string;
   subject: string;
-  user: UserRecord;
-  views?: number;
+  user: { name: string };
   likes?: number;
   dislikes?: number;
+  views: number;
   commentSize?: number;
   date?: Date;
-  isNotice?: boolean;
+  hasDetail?: boolean;
+}
+
+declare interface PostDetailRecord extends PostItemRecord {
+  user: UserRecord;
+  contents: Array<ContentRecord | ContentRecord[]>;
   comments: CommentRecord[];
-  contents: ContentRecord[];
-  finished?: boolean;
-  updated?: Date;
+  source?: string;
 }
 
 declare interface CommentRecord {
@@ -57,16 +58,6 @@ declare interface CommentRecord {
   likes: number;
   dislike: number;
   isDeleted?: boolean;
-}
-
-declare interface UserRecord {
-  id: string;
-  name: string;
-  level?: string;
-  experience?: string;
-  age?: string;
-  image?: string;
-  ip?: string;
 }
 
 declare interface ContentRecord {

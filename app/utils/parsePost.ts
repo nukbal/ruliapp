@@ -2,15 +2,6 @@ import loadHtml, { INode, querySelector } from './htmlParser';
 import parseComment from './parseComment';
 import formatText from './formatText';
 
-interface HeaderType {
-  name: string;
-  id: string;
-  level?: number;
-  experience?: number;
-  age?: number;
-  image?: string;
-}
-
 export function parseTitle(html: string) {
   const startIdx = (html.indexOf('<title>') + 7);
   const endIdx = html.indexOf('</title', startIdx);
@@ -18,7 +9,7 @@ export function parseTitle(html: string) {
   return str.substring(0, str.indexOf(' | '));
 }
 
-export function parsePostUser(parent: INode): HeaderType {
+export function parsePostUser(parent: INode): UserRecord {
   const record: any = {};
   let cursor;
   const userInfo = querySelector(parent, '.user_info');
@@ -156,18 +147,8 @@ export function parsePostContents(
   return res;
 }
 
-interface PostType {
-  subject: string;
-  user: ReturnType<typeof parsePostUser>;
-  source?: string;
-  likes?: number;
-  dislikes?: number;
-  contents: Array<ContentRecord | ContentRecord[]>;
-  comments: CommentRecord[];
-}
 
-
-export default function parsePost(htmlString: string, prefix: string = ''): PostType | undefined {
+export default function parsePost(htmlString: string, prefix: string = ''): PostDetailRecord | undefined {
   const startIndex = htmlString.indexOf('<!-- board_main start');
   const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
   let html = htmlString.substring(startIndex, endIndex);
@@ -176,7 +157,10 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
   }
 
   const Nodes = loadHtml(html);
-  const res: PostType = { subject: '', user: { name: '', id: '' }, contents: [], comments: [] };
+  // @ts-ignore
+  const res: PostDetailRecord = {
+    key: '', subject: '', user: { name: '', id: '' }, contents: [], comments: [],
+  };
 
   res.subject = parseTitle(htmlString);
   if (!res.subject) {

@@ -1,9 +1,11 @@
 import { useCallback, useState, useEffect } from 'react';
 import { StatusBar, Alert, Platform } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import parsePost from '../../utils/parsePost';
-import parseComment from '../../utils/parseComment';
-import { USER_AGENT } from '../../config/constants';
+
+import parsePost from 'app/utils/parsePost';
+import parseComment from 'app/utils/parseComment';
+import { USER_AGENT } from 'app/config/constants';
+import { useSelector, useDispatch } from 'react-redux';
+import { getPost, Actions } from 'app/stores/post';
 
 interface DataType {
   contents: Array<ContentRecord | ContentRecord[]>;
@@ -15,16 +17,9 @@ interface DataType {
   userName: string;
 }
 
-export default function usePost(url: string, key: string) {
-  const [data, setData] = useState<DataType>({
-    contents: [],
-    views: 0,
-    date: null,
-    likes: undefined,
-    dislikes: undefined,
-    userName: '',
-  });
-  const [comment, setComments] = useState<CommentRecord[]>([]);
+export default function usePost(url: string) {
+  const dispatch = useDispatch();
+  const { hasDetail, ...data } = useSelector(getPost(url));
   const [ready, setReady] = useState(false);
   const [isCommentLoading, setCommentLoading] = useState(false);
 
@@ -32,13 +27,8 @@ export default function usePost(url: string, key: string) {
     let isDone = false;
     async function loadPost() {
       setReady(false);
-      const cache = await AsyncStorage.getItem(`@Posts:${url}`);
       if (isDone) return;
-      if (cache) {
-        // @ts-ignore
-        const { comments, ...rest } = JSON.parse(cache);
-        setData(rest);
-        setComments(comments);
+      if (hasDetail) {
         setReady(true);
         return;
       }
@@ -74,18 +64,7 @@ export default function usePost(url: string, key: string) {
 
         const json = parsePost(htmlString, '');
         if (!json) throw new Error('parse failed');
-
-        const { comments, ...rest } = json;
-
-        await AsyncStorage.setItem(`@Posts:${url}`, JSON.stringify(json));
-        if (isDone) return;
-        // @ts-ignore
-        setData({
-          contents: rest.contents,
-          source: rest.source,
-          userName: rest.user.name,
-        });
-        setComments(comments);
+        dispatch(Actions.set(url, json));
       } catch (e) {
         if (isDone) return;
         // console.warn(e);
@@ -99,12 +78,14 @@ export default function usePost(url: string, key: string) {
       isDone = true;
       if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
   const loadComment = useCallback(async () => {
     setCommentLoading(true);
 
     const boardId = url.substring(url.indexOf('board/') + 6, url.indexOf('/read'));
+    const key = url.substring(url.indexOf('read/') + 5, url.length);
 
     const config = {
       method: 'POST',
@@ -127,19 +108,14 @@ export default function usePost(url: string, key: string) {
       const json = await response.json();
       if (json.success) {
         const comments = parseComment(json.view);
-        const cache = await AsyncStorage.getItem(`@Posts:${url}`);
-        if (cache) {
-          const post = JSON.parse(cache);
-          AsyncStorage.setItem(`@Posts:${url}`, JSON.stringify({ ...post, comments }));
-        }
-        setComments(comments);
+        dispatch(Actions.setComment(key, comments));
       }
     } catch (e) {
       // console.warn(e.message);
     }
     setCommentLoading(false);
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
-  }, [url, key]);
+  }, [url, dispatch]);
 
-  return { ...data, comment, ready, loadComment, isCommentLoading };
+  return { ...data, ready, loadComment, isCommentLoading };
 }

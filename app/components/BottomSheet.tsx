@@ -1,8 +1,9 @@
-import React, { useContext, useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { StyleSheet, Modal, Dimensions, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native';
 import Ani, { Easing } from 'react-native-reanimated';
+import { useSelector } from 'react-redux';
 
-import ThemeContext from 'app/ThemeContext';
+import { getTheme } from 'app/stores/theme';
 
 const {
   Value,
@@ -10,7 +11,7 @@ const {
 } = Ani;
 
 export default function BottomSheet({ show, children, onClose }: any) {
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
   const { width, height } = Dimensions.get('window');
   const [visible, setVisible] = useState(false);
   const [h, setHeight] = useState(0);

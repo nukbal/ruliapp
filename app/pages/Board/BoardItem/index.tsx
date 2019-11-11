@@ -1,12 +1,15 @@
-import React, { useMemo, useContext } from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
+import { useSelector } from 'react-redux';
 
-import ThemeContext from 'app/ThemeContext';
+import { getTheme } from 'app/stores/theme';
+import { getPost } from 'app/stores/post';
 
 import styles from './styles';
 import Placeholder from './placeholder';
 
-interface Props extends PostRecord {
+interface Props {
+  id: string;
   onPress: () => void;
   onShowUnderlay: any;
   onHideUnderlay: any;
@@ -18,10 +21,10 @@ function Fixed(n: number) {
 
 export default function BoardItem(props: Props) {
   const {
-    subject, user, commentSize, likes, views, date,
-    onPress, onShowUnderlay, onHideUnderlay,
+    id, onPress, onShowUnderlay, onHideUnderlay,
   } = props;
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
+  const { date, subject, user, likes, views, commentSize } = useSelector(getPost(id));
   const dateStr = useMemo(
     () => (
       date
@@ -37,8 +40,8 @@ export default function BoardItem(props: Props) {
       onPress={onPress}
       onShowUnderlay={onShowUnderlay}
       onHideUnderlay={onHideUnderlay}
-      underlayColor={theme.gray[400]}
-      style={[styles.container, { backgroundColor: theme.gray[100] }]}
+      underlayColor={theme.gray[100]}
+      style={[styles.container, { backgroundColor: theme.gray[50] }]}
     >
       <>
         <View style={styles.info}>

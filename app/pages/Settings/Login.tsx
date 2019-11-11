@@ -1,11 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, View, Button, StyleSheet } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { TextInput } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
 
+import Title from 'app/components/Title';
+import { getTheme } from 'app/stores/theme';
+import { Actions } from 'app/stores/user';
 import { USER_AGENT } from 'app/config/constants';
-import AuthContext, { Actions } from 'app/AuthContext';
-import ThemeContext from 'app/ThemeContext';
 
 import getUserInfo from './getUserInfo';
 
@@ -26,9 +27,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Login({ navigation }: { navigation: NavigationScreenProp<any> }) {
-  const { theme } = useContext(ThemeContext);
-  const { dispatch } = useContext(AuthContext);
+export default function Login({ navigation }: { navigation: any }) {
+  const dispatch = useDispatch();
+  const theme = useSelector(getTheme);
   const [userId, setUserId] = useState('');
   const [pass, setUserPw] = useState('');
 
@@ -64,6 +65,7 @@ export default function Login({ navigation }: { navigation: NavigationScreenProp
 
   return (
     <View style={styles.container}>
+      <Title label="로그인" />
       <TextInput
         value={userId}
         onChangeText={setUserId}

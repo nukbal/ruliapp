@@ -1,16 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import Placeholder from 'app/components/Placeholder';
-import ThemeContext from 'app/ThemeContext';
+import { getTheme } from 'app/stores/theme';
 
 import styles from './styles';
 import Comments from './Comments/placeholder';
 
 export default function PostPlaceholder() {
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector(getTheme);
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.gray[50] }]}>
       <View style={[{ padding: 8, paddingTop: 16 }]}>
         <Placeholder size={32} />
       </View>
