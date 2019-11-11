@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { StyleSheet, View, Text, ActivityIndicator, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     minHeight: 200,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(100,100,100,0.25)',
     borderRadius: 6,
     borderWidth: 1,
   },
@@ -46,10 +45,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function ShareCard({ uri }: Props) {
+function ShareCard({ uri }: Props) {
   const theme = useSelector(getTheme);
   const [ready, setReady] = useState(false);
-  const [data, setData] = useState<DataType>({ title: '', image: null, url: '' });
+  const [data, setData] = useState<DataType>({ title: '', image: null, url: '', error: false });
 
   useEffect(() => {
     let isUnmount = false;
@@ -72,34 +71,49 @@ export default function ShareCard({ uri }: Props) {
                   json.embedPreview.thumbnailPreviewRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint.videoId}`
               ),
             });
+          } else {
+            // youtube video is not available
+            setData({ image: null, url: '', title: '', error: true });
           }
           setReady(true);
         })
         .catch((e) => { console.warn('share', e.message); });
     } else {
-      setData({ ...data, title: uri });
+      setData({ image: null, url: uri, title: uri });
       setReady(true);
     }
     return () => {
       isUnmount = true;
     };
-  }, [data, uri]);
+  }, [uri]);
 
   const onPress = () => {
+    if (data.error) return;
     Linking.openURL(data.url || uri).catch((err) => console.error('An error occurred', err));
   };
+  const backgroundColor = theme.gray[75];
 
   if (!ready) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor }]}>
         <ActivityIndicator />
+      </View>
+    );
+  }
+
+  if (data.error) {
+    return (
+      <View style={[styles.container, { backgroundColor }]}>
+        <Text style={[styles.title, { color: theme.gray[800] }]}>
+          존재하지 않는 영상입니다.
+        </Text>
       </View>
     );
   }
 
   return (
     <TouchableOpacity
-      style={[styles.container, { borderColor: theme.gray[300] }, data.image ? {} : { minHeight: 0 }]}
+      style={[styles.container, { backgroundColor, borderColor: theme.gray[300] }, data.image ? {} : { minHeight: 0 }]}
       onPress={onPress}
       activeOpacity={0.75}
     >
@@ -111,3 +125,5 @@ export default function ShareCard({ uri }: Props) {
     </TouchableOpacity>
   );
 }
+
+export default memo(ShareCard, (prev, next) => prev.uri === next.uri);
