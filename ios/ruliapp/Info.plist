@@ -84,16 +84,16 @@
 	<array>
 		<string>armv7</string>
 	</array>
-	<key>UISupportedInterfaceOrientations</key>
+	<key>UISupportedInterfaceOrientations~iphone</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>Supported Interface orientations (iPad)</key>
+	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>Portrait (bottom home button)</string>
-		<string>Portrait (top home button)</string>
-		<string>Landscape (left home button)</string>
-		<string>Landscape (right home button)</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
