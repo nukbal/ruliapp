@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList, ListRenderItemInfo } from 'react-native';
 
 import Title from 'app/components/Title';
 import AppendLoading from 'app/components/AppendLoading';
+import SearchBar from 'app/components/SearchBar';
 
-// import SearchBar from './SearchBar';
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
 import useBoard from './useBoard';
@@ -24,14 +24,15 @@ interface Props {
 
 export default function Board({ route, navigation }: Props) {
   const boardId = route.params ? route.params.key : '';
-  const { list, onRefresh, onEndReached, pushing, appending } = useBoard(boardId);
+  const [search, setSearch] = useState('');
+  const { list, onRefresh, onEndReached, pushing, appending } = useBoard(boardId, search || undefined);
 
   const renderItem = useCallback(({ item, separators }: ListRenderItemInfo<string>) => {
     if (!item) return null;
 
     const onPress = () => {
       const { navigate } = navigation;
-      navigate('Post', { url: item });
+      navigate('post', { url: item });
     };
 
     return (
@@ -49,7 +50,12 @@ export default function Board({ route, navigation }: Props) {
       data={list}
       keyExtractor={extractKey}
       renderItem={renderItem}
-      ListHeaderComponent={<Title label={route.params.title} />}
+      ListHeaderComponent={(
+        <>
+          <Title label={route.params.title} />
+          <SearchBar onSubmit={setSearch} onCancel={() => setSearch('')} />
+        </>
+      )}
       ListEmptyComponent={<Placeholder />}
       refreshing={pushing}
       onRefresh={onRefresh}

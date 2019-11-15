@@ -9,6 +9,12 @@ import BottomSheet from 'app/components/BottomSheet';
 import { styles } from './Settings';
 
 const icons = ['brightness-1', 'brightness-2', 'brightness-4', 'brightness-5'];
+function getLabelText(mode: string) {
+  if (mode === 'black') return '블랙';
+  if (mode === 'dark') return '다크';
+  if (mode === 'light') return '라이트';
+  return '화이트';
+}
 
 export default function ThemeButton() {
   const dispatch = useDispatch();
@@ -17,12 +23,7 @@ export default function ThemeButton() {
 
   const [show, setShow] = useState(false);
   const toggleMenu = () => setShow(!show);
-  const currentMode = useMemo(() => {
-    if (mode === 'black') return '블랙';
-    if (mode === 'dark') return '다크';
-    if (mode === 'light') return '라이트';
-    return '화이트';
-  }, [mode]);
+  const currentMode = useMemo(() => getLabelText(mode), [mode]);
 
   const onPress = (name: any) => () => {
     dispatch(Actions.setMode(name));
@@ -57,7 +58,7 @@ export default function ThemeButton() {
             <View style={styles.itemHeader}>
               <Icons name={icons[i]} size={20} color={theme.gray[800]} style={styles.iconStyle} />
               <Text style={[styles.itemText, { color: theme.gray[800] }]}>
-                {name}
+                {getLabelText(name)}
               </Text>
             </View>
           </TouchableHighlight>

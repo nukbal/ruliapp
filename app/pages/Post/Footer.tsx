@@ -20,7 +20,7 @@ export default function ContentFooter({ url }: Props) {
   const { likes, dislikes, commentSize } = useSelector(getPostMeta(url));
 
   const open = () => {
-    const path = `http://m.ruliweb.com/${url}`;
+    const path = `https://m.ruliweb.com/${url}`;
     Linking.openURL(path).catch((err) => console.error('An error occurred', err));
   };
 

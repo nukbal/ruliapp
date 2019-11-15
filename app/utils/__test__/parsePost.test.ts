@@ -192,11 +192,12 @@ describe('html parser', () => {
     `;
     const data = parser(html, '');
     expect(data).toEqual({
+			key: '',
       comments: [],
       contents: [
+				{ type: 'reference', key: 'source', content: 'http://path/to/reference' },
         { type: 'text', key: '_0_0', content: '.' },
       ],
-      source: 'http://path/to/reference',
       subject: 'test title',
 			likes: 4,
       user: {
@@ -320,8 +321,10 @@ describe('html parser', () => {
     `;
     const data = parser(html, '');
     expect(data).toEqual({
+			key: '',
       comments: [],
       contents: [
+				{ type: 'reference', key: 'source', content: 'http://path/to/reference' },
         { type: 'text', key: '_0_0', content: 'paragraph 1 문장 2' },
 				{ type: 'text', key: '_0_2', content: '문장 3-1 문장 3-2 ' },
 				{ type: 'text', key: '_0_4', content: '문장 4 ' },
@@ -329,7 +332,6 @@ describe('html parser', () => {
 				{ type: 'text', key: '_0_6', content: '이미지 설명문 추가 문장' },
 				{ type: 'text', key: '_0_8', content: '굵은 글씨 빨간 글씨' },
       ],
-      source: 'http://path/to/reference',
 			subject: 'test title',
 			likes: 17,
       user: {
@@ -541,6 +543,7 @@ describe('html parser', () => {
     `;
     const data = parser(html, '');
     expect(data).toEqual({
+			key: '',
       comments: [],
       contents: [
         { type: 'video', key: '_0_0', content: 'https://i3.ruliweb.com/ori/19/03/28/169c279261e417ce4.mp4' },
@@ -585,6 +588,7 @@ describe('html parser', () => {
 		`;
     const data = parser(html, '');
     expect(data).toEqual({
+			key: '',
       comments: [],
       contents: [
         { type: 'image', key: '_0_0', content: 'http://image/path/1' },

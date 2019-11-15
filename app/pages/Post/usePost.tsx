@@ -7,16 +7,6 @@ import { USER_AGENT } from 'app/config/constants';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPost, Actions } from 'app/stores/post';
 
-interface DataType {
-  contents: Array<ContentRecord | ContentRecord[]>;
-  source?: string | undefined;
-  views: number;
-  likes?: number;
-  dislikes?: number;
-  date: Date | null;
-  userName: string;
-}
-
 export default function usePost(url: string) {
   const dispatch = useDispatch();
   const { hasDetail, ...data } = useSelector(getPost(url));
@@ -29,6 +19,9 @@ export default function usePost(url: string) {
       setReady(false);
       if (isDone) return;
       if (hasDetail) {
+        if (data.commentSize !== data.comments.length) {
+          loadComment();
+        }
         setReady(true);
         return;
       }
@@ -84,8 +77,14 @@ export default function usePost(url: string) {
   const loadComment = useCallback(async () => {
     setCommentLoading(true);
 
-    const boardId = url.substring(url.indexOf('board/') + 6, url.indexOf('/read'));
-    const key = url.substring(url.indexOf('read/') + 5, url.length);
+    const idx = url.indexOf('/read/');
+    let boardId = '';
+    if (url.indexOf('board/') > -1) {
+      boardId = url.substring(url.indexOf('board/') + 6, idx);
+    } else {
+      boardId = url.substring(url.indexOf('/', 1) + 1, idx);
+    }
+    const key = url.substring(idx + 6, url.length);
 
     const config = {
       method: 'POST',
@@ -96,7 +95,7 @@ export default function usePost(url: string) {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Accept-Encoding': 'gzip, deflate',
         origin: 'https://m.ruliweb.com',
-        referer: `http://m.ruliweb.com/${url}`,
+        referer: `https://m.ruliweb.com/${url}`,
         'User-Agent': USER_AGENT,
       },
     };
@@ -108,7 +107,7 @@ export default function usePost(url: string) {
       const json = await response.json();
       if (json.success) {
         const comments = parseComment(json.view);
-        dispatch(Actions.setComment(key, comments));
+        dispatch(Actions.setComment(url, comments));
       }
     } catch (e) {
       // console.warn(e.message);

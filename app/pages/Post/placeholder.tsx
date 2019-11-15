@@ -21,7 +21,7 @@ export default function PostPlaceholder() {
         <Placeholder />
         <Placeholder width="75%" />
       </View>
-      <View style={[{ flex: 0, backgroundColor: theme.primary[600], opacity: 0.65, height: 50 }]} />
+      <View style={[{ flex: 0, backgroundColor: theme.gray[75], opacity: 0.65, height: 50 }]} />
       <View>
         <Comments />
         <Comments />

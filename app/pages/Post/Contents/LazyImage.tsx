@@ -88,7 +88,7 @@ function LazyImage({ source }: Props) {
   const height = useMemo(() => setImageHeight(size, layoutWidth), [size, layoutWidth]);
 
   const textStyle = { color: theme.primary[600] };
-  const backgroundColor = ready ? 'transparent' : theme.gray[300];
+  const backgroundColor = ready ? 'transparent' : theme.gray[75];
 
   return (
     <View

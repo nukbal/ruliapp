@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { createAction, ActionsUnion } from '../utils/createAction';
+import arrayToObject from '../utils/arrayToObject';
 
 export const SET_POST = 'post/SET';
 export const SET_POST_LIST = 'post/SET_LIST';
@@ -17,7 +18,11 @@ export type Actions = ActionsUnion<typeof Actions>;
 export const getPostState = (state: any) => state.post as typeof initialState;
 export const getPost = (key: string) => createSelector(
   [getPostState],
-  (state) => state[key] || emptyPost,
+  (posts) => posts[key] || emptyPost,
+);
+export const getPostUser = (key: string) => createSelector(
+  [getPost(key)],
+  (post) => post.user,
 );
 export const getPostMeta = (key: string) => createSelector(
   [getPost(key)],
@@ -38,7 +43,13 @@ const emptyPost: PostDetailRecord = {
   comments: [],
   hasDetail: false,
 };
-const initialState: { [key: string]: PostDetailRecord } = {};
+
+interface PostState {
+  [url: string]: PostDetailRecord;
+}
+
+const initialState: PostState = {
+};
 
 export default function reducer(state = initialState, action: Actions) {
   switch (action.type) {
@@ -54,9 +65,13 @@ export default function reducer(state = initialState, action: Actions) {
       };
     }
     case SET_COMMENT: {
-      const old = state[action.payload.key] || emptyPost;
-      const comments = [...old.comments, ...action.payload.comments];
-      return { ...state, [action.payload.key]: { ...old, comments } };
+      const { key, comments } = action.payload;
+      const old = state[key] || emptyPost;
+      const oldKeys = old.comments.map((item) => item.key);
+      const obj = { ...arrayToObject(old.comments), ...arrayToObject(comments) };
+      const keys = Array.from(new Set([...oldKeys, ...comments.map((item) => item.key)]));
+      const newComments = keys.map((k) => obj[k]);
+      return { ...state, [key]: { ...old, comments: newComments } };
     }
     case SET_POST_LIST: {
       const list = { ...state };

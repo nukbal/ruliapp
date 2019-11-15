@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Alert, Text, StyleSheet, TouchableHighlight, Image } from 'react-native';
+import { View, Alert, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import Image from 'react-native-fast-image';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getTheme } from 'app/stores/theme';

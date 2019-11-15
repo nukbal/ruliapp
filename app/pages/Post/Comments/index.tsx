@@ -7,8 +7,8 @@ import { getTheme } from 'app/stores/theme';
 import Text from 'app/components/Text';
 import formatDate from 'app/utils/formatDate';
 
-import LazyImage from '../LazyImage';
-import LazyVideo from '../LazyVideo';
+import LazyImage from '../Contents/LazyImage';
+import LazyVideo from '../Contents/LazyVideo';
 import styles from './styles';
 
 interface Props extends CommentRecord {
@@ -38,7 +38,7 @@ function Comment(
 
   if (reply) {
     // @ts-ignore
-    containerStyle.push({ paddingLeft: 28, paddingTop: 25, backgroundColor: theme.gray[75] });
+    containerStyle.push({ paddingLeft: 28, paddingTop: 25 });
   }
 
   const Media = ((image && image.indexOf('.mp4') !== -1) ? LazyVideo : LazyImage);
@@ -60,10 +60,10 @@ function Comment(
         <Text>{content || ''}</Text>
       </View>
       <View style={styles.infoContainer}>
-        {likes > 0 && (<Icon name="thumb-up" size={20} color={theme.primary[600]} />)}
-        {likes > 0 && (<Text style={[styles.iconText]}>{likes}</Text>)}
-        {dislike > 0 && (<Icon name="thumb-down" size={20} color={theme.red[600]} />)}
-        {dislike > 0 && (<Text style={[styles.iconText]}>{dislike}</Text>)}
+        {likes > 0 && (<Icon name="thumb-up" size={20} color={theme.gray[800]} />)}
+        {likes > 0 && (<Text style={[styles.iconText]} color="primary" shade={600}>{likes}</Text>)}
+        {dislike > 0 && (<Icon name="thumb-down" size={20} color={theme.gray[800]} />)}
+        {dislike > 0 && (<Text style={[styles.iconText]} color="red" shade={600}>{dislike}</Text>)}
       </View>
     </View>
   );

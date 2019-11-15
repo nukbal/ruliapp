@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight,
@@ -6,6 +6,8 @@ import {
 
 import { bestList, communityList, hobbyList, newsList, gameList } from 'app/config/BoardList';
 import Title from 'app/components/Title';
+import SearchBar from 'app/components/SearchBar';
+import Divider from 'app/components/Divider';
 import { getTheme } from 'app/stores/theme';
 
 const styles = StyleSheet.create({
@@ -26,29 +28,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
   },
-  footer: {
-    borderBottomWidth: 1,
-  },
 });
 
 interface Props {
   navigation: any;
 }
 
-const sections = [
-  { title: '뉴스', data: newsList },
-  { title: '베스트', data: bestList },
-  { title: '취미', data: hobbyList },
-  { title: '게임', data: gameList },
-  { title: '커뮤니티', data: communityList },
-];
-
 export default function BoardList({ navigation }: Props) {
   const theme = useSelector(getTheme);
+  const [search, setSearch] = useState('');
 
   const onPressItem = ({ key, title }: any) => {
     const { navigate } = navigation;
-    navigate('Board', { title, key });
+    navigate('board', { title, key });
   };
 
   const renderItem = ({ item, index }: any) => {
@@ -73,16 +65,30 @@ export default function BoardList({ navigation }: Props) {
     );
   }
 
-  function renderFooter() {
-    return <View style={[styles.footer, { borderColor: theme.gray[300] }]} />;
-  }
+  const sections = useMemo(() => {
+    function filter(item: { key: string; title: string }) {
+      return item.title.indexOf(search) > -1;
+    }
+    return [
+      { title: '뉴스', data: newsList.filter(filter) },
+      { title: '베스트', data: bestList.filter(filter) },
+      { title: '취미', data: hobbyList.filter(filter) },
+      { title: '게임', data: gameList.filter(filter) },
+      { title: '커뮤니티', data: communityList.filter(filter) },
+    ];
+  }, [search]);
 
   return (
     <SectionList
       sections={sections}
-      ListHeaderComponent={<Title label="루리웹" />}
+      ListHeaderComponent={(
+        <>
+          <Title label="루리웹" />
+          <SearchBar onChange={setSearch} />
+        </>
+      )}
       renderSectionHeader={renderHeader}
-      renderSectionFooter={renderFooter}
+      renderSectionFooter={() => <Divider />}
       renderItem={renderItem}
       stickySectionHeadersEnabled={false}
     />

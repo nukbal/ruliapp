@@ -72,7 +72,6 @@ export function findContext(
       }
       url = url.replace('ruliweb.com/mo', 'ruliweb.net/ori');
 
-      // if (style) return { key, type: 'image', content: url, style };
       return { key, type: 'image', content: url };
     }
     case 'iframe': {
@@ -126,8 +125,8 @@ export function findContext(
 
 export function parsePostContents(
   parent: INode, prefix: string,
-): Array<ContentRecord | ContentRecord[]> | undefined {
-  let res: Array<ContentRecord | ContentRecord[]> = [];
+): ContentRecord[] | undefined {
+  let res: ContentRecord[] = [];
   const rows = rowSelector(parent, ['p', 'div']);
   if (!rows) return;
 
@@ -173,16 +172,16 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
   }
 
   const mainNode = querySelector(Nodes, '.board_main_view');
-  if (mainNode) {
-    const source = querySelector(mainNode, '.source_url a');
-    if (source && source.attrs) res.source = source.attrs.href;
-  } else {
-    throw new Error('no content found');
-  }
+  if (!mainNode) throw new Error('no content found');
 
   const contentNode = querySelector(mainNode, '.view_content');
   if (contentNode) {
     res.contents = parsePostContents(contentNode, prefix) || [];
+  }
+
+  const source = querySelector(mainNode, '.source_url a');
+  if (source && source.attrs) {
+    res.contents.unshift({ key: 'source', type: 'reference', content: source.attrs.href });
   }
 
   const likesNode = querySelector(mainNode, '.like_value text');

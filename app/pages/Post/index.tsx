@@ -8,6 +8,7 @@ import Title from 'app/components/Title';
 import Footer from './Footer';
 import Contents from './Contents';
 import Comments from './Comments';
+import Profile from './Profile';
 import usePost from './usePost';
 import Placeholder from './placeholder';
 
@@ -44,7 +45,12 @@ export default function Post({ route }: Props) {
         { index: 0, data: contents },
         { index: 1, data: comments },
       ]}
-      ListHeaderComponent={<Title label={subject} />}
+      ListHeaderComponent={(
+        <>
+          <Title label={subject} />
+          <Profile url={url} />
+        </>
+      )}
       renderItem={renderItems}
       keyExtractor={keyExtractor}
       renderSectionHeader={({ section }) => {

@@ -40,5 +40,6 @@ export default StyleSheet.create({
   },
   iconText: {
     paddingHorizontal: 6,
+    fontWeight: 'bold',
   },
 });

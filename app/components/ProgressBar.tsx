@@ -1,6 +1,8 @@
 import React, { useMemo, useRef, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
+import { useSelector } from 'react-redux';
+import { getTheme } from 'app/stores/theme';
 
 interface Props {
   progress?: number;
@@ -102,6 +104,7 @@ function runProgress(value: number, cache: number, width: number) {
 export default function ProgressBar({
   progress = 0, indetermate = false, color = 'red', width = 100, height = 6,
 }: Props) {
+  const theme = useSelector(getTheme);
   const cache = useRef(progress);
   const transX = useMemo(() => runLoading(indetermate, width, progress), [indetermate, width, progress]);
   let size = useMemo(() => runProgress(progress, cache.current, width), [width, progress]);
@@ -112,7 +115,7 @@ export default function ProgressBar({
   }, [progress]);
 
   return (
-    <View style={[styles.container, { width, borderRadius: height }]}>
+    <View style={[styles.container, { width, borderRadius: height, backgroundColor: theme.gray[200] }]}>
       <Animated.View
         style={[
           { borderRadius: height, height },
@@ -131,7 +134,6 @@ export default function ProgressBar({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(100,100,100,0.65)',
     overflow: 'hidden',
   },
 });

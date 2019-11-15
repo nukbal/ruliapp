@@ -30,7 +30,7 @@ declare interface PostItemRecord {
   key: string;
   url: string;
   subject: string;
-  user: { name: string };
+  user: UserRecord;
   likes?: number;
   dislikes?: number;
   views: number;
@@ -40,10 +40,8 @@ declare interface PostItemRecord {
 }
 
 declare interface PostDetailRecord extends PostItemRecord {
-  user: UserRecord;
-  contents: Array<ContentRecord | ContentRecord[]>;
+  contents: ContentRecord[];
   comments: CommentRecord[];
-  source?: string;
 }
 
 declare interface CommentRecord {

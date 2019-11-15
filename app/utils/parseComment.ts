@@ -48,8 +48,8 @@ function formatComment(node: INode): CommentRecord | undefined {
     cursor = querySelector(userInfo, '.nick text');
     if (cursor && cursor.value) record.user.name = cursor.value;
 
-    cursor = querySelector(userInfo, '.ip text');
-    if (cursor && cursor.value) record.user.ip = cursor.value.replace('| ', '');
+    // cursor = querySelector(userInfo, '.ip text');
+    // if (cursor && cursor.value) record.user.ip = cursor.value.replace('| ', '');
 
     cursor = querySelector(userInfo, '.time text');
     if (cursor && cursor.value) {

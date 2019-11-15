@@ -1,8 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
 import { useSelector } from 'react-redux';
-import { StyleSheet, View, Text, ActivityIndicator, Linking } from 'react-native';
+import { StyleSheet, View, Text, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import ProgressBar from 'app/components/ProgressBar';
 import { getTheme } from 'app/stores/theme';
 import Image from './LazyImage';
 
@@ -15,6 +16,7 @@ interface DataType {
   title: string;
   image: { url: string; width: number; height: number } | null;
   url: string;
+  error?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -96,7 +98,7 @@ function ShareCard({ uri }: Props) {
   if (!ready) {
     return (
       <View style={[styles.container, { backgroundColor }]}>
-        <ActivityIndicator />
+        <ProgressBar indetermate color={theme.primary[600]} />
       </View>
     );
   }

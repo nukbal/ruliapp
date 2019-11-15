@@ -1,9 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+
+import Text from 'app/components/Text';
+
 import ShareCard from './ShareCard';
 import LazyImage from './LazyImage';
 import LazyVideo from './LazyVideo';
-import Text from '../../components/Text';
+import Link from './Link';
 
 export const styles = StyleSheet.create({
   media: {
@@ -22,7 +25,7 @@ export default function ContentItem({ type, content, url }: ContentRecord & { ur
 
   switch (type) {
     case 'reference': {
-      return <Text style={[styles.text]}>{`출처: ${content}`}</Text>;
+      return <Link label="출처: " to={content} />;
     }
     case 'object': {
       return (
