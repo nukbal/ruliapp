@@ -5,9 +5,11 @@ import {
   Text,
   LayoutChangeEvent,
   ImageSourcePropType,
+  Image,
 } from 'react-native';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
-import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
+// import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 
 import ProgressBar from 'app/components/ProgressBar';
 import { DEFAULT_IMAGE_SIZE } from 'app/config/constants';
@@ -42,7 +44,7 @@ export function setImageHeight(image: { width: number, height: number }, screenW
   return height || DEFAULT_IMAGE_SIZE;
 }
 
-const initState = {
+const initialState = {
   error: null as string | null,
   layoutWidth: 0,
   progress: 0,
@@ -50,41 +52,40 @@ const initState = {
   ready: false,
 };
 
-function reducer(state: typeof initState, action: any) {
-  switch (action.type) {
-    case 'SIZE': {
-      return { ...state, size: action.payload, ready: true };
-    }
-    case 'PROGRESS': {
-      return { ...state, progress: action.payload };
-    }
-    case 'LAYOUT': {
-      return { ...state, layoutWidth: action.payload };
-    }
-    case 'ERROR': {
-      return { ...state, error: action.payload };
-    }
-    default: {
-      return state;
-    }
-  }
-}
+const { reducer, actions } = createSlice({
+  name: 'image',
+  initialState,
+  reducers: {
+    setSize(state, action: PayloadAction<typeof initialState['size']>) {
+      state.size = action.payload;
+    },
+    setProgress(state, action: PayloadAction<number>) {
+      state.progress = action.payload;
+    },
+    setScreen(state, action: PayloadAction<number>) {
+      state.layoutWidth = action.payload;
+    },
+    setError(state, action: PayloadAction<string | null>) {
+      state.error = action.payload;
+    },
+  },
+});
 
 function LazyImage({ source }: Props) {
   const theme = useSelector(getTheme);
-  const [state, dispatch] = useReducer(reducer, initState);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const { error, layoutWidth, progress, size, ready } = state;
 
   const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
-    dispatch({ type: 'LAYOUT', payload: nativeEvent.layout.width });
+    dispatch(actions.setScreen(nativeEvent.layout.width));
   }, []);
-  const onLoad = useCallback(({ nativeEvent }: OnLoadEvent) => {
-    dispatch({ type: 'SIZE', payload: nativeEvent });
+  const onLoad = useCallback(({ nativeEvent }: any) => {
+    dispatch(actions.setSize(nativeEvent.source));
   }, []);
-  const onProgress = useCallback(({ nativeEvent }: OnProgressEvent) => {
-    dispatch({ type: 'PROGRESS', payload: nativeEvent.loaded / nativeEvent.total });
+  const onProgress = useCallback(({ nativeEvent }: any) => {
+    dispatch(actions.setProgress(nativeEvent.loaded / nativeEvent.total));
   }, []);
-  const onError = useCallback(() => dispatch({ type: 'ERROR', payload: '이미지 로딩에 실패하였습니다.' }), []);
+  const onError = useCallback(() => dispatch(actions.setError('이미지 로딩에 실패하였습니다.')), []);
   const height = useMemo(() => setImageHeight(size, layoutWidth), [size, layoutWidth]);
 
   const textStyle = { color: theme.primary[600] };
@@ -111,13 +112,14 @@ function LazyImage({ source }: Props) {
         </View>
       )}
       <Image
-        style={ready ? { height } : undefined}
+        style={{ height }}
         // @ts-ignore
         source={source}
         onLoad={onLoad}
         onError={onError}
         onProgress={onProgress}
-        resizeMode="contain"
+        resizeMethod="resize"
+        resizeMode="cover"
       />
     </View>
   );

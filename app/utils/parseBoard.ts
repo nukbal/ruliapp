@@ -48,6 +48,7 @@ export function formatBoardRow(node: INode): PostItemRecord | undefined {
   let cursor;
 
   // if (node.attrs!.class!.indexOf('notice') > -1) record.isNotice = true;
+  if (node.attrs!.class!.indexOf('notice') > -1) return;
 
   // board title
   cursor = querySelector(titleDiv, '.subject_link');
@@ -80,10 +81,6 @@ export function formatBoardRow(node: INode): PostItemRecord | undefined {
   // @ts-ignore
   if (cursor) record.user = { name: cursor.value! };
 
-  // view counts
-  cursor = querySelector(infoDiv, '.hit text');
-  if (cursor && cursor.value) record.views = parseInt(cursor.value.replace('조회 ', ''), 10);
-
   // posted date/time
   cursor = querySelector(infoDiv, '.time text');
   if (cursor && cursor.value) {
@@ -91,8 +88,26 @@ export function formatBoardRow(node: INode): PostItemRecord | undefined {
     record.date = parseDate(dateStr);
   }
 
-  cursor = querySelector(infoDiv, '.recomd text');
-  if (cursor && cursor.value) record.likes = parseInt(cursor.value!.replace('추천 ', ''), 10);
+  // view counts
+  cursor = querySelector(infoDiv, '.hit');
+  if (cursor && cursor.childNodes.length) {
+    const target = cursor.childNodes[cursor.childNodes.length - 1];
+    if (target.value) {
+      record.views = parseInt(target.value.replace('조회 ', ''), 10);
+    } else if (target.childNodes.length) {
+      record.views = parseInt(target.childNodes[0].value!, 10);
+    }
+  }
+
+  cursor = querySelector(infoDiv, '.recomd');
+  if (cursor && cursor.childNodes.length) {
+    const target = cursor.childNodes[cursor.childNodes.length - 1];
+    if (target.value) {
+      record.likes = parseInt(target.value.replace('추천 ', ''), 10);
+    } else if (target.childNodes.length) {
+      record.likes = parseInt(target.childNodes[0].value!, 10);
+    }
+  }
 
   return record;
 }

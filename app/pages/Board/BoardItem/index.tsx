@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { getTheme } from 'app/stores/theme';
 import { getPost } from 'app/stores/post';
+import format from 'app/utils/formatDate';
 
 import styles from './styles';
 import Placeholder from './placeholder';
@@ -15,24 +16,13 @@ interface Props {
   onHideUnderlay: any;
 }
 
-function Fixed(n: number) {
-  return `0${n}`.slice(-2);
-}
-
-export default function BoardItem(props: Props) {
+function BoardItem(props: Props) {
   const {
     id, onPress, onShowUnderlay, onHideUnderlay,
   } = props;
   const theme = useSelector(getTheme);
   const { date, subject, user, likes, views, commentSize } = useSelector(getPost(id));
-  const dateStr = useMemo(
-    () => (
-      date
-        ? `${Fixed(date.getMonth() + 1)}/${Fixed(date.getDate())} ${Fixed(date.getHours())}:${Fixed(date.getMinutes())}`
-        : ''
-    ),
-    [date],
-  );
+  const dateStr = useMemo(() => (date ? format(date) : ''), [date]);
 
   if (!subject) return <Placeholder />;
   return (
@@ -57,3 +47,4 @@ export default function BoardItem(props: Props) {
     </TouchableHighlight>
   );
 }
+export default memo(BoardItem);

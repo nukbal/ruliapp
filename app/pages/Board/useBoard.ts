@@ -2,9 +2,11 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { StatusBar, Platform } from 'react-native';
 import qs from 'query-string';
+
 import parseBoardList, { IParseBoard } from 'app/utils/parseBoard';
-import { USER_AGENT } from 'app/config/constants';
-import { Actions } from 'app/stores/post';
+import { USER_AGENT, REQUEST_THROTTLE } from 'app/config/constants';
+import { setPostList } from 'app/stores/post';
+import { isPlain } from '@reduxjs/toolkit';
 
 export default function useBoard(key: string, str?: string) {
   const dispatch = useDispatch();
@@ -16,9 +18,8 @@ export default function useBoard(key: string, str?: string) {
 
   const request = useCallback(async (
     params: { page: number, search_key?: string, cate?: string } = { page: 1 },
-    callback?: () => void,
   ) => {
-    if (lastRan.current && (Date.now() - lastRan.current < 1000)) return;
+    if (lastRan.current && (Date.now() - lastRan.current < REQUEST_THROTTLE)) return;
     lastRan.current = Date.now();
     let targetUrl = `https://m.ruliweb.com/${key}`;
 
@@ -54,7 +55,7 @@ export default function useBoard(key: string, str?: string) {
       const json: IParseBoard = parseBoardList(htmlString);
 
       const keys = json.rows.map((item: PostItemRecord) => item.url);
-      dispatch(Actions.setList(json.rows));
+      dispatch(setPostList(json.rows));
       if (params.page === 1) {
         setList(keys);
       } else {
@@ -64,28 +65,26 @@ export default function useBoard(key: string, str?: string) {
       // console.error(e);
     }
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
-
-    if (callback) callback();
   }, [dispatch, key]);
 
   useEffect(() => {
     if (key) request({ page: 1, search_key: str });
   }, [key, request, str]);
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     if (key && !pushing && list.length > 0) {
       setPushing(true);
-      request({ page: 1, search_key: str }, () => setPushing(false));
+      await request({ page: 1, search_key: str });
+      setPushing(false);
     }
   };
 
-  const onEndReached = () => {
+  const onEndReached = async () => {
     if (key && !appending && list.length > 0) {
       setAppending(true);
-      request({ page: page + 1 }, () => {
-        setPage(page + 1);
-        setAppending(false);
-      });
+      await request({ page: page + 1 });
+      setPage(page + 1);
+      setAppending(false);
     }
   };
 

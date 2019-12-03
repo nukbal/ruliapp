@@ -28,8 +28,9 @@ export const gameList = [
   { key: 'ps/board/300421', title: 'PS 게임이야기' },
   { key: 'ps/board/299999', title: '인디게임' },
   { key: 'pc/game/81745', title: '패스 오브 엑자일' },
-  { key: 'family/4526/board/109995', title: '롤 정보게시판' },
-  { key: 'family/4454/board/100159', title: '와우 정보게시판' },
+  { key: 'game/9995', title: '리그 오브 레전드' },
+  { key: 'game/84766', title: '월드 오브 워크래프트' },
+  { key: 'game/85237', title: '포켓몬스터' },
 ];
 
 export const hobbyList = [

@@ -1,6 +1,6 @@
 
 function setKstOffset(date: Date) {
-  return new Date(date.getTime() - (9 * 60 * 60 * 1000));
+  return new Date(date.getTime() - (9 * 60 * 60 * 1000)).toISOString();
 }
 
 function parseTime(date: Date, str: string) {
@@ -10,7 +10,7 @@ function parseTime(date: Date, str: string) {
   return setKstOffset(date);
 }
 
-export default function parseDate(str: string): Date | undefined {
+export default function parseDate(str: string): string | undefined {
   const len = str.length;
   if (len < 5) return;
 

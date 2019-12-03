@@ -1,37 +1,6 @@
-import { createSelector } from 'reselect';
-import { createAction, ActionsUnion } from '../utils/createAction';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import arrayToObject from '../utils/arrayToObject';
-
-export const SET_POST = 'post/SET';
-export const SET_POST_LIST = 'post/SET_LIST';
-export const SET_COMMENT = 'post/SET_COMMENT';
-
-export const Actions = {
-  set: (url: string, post: PostDetailRecord) => createAction(SET_POST, { ...post, url }),
-  setComment:
-    (key: string, comments: PostDetailRecord['comments']) => createAction(SET_COMMENT, { key, comments }),
-  setList: (list: PostItemRecord[]) => createAction(SET_POST_LIST, list),
-};
-export type Actions = ActionsUnion<typeof Actions>;
-
-
-export const getPostState = (state: any) => state.post as typeof initialState;
-export const getPost = (key: string) => createSelector(
-  [getPostState],
-  (posts) => posts[key] || emptyPost,
-);
-export const getPostUser = (key: string) => createSelector(
-  [getPost(key)],
-  (post) => post.user,
-);
-export const getPostMeta = (key: string) => createSelector(
-  [getPost(key)],
-  (post) => ({
-    dislikes: post.dislikes,
-    likes: post.likes,
-    commentSize: post.commentSize,
-  }),
-);
+import { RootState } from '.';
 
 const emptyPost: PostDetailRecord = {
   key: '',
@@ -48,47 +17,49 @@ interface PostState {
   [url: string]: PostDetailRecord;
 }
 
-const initialState: PostState = {
-};
+const initialState: PostState = {};
 
-export default function reducer(state = initialState, action: Actions) {
-  switch (action.type) {
-    case SET_POST: {
+const postSlice = createSlice({
+  name: 'post',
+  initialState,
+  reducers: {
+    setPost(state, action: PayloadAction<PostDetailRecord>) {
       const data = state[action.payload.url] || emptyPost;
-      return {
-        ...state,
-        [action.payload.url]: {
-          ...data,
-          ...action.payload,
-          hasDetail: true,
-        },
-      };
-    }
-    case SET_COMMENT: {
-      const { key, comments } = action.payload;
-      const old = state[key] || emptyPost;
-      const oldKeys = old.comments.map((item) => item.key);
-      const obj = { ...arrayToObject(old.comments), ...arrayToObject(comments) };
-      const keys = Array.from(new Set([...oldKeys, ...comments.map((item) => item.key)]));
-      const newComments = keys.map((k) => obj[k]);
-      return { ...state, [key]: { ...old, comments: newComments } };
-    }
-    case SET_POST_LIST: {
-      const list = { ...state };
+      const user = Object.assign(data.user, action.payload.user);
+      state[action.payload.url] = { ...data, ...action.payload, user, hasDetail: true };
+    },
+    setPostList(state, action: PayloadAction<PostItemRecord[]>) {
       for (let i = 0, len = action.payload.length; i < len; i += 1) {
         const target = action.payload[i];
-        if (list[target.url] && list[target.url].hasDetail) {
-          // @ts-ignore
-          list[target.url] = { ...list[target.url], ...target };
+        if (state[target.url] && state[target.url].hasDetail) {
+          state[target.url] = { ...state[target.url], ...target, user: { ...state[target.url].user, ...target.user } };
         } else {
-          // @ts-ignore
-          list[target.url] = { ...emptyPost, ...target };
+          state[target.url] = { ...emptyPost, ...target };
         }
       }
-      return list;
-    }
-    default: {
-      return state;
-    }
-  }
-}
+    },
+    setComments(state, action: PayloadAction<{ key: string, comments: PostDetailRecord['comments'] }>) {
+      const { key, comments } = action.payload;
+      const old = state[key] ? state[key].comments : [];
+      const oldKeys = old.map((item) => item.key);
+      const obj = { ...arrayToObject(old), ...arrayToObject(comments) };
+      const keys = Array.from(new Set([...oldKeys, ...comments.map((item) => item.key)]));
+      state[key].comments = keys.map((k) => obj[k]);
+    },
+  },
+});
+
+export const getPostState = (state: RootState) => state.post;
+export const getPost = (key: string) => createSelector(
+  [getPostState],
+  (posts) => posts[key] || emptyPost,
+);
+export const getPostUser = (key: string) => createSelector(getPost(key), (post) => post.user);
+export const getPostMeta = (key: string) => createSelector(getPost(key), (post) => ({
+  dislikes: post.dislikes,
+  likes: post.likes,
+  commentSize: post.commentSize,
+}));
+
+export const { setPost, setPostList, setComments } = postSlice.actions;
+export default postSlice.reducer;

@@ -1,4 +1,4 @@
-import { createStore } from 'redux';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import rootReducer from './stores';
@@ -10,9 +10,15 @@ const persistConfig: PersistConfig<any> = {
   debug: __DEV__,
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: ['persist/PERSIST'],
+    },
+    thunk: true,
+  }),
+});
+export const persistor = persistStore(store);
 
-export default function createStores() {
-  const store = createStore(persistedReducer);
-  const persistor = persistStore(store);
-  return { store, persistor };
-}
+export type AppDispatch = typeof store.dispatch;

@@ -170,7 +170,7 @@ describe('html parser', () => {
       dislike: 10,
       key: 'ct_1111111',
       likes: 34,
-      time: new Date('2019-01-31T10:12:00.000Z'),
+      time: '2019-01-31T10:12:00.000Z',
       user: {
         id: '123456',
         ip: '111.111.***.***',
@@ -183,7 +183,7 @@ describe('html parser', () => {
       key: 'ct_999999',
       reply: '테스트유저 2',
       likes: 1,
-      time: new Date('2019-01-31T11:02:00.000Z'),
+      time: '2019-01-31T11:02:00.000Z',
       user: {
         id: '123458',
         ip: '111.111.***.***',
@@ -240,7 +240,7 @@ describe('html parser', () => {
     expect(data).toEqual([
       {
         key: 'ct_123123',
-        time: new Date('2019-08-15T06:27:00.000Z'),
+        time: '2019-08-15T06:27:00.000Z',
         content: '덧글 내용123',
         image: 'https://i2.ruliweb.com/cmt/17/09/28/123123123.mp4',
         likes: 0,

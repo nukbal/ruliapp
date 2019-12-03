@@ -3,7 +3,7 @@ import { View, Text, TouchableHighlight } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getTheme, getThemeMode, Actions } from 'app/stores/theme';
+import { getTheme, getThemeMode, setMode } from 'app/stores/theme';
 import BottomSheet from 'app/components/BottomSheet';
 
 import { styles } from './Settings';
@@ -26,7 +26,7 @@ export default function ThemeButton() {
   const currentMode = useMemo(() => getLabelText(mode), [mode]);
 
   const onPress = (name: any) => () => {
-    dispatch(Actions.setMode(name));
+    dispatch(setMode(name));
     setShow(false);
   };
 

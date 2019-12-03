@@ -1,17 +1,5 @@
-import { createSelector } from 'reselect';
-import { createAction, ActionsUnion } from '../utils/createAction';
-
-export const Actions = {
-  login: (userInfo: UserState['userInfo']) => createAction('LOGIN', userInfo),
-  clear: () => createAction('CLEAR'),
-};
-export type Actions = ActionsUnion<typeof Actions>;
-
-const getUserState = (state: any) => state.user as UserState;
-export const getLoginStatus = createSelector([getUserState], (user) => user.isLogined);
-export const getLastLoginTime = createSelector([getUserState], (user) => user.lastLogined);
-export const getUserInfo = createSelector([getUserState], (user) => user.userInfo);
-export const getUserId = createSelector([getUserInfo], (user) => user.id);
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '.';
 
 export interface UserState {
   isLogined: boolean;
@@ -46,7 +34,7 @@ export interface UserState {
   };
 }
 
-const initState = {
+const initialState: UserState = {
   isLogined: false,
   lastLogined: 0,
   userInfo: {
@@ -66,16 +54,26 @@ const initState = {
   },
 };
 
-export default function reducer(state: UserState = initState, action: Actions) {
-  switch (action.type) {
-    case 'LOGIN': {
-      return { userInfo: action.payload, lastLogined: Date.now(), isLogined: true };
-    }
-    case 'CLEAR': {
-      return initState;
-    }
-    default: {
-      return state;
-    }
-  }
-}
+const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    login(state, action: PayloadAction<UserState['userInfo']>) {
+      state.userInfo = action.payload;
+      state.isLogined = true;
+      state.lastLogined = Date.now();
+    },
+    logout() {
+      return initialState;
+    },
+  },
+});
+
+const getUserState = (state: RootState) => state.user;
+export const getLoginStatus = createSelector(getUserState, (user) => user.isLogined);
+export const getLastLoginTime = createSelector(getUserState, (user) => user.lastLogined);
+export const getUserInfo = createSelector(getUserState, (user) => user.userInfo);
+export const getUserId = createSelector(getUserInfo, (user) => user.id);
+
+export const { login, logout } = userSlice.actions;
+export default userSlice.reducer;

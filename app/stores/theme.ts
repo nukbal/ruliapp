@@ -1,7 +1,6 @@
-import { createSelector } from 'reselect';
-import { Platform, StatusBar } from 'react-native';
-import { createAction, ActionsUnion } from '../utils/createAction';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import theme from '../styles';
+import { RootState } from './index';
 
 type themeMode = 'black' | 'dark' | 'light' | 'white';
 interface ColorType {
@@ -21,28 +20,17 @@ interface GrayType extends ColorType {
   900: string;
 }
 
-const SET_MODE = 'theme/SET_MODE';
-
-export const Actions = {
-  setMode: (mode: themeMode) => createAction(SET_MODE, mode),
-};
-export type Actions = ActionsUnion<typeof Actions>;
-
-export const getThemeMode = (state: any) => state.theme as themeMode;
-export const getTheme = createSelector([getThemeMode], (mode) => theme[mode]);
-
-export default function reducer(state: themeMode = 'black', action: Actions) {
-  switch (action.type) {
-    case SET_MODE: {
-      if (Platform.OS === 'ios') {
-        StatusBar.setBarStyle(
-          ['black', 'dark'].indexOf(action.payload) > -1 ? 'light-content' : 'dark-content',
-        );
-      }
+const themeSlice = createSlice({
+  name: 'theme',
+  initialState: 'black' as themeMode,
+  reducers: {
+    setMode(_, action: PayloadAction<themeMode>) {
       return action.payload;
-    }
-    default: {
-      return state;
-    }
-  }
-}
+    },
+  },
+});
+export const getThemeMode = (state: RootState) => state.theme;
+export const getTheme = createSelector(getThemeMode, (mode) => theme[mode]);
+
+export const { setMode } = themeSlice.actions;
+export default themeSlice.reducer;

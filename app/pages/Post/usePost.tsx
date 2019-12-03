@@ -5,7 +5,9 @@ import parsePost from 'app/utils/parsePost';
 import parseComment from 'app/utils/parseComment';
 import { USER_AGENT } from 'app/config/constants';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPost, Actions } from 'app/stores/post';
+import {
+  getPost, setPost, setComments,
+} from 'app/stores/post';
 
 export default function usePost(url: string) {
   const dispatch = useDispatch();
@@ -57,7 +59,8 @@ export default function usePost(url: string) {
 
         const json = parsePost(htmlString, '');
         if (!json) throw new Error('parse failed');
-        dispatch(Actions.set(url, json));
+        json.url = url;
+        dispatch(setPost(json));
       } catch (e) {
         if (isDone) return;
         // console.warn(e);
@@ -85,10 +88,15 @@ export default function usePost(url: string) {
       boardId = url.substring(url.indexOf('/', 1) + 1, idx);
     }
     const key = url.substring(idx + 6, url.length);
+    let page = 1;
+
+    if (data.commentSize && data.commentSize > 100) {
+      page = 2;
+    }
 
     const config = {
       method: 'POST',
-      body: `page=1&article_id=${key}&board_id=${boardId}&cmtimg=1`,
+      body: `page=1&article_id=${key}&board_id=${boardId}&cmtimg=${page}`,
       credentials: 'include',
       headers: {
         Accept: 'application/json, text/javascript, */*; q=0.01',
@@ -107,14 +115,14 @@ export default function usePost(url: string) {
       const json = await response.json();
       if (json.success) {
         const comments = parseComment(json.view);
-        dispatch(Actions.setComment(url, comments));
+        dispatch(setComments({ key: url, comments }));
       }
     } catch (e) {
       // console.warn(e.message);
     }
     setCommentLoading(false);
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
-  }, [url, dispatch]);
+  }, [url, dispatch, data.commentSize]);
 
   return { ...data, ready, loadComment, isCommentLoading };
 }

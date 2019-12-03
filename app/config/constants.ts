@@ -10,3 +10,5 @@ export const USER_AGENT = (
 export const AUTH_TIMEOUT = __DEV__ ? Infinity : 86400000;
 
 export const DEFAULT_IMAGE_SIZE = Platform.OS === 'ios' && Platform.isPad ? 350 : 200;
+
+export const REQUEST_THROTTLE = 2 * 1000;

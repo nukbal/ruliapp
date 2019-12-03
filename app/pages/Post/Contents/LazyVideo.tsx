@@ -1,6 +1,11 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo, useReducer } from 'react';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 import Video, { OnLoadData } from 'react-native-video';
-import { StyleSheet, LayoutChangeEvent, ImageSourcePropType, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, LayoutChangeEvent, ImageSourcePropType, TouchableWithoutFeedback } from 'react-native';
+
+import ProgressBar from 'app/components/ProgressBar';
+import { getTheme } from 'app/stores/theme';
 import { setImageHeight } from './LazyImage';
 
 interface Props {
@@ -15,41 +20,80 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     backgroundColor: 'rgba(100,100,100,0.25)',
   },
+  message: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+const initialState = {
+  screenWidth: 0,
+  size: { width: 0, height: 0 },
+  pause: false,
+  ready: false,
+};
+
+const { actions, reducer } = createSlice({
+  name: 'video',
+  initialState,
+  reducers: {
+    setScreen(state, action: PayloadAction<number>) {
+      state.screenWidth = action.payload;
+    },
+    togglePause(state) {
+      state.pause = !state.pause;
+    },
+    setSize(state, action: PayloadAction<{ width: number; height: number; }>) {
+      state.size = action.payload;
+      state.ready = true;
+    },
+  },
 });
 
 function LazyVideo({ source }: Props) {
-  const [screenWidth, setScreenWidth] = useState(0);
-  const [size, setSize] = useState({ width: 0, height: 0 });
-  const [pause, setPause] = useState(false);
+  const [
+    { screenWidth, size, pause, ready },
+    dispatch,
+  ] = useReducer(reducer, initialState);
+  const theme = useSelector(getTheme);
 
-
-  const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setScreenWidth(nativeEvent.layout.width);
-  const onLoad = ({ naturalSize }: OnLoadData) => setSize({ width: naturalSize.width, height: naturalSize.height });
-  const onPress = () => setPause((p) => !p);
+  const onLayout = ({ nativeEvent }: LayoutChangeEvent) => dispatch(actions.setScreen(nativeEvent.layout.width));
+  const onLoad = ({ naturalSize }: OnLoadData) => {
+    dispatch(actions.setSize({ width: naturalSize.width, height: naturalSize.height }));
+  };
+  const onPress = () => dispatch(actions.togglePause());
 
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
 
   return (
-    <TouchableWithoutFeedback
-      style={[styles.container, { height }]}
-      onLayout={onLayout}
-      onPress={onPress}
-    >
-      <Video
-        // @ts-ignore
-        source={source}
-        onLoad={onLoad}
-        style={{ height }}
-        ignoreSilentSwitch="obey"
-        resizeMode="cover"
-        paused={pause}
-        allowsExternalPlayback={false}
-        disableFocus
-        hideShutterView
-        muted
-        repeat
-      />
-    </TouchableWithoutFeedback>
+    <View style={styles.container} onLayout={onLayout}>
+      {!ready && (
+        <View style={styles.message}>
+          <ProgressBar indetermate color={theme.primary[600]} />
+        </View>
+      )}
+      <TouchableWithoutFeedback onPress={onPress}>
+        <Video
+          // @ts-ignore
+          source={source}
+          onLoad={onLoad}
+          style={{ height }}
+          ignoreSilentSwitch="obey"
+          resizeMode="cover"
+          paused={pause}
+          allowsExternalPlayback={false}
+          disableFocus
+          hideShutterView
+          muted
+          repeat
+        />
+      </TouchableWithoutFeedback>
+    </View>
   );
 }
 

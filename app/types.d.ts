@@ -14,7 +14,7 @@ declare interface BoardRecord {
   title: string;
   posts: List<PostRecord>;
   notice: List<PostRecord>;
-  updated?: Date;
+  updated?: string;
 }
 
 declare interface UserRecord {
@@ -35,7 +35,7 @@ declare interface PostItemRecord {
   dislikes?: number;
   views: number;
   commentSize?: number;
-  date?: Date;
+  date?: string;
   hasDetail?: boolean;
 }
 
@@ -52,7 +52,7 @@ declare interface CommentRecord {
   content: string;
   user: UserRecord;
   image?: string;
-  time?: Date;
+  time?: string;
   likes: number;
   dislike: number;
   isDeleted?: boolean;

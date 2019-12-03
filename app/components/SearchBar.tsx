@@ -6,6 +6,7 @@ import {
   LayoutChangeEvent,
   Dimensions,
   Platform,
+  Keyboard,
 } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -30,7 +31,7 @@ const {
 } = Animated;
 
 const config = {
-  duration: 250,
+  duration: 150,
   easing: Easing.bezier(0.50, 0, 1, 1),
 };
 const BUTTON_WIDTH = 68;
@@ -46,7 +47,19 @@ export default function SearchBar({
   const theme = useSelector(getTheme);
   const [text, setText] = useState('');
   const [width, setWidth] = useState(Dimensions.get('window').width - 16);
+  const ref = useRef<TextInput>(null);
   const value = useRef(new Value(0));
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      const sub = Keyboard.addListener('keyboardDidHide', () => {
+        if (ref.current) ref.current.blur();
+      });
+      return () => {
+        sub.remove();
+      };
+    }
+  }, []);
 
   // debounce input update to parent
   useEffect(() => {
@@ -96,6 +109,7 @@ export default function SearchBar({
       >
         <Icon name="search" size={18} color={theme.gray[700]} style={styles.searchIcon} />
         <TextInput
+          ref={ref}
           style={[styles.textInput, { color: theme.gray[800] }]}
           placeholder="검색하기"
           placeholderTextColor={theme.gray[700]}

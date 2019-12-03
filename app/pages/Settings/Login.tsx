@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Title from 'app/components/Title';
 import { getTheme } from 'app/stores/theme';
-import { Actions } from 'app/stores/user';
+import { login } from 'app/stores/user';
 import { USER_AGENT } from 'app/config/constants';
 
 import getUserInfo from './getUserInfo';
@@ -56,7 +56,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
     try {
       const userInfo = await getUserInfo();
-      dispatch(Actions.login(userInfo));
+      dispatch(login(userInfo));
       navigation.goBack();
     } catch (e) {
       Alert.alert('유저 정보 취득에 실패하였습니다.');

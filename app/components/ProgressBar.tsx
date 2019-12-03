@@ -34,7 +34,7 @@ function runLoading(indetermate: boolean, width: number, size: number) {
     frameTime: new Value(0),
   };
   const config = {
-    duration: 1350,
+    duration: 1000,
     toValue: 1,
     easing: Easing.linear,
   };
@@ -81,7 +81,7 @@ function runProgress(value: number, cache: number, width: number) {
   const config = {
     duration: 200,
     toValue: value,
-    easing: Easing.ease,
+    easing: Easing.linear,
   };
 
   return block([

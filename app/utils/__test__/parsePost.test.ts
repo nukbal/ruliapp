@@ -554,7 +554,7 @@ describe('html parser', () => {
       user: {
         experience: 68,
         id: '123123',
-        image: '//i2.ruliweb.com/profile_m/path/to/avatar.jpeg',
+        image: 'https://i2.ruliweb.com/profile_m/path/to/avatar.jpeg',
         level: 100,
         name: 'Post User',
       }
@@ -596,6 +596,64 @@ describe('html parser', () => {
         { type: 'image', key: '_0_2', content: 'http://image/path/3' },
         { type: 'image', key: '_0_3', content: 'http://image/path/4' },
         { type: 'image', key: '_0_4', content: 'http://image/path/5' },
+			],
+      subject: 'test',
+      user: {},
+    });
+	})
+	
+	it('content with WYSIWYG editor (se?)', () => {
+		const html = `
+		<title>test | ruliapp</title>
+		<!-- board_main start -->
+		<div class="board_main_top"></div>
+		<div class="board_main_view">
+			<div class="view_content">
+				<div class="row">
+					<div>
+						<p><img src="http://image/path" alt="" /></p>
+						<p></p>
+						<div class="se_component se_paragraph default">
+							<div class="se_sectionArea">
+								<div class="se_editArea">
+									<div class="se_viewArea">
+										<div class="se_editView">
+											<div class="se_textView">
+												<p class="se_textarea">
+													some text!
+													<br>
+													additional text!
+													<br>
+													<span lang="EN-US">(</span>
+													日本語
+													<span lang="EN-US">)</span>
+													<br>
+													with some
+													<span lang="JP">にほん</span>
+													<span>&nbsp;</span>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- board_main end -->
+		`;
+    const data = parser(html, '');
+    expect(data).toEqual({
+			key: '',
+      comments: [],
+      contents: [
+        { type: 'image', key: '_0_0', content: 'http://image/path' },
+        { type: 'text', key: '_0_1', content: 'some text!' },
+				{ type: 'text', key: '_0_2', content: 'additional text!' },
+				{ type: 'text', key: '_0_3', content: '(日本語)' },
+				{ type: 'text', key: '_0_4', content: 'with someにほん' },
 			],
       subject: 'test',
       user: {},

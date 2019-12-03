@@ -16,7 +16,11 @@ export function parsePostUser(parent: INode): UserRecord {
 
   if (userInfo) {
     cursor = querySelector(userInfo, '.profile_img_m');
-    if (cursor && cursor.attrs) record.image = cursor.attrs.src;
+    if (cursor && cursor.attrs) {
+      let url = cursor.attrs.src;
+      if (url.indexOf('//') === 0) url = url.replace('//', 'https://');
+      record.image = url;
+    }
 
     cursor = querySelector(userInfo, '.nick strong text');
     if (cursor && cursor.value) record.name = cursor.value;
@@ -100,21 +104,12 @@ export function findContext(
           if (Array.isArray(value)) {
             arr = arr.concat(value);
           } else {
+            // if (value.type === 'text') {
+            //   console.log(value.content, rows[i].parent!.tagName);
+            // }
             arr.push(value);
           }
         }
-      }
-
-      let idx = 0;
-      while (idx < arr.length) {
-        const value = arr[idx];
-        if (!value) break;
-        if (value.type === 'text' && arr[idx + 1] && arr[idx + 1].type === 'text') {
-          value.content += ` ${arr[idx + 1].content}`;
-          delete arr[idx + 1];
-          idx++;
-        }
-        idx++;
       }
       arr = arr.filter((item) => item !== undefined);
       return arr.length > 1 ? arr : arr[0];

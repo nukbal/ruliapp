@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Alert, Text, StyleSheet, TouchableHighlight } from 'react-native';
+import { View, Alert, Text, StyleSheet, TouchableHighlight, Image } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import Image from 'react-native-fast-image';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getTheme } from 'app/stores/theme';
-import { getUserInfo, getLoginStatus, Actions } from 'app/stores/user';
+import { getUserInfo, getLoginStatus, logout } from 'app/stores/user';
 
 import { styles as SettingStyle } from './Settings';
 
@@ -35,15 +34,15 @@ export default function UserPanel({ navigation }: { navigation: any }) {
   const isLogined = useSelector(getLoginStatus);
   const userInfo = useSelector(getUserInfo);
 
-  const login = () => navigation.navigate('Login');
-  const logout = () => Alert.alert('로그아웃', '로그아웃 하시겠습니까?', [
+  const login = () => navigation.navigate('login');
+  const onLogout = () => Alert.alert('로그아웃', '로그아웃 하시겠습니까?', [
     { text: '취소', style: 'cancel' },
     {
       text: '로그아웃',
       onPress: async () => {
         try {
           await fetch('https://bbs.ruliweb.com/member/logout');
-          dispatch(Actions.clear());
+          dispatch(logout());
         } catch (e) {
           // ignore
         }
@@ -87,7 +86,7 @@ export default function UserPanel({ navigation }: { navigation: any }) {
       <TouchableHighlight
         style={SettingStyle.item}
         underlayColor={theme.gray[400]}
-        onPress={logout}
+        onPress={onLogout}
       >
         <>
           <View style={SettingStyle.itemHeader}>
