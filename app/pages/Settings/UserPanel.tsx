@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTheme } from 'app/stores/theme';
 import { getUserInfo, getLoginStatus, logout } from 'app/stores/user';
 
-import { styles as SettingStyle } from './Settings';
+import SettingStyle from './styles';
 
 const styles = StyleSheet.create({
   panel: {

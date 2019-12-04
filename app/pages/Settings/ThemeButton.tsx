@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getTheme, getThemeMode, setMode } from 'app/stores/theme';
 import BottomSheet from 'app/components/BottomSheet';
 
-import { styles } from './Settings';
+import styles from './styles';
 
 const icons = ['brightness-1', 'brightness-2', 'brightness-4', 'brightness-5'];
 function getLabelText(mode: string) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, View, Text, Linking, TouchableHighlight } from 'react-native';
+import { ScrollView, View, Text, Linking, TouchableHighlight } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 
@@ -8,37 +8,7 @@ import Title from 'app/components/Title';
 
 import UserPanel from './UserPanel';
 import ThemeButton from './ThemeButton';
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '100%',
-  },
-  item: {
-    height: 48,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-    marginBottom: 1,
-  },
-  itemHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  iconStyle: {
-    paddingRight: 32,
-  },
-  itemText: {
-    fontWeight: '500',
-    alignItems: 'center',
-  },
-  divide: {
-    marginBottom: 25,
-  },
-});
+import styles from './styles';
 
 export default function Settings({ navigation }: { navigation: any }) {
   const theme = useSelector(getTheme);

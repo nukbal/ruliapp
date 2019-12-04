@@ -1,8 +1,8 @@
 import 'react-native-gesture-handler';
 import { AppRegistry } from 'react-native';
-import { useScreens } from 'react-native-screens';
+import { enableScreens } from 'react-native-screens';
 import App from './app/index.tsx';
 
-useScreens();
+enableScreens();
 
 AppRegistry.registerComponent('ruliapp', () => App);
