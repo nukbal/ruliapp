@@ -6,7 +6,6 @@ import qs from 'query-string';
 import parseBoardList, { IParseBoard } from 'app/utils/parseBoard';
 import { USER_AGENT, REQUEST_THROTTLE } from 'app/config/constants';
 import { setPostList } from 'app/stores/post';
-import { isPlain } from '@reduxjs/toolkit';
 
 export default function useBoard(key: string, str?: string) {
   const dispatch = useDispatch();

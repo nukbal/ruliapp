@@ -23,6 +23,7 @@ export default function Text({
         // @ts-ignore
         color: theme[color][shade],
         fontSize: fontSize[size],
+        lineHeight: fontSize[size] * 1.25,
       }, ...style]}
       {...rest}
     >

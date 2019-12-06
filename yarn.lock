@@ -1169,10 +1169,10 @@
     redux-thunk "^2.3.0"
     reselect "^4.0.0"
 
-"@testing-library/jest-native@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-native/-/jest-native-3.0.3.tgz#58a402981e4974fdc1a4d79345b1a9841bfd1adf"
-  integrity sha512-BgB+NOvBDwLMW06Gf1i7tUih7OHwGIYFhenbQO3Kia5yShPM7mJ/PuBt7rO9tXqD11oVH3dWXeZQHMoYu7u5rA==
+"@testing-library/jest-native@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/jest-native/-/jest-native-3.1.0.tgz#414c834dfb524ca82b86509d5479e365d4d5bbec"
+  integrity sha512-MZdsTsD6xrP5V0FTz2gVPG00ZMoKn4WniRitUH40zZTQ0DfMa5CVDpkAd5ed6qX1coDwS8vSCZS/JGMIDYjRQQ==
   dependencies:
     chalk "^2.4.1"
     jest-diff "^24.0.0"
@@ -1181,10 +1181,10 @@
     ramda "^0.26.1"
     redent "^2.0.0"
 
-"@testing-library/react-native@^5.0.0":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/react-native/-/react-native-5.0.1.tgz#7edd21eef10aa9d2738e601964c6ca39014f8644"
-  integrity sha512-sS7dO8ws5GyQ7r2X6dw3Mj+KUjrY/9Obr+9zyrph6hwz5DDntrCvCz+NSyWtwIPeLsr7pRj+BWWsw8uYYFUKJg==
+"@testing-library/react-native@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/react-native/-/react-native-5.0.2.tgz#18d1c865f50b1a69640d20c5088c3b6f336be3a6"
+  integrity sha512-ZHHxxMUjO6jpxPCeWBjjQeI+uWT7eTi90vk7hoKcIFccAovmgmMwjzeQyrLeWZ994a1t6KcmtBHYLkJSqETEYw==
   dependencies:
     pretty-format "^24.9.0"
     wait-for-expect "^3.0.0"
@@ -6118,10 +6118,10 @@ react-native-reanimated@^1.4.0:
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.4.0.tgz#7f1acbf9be08492d834f512700570978052be2f9"
   integrity sha512-tO7nSNNP+iRLVbkcSS5GXyDBb7tSI02+XuRL3/S39EAr35rnvUy2JfeLUQG+fWSObJjnMVhasUDEUwlENk8IXw==
 
-react-native-screens@^2.0.0-alpha.16:
-  version "2.0.0-alpha.16"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.0.0-alpha.16.tgz#4675c0e9b8cbd6b9321bfd3881b5939d61aba72b"
-  integrity sha512-CGa0LT+AksCgttrVfM3cp8VWxUz6xcInj+qCUY1Nvd2HQh4gP3WQtH3SDWvMC3pFy3CbK0CbXZz7UcZsG3pzwQ==
+react-native-screens@^2.0.0-alpha.17:
+  version "2.0.0-alpha.17"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.0.0-alpha.17.tgz#6141234119c844d160cf8b13ea1b81ba005856bd"
+  integrity sha512-iofz5owfGT5K6V9gI3JISrL/dh5yVc5ScLAKqWQgKcbf3yG98ondr4zuwcX6t7G6IfhnDWG7qgkmWBG4u7g3Ww==
   dependencies:
     debounce "^1.2.0"
 

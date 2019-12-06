@@ -1,12 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
-import Icons from 'react-native-vector-icons/MaterialIcons';
+import { Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getTheme, getThemeMode, setMode } from 'app/stores/theme';
 import BottomSheet from 'app/components/BottomSheet';
-
-import styles from './styles';
+import ListItem, { listStyles } from 'app/components/ListItem';
 
 const icons = ['brightness-1', 'brightness-2', 'brightness-4', 'brightness-5'];
 function getLabelText(mode: string) {
@@ -32,36 +30,23 @@ export default function ThemeButton() {
 
   return (
     <>
-      <TouchableHighlight
-        style={styles.item}
-        underlayColor={theme.gray[300]}
+      <ListItem
+        name="filter-hdr"
         onPress={toggleMenu}
+        right={<Text style={[listStyles.itemText, { color: theme.gray[800] }]}>{currentMode}</Text>}
       >
-        <>
-          <View style={styles.itemHeader}>
-            <Icons name="filter-hdr" size={20} color={theme.gray[800]} style={styles.iconStyle} />
-            <Text style={[styles.itemText, { color: theme.gray[800] }]}>
-              테마
-            </Text>
-          </View>
-          <Text style={[styles.itemText, { color: theme.gray[800] }]}>{currentMode}</Text>
-        </>
-      </TouchableHighlight>
+        테마
+      </ListItem>
       <BottomSheet show={show} onClose={toggleMenu}>
         {['black', 'dark', 'light', 'white'].map((name, i) => (
-          <TouchableHighlight
+          <ListItem
             key={name}
-            style={[styles.item, mode === name ? { backgroundColor: theme.gray[400] } : undefined]}
-            underlayColor={theme.gray[300]}
+            name={icons[i]}
+            style={mode === name ? { backgroundColor: theme.gray[400] } : undefined}
             onPress={onPress(name)}
           >
-            <View style={styles.itemHeader}>
-              <Icons name={icons[i]} size={20} color={theme.gray[800]} style={styles.iconStyle} />
-              <Text style={[styles.itemText, { color: theme.gray[800] }]}>
-                {getLabelText(name)}
-              </Text>
-            </View>
-          </TouchableHighlight>
+            {getLabelText(name)}
+          </ListItem>
         ))}
       </BottomSheet>
     </>

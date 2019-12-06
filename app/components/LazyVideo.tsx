@@ -6,7 +6,7 @@ import { View, StyleSheet, LayoutChangeEvent, ImageSourcePropType, TouchableWith
 
 import ProgressBar from 'app/components/ProgressBar';
 import { getTheme } from 'app/stores/theme';
-import { setImageHeight } from './LazyImage';
+import setImageHeight from 'app/utils/setImageHeight';
 
 interface Props {
   source: ImageSourcePropType;

@@ -7,8 +7,8 @@ import { getTheme } from 'app/stores/theme';
 import Text from 'app/components/Text';
 import formatDate from 'app/utils/formatDate';
 
-import LazyImage from '../Contents/LazyImage';
-import LazyVideo from '../Contents/LazyVideo';
+import LazyImage from 'app/components/LazyImage';
+import LazyVideo from 'app/components/LazyVideo';
 import styles from './styles';
 
 interface Props extends CommentRecord {

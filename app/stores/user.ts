@@ -73,6 +73,7 @@ const getUserState = (state: RootState) => state.user;
 export const getLoginStatus = createSelector(getUserState, (user) => user.isLogined);
 export const getLastLoginTime = createSelector(getUserState, (user) => user.lastLogined);
 export const getUserInfo = createSelector(getUserState, (user) => user.userInfo);
+export const getUserAvatar = createSelector(getUserInfo, (user) => user.avatar);
 export const getUserId = createSelector(getUserInfo, (user) => user.id);
 
 export const { login, logout } = userSlice.actions;

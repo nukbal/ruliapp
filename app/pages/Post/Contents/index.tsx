@@ -3,10 +3,10 @@ import { StyleSheet } from 'react-native';
 
 import Text from 'app/components/Text';
 
-import ShareCard from './ShareCard';
-import LazyImage from './LazyImage';
-import LazyVideo from './LazyVideo';
-import Link from './Link';
+import ShareCard from 'app/components/ShareCard';
+import LazyImage from 'app/components/LazyImage';
+import LazyVideo from 'app/components/LazyVideo';
+import Link from 'app/components/Link';
 
 export const styles = StyleSheet.create({
   media: {

@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Alert, Text, StyleSheet, TouchableHighlight, Image } from 'react-native';
+import { View, Alert, Text, StyleSheet, Image } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getTheme } from 'app/stores/theme';
 import { getUserInfo, getLoginStatus, logout } from 'app/stores/user';
-
-import SettingStyle from './styles';
+import ListItem, { listStyles } from 'app/components/ListItem';
 
 const styles = StyleSheet.create({
   panel: {
@@ -52,52 +51,36 @@ export default function UserPanel({ navigation }: { navigation: any }) {
 
   if (!isLogined) {
     return (
-      <TouchableHighlight
-        style={SettingStyle.item}
-        underlayColor={theme.gray[400]}
+      <ListItem
+        name="account-circle"
         onPress={login}
+        right={<Icons name="arrow-forward" size={20} color={theme.gray[800]} />}
       >
-        <>
-          <View style={SettingStyle.itemHeader}>
-            <Icons name="account-circle" size={20} color={theme.gray[800]} style={SettingStyle.iconStyle} />
-            <Text style={[SettingStyle.itemText, { color: theme.gray[800] }]}>
-              로그인
-            </Text>
-          </View>
-          <Icons name="arrow-forward" size={20} color={theme.gray[800]} />
-        </>
-      </TouchableHighlight>
+        로그인
+      </ListItem>
     );
   }
 
   return (
     <>
-      <View style={[SettingStyle.item, SettingStyle.itemHeader, styles.panel]}>
+      <View style={[listStyles.item, listStyles.itemHeader, styles.panel]}>
         {userInfo.avatar && <Image source={{ uri: userInfo.avatar }} style={styles.avatar} />}
         <View>
           <Text style={[styles.userText, { color: theme.gray[800] }]}>
             {userInfo.name}
           </Text>
-          <Text style={[SettingStyle.itemHeader, styles.userStatusText, { color: theme.gray[800] }]}>
+          <Text style={[listStyles.itemHeader, styles.userStatusText, { color: theme.gray[800] }]}>
             {`${userInfo.level}Lv. (${userInfo.expNow}% / ${userInfo.expLeft}) ${userInfo.attends}일`}
           </Text>
         </View>
       </View>
-      <TouchableHighlight
-        style={SettingStyle.item}
-        underlayColor={theme.gray[400]}
+      <ListItem
+        name="exit-to-app"
         onPress={onLogout}
+        right={<Icons name="arrow-forward" size={18} color={theme.gray[800]} />}
       >
-        <>
-          <View style={SettingStyle.itemHeader}>
-            <Icons name="exit-to-app" size={18} color={theme.gray[800]} style={SettingStyle.iconStyle} />
-            <Text style={[SettingStyle.itemText, { color: theme.gray[800] }]}>
-              로그아웃
-            </Text>
-          </View>
-          <Icons name="arrow-forward" size={18} color={theme.gray[800]} />
-        </>
-      </TouchableHighlight>
+        로그아웃
+      </ListItem>
     </>
   );
 }

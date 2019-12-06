@@ -8,10 +8,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   getPost, setPost, setComments,
 } from 'app/stores/post';
+import { getBookmark } from 'app/stores/bookmark';
 
-export default function usePost(url: string) {
+export default function usePost(url: string, isBookmark?: boolean) {
   const dispatch = useDispatch();
-  const { hasDetail, ...data } = useSelector(getPost(url));
+  const { hasDetail, ...data } = useSelector(isBookmark ? getBookmark(url) : getPost(url));
   const [ready, setReady] = useState(false);
   const [isCommentLoading, setCommentLoading] = useState(false);
 
@@ -19,7 +20,8 @@ export default function usePost(url: string) {
     let isDone = false;
     async function loadPost() {
       setReady(false);
-      if (isDone) return;
+      if (isBookmark) setReady(true);
+      if (isDone || isBookmark) return;
       if (hasDetail) {
         if (data.commentSize !== data.comments.length) {
           loadComment();

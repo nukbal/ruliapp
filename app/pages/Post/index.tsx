@@ -23,10 +23,10 @@ function keyExtractor(item: CommentRecord | ContentRecord) {
 }
 
 export default function Post({ route }: Props) {
-  const { url } = route.params;
+  const { url, bookmark } = route.params;
   const {
     subject, contents, comments, ready, isCommentLoading, loadComment,
-  } = usePost(url);
+  } = usePost(url, bookmark);
   const theme = useSelector(getTheme);
   const path = `http://m.ruliweb.com/${url}`;
 

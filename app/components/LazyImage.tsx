@@ -6,13 +6,13 @@ import {
   LayoutChangeEvent,
   ImageSourcePropType,
   Image,
+  Platform,
 } from 'react-native';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
-// import Image, { OnLoadEvent, OnProgressEvent } from 'react-native-fast-image';
 
 import ProgressBar from 'app/components/ProgressBar';
-import { DEFAULT_IMAGE_SIZE } from 'app/config/constants';
+import setImageHeight from 'app/utils/setImageHeight';
 import { getTheme } from 'app/stores/theme';
 
 const styles = StyleSheet.create({
@@ -36,12 +36,6 @@ const styles = StyleSheet.create({
 
 interface Props {
   source: ImageSourcePropType;
-}
-
-export function setImageHeight(image: { width: number, height: number }, screenWidth: number) {
-  const ratio = image.height / image.width;
-  const height = screenWidth * ratio;
-  return height || DEFAULT_IMAGE_SIZE;
 }
 
 const initialState = {
@@ -113,13 +107,12 @@ function LazyImage({ source }: Props) {
       )}
       <Image
         style={{ height }}
-        // @ts-ignore
         source={source}
         onLoad={onLoad}
         onError={onError}
         onProgress={onProgress}
-        resizeMethod="resize"
-        resizeMode="cover"
+        resizeMethod={Platform.OS === 'android' ? 'resize' : 'auto'}
+        resizeMode="stretch"
       />
     </View>
   );
@@ -127,8 +120,7 @@ function LazyImage({ source }: Props) {
 
 function isEqual(prev: Props, next: Props) {
   return (
-    // @ts-ignore
-    prev.source.uri === next.source.uri
+    prev.source === next.source
   );
 }
 

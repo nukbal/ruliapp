@@ -46,6 +46,7 @@ export default function BottomSheet({ show, children, onClose }: any) {
       visible={visible}
       onRequestClose={onClose}
       presentationStyle="overFullScreen"
+      hardwareAccelerated
       transparent
     >
       <TouchableWithoutFeedback onPress={onClose}>

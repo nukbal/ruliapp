@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
   StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight,
@@ -85,6 +85,7 @@ export default function BoardList({ navigation }: Props) {
         <>
           <Title label="루리웹" />
           <SearchBar onChange={setSearch} />
+          <Text onPress={() => navigation.navigate('bookmark')}>Bookmark</Text>
         </>
       )}
       renderSectionHeader={renderHeader}

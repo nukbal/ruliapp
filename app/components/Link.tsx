@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Linking, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Linking, StyleSheet } from 'react-native';
 import Text from 'app/components/Text';
 
 interface Props {
@@ -14,9 +14,15 @@ export default function Link({ label, to }: Props) {
   return (
     <View style={styles.container}>
       {label && <Text color="gray" shade={800}>{label}</Text>}
-      <TouchableOpacity onPress={onPress}>
-        <Text color="primary" shade={600} numberOfLines={1}>{to}</Text>
-      </TouchableOpacity>
+      <Text
+        color="primary"
+        shade={600}
+        style={[styles.link]}
+        onPress={onPress}
+        numberOfLines={1}
+      >
+        {to}
+      </Text>
     </View>
   );
 }
@@ -26,5 +32,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     paddingHorizontal: 8,
+  },
+  link: {
+    flex: 1,
   },
 });
