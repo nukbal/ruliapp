@@ -82,8 +82,8 @@ function MainRouter() {
       <Main.Screen
         name="post"
         component={PostScreen}
-        options={({ route }) => ({
-          headerRight: () => <PostRight route={route} />,
+        options={({ route, navigation }) => ({
+          headerRight: () => <PostRight route={route} navigation={navigation} />,
         })}
       />
     </Main.Navigator>

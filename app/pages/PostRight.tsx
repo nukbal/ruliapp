@@ -9,7 +9,7 @@ import ListItem from 'app/components/ListItem';
 
 import HeaderRight from './HeaderRight';
 
-export default function PostRight({ route }: any) {
+export default function PostRight({ route, navigation }: any) {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const data = useSelector(route.params.bookmark ? getBookmark(route.params.url) : getPost(route.params.url));
@@ -18,6 +18,7 @@ export default function PostRight({ route }: any) {
   const toggleBookmark = () => {
     if (route.params.bookmark) {
       dispatch(removeBookmark(route.params.url));
+      navigation.goBack();
     } else {
       dispatch(setBookmark(data));
     }
