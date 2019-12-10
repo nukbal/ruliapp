@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { CachesDirectoryPath } from 'react-native-fs';
 
 export const USER_AGENT = (
   Platform.OS === 'ios'
@@ -12,3 +13,5 @@ export const AUTH_TIMEOUT = __DEV__ ? Infinity : 86400000;
 export const DEFAULT_IMAGE_SIZE = Platform.OS === 'ios' && Platform.isPad ? 350 : 200;
 
 export const REQUEST_THROTTLE = 850;
+
+export const CACHE_PATH = `${CachesDirectoryPath}/local_cache/`;

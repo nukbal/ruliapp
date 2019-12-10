@@ -2,14 +2,15 @@ import React, { memo, useMemo, useReducer } from 'react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
 import Video, { OnLoadData } from 'react-native-video';
-import { View, StyleSheet, LayoutChangeEvent, ImageSourcePropType, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native';
 
 import ProgressBar from 'app/components/ProgressBar';
 import { getTheme } from 'app/stores/theme';
 import setImageHeight from 'app/utils/setImageHeight';
+import useCachedFile from 'app/hooks/useCachedFile';
 
 interface Props {
-  source: ImageSourcePropType;
+  source: any;
   viewable?: boolean;
 }
 
@@ -35,7 +36,6 @@ const initialState = {
   screenWidth: 0,
   size: { width: 0, height: 0 },
   pause: false,
-  ready: false,
 };
 
 const { actions, reducer } = createSlice({
@@ -50,16 +50,16 @@ const { actions, reducer } = createSlice({
     },
     setSize(state, action: PayloadAction<{ width: number; height: number; }>) {
       state.size = action.payload;
-      state.ready = true;
     },
   },
 });
 
 function LazyVideo({ source }: Props) {
   const [
-    { screenWidth, size, pause, ready },
+    { screenWidth, size, pause },
     dispatch,
   ] = useReducer(reducer, initialState);
+  const [uri, progress] = useCachedFile(source.uri);
   const theme = useSelector(getTheme);
 
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => dispatch(actions.setScreen(nativeEvent.layout.width));
@@ -69,30 +69,34 @@ function LazyVideo({ source }: Props) {
   const onPress = () => dispatch(actions.togglePause());
 
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
+  const backgroundColor = uri ? 'transparent' : theme.gray[75];
 
   return (
-    <View style={styles.container} onLayout={onLayout}>
-      {!ready && (
+    <View
+      style={[styles.container, { height, backgroundColor }]}
+      onLayout={onLayout}
+    >
+      {!uri && (
         <View style={styles.message}>
-          <ProgressBar indetermate color={theme.primary[600]} />
+          <ProgressBar indetermate color={theme.primary[600]} progress={progress} />
         </View>
       )}
-      <TouchableWithoutFeedback onPress={onPress}>
-        <Video
-          // @ts-ignore
-          source={source}
-          onLoad={onLoad}
-          style={{ height }}
-          ignoreSilentSwitch="obey"
-          resizeMode="cover"
-          paused={pause}
-          allowsExternalPlayback={false}
-          disableFocus
-          hideShutterView
-          muted
-          repeat
-        />
-      </TouchableWithoutFeedback>
+      {!!uri && (
+        <TouchableWithoutFeedback onPress={onPress}>
+          <Video
+            source={{ uri }}
+            onLoad={onLoad}
+            style={{ height }}
+            ignoreSilentSwitch="obey"
+            resizeMode="cover"
+            paused={pause}
+            allowsExternalPlayback={false}
+            disableFocus
+            muted
+            repeat
+          />
+        </TouchableWithoutFeedback>
+      )}
     </View>
   );
 }

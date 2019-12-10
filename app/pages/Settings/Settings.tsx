@@ -6,6 +6,7 @@ import ListItem from 'app/components/ListItem';
 
 import UserPanel from './UserPanel';
 import ThemeButton from './ThemeButton';
+import CachePanel from './CachePanel';
 import styles from './styles';
 
 export default function Settings({ navigation }: { navigation: any }) {
@@ -18,6 +19,10 @@ export default function Settings({ navigation }: { navigation: any }) {
       <View style={styles.divide} />
 
       <ThemeButton />
+
+      <View style={styles.divide} />
+
+      <CachePanel />
 
       <View style={styles.divide} />
 
