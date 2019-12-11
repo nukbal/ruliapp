@@ -2,12 +2,15 @@ import React, { memo, useMemo, useReducer } from 'react';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
 import Video, { OnLoadData } from 'react-native-video';
-import { View, StyleSheet, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, LayoutChangeEvent } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import ProgressBar from 'app/components/ProgressBar';
 import { getTheme } from 'app/stores/theme';
 import setImageHeight from 'app/utils/setImageHeight';
 import useCachedFile from 'app/hooks/useCachedFile';
+import { VIDEO_CACHE } from 'app/config/constants';
 
 interface Props {
   source: any;
@@ -30,12 +33,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  pauseIcon: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    zIndex: 100,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+  },
 });
 
 const initialState = {
   screenWidth: 0,
   size: { width: 0, height: 0 },
   pause: false,
+  ready: false,
 };
 
 const { actions, reducer } = createSlice({
@@ -45,31 +57,32 @@ const { actions, reducer } = createSlice({
     setScreen(state, action: PayloadAction<number>) {
       state.screenWidth = action.payload;
     },
-    togglePause(state) {
-      state.pause = !state.pause;
+    setPause(state, action: PayloadAction<boolean>) {
+      state.pause = action.payload;
     },
     setSize(state, action: PayloadAction<{ width: number; height: number; }>) {
       state.size = action.payload;
+      state.ready = true;
     },
   },
 });
 
 function LazyVideo({ source }: Props) {
   const [
-    { screenWidth, size, pause },
+    { screenWidth, size, pause, ready },
     dispatch,
   ] = useReducer(reducer, initialState);
-  const [uri, progress] = useCachedFile(source.uri);
+  const uri = useCachedFile(source.uri, VIDEO_CACHE);
   const theme = useSelector(getTheme);
 
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => dispatch(actions.setScreen(nativeEvent.layout.width));
   const onLoad = ({ naturalSize }: OnLoadData) => {
     dispatch(actions.setSize({ width: naturalSize.width, height: naturalSize.height }));
   };
-  const onPress = () => dispatch(actions.togglePause());
+  const onPress = () => dispatch(actions.setPause(!pause));
 
   const height = useMemo(() => setImageHeight(size, screenWidth), [size, screenWidth]);
-  const backgroundColor = uri ? 'transparent' : theme.gray[75];
+  const backgroundColor = ready ? 'transparent' : theme.gray[75];
 
   return (
     <View
@@ -78,9 +91,10 @@ function LazyVideo({ source }: Props) {
     >
       {!uri && (
         <View style={styles.message}>
-          <ProgressBar indetermate color={theme.primary[600]} progress={progress} />
+          <ProgressBar indetermate color={theme.primary[600]} />
         </View>
       )}
+      {pause && <Icon name="pause" style={styles.pauseIcon} color={theme.gray[800]} size={32} />}
       {!!uri && (
         <TouchableWithoutFeedback onPress={onPress}>
           <Video

@@ -14,4 +14,11 @@ export const DEFAULT_IMAGE_SIZE = Platform.OS === 'ios' && Platform.isPad ? 350 
 
 export const REQUEST_THROTTLE = 850;
 
-export const CACHE_PATH = `${CachesDirectoryPath}/local_cache/`;
+export const VIDEO_CACHE = `${CachesDirectoryPath}/videocache/`;
+
+const imgcache = (
+  Platform.OS === 'ios'
+    ? 'com.hackemist.SDImageCache/default/'
+    : 'image_manager_disk_cache/'
+);
+export const IMAGE_CACHE = `${CachesDirectoryPath}/${imgcache}`;

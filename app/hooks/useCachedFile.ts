@@ -1,58 +1,44 @@
-import { useEffect, useState } from 'react';
-import { Platform } from 'react-native';
-import {
-  downloadFile,
-  stopDownload,
-  exists,
-  mkdir,
-} from 'react-native-fs';
+import { useState, useEffect } from 'react';
+import { downloadFile, exists, stopDownload, moveFile } from 'react-native-fs';
 
-import { CACHE_PATH } from 'app/config/constants';
-
-exists(CACHE_PATH).then((exist) => {
-  if (!exist) mkdir(CACHE_PATH);
-});
-
-async function pathExists(url: string): Promise<[string, boolean]> {
-  const name = url.replace('.ruliweb.com', '').replace(/http?s:/i, '').split('/').join('');
-  const path = [CACHE_PATH, name].join('');
-  const hasFile = await exists(path);
-  return [path, hasFile];
-}
-
-const prefix = Platform.OS === 'android' ? 'file://' : '';
-
-export default function useCachedFile(url: string): [string, number, string] {
-  const [path, onSuccess] = useState('');
-  const [percent, onProgress] = useState(0);
-  const [error, onError] = useState('');
+export default function useCachedFile(url: string, cacheDir: string) {
+  const [path, setPath] = useState('');
 
   useEffect(() => {
-    let queue: number | null = null;
-    pathExists(url)
-      .then(([filepath, hasFile]) => {
-        if (hasFile) {
-          onSuccess(prefix + filepath);
+    if (!url || !cacheDir) return;
+    let id = null as number | null;
+    async function init() {
+      try {
+        const filename = `${cacheDir}/${url.replace('.mp4', '').replace(/[./:]/g, '')}.mp4`;
+        const fileExists = await exists(filename);
+        if (fileExists) {
+          setPath(filename);
           return;
         }
+
+        const cacheFilename = `${filename}.cache`;
         const { jobId, promise } = downloadFile({
           fromUrl: url,
-          toFile: filepath,
-          discretionary: true,
-          progress: (e) => queue && onProgress(e.bytesWritten / e.contentLength),
-          progressDivider: 5,
+          toFile: cacheFilename,
         });
-        queue = jobId;
-        promise.then(() => {
-          if (queue) onSuccess(prefix + filepath);
-          queue = null;
-        }).catch((e) => queue && onError(e.message));
-      });
+        id = jobId;
+        const { statusCode } = await promise;
+        id = null;
+        if (statusCode < 400) {
+          await moveFile(cacheFilename, filename);
+          setPath(filename);
+        }
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+    init();
     return () => {
-      if (queue) stopDownload(queue);
-      queue = null;
+      if (id) {
+        stopDownload(id);
+      }
     };
-  }, [url]);
+  }, [url, cacheDir]);
 
-  return [path, percent, error];
+  return path;
 }

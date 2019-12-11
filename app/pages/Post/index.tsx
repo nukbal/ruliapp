@@ -64,8 +64,13 @@ export default function Post({ route }: Props) {
         waitForInteraction: false,
         itemVisiblePercentThreshold: 25,
       }}
-      removeClippedSubviews
       style={{ backgroundColor: theme.gray[50] }}
+
+      removeClippedSubviews
+      initialNumToRender={3}
+      maxToRenderPerBatch={5}
+      updateCellsBatchingPeriod={100}
+      windowSize={5}
     />
   );
 }
