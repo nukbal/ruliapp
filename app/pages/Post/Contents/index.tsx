@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default function ContentItem({ type, content, url }: ContentRecord & { url: string; }) {
+export default function ContentItem({ type, content }: ContentRecord) {
   if (!type || !content) return null;
 
   switch (type) {
@@ -34,7 +34,7 @@ export default function ContentItem({ type, content, url }: ContentRecord & { ur
     }
     case 'image': {
       return (
-        <LazyImage source={{ uri: content, headers: { referer: url } }} />
+        <LazyImage source={{ uri: content }} />
       );
     }
     case 'video': {

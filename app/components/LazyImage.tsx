@@ -1,18 +1,26 @@
-import React, { memo, useMemo, useCallback, useReducer } from 'react';
+import React, { memo, useMemo, useCallback, useState } from 'react';
 import {
   StyleSheet,
   View,
   LayoutChangeEvent,
+  Image,
+  NativeSyntheticEvent,
+  ImageLoadEventData,
+  Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import Image, { OnProgressEvent, OnLoadEvent } from 'react-native-fast-image';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
 
 import setImageHeight from 'app/utils/setImageHeight';
 import { getTheme } from 'app/stores/theme';
+import useCachedFile from 'app/hooks/useCachedFile';
+import { FILE_PREFIX } from 'app/config/constants';
+import saveFile from 'app/utils/saveFile';
 
 import ProgressBar from './ProgressBar';
 import Text from './Text';
+import BottomSheet from './BottomSheet';
+import ListItem from './ListItem';
 
 const styles = StyleSheet.create({
   ImageContent: {
@@ -34,55 +42,28 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  source: any;
+  source: { uri: string };
 }
-
-const initialState = {
-  layoutWidth: 0,
-  size: { width: 0, height: 0 },
-  progress: 0,
-  error: '',
-  ready: false,
-};
-
-const { reducer, actions } = createSlice({
-  name: 'image',
-  initialState,
-  reducers: {
-    setSize(state, action: PayloadAction<typeof initialState['size']>) {
-      state.size = action.payload;
-    },
-    setProgress(state, action: PayloadAction<number>) {
-      state.progress = action.payload;
-    },
-    setError(state, action: PayloadAction<string>) {
-      state.error = action.payload;
-    },
-    setScreen(state, action: PayloadAction<number>) {
-      state.layoutWidth = action.payload;
-    },
-  },
-});
 
 function LazyImage({ source }: Props) {
   const theme = useSelector(getTheme);
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { layoutWidth, size, error, ready, progress } = state;
+  const [uri, progress, error] = useCachedFile(source.uri);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const [layoutWidth, setLayout] = useState(0);
+  const [show, setShow] = useState(false);
 
   const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
-    dispatch(actions.setScreen(nativeEvent.layout.width));
+    setLayout(nativeEvent.layout.width);
   }, []);
-  const onLoad = useCallback(({ nativeEvent }: OnLoadEvent) => {
-    dispatch(actions.setSize(nativeEvent));
+  const onLoad = useCallback(({ nativeEvent }: NativeSyntheticEvent<ImageLoadEventData>) => {
+    setSize(nativeEvent.source);
   }, []);
-  const onProgress = useCallback(({ nativeEvent }: OnProgressEvent) => {
-    dispatch(actions.setProgress(nativeEvent.loaded / nativeEvent.total));
-  }, []);
-  const onError = useCallback(() => {
-    dispatch(actions.setError(JSON.stringify(source)));
-  }, []);
+  const save = useCallback(async () => {
+    await saveFile(uri);
+  }, [uri]);
+  const toggleMenu = useCallback(() => setShow(!show), [show]);
   const height = useMemo(() => setImageHeight(size, layoutWidth), [size, layoutWidth]);
-  const backgroundColor = ready ? 'transparent' : theme.gray[75];
+  const backgroundColor = uri ? 'transparent' : theme.gray[75];
 
   return (
     <View
@@ -92,10 +73,11 @@ function LazyImage({ source }: Props) {
       {!!error && (
         <View style={styles.message}>
           <Text color="primary">불러오기 실패</Text>
+          <Text color="primary">{source.uri}</Text>
           <Text color="primary">{error}</Text>
         </View>
       )}
-      {!ready && !error && (
+      {!uri && !error && (
         <View style={styles.message}>
           <ProgressBar
             color={theme.primary[600]}
@@ -104,13 +86,21 @@ function LazyImage({ source }: Props) {
           />
         </View>
       )}
-      <Image
-        style={{ height }}
-        source={source}
-        onLoad={onLoad}
-        onError={onError}
-        onProgress={onProgress}
-      />
+      {!!uri && (
+        <TouchableWithoutFeedback onLongPress={toggleMenu}>
+          <Image
+            style={{ height }}
+            source={{ uri: FILE_PREFIX + uri }}
+            onLoad={onLoad}
+            resizeMethod={Platform.OS === 'android' ? 'scale' : 'auto'}
+          />
+        </TouchableWithoutFeedback>
+      )}
+      {!!uri && (
+        <BottomSheet show={show} onClose={toggleMenu}>
+          <ListItem name="archive" onPress={save}>저장하기</ListItem>
+        </BottomSheet>
+      )}
     </View>
   );
 }
