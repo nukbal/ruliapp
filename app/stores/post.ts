@@ -51,15 +51,9 @@ const postSlice = createSlice({
 
 export const getPostState = (state: RootState) => state.post;
 export const getPost = (key: string) => createSelector(
-  [getPostState],
+  getPostState,
   (posts) => posts[key] || emptyPost,
 );
-export const getPostUser = (key: string) => createSelector(getPost(key), (post) => post.user);
-export const getPostMeta = (key: string) => createSelector(getPost(key), (post) => ({
-  dislikes: post.dislikes,
-  likes: post.likes,
-  commentSize: post.commentSize,
-}));
 
 export const { setPost, setPostList, setComments } = postSlice.actions;
 export default postSlice.reducer;

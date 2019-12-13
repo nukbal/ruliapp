@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { SectionList } from 'react-native';
 import { useSelector } from 'react-redux';
 
@@ -26,16 +26,28 @@ export default function Post({ route }: Props) {
   const { url, bookmark } = route.params;
   const {
     subject, contents, comments, ready, isCommentLoading, loadComment,
+    user, date, views, likes, dislikes, commentSize,
   } = usePost(url, bookmark);
   const theme = useSelector(getTheme);
-  const path = `http://m.ruliweb.com/${url}`;
 
   const renderItems = useCallback(({ item, section }: any) => {
     if (section.index === 0) {
-      return <Contents {...item} url={path} />;
+      return <Contents {...item} />;
     }
     return <Comments {...item} id={item.key} />;
-  }, [path]);
+  }, []);
+
+  const ListHeaderComponent = useMemo(() => (ready ? (
+    <>
+      <Title label={subject} />
+      <Profile user={user} date={date} views={views} />
+    </>
+  ) : null), [ready, subject, user, date, views]);
+
+  const ListFooter = useMemo(
+    () => (ready ? <Footer url={url} likes={likes} dislikes={dislikes} commentSize={commentSize} /> : null),
+    [ready, url, likes, dislikes, commentSize],
+  );
 
   if (!ready) return <Placeholder />;
 
@@ -45,16 +57,11 @@ export default function Post({ route }: Props) {
         { index: 0, data: contents },
         { index: 1, data: comments },
       ]}
-      ListHeaderComponent={(
-        <>
-          <Title label={subject} />
-          <Profile url={url} />
-        </>
-      )}
+      ListHeaderComponent={ListHeaderComponent}
       renderItem={renderItems}
       keyExtractor={keyExtractor}
       renderSectionHeader={({ section }) => {
-        if (section.index === 1) return <Footer url={url} />;
+        if (section.index === 1) return ListFooter;
         return null;
       }}
       stickySectionHeadersEnabled={false}
@@ -69,7 +76,7 @@ export default function Post({ route }: Props) {
       removeClippedSubviews
       initialNumToRender={3}
       maxToRenderPerBatch={5}
-      updateCellsBatchingPeriod={100}
+      updateCellsBatchingPeriod={50}
       windowSize={5}
     />
   );

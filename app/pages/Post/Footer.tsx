@@ -9,15 +9,11 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import { getTheme } from 'app/stores/theme';
-import { getPostMeta } from 'app/stores/post';
 
-interface Props {
-  url: string;
-}
-
-export default function ContentFooter({ url }: Props) {
+export default function ContentFooter({
+  url, likes, dislikes, commentSize,
+}: Pick<PostDetailRecord,'url'|'likes'|'dislikes'|'commentSize'>) {
   const theme = useSelector(getTheme);
-  const { likes, dislikes, commentSize } = useSelector(getPostMeta(url));
 
   const open = () => {
     const path = `https://m.ruliweb.com/${url}`;

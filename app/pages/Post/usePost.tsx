@@ -1,6 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
 import { StatusBar, Alert, Platform } from 'react-native';
-
 import parsePost from 'app/utils/parsePost';
 import parseComment from 'app/utils/parseComment';
 import { USER_AGENT } from 'app/config/constants';
