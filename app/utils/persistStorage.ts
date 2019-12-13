@@ -1,36 +1,67 @@
 import {
   DocumentDirectoryPath,
-  readDir,
   unlink,
   writeFile,
   readFile,
   exists,
+  mkdir,
+  readDir,
 } from 'react-native-fs';
 
-const location = DocumentDirectoryPath;
-const dir = 'redux_persist/';
-export const baseDir = [location, dir].join('/');
+let isDirLoaded = false;
+
+const baseDir = `${DocumentDirectoryPath}/redux_persist`;
+function resolveFilePath(key: string) {
+  return [baseDir, key.split(':').join('_')].join('/');
+}
+
+async function checkDir() {
+  const isExist = await exists(baseDir);
+  if (!isExist) await mkdir(baseDir);
+  isDirLoaded = true;
+}
 
 export default {
   async setItem(key: string, value: string) {
-    await writeFile(baseDir + encodeURIComponent(key), value, 'utf8');
+    try {
+      if (!isDirLoaded) await checkDir();
+      const path = resolveFilePath(key);
+      await writeFile(path, value);
+    } catch (e) {
+      console.warn('[persist.setItem] error ', e);
+    }
   },
   async getItem(key: string) {
-    const path = baseDir + encodeURIComponent(key);
-    const isExists = await exists(path);
-    if (!isExists) return null;
-
-    const data = await readFile(path, 'utf8');
-    return data;
+    try {
+      if (!isDirLoaded) await checkDir();
+      const path = resolveFilePath(key);
+      const isExists = await exists(path);
+      if (isExists) {
+        const data = await readFile(path);
+        return data;
+      }
+    } catch (e) {
+      console.warn('[persist.getItem] error ', e);
+    }
   },
   async removeItem(key: string) {
-    const path = baseDir + encodeURIComponent(key);
-    const isExists = await exists(path);
-    if (isExists) await unlink(path);
+    try {
+      if (!isDirLoaded) await checkDir();
+      const path = resolveFilePath(key);
+      const isExists = await exists(path);
+      if (isExists) await unlink(path);
+    } catch (e) {
+      console.warn('[persist.removeItem] error ', e);
+    }
   },
   async getAllKeys() {
-    const files = await readDir(baseDir);
-    const list = files.filter((file) => file.isFile());
-    return list.map((f) => decodeURIComponent(f.name));
+    try {
+      if (!isDirLoaded) await checkDir();
+      const files = await readDir(baseDir);
+      const names = files.filter((file) => file.isFile()).map((file) => file.name.split('_').join(':'));
+      return names;
+    } catch (e) {
+      console.warn('[persist.getAllKeys] error', e);
+    }
   },
 };

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Alert, ToastAndroid, Platform } from 'react-native';
-import { readDir, unlink } from 'react-native-fs';
+import { readDir, unlink, exists } from 'react-native-fs';
 import { CACHE_PATH } from 'app/config/constants';
 import ListItem from 'app/components/ListItem';
 import Text from 'app/components/Text';
@@ -10,6 +10,8 @@ export default function CachePanel() {
 
   const onPress = useCallback(() => {
     async function clearCache() {
+      const isExists = await exists(CACHE_PATH);
+      if (!isExists) return;
       const cache = await readDir(CACHE_PATH);
       await Promise.all(cache.map((file) => unlink(file.path)));
       setSize(0);
@@ -29,6 +31,8 @@ export default function CachePanel() {
 
   useEffect(() => {
     async function init() {
+      const isExists = await exists(CACHE_PATH);
+      if (!isExists) return;
       const cache = await readDir(CACHE_PATH);
       const total = cache.reduce((acc, file) => acc + parseInt(file.size, 10), 0);
       setSize(Math.round((total / 1048576) * 100) / 100);
