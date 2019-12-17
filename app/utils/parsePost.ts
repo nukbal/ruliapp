@@ -65,7 +65,15 @@ export function findContext(
       const value = formatText(current.value);
       if (value === 'GIF') return;
 
-      // if (style) return { key, type: 'text', content: value, style };
+      if (
+        current.parent
+        && current.parent.tagName === 'a'
+        && current.parent.attrs
+        && current.parent.attrs.href
+      ) {
+        const content = current.parent.attrs.href;
+        return { key, type: 'link', content };
+      }
       return { key, type: 'text', content: value };
     }
     case 'img': {

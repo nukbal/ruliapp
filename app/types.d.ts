@@ -60,7 +60,7 @@ declare interface CommentRecord {
 
 declare interface ContentRecord {
   key: string;
-  type: 'image' | 'object' | 'text' | 'reference' | 'video';
+  type: 'image' | 'object' | 'text' | 'reference' | 'video' | 'link';
   style?: any;
   content: string;
   /** only on image */

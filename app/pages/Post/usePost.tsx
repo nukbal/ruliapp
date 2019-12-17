@@ -46,10 +46,6 @@ export default function usePost(url: string, isBookmark?: boolean) {
           },
         };
 
-        if (Platform.OS === 'android') {
-          delete config.headers['Accept-Encoding'];
-        }
-
         // @ts-ignore
         const response = await fetch(targetUrl, config);
         if (isDone) return;

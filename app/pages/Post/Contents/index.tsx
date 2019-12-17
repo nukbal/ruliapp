@@ -42,6 +42,9 @@ export default function ContentItem({ type, content }: ContentRecord) {
         <LazyVideo source={{ uri: content }} />
       );
     }
+    case 'link': {
+      return <Link to={content} />;
+    }
     default: {
       return <Text style={[styles.text]}>{content}</Text>;
     }
