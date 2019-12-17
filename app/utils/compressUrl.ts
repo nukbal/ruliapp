@@ -1,15 +1,21 @@
 
 export default function compress(url: string) {
-  const ext = url.match(/\.[0-9a-z]+$/i);
-  if (ext) {
-    const safeStr = url
-      .replace(/^(http|https)/g, '')
-      .replace(ext[0], '')
-      .replace(/[^a-zA-Z0-9-_]/g, '');
-    return safeStr + ext;
+  let ext = '.jpg';
+  const regex = url.match(/(\.|=)(gif|jpe?g|png|webp|mp4)/i);
+  let safeUrl = url;
+
+  if (regex) {
+    safeUrl = safeUrl.substring(0, regex.index);
+    ext = `.${regex[2]!}`;
   }
-  // eslint-disable-next-line prefer-template
-  return url
+
+  const paramIdx = safeUrl.indexOf('?');
+  if (paramIdx > -1) {
+    safeUrl = safeUrl.substring(0, paramIdx);
+  }
+
+  return safeUrl
     .replace(/^(http|https)/g, '')
-    .replace(/[^a-zA-Z0-9-_]/g, '') + '.jpg';
+    .replace(/[^a-zA-Z0-9-_]/g, '')
+    .replace('ruliwebcom', '') + ext;
 }

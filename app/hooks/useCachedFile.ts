@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { downloadFile, exists, stopDownload, moveFile, mkdir } from 'react-native-fs';
 import { CACHE_PATH } from '../config/constants';
+import compress from '../utils/compressUrl';
 
 let isLoaded = false;
 const cache = {} as { [url: string]: number };
@@ -12,17 +13,7 @@ async function download(url: string, onProgress?: (interval: number) => void) {
     isLoaded = true;
   }
 
-  let name = url.replace('http', '').replace('://', '').replace('ruliweb', '');
-  const extIdx = name.lastIndexOf('.');
-  if (extIdx >= name.length - 5) {
-    const ext = name.substring(extIdx, name.length);
-    name = name.substring(0, extIdx);
-    name = name.replace(/[./]/g, '');
-    name += ext;
-  } else {
-    name = name.replace(/[./]/g, '');
-    name += '.jpg';
-  }
+  const name = compress(url);
 
   const filename = `${CACHE_PATH}/${name}`;
   const fileExists = await exists(filename);
@@ -53,20 +44,20 @@ async function download(url: string, onProgress?: (interval: number) => void) {
   }
 }
 
-export default function useCachedFile(url?: string): [string, number, string] {
+export default function useCachedFile(url?: string, enableProgress: boolean = true): [string, number, string] {
   const [path, setPath] = useState('');
   const [error, setError] = useState('');
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (!url) return;
-    download(url, setProgress)
+    download(url, enableProgress ? setProgress : undefined)
       .then((filename) => filename && setPath(filename))
       .catch((e) => setError(e.message));
     return () => {
       if (cache[url]) stopDownload(cache[url]);
     };
-  }, [url]);
+  }, [url, enableProgress]);
 
   return [path, progress, error];
 }
