@@ -1,6 +1,6 @@
 import { configureStore, getDefaultMiddleware, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'app/utils/persistStorage';
+import storage from '@react-native-community/async-storage';
 import userReducer from './user';
 import themeReducer from './theme';
 import postReducer from './post';
