@@ -50,7 +50,11 @@ function isWhitespace(raw?: string) {
 }
 
 function TextNode(raw: string): INode {
-  return { tagName: 'text', value: raw, childNodes: [] };
+  const value = raw
+    .split('\n')
+    .map((str) => str.trim())
+    .join(' ');
+  return { tagName: 'text', value, childNodes: [] };
 }
 
 function HTMLNode(name: string = 'root', attrs: { [key: string]: any }) {
@@ -133,7 +137,9 @@ export default function parse(data: string): INode {
     if (lastTextPos > -1) {
       // if has content
       if (lastTextPos + match[0].length < kMarkupPattern.lastIndex) {
-        const text = data.substring(lastTextPos, kMarkupPattern.lastIndex - match[0].length).trim();
+        const text = data
+          .substring(lastTextPos, kMarkupPattern.lastIndex - match[0].length)
+          .trim();
         if (text && !isWhitespace(text)) appendChild(currentParent, TextNode(text));
       }
     }

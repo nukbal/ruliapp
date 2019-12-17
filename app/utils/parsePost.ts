@@ -1,3 +1,4 @@
+import { StyleProp, TextStyle } from 'react-native';
 import loadHtml, { INode, querySelector } from './htmlParser';
 import parseComment from './parseComment';
 import formatText from './formatText';
@@ -74,7 +75,15 @@ export function findContext(
         const content = current.parent.attrs.href;
         return { key, type: 'link', content };
       }
-      return { key, type: 'text', content: value };
+
+      let style: StyleProp<TextStyle> | undefined;
+      if (
+        current.parent
+        && current.parent.tagName === 'b'
+      ) {
+        style = { fontWeight: 'bold' };
+      }
+      return { key, type: 'text', content: value, style };
     }
     case 'img': {
       if (!current.attrs || !current.attrs.src) return;

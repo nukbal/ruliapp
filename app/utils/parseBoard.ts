@@ -12,6 +12,8 @@ export function parseBoardUrl(href: string) {
   let url = (
     href
       .replace('://m.ruliweb.com/', '')
+      .replace('://ruliweb.com/', '')
+      .replace('://bbs.ruliweb.com/', '')
       .replace('https', '')
       .replace('http', '')
   );

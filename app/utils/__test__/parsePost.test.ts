@@ -1,216 +1,7 @@
 import parser from '../parsePost';
 
 describe('html parser', () => {
-  it('reference only', () => {
-    const html = `
-    <title>test title | board name</title>
-		<!-- board_main start -->
-		<div class="board_main">
-			<div class="board_main_top">
-				<div class="user_view">
-					<br>
-					<div class="row">
-						<input type="hidden" class="article_id" value="boardPath">
-						<input type="hidden" class="article_url"
-							   value="https://m.ruliweb.com/boardPath">
-						<input type="hidden" class="bbs_url" value="https://m.ruliweb.com/boardPath">
-						<input id="reply_count" type="hidden" value="5">
-						<h4 class="subject">
-							<strong><span class="subject_text text_large">test title</span></strong>
-						</h4>
-					</div>
-					<div class="row">
-            <div class="col">
-							<div class="user_info">
-                  <div class="profile_img_m_wrapper">
-									<img id="profile_img_m" class="profile_img_m" width="75" height="75" alt="profile_img_m"  src="https://img.ruliweb.com/img/2016/icon/ruliweb_icon_144_144.png">
-								</div>
-
-								<div class="info_wrapper">
-
-									<div class="row">
-										<a class="nick" href="https://m.ruliweb.com/boardId?search_type=member_srl&search_key=123123" tabindex="-1">
-											<strong>Post User</strong>
-											<input type="hidden" id="member_srl" value="123123">
-										</a>
-										<span class="text_bar"> | </span>
-										<span>
-											추천
-											<span class="like">4</span>
-											<span class="text_bar"> | </span>
-											조회 637										</span>
-										<span>
-											일시 <span class="regdate">2019.03.28 (13:42:52)</span>
-                        <span class="text_bar"> | </span>
-												<span>IP : 111.222.***.***</span>
-                    </span>
-									</div>
-
-									<div class="row">
-										<a class="text_gray" href="https://m.ruliweb.com/news/board/1001?search_type=member_srl&search_key=148186" tabindex="-1"><strong>작성글</strong></a>
-										<span class="text_bar"> | </span>
-										<a class="text_gray" href="javascript:void(0);" onclick="app.open_message(148186);"><strong>쪽지</strong></a>
-										<span>출석 4835일</span>
-										<span class="text_bar"> | </span>
-										<span class="level">&nbsp;LV. <strong>100</strong>&nbsp;</span>
-										<span class="text_bar"> | </span>
-																				<span>Exp. <span class="exp_text"><strong>68%</strong></span>
-										<div class="row member_icon">
-																					</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-				<hr>
-      </div>
-      <div class="board_main_view">
-        <div class="source_url">
-          원본출처
-          <span class="text_bar"> | </span>
-          <a href="http://path/to/reference" target="_blank">http://path/to/reference</a>
-        </div>
-        <!-- ADOP SEO Tag S-->
-				<div class="view_content">
-					<div class="row">
-            <p style="text-align: center;">&nbsp;</p>
-            <p style="text-align: center;">.</p>
-            <p style="text-align: center;">&nbsp;</p>
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-					</div>
-				</div>
-        <div class="row">
-					<div class="view_bottom">
-						<div class="like_wrapper">
-							<div class="like">
-								<span
-									class="like_value">4</span>
-								<!--[if lt IE 8]>
-								<p class="icon">추천</p>
-								<![endif]-->
-								<i class="icon icon-thumbs-up-alt"></i>
-							</div>
-            </div>
-					</div>
-				</div>
-			</div>
-
-			<div class="board_main_bottom">
-				<div class="row">
-					<div class="btn_wrapper col">
-					</div>
-				</div>
-				<br>
-				<br>
-				<div class="row">
-					<div class="share_wrapper row">
-						<ul>
-							<li class="col">
-								<div class="sns_icon">
-                  <a href="javascript:app.go_login('스크랩');"><i class="icon_ruliweb_60"></i></a>
-                </div>
-								<div class="sns_desc">스크랩</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<div class="url_copy" data-clipboard-text="https://m.ruliweb.com/boardpath">URL</div>
-								</div>
-								<div class="sns_desc">복사</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<a href="javascript:app.sns_share('facebook', 'https://m.ruliweb.com/boardpath');">
-										<i class="icon_facebook_60"></i>
-									</a>
-								</div>
-								<div class="sns_desc">페북</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<a href="javascript:app.sns_share('twitter', 'https://m.ruliweb.com/boardpath');">
-										<i class="icon_twitter_60"></i>
-								</div>
-								<div class="sns_desc">트위터</div>
-								</a>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-                  <a href="javascript:app.sns_share('naver', 'https://m.ruliweb.com/boardpath');" tabindex="-1" title="네이버">
-                    <img id="naver" src="https://ssl.pstatic.net/share/images/appicon/naver_square_30x30.png" alt="네이버로공유" width="30" height="30">
-                  </a>
-								</div>
-								<div class="sns_desc">네이버</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<a id="kakao-link-btn" href="javascript:;">
-                    <i class="icon_kakaotalk_60"></i>
-                    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-                    <script type='text/javascript'>
-                      Kakao.init('kakao_api_key');
-                      Kakao.Link.createScrapButton({
-                        container: '#kakao-link-btn',
-                        requestUrl: 'https://m.ruliweb.com/boardpath'
-                      });
-                    </script>
-									</a>
-								</div>
-								<div class="sns_desc">카톡</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<a href="javascript:app.sns_share('kakao', 'https://m.ruliweb.com/boardpath');">
-										<i class="icon_kakao_60"></i>
-									</a>
-								</div>
-								<div class="sns_desc">카스</div>
-							</li>
-						</ul>
-					</div>
-					<br>
-					<br>
-					<div class="btn_wrapper article_func_wrapper row">
-						<div class="col col_2">
-							<a class="btn_list btn_default btn_light" href="https://m.ruliweb.com/news/board/1001?">목록</a>
-						</div>
-						<div class="col col_2 r_col">
-              <div class="btn_default btn_light" onclick="app.invalid_popup();">삭제</div>
-            </div>
-						<div class="col col_2 r_col">
-              <div class="btn_default btn_light" onclick="app.invalid_popup();">수정</div>
-            </div>
-						<div class="col col_2 r_col">
-              <div class="btn_default btn_light" onclick="app.go_login('신고', event);">신고</div>
-            </div>
-					</div>
-				</div>
-			</div>
-		</div><!-- board_main end -->
-    `;
-    const data = parser(html, '');
-    expect(data).toEqual({
-			key: '',
-      comments: [],
-      contents: [
-				{ type: 'reference', key: 'source', content: 'http://path/to/reference' },
-        { type: 'text', key: '_0_0', content: '.' },
-      ],
-      subject: 'test title',
-			likes: 4,
-      user: {
-        experience: 68,
-        id: '123123',
-        image: 'https://img.ruliweb.com/img/2016/icon/ruliweb_icon_144_144.png',
-        level: 100,
-        name: 'Post User',
-      }
-    });
-  });
-
-  it('normal pattern', () => {
+  it('full pattern', () => {
     const html = `
     <title>test title | board name</title>
     <!-- board_main start -->
@@ -344,71 +135,52 @@ describe('html parser', () => {
     });
 	});
 
-  it('with gif animation', () => {
+  it('pattern-1: reference only', () => {
+    const html = `
+    <title>test title | board name</title>
+		<!-- board_main start -->
+		<div class="board_main">
+			<div class="board_main_top"></div>
+      <div class="board_main_view">
+        <div class="source_url">
+          원본출처
+          <span class="text_bar"> | </span>
+          <a href="http://path/to/reference" target="_blank">http://path/to/reference</a>
+        </div>
+        <!-- ADOP SEO Tag S-->
+				<div class="view_content">
+					<div class="row">
+            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center;">.</p>
+            <p style="text-align: center;">&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+					</div>
+				</div>
+			</div>
+		</div><!-- board_main end -->
+    `;
+    const data = parser(html, '');
+    expect(data).toEqual({
+			key: '',
+      comments: [],
+      contents: [
+				{ type: 'reference', key: 'source', content: 'http://path/to/reference' },
+        { type: 'text', key: '_0_0', content: '.' },
+      ],
+      subject: 'test title',
+      user: {}
+    });
+  });
+
+
+  it('pattern-2: with gif animation', () => {
     const html = `
     <title>git animation test | board name</title>
     <!-- board_main start -->
 		<div class="board_main">
-			<div class="board_main_top">
-				<div class="user_view">
-					<div class="row">
-						<input type="hidden" class="article_id" value="000000">
-						<input type="hidden" class="article_url"
-							   value="https://m.ruliweb.com/best/board/111111/read/000000">
-						<input type="hidden" class="bbs_url" value="https://m.ruliweb.com/best/board/111111">
-						<input id="reply_count" type="hidden" value="22">
-						<h4 class="subject">
-							<strong><span class="subject_text text_large">git animation test</span></strong>
-						</h4>
-					</div>
-					<div class="row">
-            <div class="col">
-							<div class="user_info">
-                <div class="profile_img_m_wrapper">
-									<img id="profile_img_m" class="profile_img_m" width="75" height="75" alt="profile_img_m"  src="//i2.ruliweb.com/profile_m/path/to/avatar.jpeg">
-								</div>
-
-								<div class="info_wrapper">
-
-									<div class="row">
-										<a class="nick" href="https://m.ruliweb.com/best/board/111111?search_type=member_srl&search_key=123123" tabindex="-1">
-											<strong>Post User</strong>
-											<input type="hidden" id="member_srl" value="123123">
-										</a>
-										<span class="text_bar"> | </span>
-										<span>
-											추천
-											<span class="like">23</span>
-											<span class="text_bar"> | </span>
-											조회 5933										</span>
-										<span>
-											일시 <span class="regdate">2019.03.28 (13:05:20)</span>
-                      <span class="text_bar"> | </span>
-                      <span>IP : 111.222.***.***</span>
-                    </span>
-									</div>
-									<div class="row">
-										<a class="text_gray" href="https://m.ruliweb.com/best/board/111111?search_type=member_srl&search_key=123123" tabindex="-1"><strong>작성글</strong></a>
-										<span class="text_bar"> | </span>
-										<a class="text_gray" href="javascript:void(0);" onclick="app.open_message(123123);"><strong>쪽지</strong></a>
-										<span>출석 824일</span>
-										<span class="text_bar"> | </span>
-										<span class="level">&nbsp;LV. <strong>100</strong>&nbsp;</span>
-										<span class="text_bar"> | </span>
-                    <span>Exp. <span class="exp_text"><strong>68%</strong></span>
-										<div class="row member_icon">
-                    </div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-				<hr>
-      </div>
-      			<div class="board_main_view">
-								<!-- ADOP SEO Tag S-->
+			<div class="board_main_top"></div>
+			<div class="board_main_view">
 				<div class="view_content">
 					<div class="row">
 						<p style="text-align: center;">
@@ -425,120 +197,15 @@ describe('html parser', () => {
 					<div class="view_bottom">
 						<div class="like_wrapper">
 							<div class="like">
-								<br>
-								<span
-									class="like_value">23</span>
-								<br>
-								<!--[if lt IE 8]>
-								<p class="icon">추천</p>
-								<![endif]-->
-								<i class="icon icon-thumbs-up-alt"></i>
+								<span class="like_value">23</span>
 							</div>
               <div class="dislike">
-								<span
-									class="dislike_value">0</span>
-									<br>
-									<!--[if lt IE 8]>
-									<p class="icon">비추천</p>
-									<![endif]-->
-									<i class="icon icon-thumbs-down-alt"></i>
-								</div>
+								<span class="dislike_value">0</span>
+							</div>
             </div>
 					</div>
 				</div>
 			</div>
-			<div class="board_main_bottom">
-				<div class="row">
-					<div class="btn_wrapper col">
-					</div>
-				</div>
-				<br>
-				<br>
-				<div class="row">
-					<div class="share_wrapper row">
-						<ul>
-							<li class="col">
-								<div class="sns_icon">
-                    <a href="javascript:app.go_login('스크랩');"><i class="icon_ruliweb_60"></i></a>
-                </div>
-								<div class="sns_desc">스크랩</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<div class="url_copy" data-clipboard-text="https://m.ruliweb.com/best/board/123/read/123123123">URL</div>
-								</div>
-								<div class="sns_desc">복사</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<a href="javascript:app.sns_share('facebook', 'https://m.ruliweb.com/best/board/123/read/123123123');">
-										<i class="icon_facebook_60"></i>
-									</a>
-								</div>
-								<div class="sns_desc">페북</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<a href="javascript:app.sns_share('twitter', 'https://m.ruliweb.com/best/board/123/read/123123123');">
-										<i class="icon_twitter_60"></i>
-								</div>
-								<div class="sns_desc">트위터</div>
-								</a>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-                                    <a href="javascript:app.sns_share('naver', 'https://m.ruliweb.com/best/board/123/read/123123123');" tabindex="-1" title="네이버">
-                                        <img id="naver" src="https://ssl.pstatic.net/share/images/appicon/naver_square_30x30.png" alt="네이버로공유" width="30" height="30">
-                                    </a>
-								</div>
-								<div class="sns_desc">네이버</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<a id="kakao-link-btn" href="javascript:;">
-                    <i class="icon_kakaotalk_60"></i>
-                    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-                    <script type='text/javascript'>
-                      Kakao.init('kakao-token-here');
-                      Kakao.Link.createScrapButton({
-                        container: '#kakao-link-btn',
-                        requestUrl: 'https://m.ruliweb.com/best/board/123/read/123123123'
-                      });
-                    </script>
-									</a>
-								</div>
-								<div class="sns_desc">카톡</div>
-							</li>
-							<li class="col">
-								<div class="sns_icon">
-									<a href="javascript:app.sns_share('kakao', 'https://m.ruliweb.com/best/board/123/read/123123123');">
-										<i class="icon_kakao_60"></i>
-									</a>
-								</div>
-								<div class="sns_desc">카스</div>
-							</li>
-						</ul>
-					</div>
-					<br>
-					<br>
-					<div class="btn_wrapper article_func_wrapper row">
-						<div class="col col_2">
-							<a class="btn_list btn_default btn_light" href="https://m.ruliweb.com/best/board/123?">목록</a>
-						</div>
-						<div class="col col_2 r_col">
-															<div class="btn_default btn_light" onclick="app.invalid_popup();">삭제</div>
-													</div>
-						<div class="col col_2 r_col">
-													<div class="btn_default btn_light" onclick="app.invalid_popup();">수정</div>
-												</div>
-						<div class="col col_2 r_col">
-															<div class="btn_default btn_light" onclick="app.go_login('신고', event);">신고</div>
-													</div>
-					</div>
-				</div>
-
-			</div>
-
 		</div><!-- board_main end -->
     `;
     const data = parser(html, '');
@@ -551,17 +218,11 @@ describe('html parser', () => {
       subject: 'git animation test',
 			likes: 23,
 			dislikes: 0,
-      user: {
-        experience: 68,
-        id: '123123',
-        image: 'https://i2.ruliweb.com/profile_m/path/to/avatar.jpeg',
-        level: 100,
-        name: 'Post User',
-      }
+      user: {}
     });
 	})
 	
-	it('multiple images on single paragraph', () => {
+	it('pattern-3: multiple images on single paragraph', () => {
 		const html = `
 		<title>test | ruliapp</title>
 		<!-- board_main start -->
@@ -602,7 +263,7 @@ describe('html parser', () => {
     });
 	})
 	
-	it('content with WYSIWYG editor (se?)', () => {
+	it('pattern-4: content with WYSIWYG editor (se?)', () => {
 		const html = `
 		<title>test | ruliapp</title>
 		<!-- board_main start -->
@@ -658,5 +319,121 @@ describe('html parser', () => {
       subject: 'test',
       user: {},
     });
-	})
+	});
+
+	it('pattern-5: merging line breaks', () => {
+		const html = `
+			<title>test | ruliapp</title>
+			<!-- board_main start -->
+			<div class="board_main_top"></div>
+			<div class="board_main_view">
+				<div class="view_content">
+					<div class="row">
+						<div>
+							<p style="text-align: center;">
+								<a class="img_load_m">
+									<img class="lazy_read" src="//image/path">
+								</a>
+							</p>
+							<p style="text-align: center;">&nbsp;</p>
+							<h1 style="text-align: center;">
+								text
+								with
+								line-break
+							</h1>
+						</div>
+						<br>
+					</div>
+				</div>
+			</div>
+			<!-- board_main end -->
+		`;
+    const data = parser(html, '');
+    expect(data).toEqual({
+			key: '',
+      comments: [],
+      contents: [
+        { type: 'image', key: '_0_0', content: 'https://image/path' },
+        { type: 'text', key: '_0_1', content: 'text with line-break' },
+			],
+      subject: 'test',
+      user: {},
+    });
+	});
+
+	it('pattern-6: line breaks with br tag', () => {
+		const html = `
+			<title>test | ruliapp</title>
+			<!-- board_main start -->
+			<div class="board_main_top"></div>
+			<div class="board_main_view">
+				<div class="view_content">
+					<div class="row">
+						<div>
+							<p style="text-align: center;">
+								<a class="img_load_m">
+									<img class="lazy_read" src="//image/path">
+								</a>
+							</p>
+							<p style="text-align: center;">&nbsp;</p>
+							<h1 style="text-align: center;">
+								text<br>
+								with<br>
+								line-break
+							</h1>
+						</div>
+						<br>
+					</div>
+				</div>
+			</div>
+			<!-- board_main end -->
+		`;
+    const data = parser(html, '');
+    expect(data).toEqual({
+			key: '',
+      comments: [],
+      contents: [
+        { type: 'image', key: '_0_0', content: 'https://image/path' },
+        { type: 'text', key: '_0_1', content: 'text\nwith\nline-break' },
+			],
+      subject: 'test',
+      user: {},
+    });
+	});
+
+	it('pattern-7: with a tag link', () => {
+		const html = `
+			<title>test | ruliapp</title>
+			<!-- board_main start -->
+			<div class="board_main_top"></div>
+			<div class="board_main_view">
+				<div class="view_content">
+					<div class="row">
+						<div>
+							<p style="text-align: center;">
+								<a class="img_load_m">
+									<img class="lazy_read" src="//image/path">
+								</a>
+							</p>
+              <p style="text-align: center;">&nbsp;</p>
+              <a href="https://link/path">https://link/path</a>
+						</div>
+						<br>
+					</div>
+				</div>
+			</div>
+			<!-- board_main end -->
+		`;
+    const data = parser(html, '');
+    expect(data).toEqual({
+			key: '',
+      comments: [],
+      contents: [
+        { type: 'image', key: '_0_0', content: 'https://image/path' },
+        { type: 'link', key: '_0_1', content: 'https://link/path' },
+			],
+      subject: 'test',
+      user: {},
+    });
+	});
 });
