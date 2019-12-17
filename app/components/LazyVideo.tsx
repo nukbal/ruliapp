@@ -6,6 +6,7 @@ import {
   LayoutChangeEvent, TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Haptic from 'react-native-haptic-feedback';
 
 import { getTheme } from 'app/stores/theme';
 import setImageHeight from 'app/utils/setImageHeight';
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     right: 8,
     zIndex: 100,
     borderRadius: 12,
-    backgroundColor: 'rgba(0,0,0,0.25)',
+    opacity: 0.65,
   },
 });
 
@@ -60,7 +61,10 @@ function LazyVideo({ source }: Props) {
   const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setLayout(nativeEvent.layout.width);
   const onLoad = ({ naturalSize }: OnLoadData) => setSize({ width: naturalSize.width, height: naturalSize.height });
   const onPress = () => setPause(!pause);
-  const toggleMenu = () => showBottomSheet(!bottom);
+  const toggleMenu = () => {
+    if (!bottom) Haptic.trigger('impactLight');
+    showBottomSheet(!bottom);
+  };
   const save = async () => {
     await saveFile(uri);
     showBottomSheet(false);
@@ -77,6 +81,7 @@ function LazyVideo({ source }: Props) {
       {!!error && (
         <View style={styles.message}>
           <Text color="primary">불러오기 실패</Text>
+          <Text color="primary">{source.uri}</Text>
           <Text color="primary">{error}</Text>
         </View>
       )}
@@ -89,7 +94,14 @@ function LazyVideo({ source }: Props) {
           />
         </View>
       )}
-      {pause && <Icon name="pause" style={styles.pauseIcon} color={theme.gray[800]} size={32} />}
+      {pause && (
+        <Icon
+          name="pause"
+          style={[styles.pauseIcon, { backgroundColor: theme.gray[300] }]}
+          color={theme.gray[800]}
+          size={32}
+        />
+      )}
       {!!uri && (
         <TouchableWithoutFeedback onPress={onPress} onLongPress={toggleMenu}>
           <Video

@@ -6,10 +6,10 @@ import {
   Image,
   NativeSyntheticEvent,
   ImageLoadEventData,
-  Platform,
   TouchableWithoutFeedback,
 } from 'react-native';
 import { useSelector } from 'react-redux';
+import Haptic from 'react-native-haptic-feedback';
 
 import setImageHeight from 'app/utils/setImageHeight';
 import { getTheme } from 'app/stores/theme';
@@ -60,8 +60,12 @@ function LazyImage({ source }: Props) {
   }, []);
   const save = useCallback(async () => {
     await saveFile(uri);
+    setShow(false);
   }, [uri]);
-  const toggleMenu = useCallback(() => setShow(!show), [show]);
+  const toggleMenu = useCallback(() => {
+    if (!show) Haptic.trigger('impactLight');
+    setShow(!show);
+  }, [show]);
   const height = useMemo(() => setImageHeight(size, layoutWidth), [size, layoutWidth]);
   const backgroundColor = uri ? 'transparent' : theme.gray[75];
 
@@ -92,7 +96,6 @@ function LazyImage({ source }: Props) {
             style={{ height }}
             source={{ uri: FILE_PREFIX + uri }}
             onLoad={onLoad}
-            resizeMethod={Platform.OS === 'android' ? 'scale' : 'auto'}
           />
         </TouchableWithoutFeedback>
       )}
