@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import Text from 'components/Text';
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default function ContentItem({ type, content, style }: ContentRecord) {
+function ContentItem({ type, content, style }: ContentRecord) {
   if (!type || !content) return null;
 
   switch (type) {
@@ -50,3 +50,11 @@ export default function ContentItem({ type, content, style }: ContentRecord) {
     }
   }
 }
+
+function isEqual(prev: ContentRecord, next: ContentRecord) {
+  return (
+    prev.type === next.type
+    && prev.content === next.content
+  );
+}
+export default memo(ContentItem, isEqual);

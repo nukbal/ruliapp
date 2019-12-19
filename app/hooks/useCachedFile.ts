@@ -22,8 +22,6 @@ async function download(url: string, onProgress?: (interval: number) => void) {
     return filename;
   }
 
-  if (jobqueue[url] === -1) return;
-
   const cacheFilename = `${filename}.cache`;
   const { jobId, promise } = downloadFile({
     fromUrl: url!,

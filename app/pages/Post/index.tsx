@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { SectionList } from 'react-native';
 import { useSelector } from 'react-redux';
 
@@ -18,7 +18,6 @@ interface Props {
 }
 
 function keyExtractor(item: CommentRecord | ContentRecord) {
-  if (Array.isArray(item)) return item[0].key;
   return item.key;
 }
 
@@ -30,13 +29,6 @@ export default function Post({ route }: Props) {
   } = usePost(url, bookmark);
   const theme = useSelector(getTheme);
 
-  const renderItems = useCallback(({ item, section }: any) => {
-    if (section.index === 0) {
-      return <Contents {...item} />;
-    }
-    return <Comments {...item} id={item.key} />;
-  }, []);
-
   const ListHeaderComponent = useMemo(() => (ready ? (
     <>
       <Title label={subject} />
@@ -44,24 +36,35 @@ export default function Post({ route }: Props) {
     </>
   ) : null), [ready, subject, user, date, views]);
 
-  const ListFooter = useMemo(
-    () => (ready ? <Footer url={url} likes={likes} dislikes={dislikes} commentSize={commentSize} /> : null),
-    [ready, url, likes, dislikes, commentSize],
-  );
+  const ListFooter = useMemo(() => (ready ? (
+    <Footer
+      url={url}
+      likes={likes}
+      dislikes={dislikes}
+      commentSize={commentSize}
+    />
+  ) : null), [ready, url, likes, dislikes, commentSize]);
 
   if (!ready) return <Placeholder />;
 
   return (
     <SectionList
       sections={[
-        { index: 0, data: contents },
-        { index: 1, data: comments, initialNumToRender: 0 },
+        { key: 'contents', data: contents },
+        // @ts-ignore
+        { key: 'comments', data: comments },
       ]}
       ListHeaderComponent={ListHeaderComponent}
-      renderItem={renderItems}
+      renderItem={({ item, section }) => {
+        if (section.key === 'contents') {
+          return <Contents {...item} />;
+        }
+        // @ts-ignore
+        return <Comments {...item} id={item.key} />;
+      }}
       keyExtractor={keyExtractor}
       renderSectionHeader={({ section }) => {
-        if (section.index === 1) return ListFooter;
+        if (section.key === 'comments') return ListFooter;
         return null;
       }}
       stickySectionHeadersEnabled={false}
@@ -75,8 +78,8 @@ export default function Post({ route }: Props) {
 
       removeClippedSubviews
       initialNumToRender={3}
-      maxToRenderPerBatch={3}
-      windowSize={5}
+      updateCellsBatchingPeriod={75}
+      windowSize={3}
     />
   );
 }

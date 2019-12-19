@@ -17,11 +17,13 @@ export const AUTH_TIMEOUT = __DEV__ ? Infinity : 86400000;
 // @ts-ignore
 export const DEFAULT_IMAGE_SIZE = IS_IOS && Platform.isPad ? 350 : 250;
 
+// unit: ms
 export const REQUEST_THROTTLE = 850;
 
 export const CACHE_PATH = `${CachesDirectoryPath}/appcache`;
 
 export const FILE_PREFIX = IS_ANDROID ? 'file://' : '';
 
+// short-live in-memory caches
 export const PATH_CACHE = Cache<string>(50);
-export const SHARE_CACHE = Cache<any>(5);
+export const SHARE_CACHE = Cache<any>(15);

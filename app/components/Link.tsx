@@ -16,7 +16,7 @@ export default function Link({ label, to }: Props) {
     <Text
       color="primary"
       shade={600}
-      style={[styles.link]}
+      style={[styles.link, !label ? styles.container : undefined]}
       onPress={onPress}
       numberOfLines={1}
     >

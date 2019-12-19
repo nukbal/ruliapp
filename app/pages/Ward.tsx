@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ListRenderItemInfo } from 'react-native';
+import { FlatList } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useStore } from 'react-redux';
 
@@ -7,6 +7,7 @@ import { getPostKeys, getPost, setPosts } from 'stores/post';
 import Title from 'components/Title';
 // import SearchBar from 'components/SearchBar';
 import BoardItem from './Board/BoardItem';
+import Placeholder from './Board/placeholder';
 
 function extractKey(item: string) {
   return item;
@@ -14,6 +15,7 @@ function extractKey(item: string) {
 
 export default function Bookmark({ navigation }: any) {
   const [list, setList] = useState<string[]>([]);
+  const [ready, setReady] = useState(false);
   const store = useStore();
   const [search, setSearch] = useState('');
 
@@ -32,36 +34,39 @@ export default function Bookmark({ navigation }: any) {
             .then((res) => {
               const data = res.map((r) => r[1] && JSON.parse(r[1])).filter(Boolean);
               store.dispatch(setPosts(data as PostDetailRecord[]));
+              setReady(true);
             });
+        } else {
+          setReady(true);
         }
       });
   }, [store]);
 
-  const renderItem = ({ item, separators }: ListRenderItemInfo<string>) => {
-    if (!item) return null;
-    const url = item.replace('ward:', '');
-    const data = getPost(url)(store.getState());
-
-    const onPress = () => {
-      const { navigate } = navigation;
-      navigate('post', { url, ward: true });
-    };
-
-    return (
-      <BoardItem
-        data={data}
-        onPress={onPress}
-        onShowUnderlay={separators.highlight}
-        onHideUnderlay={separators.unhighlight}
-      />
-    );
-  };
+  if (!ready) return <Placeholder />;
 
   return (
     <FlatList
       data={list}
       keyExtractor={extractKey}
-      renderItem={renderItem}
+      renderItem={({ item, separators }) => {
+        if (!item) return null;
+        const url = item.replace('ward:', '');
+        const data = getPost(url)(store.getState());
+
+        const onPress = () => {
+          const { navigate } = navigation;
+          navigate('post', { url, ward: true });
+        };
+
+        return (
+          <BoardItem
+            data={data}
+            onPress={onPress}
+            onShowUnderlay={separators.highlight}
+            onHideUnderlay={separators.unhighlight}
+          />
+        );
+      }}
       ListHeaderComponent={(
         <>
           <Title label="와드" />

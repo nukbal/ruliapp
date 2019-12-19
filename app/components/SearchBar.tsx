@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { memo, useState, useEffect, useRef } from 'react';
 import {
   TextInput,
   View,
@@ -40,7 +40,7 @@ function run(value: any, toValue: number) {
   return timing(value, { ...config, toValue: new Value(toValue) });
 }
 
-export default function SearchBar({
+function SearchBar({
   keyboardType, returnKeyType,
   onChange, onSubmit, onFocus, onBlur, onCancel,
 }: Props) {
@@ -144,6 +144,7 @@ export default function SearchBar({
     </View>
   );
 }
+export default memo(SearchBar);
 
 const styles = StyleSheet.create({
   container: {
