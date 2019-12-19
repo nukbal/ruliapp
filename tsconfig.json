@@ -17,7 +17,16 @@
     "lib": [
       "esnext"
     ],
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "paths": {
+      "components/*": ["./app/components/*"],
+      "config/*": ["./app/config/*"],
+      "pages/*": ["./app/pages/*"],
+      "hooks/*": ["./app/hooks/*"],
+      "stores/*": ["./app/stores/*"],
+      "styles/*": ["./app/styles/*"],
+      "utils/*": ["./app/utils/*"],
+    }
   },
   "exclude": [
     "ios",

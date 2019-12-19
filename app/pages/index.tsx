@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
-import { getTheme, getThemeMode } from 'app/stores/theme';
+import { getTheme, getThemeMode } from 'stores/theme';
 
 import HeaderRight from './HeaderRight';
 import PostRight from './PostRight';
@@ -10,7 +10,7 @@ import PostRight from './PostRight';
 import BoardStack from './Board';
 import BoardList from './BoardList';
 import PostScreen from './Post';
-import BookmarkList from './Bookmark';
+import WardList from './Ward';
 
 import Settings from './Settings/Settings';
 import Login from './Settings/Login';
@@ -66,7 +66,7 @@ function MainRouter() {
         headerBackTitle: '',
         headerTintColor: theme.gray[800],
         contentStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: theme.gray[50],
         },
       }}
     >
@@ -78,7 +78,7 @@ function MainRouter() {
         })}
       />
       <Main.Screen name="board" component={BoardStack} />
-      <Main.Screen name="bookmark" component={BookmarkList} />
+      <Main.Screen name="ward" component={WardList} />
       <Main.Screen
         name="post"
         component={PostScreen}

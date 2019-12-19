@@ -4,6 +4,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
+    bundleConfig: "metro.config.js",
     enableHermes: true
 ]
 
@@ -12,32 +13,7 @@ apply from: "../../node_modules/react-native/react.gradle"
 project.ext.vectoricons = [
     iconFontNames: [ 'MaterialIcons.ttf' ] // Name of the font files you want to copy
 ]
-
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-
-/**
- * Set this to true to create two separate APKs instead of one:
- *   - An APK that only works on ARM devices
- *   - An APK that only works on x86 devices
- * The advantage is the size of the APK is reduced by about 4MB.
- * Upload all the APKs to the Play Store and people will download
- * the correct one based on the CPU architecture of their device.
- */
-def enableSeparateBuildPerCPUArchitecture = true
-
-/**
- * Run Proguard to shrink the Java bytecode in release builds.
- */
-def enableProguardInReleaseBuilds = true
-
-/**
- * Whether to enable the Hermes VM.
- *
- * This should be set on project.ext.react and mirrored here.  If it is not set
- * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
- * and the benefits of using Hermes will therefore be sharply reduced.
- */
-def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -57,7 +33,15 @@ android {
     splits {
         abi {
             reset()
-            enable enableSeparateBuildPerCPUArchitecture
+            /**
+            * Set this to true to create two separate APKs instead of one:
+            *   - An APK that only works on ARM devices
+            *   - An APK that only works on x86 devices
+            * The advantage is the size of the APK is reduced by about 4MB.
+            * Upload all the APKs to the Play Store and people will download
+            * the correct one based on the CPU architecture of their device.
+            */
+            enable true
             universalApk false  // If true, also generate a universal APK
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
@@ -78,7 +62,10 @@ android {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
             signingConfig signingConfigs.debug
-            minifyEnabled enableProguardInReleaseBuilds
+            /**
+            * Run Proguard to shrink the Java bytecode in release builds.
+            */
+            minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
@@ -100,27 +87,24 @@ android {
         pickFirst "lib/arm64-v8a/libc++_shared.so"
         pickFirst "lib/x86/libc++_shared.so"
         pickFirst "lib/x86_64/libc++_shared.so"
+        // since this app force to use hermes, jsc should be excluded
+        exclude "**/libjsc.so"
     }
 }
 
 configurations.all {
      resolutionStrategy {
        force "com.facebook.soloader:soloader:0.8.0"
+       force "androidx.appcompat:appcompat:1.1.0"
      }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
-
-    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
-        exclude group:'com.facebook.yoga'
-        exclude group:'com.facebook.flipper', module: 'fbjni'
-        exclude group:'com.facebook.litho', module: 'litho-annotations'
-        exclude group:'com.squareup.okhttp3'
-    }
+    implementation "com.facebook.react:react-native:+"  // From node_modules       force "com.facebook.soloader:soloader:0.8.0"
+    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02"
+    implementation "com.facebook.fresco:animated-gif:1.12.0"
 
     def hermesPath = "../../node_modules/hermes-engine/android/";
     debugImplementation files(hermesPath + "hermes-debug.aar")

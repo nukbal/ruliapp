@@ -1,16 +1,15 @@
 import { configureStore, getDefaultMiddleware, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from '@react-native-community/async-storage';
+
 import userReducer from './user';
 import themeReducer from './theme';
 import postReducer from './post';
-import bookmarkReducer from './bookmark';
 
 const rootReducer = combineReducers({
   user: userReducer,
   theme: themeReducer,
   post: postReducer,
-  bookmark: bookmarkReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 const reducer = persistReducer(

@@ -10,12 +10,13 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import Haptic from 'react-native-haptic-feedback';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import setImageHeight from 'app/utils/setImageHeight';
-import { getTheme } from 'app/stores/theme';
-import useCachedFile from 'app/hooks/useCachedFile';
-import { FILE_PREFIX } from 'app/config/constants';
-import saveFile from 'app/utils/saveFile';
+import setImageHeight from 'utils/setImageHeight';
+import { getTheme } from 'stores/theme';
+import useCachedFile from 'hooks/useCachedFile';
+import { FILE_PREFIX } from 'config/constants';
+import saveFile from 'utils/saveFile';
 
 import ProgressBar from './ProgressBar';
 import Text from './Text';
@@ -63,7 +64,7 @@ function LazyImage({ source }: Props) {
     setShow(false);
   }, [uri]);
   const toggleMenu = useCallback(() => {
-    if (!show) Haptic.trigger('impactLight');
+    if (!show) Haptic.trigger('selection');
     setShow(!show);
   }, [show]);
   const height = useMemo(() => setImageHeight(size, layoutWidth), [size, layoutWidth]);
@@ -76,6 +77,7 @@ function LazyImage({ source }: Props) {
     >
       {!!error && (
         <View style={styles.message}>
+          <Icon name="broken-image" color={theme.primary[600]} size={24} />
           <Text color="primary">불러오기 실패</Text>
           <Text color="primary">{source.uri}</Text>
           <Text color="primary">{error}</Text>

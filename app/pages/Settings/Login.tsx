@@ -3,10 +3,10 @@ import { Alert, View, Button, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Title from 'app/components/Title';
-import { getTheme } from 'app/stores/theme';
-import { login } from 'app/stores/user';
-import { USER_AGENT } from 'app/config/constants';
+import Title from 'components/Title';
+import { getTheme } from 'stores/theme';
+import { login } from 'stores/user';
+import { USER_AGENT } from 'config/constants';
 
 import getUserInfo from './getUserInfo';
 

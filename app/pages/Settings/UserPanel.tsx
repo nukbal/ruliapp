@@ -3,9 +3,9 @@ import { View, Alert, Text, StyleSheet, Image } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { getTheme } from 'app/stores/theme';
-import { getUserInfo, getLoginStatus, logout } from 'app/stores/user';
-import ListItem, { listStyles } from 'app/components/ListItem';
+import { getTheme } from 'stores/theme';
+import { getUserInfo, getLoginStatus, logout } from 'stores/user';
+import ListItem, { listStyles } from 'components/ListItem';
 
 const styles = StyleSheet.create({
   panel: {

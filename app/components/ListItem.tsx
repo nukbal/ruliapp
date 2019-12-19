@@ -10,8 +10,8 @@ import {
 import { useSelector } from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
-import Text from 'app/components/Text';
-import { getTheme } from 'app/stores/theme';
+import Text from 'components/Text';
+import { getTheme } from 'stores/theme';
 
 interface Props {
   name: string;

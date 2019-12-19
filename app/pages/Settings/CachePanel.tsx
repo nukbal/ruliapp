@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Alert, ToastAndroid, Platform } from 'react-native';
 import { readDir, unlink, exists } from 'react-native-fs';
-import { CACHE_PATH } from 'app/config/constants';
-import ListItem from 'app/components/ListItem';
-import Text from 'app/components/Text';
+
+import { CACHE_PATH, PATH_CACHE } from 'config/constants';
+import ListItem from 'components/ListItem';
+import Text from 'components/Text';
 
 export default function CachePanel() {
   const [size, setSize] = useState(0);
@@ -14,6 +15,7 @@ export default function CachePanel() {
       if (!isExists) return;
       const cache = await readDir(CACHE_PATH);
       await Promise.all(cache.map((file) => unlink(file.path)));
+      PATH_CACHE.clear();
       setSize(0);
       if (Platform.OS === 'android') {
         ToastAndroid.show('캐시가 삭제되었습니다.', ToastAndroid.SHORT);

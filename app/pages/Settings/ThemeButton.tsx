@@ -2,9 +2,9 @@ import React, { useState, useMemo } from 'react';
 import { Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getTheme, getThemeMode, setMode } from 'app/stores/theme';
-import BottomSheet from 'app/components/BottomSheet';
-import ListItem, { listStyles } from 'app/components/ListItem';
+import { getTheme, getThemeMode, setMode } from 'stores/theme';
+import BottomSheet from 'components/BottomSheet';
+import ListItem, { listStyles } from 'components/ListItem';
 
 const icons = ['brightness-1', 'brightness-2', 'brightness-4', 'brightness-5'];
 function getLabelText(mode: string) {

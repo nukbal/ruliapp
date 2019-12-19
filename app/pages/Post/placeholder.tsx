@@ -2,8 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import Placeholder from 'app/components/Placeholder';
-import { getTheme } from 'app/stores/theme';
+import Placeholder from 'components/Placeholder';
+import { getTheme } from 'stores/theme';
 
 import styles from './styles';
 import Comments from './Comments/placeholder';

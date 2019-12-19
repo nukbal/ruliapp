@@ -3,12 +3,12 @@ import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 
-import { getTheme } from 'app/stores/theme';
-import Text from 'app/components/Text';
-import formatDate from 'app/utils/formatDate';
+import { getTheme } from 'stores/theme';
+import Text from 'components/Text';
+import formatDate from 'utils/formatDate';
 
-import LazyImage from 'app/components/LazyImage';
-import LazyVideo from 'app/components/LazyVideo';
+import LazyImage from 'components/LazyImage';
+import LazyVideo from 'components/LazyVideo';
 import styles from './styles';
 
 interface Props extends CommentRecord {

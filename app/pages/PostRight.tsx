@@ -1,36 +1,53 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { ToastAndroid } from 'react-native';
+import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
-import { getPost } from 'app/stores/post';
-import { getBookmark, setBookmark, removeBookmark } from 'app/stores/bookmark';
-
-import BottomSheet from 'app/components/BottomSheet';
-import ListItem from 'app/components/ListItem';
+import BottomSheet from 'components/BottomSheet';
+import ListItem from 'components/ListItem';
+import { IS_ANDROID } from 'config/constants';
+import { getPost } from 'stores/post';
 
 import HeaderRight from './HeaderRight';
 
 export default function PostRight({ route, navigation }: any) {
+  const { url, bookmark } = route.params;
+  const key = `ward:${url}`;
   const [show, setShow] = useState(false);
-  const dispatch = useDispatch();
-  const data = useSelector(route.params.bookmark ? getBookmark(route.params.url) : getPost(route.params.url));
+  const [warded, isWarded] = useState(false);
+  const data = useSelector(getPost(url));
   const onClose = () => setShow(false);
   const onPress = () => setShow(true);
   const toggleBookmark = () => {
-    if (route.params.bookmark) {
-      dispatch(removeBookmark(route.params.url));
-      navigation.goBack();
-    } else {
-      dispatch(setBookmark(data));
+    if (data && !warded) {
+      AsyncStorage
+        .setItem(key, JSON.stringify(data))
+        .then(() => {
+          if (IS_ANDROID) ToastAndroid.show('와드추가', ToastAndroid.SHORT);
+        });
+    } else if (warded) {
+      AsyncStorage
+        .removeItem(key)
+        .then(() => {
+          if (IS_ANDROID) ToastAndroid.show('와드삭제', ToastAndroid.SHORT);
+        });
     }
     setShow(false);
+    if (bookmark) navigation.goBack();
   };
+
+  useEffect(() => {
+    AsyncStorage
+      .getItem(key)
+      .then((d) => isWarded(!!d));
+  }, [key]);
 
   return (
     <>
       <HeaderRight name="more-vert" onPress={onPress} />
       <BottomSheet show={show} onClose={onClose}>
         <ListItem name="bookmark" onPress={toggleBookmark}>
-          {route.params.bookmark ? '북마크에서 제거하기' : '북마크에 넣기'}
+          {warded ? '와드 제거하기' : '와드 추가하기'}
         </ListItem>
       </BottomSheet>
     </>

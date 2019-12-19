@@ -8,11 +8,11 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Haptic from 'react-native-haptic-feedback';
 
-import { getTheme } from 'app/stores/theme';
-import setImageHeight from 'app/utils/setImageHeight';
-import useCachedFile from 'app/hooks/useCachedFile';
-import saveFile from 'app/utils/saveFile';
-import { FILE_PREFIX } from 'app/config/constants';
+import { getTheme } from 'stores/theme';
+import setImageHeight from 'utils/setImageHeight';
+import useCachedFile from 'hooks/useCachedFile';
+import saveFile from 'utils/saveFile';
+import { FILE_PREFIX } from 'config/constants';
 
 import ProgressBar from './ProgressBar';
 import Text from './Text';
@@ -62,7 +62,7 @@ function LazyVideo({ source }: Props) {
   const onLoad = ({ naturalSize }: OnLoadData) => setSize({ width: naturalSize.width, height: naturalSize.height });
   const onPress = () => setPause(!pause);
   const toggleMenu = () => {
-    if (!bottom) Haptic.trigger('impactLight');
+    if (!bottom) Haptic.trigger('selection');
     showBottomSheet(!bottom);
   };
   const save = async () => {

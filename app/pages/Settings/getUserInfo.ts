@@ -1,6 +1,6 @@
-import parser, { querySelector, querySelectorAll } from 'app/utils/htmlParser';
-import { UserState } from 'app/stores/user';
-import { USER_AGENT } from 'app/config/constants';
+import parser, { querySelector, querySelectorAll } from 'utils/htmlParser';
+import { UserState } from 'stores/user';
+import { USER_AGENT } from 'config/constants';
 
 const config = {
   method: 'GET',

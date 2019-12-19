@@ -4,11 +4,14 @@ import {
   StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight,
 } from 'react-native';
 
-import { bestList, communityList, hobbyList, newsList, gameList } from 'app/config/BoardList';
-import Title from 'app/components/Title';
-import SearchBar from 'app/components/SearchBar';
-import Divider from 'app/components/Divider';
-import { getTheme } from 'app/stores/theme';
+import { bestList, communityList, hobbyList, newsList, gameList } from 'config/BoardList';
+import Title from 'components/Title';
+import SearchBar from 'components/SearchBar';
+import Divider from 'components/Divider';
+import Button from 'components/Button';
+import { getTheme } from 'stores/theme';
+import * as colors from 'styles/static';
+
 
 const styles = StyleSheet.create({
   item: {
@@ -27,6 +30,13 @@ const styles = StyleSheet.create({
   labelText: {
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  headerMenu: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    marginTop: 8,
   },
 });
 
@@ -85,7 +95,18 @@ export default function BoardList({ navigation }: Props) {
         <>
           <Title label="루리웹" />
           <SearchBar onChange={setSearch} />
-          <Text onPress={() => navigation.navigate('bookmark')}>Bookmark</Text>
+          <View style={styles.headerMenu}>
+            <Button color={theme.gray[300]} onPress={() => {}} disabled>
+              커밍순
+            </Button>
+            <Button
+              name="bookmark"
+              color={colors.green[600]}
+              onPress={() => navigation.navigate('ward')}
+            >
+              와드
+            </Button>
+          </View>
         </>
       )}
       renderSectionHeader={renderHeader}

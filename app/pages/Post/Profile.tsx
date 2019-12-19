@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import Text from 'app/components/Text';
-import formatDate from 'app/utils/formatDate';
-import useCachedFile from 'app/hooks/useCachedFile';
-import { FILE_PREFIX } from 'app/config/constants';
+import Text from 'components/Text';
+import formatDate from 'utils/formatDate';
+import useCachedFile from 'hooks/useCachedFile';
+import { FILE_PREFIX } from 'config/constants';
 
 export default function Profile({ date, views, user }: Pick<PostDetailRecord,'user'|'date'|'views'>) {
   const [uri] = useCachedFile(user.image);

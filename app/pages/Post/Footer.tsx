@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
-import { getTheme } from 'app/stores/theme';
+import { getTheme } from 'stores/theme';
 
 export default function ContentFooter({
   url, likes, dislikes, commentSize,

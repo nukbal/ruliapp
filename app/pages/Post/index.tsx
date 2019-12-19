@@ -2,8 +2,8 @@ import React, { useCallback, useMemo } from 'react';
 import { SectionList } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { getTheme } from 'app/stores/theme';
-import Title from 'app/components/Title';
+import { getTheme } from 'stores/theme';
+import Title from 'components/Title';
 
 import Footer from './Footer';
 import Contents from './Contents';
@@ -55,7 +55,7 @@ export default function Post({ route }: Props) {
     <SectionList
       sections={[
         { index: 0, data: contents },
-        { index: 1, data: comments },
+        { index: 1, data: comments, initialNumToRender: 0 },
       ]}
       ListHeaderComponent={ListHeaderComponent}
       renderItem={renderItems}
@@ -75,8 +75,7 @@ export default function Post({ route }: Props) {
 
       removeClippedSubviews
       initialNumToRender={3}
-      maxToRenderPerBatch={5}
-      updateCellsBatchingPeriod={50}
+      maxToRenderPerBatch={3}
       windowSize={5}
     />
   );

@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import { useSelector } from 'react-redux';
-import { getTheme } from 'app/stores/theme';
+import { getTheme } from 'stores/theme';
 
 interface Props {
   progress?: number;

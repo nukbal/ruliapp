@@ -1,17 +1,16 @@
 import { useCallback, useState, useEffect } from 'react';
 import { StatusBar, Alert, Platform } from 'react-native';
-import parsePost from 'app/utils/parsePost';
-import parseComment from 'app/utils/parseComment';
-import { USER_AGENT } from 'app/config/constants';
+import parsePost from 'utils/parsePost';
+import parseComment from 'utils/parseComment';
+import { USER_AGENT } from 'config/constants';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   getPost, setPost, setComments,
-} from 'app/stores/post';
-import { getBookmark } from 'app/stores/bookmark';
+} from 'stores/post';
 
 export default function usePost(url: string, isBookmark?: boolean) {
   const dispatch = useDispatch();
-  const { hasDetail, ...data } = useSelector(isBookmark ? getBookmark(url) : getPost(url));
+  const data = useSelector(getPost(url));
   const [ready, setReady] = useState(false);
   const [isCommentLoading, setCommentLoading] = useState(false);
 
@@ -21,7 +20,7 @@ export default function usePost(url: string, isBookmark?: boolean) {
       setReady(false);
       if (isBookmark) setReady(true);
       if (isDone || isBookmark) return;
-      if (hasDetail) {
+      if (data.url) {
         if (data.commentSize !== data.comments.length) {
           loadComment();
         }
@@ -57,10 +56,11 @@ export default function usePost(url: string, isBookmark?: boolean) {
         const json = parsePost(htmlString, '');
         if (!json) throw new Error('parse failed');
         json.url = url;
+        json.key = url;
         dispatch(setPost(json));
       } catch (e) {
         if (isDone) return;
-        // console.warn(e);
+        console.error(e);
         Alert.alert('error', '해당 글이 존재하지 않습니다.');
       }
       setReady(true);
@@ -115,7 +115,7 @@ export default function usePost(url: string, isBookmark?: boolean) {
         dispatch(setComments({ key: url, comments }));
       }
     } catch (e) {
-      // console.warn(e.message);
+      console.log(e.message);
     }
     setCommentLoading(false);
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);

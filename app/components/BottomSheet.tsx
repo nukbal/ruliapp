@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Modal, Dimensions, LayoutChangeEvent, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, Modal, Dimensions, LayoutChangeEvent } from 'react-native';
 import Ani, { Easing } from 'react-native-reanimated';
 import { useSelector } from 'react-redux';
 
-import { getTheme } from 'app/stores/theme';
+import { getTheme } from 'stores/theme';
 
 const {
   Value,

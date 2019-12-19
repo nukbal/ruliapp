@@ -2,6 +2,7 @@ import { StyleProp, TextStyle } from 'react-native';
 import loadHtml, { INode, querySelector } from './htmlParser';
 import parseComment from './parseComment';
 import formatText from './formatText';
+import parseDate from './parseDate';
 
 export function parseTitle(html: string) {
   const startIdx = (html.indexOf('<title>') + 7);
@@ -181,6 +182,20 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
   const headerNode = querySelector(Nodes, '.board_main_top');
   if (headerNode) {
     res.user = parsePostUser(headerNode);
+    let cursor = querySelector(headerNode, '#reply_count');
+    if (cursor && cursor.attrs) {
+      res.commentSize = parseInt(cursor.attrs.value, 10);
+    }
+
+    cursor = querySelector(headerNode, '.like');
+    if (cursor && cursor.parent && cursor.parent.childNodes.length) {
+      const len = cursor.parent.childNodes.length;
+      const val = cursor.parent.childNodes[len - 1].value;
+      if (val) res.views = parseInt(val.replace('조회 ', ''), 10);
+    }
+
+    cursor = querySelector(headerNode, '.regdate');
+    if (cursor && cursor.value) res.date = parseDate(cursor.value);
   }
 
   const mainNode = querySelector(Nodes, '.board_main_view');

@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { FlatList, ListRenderItemInfo } from 'react-native';
 
-import Title from 'app/components/Title';
-import AppendLoading from 'app/components/AppendLoading';
-import SearchBar from 'app/components/SearchBar';
+import Title from 'components/Title';
+import AppendLoading from 'components/AppendLoading';
+import SearchBar from 'components/SearchBar';
 
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
@@ -25,9 +25,11 @@ interface Props {
 export default function Board({ route, navigation }: Props) {
   const boardId = route.params ? route.params.key : '';
   const [search, setSearch] = useState('');
-  const { list, onRefresh, onEndReached, pushing, appending } = useBoard(boardId, search || undefined);
+  const {
+    list, data, onRefresh, onEndReached, pushing, appending,
+  } = useBoard(boardId, search || undefined);
 
-  const renderItem = useCallback(({ item, separators }: ListRenderItemInfo<string>) => {
+  const renderItem = ({ item, separators }: ListRenderItemInfo<string>) => {
     if (!item) return null;
 
     const onPress = () => {
@@ -37,13 +39,13 @@ export default function Board({ route, navigation }: Props) {
 
     return (
       <BoardItem
-        id={item}
+        data={data[item]}
         onPress={onPress}
         onShowUnderlay={separators.highlight}
         onHideUnderlay={separators.unhighlight}
       />
     );
-  }, [navigation]);
+  };
 
   return (
     <FlatList

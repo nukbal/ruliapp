@@ -1,6 +1,7 @@
 import { Platform, ToastAndroid, PermissionsAndroid } from 'react-native';
 import { PicturesDirectoryPath, exists, mkdir, scanFile, copyFile } from 'react-native-fs';
-import { CACHE_PATH } from '../config/constants';
+
+import { CACHE_PATH } from 'config/constants';
 
 let dirExists = false;
 const androidPath = `${PicturesDirectoryPath}/Ruliapp/`;

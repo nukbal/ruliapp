@@ -1,8 +1,8 @@
 import React from 'react';
 import { ScrollView, View, Linking } from 'react-native';
 
-import Title from 'app/components/Title';
-import ListItem from 'app/components/ListItem';
+import Title from 'components/Title';
+import ListItem from 'components/ListItem';
 
 import UserPanel from './UserPanel';
 import ThemeButton from './ThemeButton';

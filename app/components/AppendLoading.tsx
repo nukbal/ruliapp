@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
-import { getTheme } from 'app/stores/theme';
+import { getTheme } from 'stores/theme';
 import ProgressBar from './ProgressBar';
 
 export default function AppendLoading() {

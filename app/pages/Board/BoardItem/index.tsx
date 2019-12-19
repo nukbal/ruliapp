@@ -2,28 +2,22 @@ import React, { useMemo, memo } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { getTheme } from 'app/stores/theme';
-import { getPost } from 'app/stores/post';
-import { getBookmark } from 'app/stores/bookmark';
-import format from 'app/utils/formatDate';
+import { getTheme } from 'stores/theme';
+import format from 'utils/formatDate';
 
 import styles from './styles';
 import Placeholder from './placeholder';
 
 interface Props {
-  id: string;
+  data: PostItemRecord;
   onPress: () => void;
   onShowUnderlay: any;
   onHideUnderlay: any;
-  bookmark?: boolean;
 }
 
-function BoardItem(props: Props) {
-  const {
-    id, onPress, onShowUnderlay, onHideUnderlay, bookmark,
-  } = props;
+function BoardItem({ onPress, onShowUnderlay, onHideUnderlay, data }: Props) {
+  const { date, subject, user, commentSize, likes, views } = data;
   const theme = useSelector(getTheme);
-  const { date, subject, user, likes, views, commentSize } = useSelector(bookmark ? getBookmark(id) : getPost(id));
   const dateStr = useMemo(() => (date ? format(date) : ''), [date]);
 
   if (!subject) return <Placeholder />;

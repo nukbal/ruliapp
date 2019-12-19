@@ -1,35 +1,75 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useRef, useReducer, useCallback } from 'react';
 import { StatusBar, Platform } from 'react-native';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import qs from 'query-string';
 
-import parseBoardList, { IParseBoard } from 'app/utils/parseBoard';
-import { USER_AGENT, REQUEST_THROTTLE } from 'app/config/constants';
-import { setPostList } from 'app/stores/post';
+import parseBoardList, { IParseBoard } from 'utils/parseBoard';
+import { USER_AGENT, REQUEST_THROTTLE } from 'config/constants';
 
-export default function useBoard(key: string, str?: string) {
-  const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
-  const [pushing, setPushing] = useState(false);
-  const [appending, setAppending] = useState(false);
-  const [list, setList] = useState<string[]>([]);
+const initialState = {
+  page: 1,
+  maxPage: 1,
+  pushing: false,
+  appending: false,
+  list: [] as string[],
+  data: {} as { [url: string]: PostItemRecord },
+};
+const { reducer, actions } = createSlice({
+  name: 'board',
+  initialState,
+  reducers: {
+    setPostList(state, action: PayloadAction<PostItemRecord[]>) {
+      for (let i = 0; i < action.payload.length; i += 1) {
+        const target = action.payload[i];
+        state.data[target.url] = target;
+        if (state.list.indexOf(target.url) === -1) state.list.push(target.url);
+      }
+      state.pushing = false;
+      state.appending = false;
+    },
+    setPage(state, action: PayloadAction<number>) {
+      state.page = action.payload;
+      state.appending = false;
+      state.pushing = false;
+    },
+    append(state) {
+      if (!state.appending) {
+        state.appending = true;
+        state.page = state.maxPage + 1;
+        state.maxPage = state.page;
+      }
+    },
+    refresh(state) {
+      if (!state.pushing) {
+        state.page = 1;
+        state.pushing = true;
+      }
+    },
+    clearList(state) {
+      state.list = [];
+    },
+    done(state) {
+      state.appending = false;
+      state.pushing = false;
+    },
+  },
+});
+
+export default function useBoard(key: string, str: string = 'subject') {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { page, pushing } = state;
   const lastRan = useRef<number | null>(null);
 
-  const request = useCallback(async (
-    params: { page: number, search_key?: string, cate?: string } = { page: 1 },
-  ) => {
-    if (lastRan.current && (Date.now() - lastRan.current < REQUEST_THROTTLE)) return;
+  useEffect(() => {
+    if (lastRan.current && (Date.now() - lastRan.current < REQUEST_THROTTLE)) {
+      dispatch(actions.done());
+      return;
+    }
     lastRan.current = Date.now();
     let targetUrl = `https://m.ruliweb.com/${key}`;
 
-    if (params) {
-      const q = { ...params } as any;
-      if (params.search_key) {
-        q.search_type = 'subject';
-      }
-      const query = qs.stringify(q);
-      targetUrl += `?${query}`;
-    }
+    const query = qs.stringify({ page, search_key: str });
+    targetUrl += `?${query}`;
 
     const config: RequestInit = {
       method: 'GET',
@@ -44,48 +84,26 @@ export default function useBoard(key: string, str?: string) {
         Referer: targetUrl,
       },
     };
-    if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
+    async function request() {
+      if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
 
-    try {
-      if (params.page === 1 && params.search_key) setList([]);
+      try {
+        if (page === 1 && str !== 'subject') dispatch(actions.clearList());
 
-      const response = await fetch(targetUrl, config);
-      const htmlString = await response.text();
-      const json: IParseBoard = parseBoardList(htmlString);
-
-      const keys = json.rows.map((item: PostItemRecord) => item.url);
-      dispatch(setPostList(json.rows));
-      if (params.page === 1) {
-        setList(keys);
-      } else {
-        setList((lst) => Array.from(new Set([...lst, ...keys])));
+        const response = await fetch(targetUrl, config);
+        const htmlString = await response.text();
+        const json: IParseBoard = parseBoardList(htmlString);
+        dispatch(actions.setPostList(json.rows));
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      // console.error(e);
+      if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
     }
-    if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
-  }, [dispatch, key]);
+    request();
+  }, [key, page, str, pushing]);
 
-  useEffect(() => {
-    if (key) request({ page: 1, search_key: str });
-  }, [key, request, str]);
+  const onRefresh = useCallback(async () => dispatch(actions.refresh()), []);
+  const onEndReached = useCallback(async () => dispatch(actions.append()), []);
 
-  const onRefresh = async () => {
-    if (key && !pushing && list.length > 0) {
-      setPushing(true);
-      await request({ page: 1, search_key: str });
-      setPushing(false);
-    }
-  };
-
-  const onEndReached = async () => {
-    if (key && !appending && list.length > 0) {
-      setAppending(true);
-      await request({ page: page + 1 });
-      setPage(page + 1);
-      setAppending(false);
-    }
-  };
-
-  return { list, request, onRefresh, onEndReached, pushing, appending };
+  return { ...state, onEndReached, onRefresh };
 }

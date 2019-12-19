@@ -1,23 +1,24 @@
 {
   "extends": [
+    "react-app",
     "airbnb",
     "@react-native-community"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
   ],
   "settings": {
     "import/resolver": {
         "node": {
-            "paths": ["."],
-            "extensions": [".js", ".ts", ".tsx"]
+            "paths": ["app"],
+            "extensions": [".js", ".jsx", ".ts", ".tsx"]
         }
     }
   },
   "rules": {
     "prettier/prettier": "off",
-    "jsx-a11y/href-no-hash" : "off",
-    "jsx-a11y/anchor-is-valid": [ "error", {
-      "components": [ "Link" ],
-      "specialLink": ["to"]
-    }],
+    "import/extensions": "off",
     "react/no-unused-prop-types": "off",
     "object-curly-newline": "off",
     "react/jsx-filename-extension": "off",

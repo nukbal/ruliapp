@@ -9,11 +9,11 @@ import {
   Keyboard,
 } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { useSelector } from 'react-redux';
-import { getTheme } from 'app/stores/theme';
+import { getTheme } from 'stores/theme';
+import { fontSize } from 'styles/static';
 
 interface Props {
   keyboardType?: '' | 'default';
@@ -34,7 +34,7 @@ const config = {
   duration: 150,
   easing: Easing.bezier(0.50, 0, 1, 1),
 };
-const BUTTON_WIDTH = 68;
+const BUTTON_WIDTH = 60;
 
 function run(value: any, toValue: number) {
   return timing(value, { ...config, toValue: new Value(toValue) });
@@ -46,9 +46,9 @@ export default function SearchBar({
 }: Props) {
   const theme = useSelector(getTheme);
   const [text, setText] = useState('');
-  const [width, setWidth] = useState(Dimensions.get('window').width - 16);
+  const [width, setWidth] = useState(Dimensions.get('window').width);
   const ref = useRef<TextInput>(null);
-  const value = useRef(new Value(0));
+  const [value] = useState(new Value(0));
 
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -70,12 +70,12 @@ export default function SearchBar({
   }, [text, onChange]);
 
   const handleFocus = () => {
-    run(value.current, 1).start();
+    run(value, 1).start();
     if (onFocus) onFocus();
   };
 
   const handleBlur = () => {
-    run(value.current, 0).start(({ finished }) => {
+    run(value, 0).start(({ finished }) => {
       if (finished && onBlur) onBlur();
     });
   };
@@ -83,7 +83,7 @@ export default function SearchBar({
   const handleCancel = () => {
     setText('');
     if (onCancel) onCancel();
-    run(value.current, 0).start();
+    run(value, 0).start();
   };
 
   const handleSubmit = () => {
@@ -91,7 +91,7 @@ export default function SearchBar({
     handleBlur();
   };
 
-  const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setWidth(nativeEvent.layout.width - 16);
+  const onLayout = ({ nativeEvent }: LayoutChangeEvent) => setWidth(nativeEvent.layout.width);
 
   return (
     <View style={styles.container} onLayout={onLayout}>
@@ -100,14 +100,14 @@ export default function SearchBar({
           styles.inputWrapper,
           {
             backgroundColor: theme.gray[100],
-            width: value.current.interpolate({
+            width: value.interpolate({
               inputRange: [0, 1],
               outputRange: [width, width - BUTTON_WIDTH],
             }),
           },
         ]}
       >
-        <Icon name="search" size={18} color={theme.gray[700]} style={styles.searchIcon} />
+        <Icon name="search" size={fontSize[300]} color={theme.gray[700]} style={styles.searchIcon} />
         <TextInput
           ref={ref}
           style={[styles.textInput, { color: theme.gray[800] }]}
@@ -124,24 +124,23 @@ export default function SearchBar({
           keyboardType={keyboardType || 'default'}
         />
       </Animated.View>
-      <TouchableOpacity style={styles.filter} onPress={handleCancel}>
-        <Animated.Text
-          style={[
-            styles.cancelText,
-            {
-              color: theme.primary[600],
-              transform: [{
-                translateX: value.current.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [BUTTON_WIDTH, 0],
-                }),
-              }],
-            },
-          ]}
-        >
-          Cancel
-        </Animated.Text>
-      </TouchableOpacity>
+      <Animated.Text
+        onPress={handleCancel}
+        style={[
+          styles.cancelText,
+          {
+            color: theme.primary[600],
+            transform: [{
+              translateX: value.interpolate({
+                inputRange: [0, 1],
+                outputRange: [BUTTON_WIDTH, 0],
+              }),
+            }],
+          },
+        ]}
+      >
+        Cancel
+      </Animated.Text>
     </View>
   );
 }
@@ -150,7 +149,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     maxWidth: 400,
-    paddingHorizontal: 8,
+    margin: 8,
     flexDirection: 'row',
     alignItems: 'center',
     overflow: 'hidden',
@@ -158,29 +157,26 @@ const styles = StyleSheet.create({
   inputWrapper: {
     position: 'relative',
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'flex-start',
-    padding: Platform.OS === 'android' ? 0 : 8,
+    padding: Platform.OS === 'android' ? 4 : 8,
     paddingLeft: 32,
     borderRadius: 8,
   },
   searchIcon: {
     position: 'absolute',
-    left: Platform.OS === 'android' ? 12 : 8,
-    top: Platform.OS === 'android' ? 12 : 8,
+    left: 8,
+    top: 8,
   },
   textInput: {
     flex: 1,
-    fontSize: 15,
-  },
-  filter: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    width: '100%',
+    margin: 0,
+    padding: 0,
+    fontSize: fontSize[100],
   },
   cancelText: {
     width: BUTTON_WIDTH,
-    fontSize: 17,
+    fontSize: fontSize[200],
     textAlign: 'center',
   },
 });

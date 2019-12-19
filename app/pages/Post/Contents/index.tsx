@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import Text from 'app/components/Text';
+import Text from 'components/Text';
 
-import ShareCard from 'app/components/ShareCard';
-import LazyImage from 'app/components/LazyImage';
-import LazyVideo from 'app/components/LazyVideo';
-import Link from 'app/components/Link';
+import ShareCard from 'components/ShareCard';
+import LazyImage from 'components/LazyImage';
+import LazyVideo from 'components/LazyVideo';
+import Link from 'components/Link';
 
 export const styles = StyleSheet.create({
   media: {
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default function ContentItem({ type, content }: ContentRecord) {
+export default function ContentItem({ type, content, style }: ContentRecord) {
   if (!type || !content) return null;
 
   switch (type) {
@@ -46,7 +46,7 @@ export default function ContentItem({ type, content }: ContentRecord) {
       return <Link to={content} />;
     }
     default: {
-      return <Text style={[styles.text]}>{content}</Text>;
+      return <Text style={[styles.text, style]}>{content}</Text>;
     }
   }
 }

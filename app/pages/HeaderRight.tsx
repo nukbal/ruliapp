@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
-import { getTheme } from 'app/stores/theme';
+import { getTheme } from 'stores/theme';
 
 let marginRight: number | undefined;
 if (Platform.OS !== 'ios') {

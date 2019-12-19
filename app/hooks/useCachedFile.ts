@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { downloadFile, exists, stopDownload, moveFile, mkdir } from 'react-native-fs';
-import { CACHE_PATH } from '../config/constants';
-import compress from '../utils/compressUrl';
+
+import { CACHE_PATH, PATH_CACHE as cache } from 'config/constants';
+import compress from 'utils/compressUrl';
 
 let isLoaded = false;
-const cache = {} as { [url: string]: number };
+const jobqueue = {} as { [url: string]: number };
 
 async function download(url: string, onProgress?: (interval: number) => void) {
   if (!isLoaded) {
@@ -21,20 +22,25 @@ async function download(url: string, onProgress?: (interval: number) => void) {
     return filename;
   }
 
+  if (jobqueue[url] === -1) return;
+
   const cacheFilename = `${filename}.cache`;
   const { jobId, promise } = downloadFile({
     fromUrl: url!,
     toFile: cacheFilename,
+    headers: {
+      'Accept-Ranges': 'none',
+    },
     progress: (e) => {
-      if (onProgress && e.jobId === cache[url]) {
+      if (onProgress && e.jobId === jobqueue[url]) {
         onProgress(e.bytesWritten / e.contentLength);
       }
     },
   });
-  cache[url] = jobId;
+  jobqueue[url] = jobId;
 
   const { statusCode } = await promise;
-  delete cache[url];
+  delete jobqueue[url];
 
   if (statusCode < 400) {
     await moveFile(cacheFilename, filename);
@@ -51,13 +57,27 @@ export default function useCachedFile(url?: string, enableProgress: boolean = tr
 
   useEffect(() => {
     if (!url) return;
-    download(url, enableProgress ? setProgress : undefined)
-      .then((filename) => filename && setPath(filename))
-      .catch((e) => setError(e.message));
+    if (cache.has(url)) {
+      const filepath = cache.get(url);
+      setPath(filepath);
+    } else {
+      download(url, enableProgress ? setProgress : undefined)
+        .then((filename) => {
+          if (filename) {
+            if (jobqueue[url] !== -1) setPath(filename);
+            cache.set(url, filename);
+          }
+        })
+        .catch((e) => jobqueue[url] !== -1 && setError(e.message));
+    }
     return () => {
-      if (cache[url]) stopDownload(cache[url]);
+      if (jobqueue[url]) {
+        stopDownload(jobqueue[url]);
+        jobqueue[url] = -1;
+      }
     };
-  }, [url, enableProgress]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
 
   return [path, progress, error];
 }

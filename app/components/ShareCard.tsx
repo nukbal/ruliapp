@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import { StyleSheet, View, Text, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ProgressBar from 'app/components/ProgressBar';
-import { getTheme } from 'app/stores/theme';
+import ProgressBar from 'components/ProgressBar';
+import { getTheme } from 'stores/theme';
+import { SHARE_CACHE as cache } from 'config/constants';
 import Image from './LazyImage';
 
 interface Props {
@@ -54,28 +55,34 @@ function ShareCard({ uri }: Props) {
 
   useEffect(() => {
     let isUnmount = false;
-    if (uri.indexOf('youtube.com') > -1) {
+    if (uri.indexOf('youtube.com/embed/') > -1) {
+      const videoId = uri.substring(uri.indexOf('/embed/') + 7, uri.length);
+      const url = `https://www.youtube.com/watch?v=${videoId}`;
+      if (cache.has(videoId)) {
+        setData(cache.get(videoId));
+        setReady(true);
+        return;
+      }
+
       fetch(uri, { method: 'get' })
         .then((res) => (isUnmount ? '' : res.text()))
         .then((html) => {
           if (isUnmount) return;
-
           const startIdx = html.indexOf('"embedded_player_response":');
           const endIdx = html.indexOf('}"', startIdx);
           if (startIdx > 0 && endIdx > 0) {
             const target = html.substring(startIdx + 27, endIdx + 2);
             const json = JSON.parse(JSON.parse(target));
-            setData({
+            const targetData = {
               title: json.embedPreview.thumbnailPreviewRenderer.title.runs[0].text,
               image: json.embedPreview.thumbnailPreviewRenderer.defaultThumbnail.thumbnails[1],
-              url: (
-                `https://www.youtube.com/watch?v=${
-                  json.embedPreview.thumbnailPreviewRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint.videoId}`
-              ),
-            });
+              url,
+            };
+            cache.set(videoId, targetData);
+            setData(targetData);
           } else {
             // youtube video is not available
-            setData({ image: null, url: '', title: '', error: true });
+            setData({ image: null, url, title: '', error: true });
           }
           setReady(true);
         })
@@ -113,14 +120,16 @@ function ShareCard({ uri }: Props) {
     );
   }
 
+  const titleStyle = data.image ? { borderColor: theme.gray[300], borderTopWidth: 1, paddingTop: 6 } : {};
+
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor, borderColor: theme.gray[300] }, data.image ? {} : { minHeight: 0 }]}
+      style={[styles.container, { backgroundColor, borderColor: theme.gray[300] }]}
       onPress={onPress}
       activeOpacity={0.75}
     >
       {data.image && <Image source={{ uri: data.image.url }} />}
-      <View style={[styles.info, data.image ? { borderColor: theme.gray[300], borderTopWidth: 1, paddingTop: 6 } : {}]}>
+      <View style={[styles.info, titleStyle]}>
         <Text numberOfLines={2} style={[styles.title, { color: theme.gray[800] }]}>{data.title}</Text>
         <Icon name="launch" size={16} color={theme.primary[600]} style={styles.icon} />
       </View>

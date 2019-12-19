@@ -28,3 +28,20 @@ export const fontSize = {
   1000: 40,
   1100: 45,
 };
+
+export const white = '#ffffff';
+export const black = '#000000';
+
+export const green = {
+  400: '#33ab84',
+  500: '#2d9d78',
+  600: '#268e6c',
+  700: '#12805c',
+};
+
+export const orange = {
+  400: '#f29423',
+  500: '#e68619',
+  600: '#da7b11',
+  700: '#cb6f10',
+};

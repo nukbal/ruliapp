@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import Placeholder from 'app/components/Placeholder';
+import Placeholder from 'components/Placeholder';
 
 import styles from './styles';
 

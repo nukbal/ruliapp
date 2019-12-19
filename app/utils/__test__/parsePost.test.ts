@@ -125,6 +125,8 @@ describe('html parser', () => {
       ],
 			subject: 'test title',
 			likes: 17,
+			commentSize: 20,
+			views: 6168,
       user: {
         experience: 68,
         id: '1076219',

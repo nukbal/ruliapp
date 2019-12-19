@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text as Warpper, TextProps } from 'react-native';
 import { useSelector } from 'react-redux';
-import { getTheme } from 'app/stores/theme';
-import { fontSize } from 'app/styles/static';
+import { getTheme } from 'stores/theme';
+import { fontSize } from 'styles/static';
 
 interface Props extends TextProps {
   color?: 'gray' | 'red' | 'primary';
@@ -23,7 +23,7 @@ export default function Text({
         // @ts-ignore
         color: theme[color][shade],
         fontSize: fontSize[size],
-        lineHeight: fontSize[size] * 1.25,
+        lineHeight: fontSize[size] * 1.5,
       }, ...style]}
       {...rest}
     >
