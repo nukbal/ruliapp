@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { getTheme, getThemeMode } from 'stores/theme';
 
@@ -15,9 +15,9 @@ import WardList from './Ward';
 import Settings from './Settings/Settings';
 import Login from './Settings/Login';
 
-const Root = createNativeStackNavigator();
-const Main = createNativeStackNavigator();
-const Config = createNativeStackNavigator();
+const Root = createStackNavigator();
+const Main = createStackNavigator();
+const Config = createStackNavigator();
 
 function ConfigRouter() {
   const theme = useSelector(getTheme);
@@ -31,7 +31,7 @@ function ConfigRouter() {
         },
         headerTitle: '',
         headerBackTitle: '',
-        contentStyle: {
+        cardStyle: {
           backgroundColor: theme.gray[50],
         },
         headerRight: () => (
@@ -43,6 +43,7 @@ function ConfigRouter() {
             }}
           />
         ),
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       })}
     >
       <Config.Screen name="settings" component={Settings} />
@@ -58,16 +59,16 @@ function MainRouter() {
     <Main.Navigator
       initialRouteName="main"
       screenOptions={{
-        headerHideShadow: true,
         headerStyle: {
           backgroundColor: Platform.OS === 'ios' ? 'transparent' : theme.gray[50],
         },
         headerTitle: '',
         headerBackTitle: '',
         headerTintColor: theme.gray[800],
-        contentStyle: {
+        cardStyle: {
           backgroundColor: theme.gray[50],
         },
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       }}
     >
       <Main.Screen
@@ -105,12 +106,13 @@ export default function Router() {
   return (
     <Root.Navigator
       initialRouteName="root"
+      mode="modal"
       screenOptions={{
         headerShown: false,
-        presentation: 'modal',
-        contentStyle: {
+        cardStyle: {
           backgroundColor: theme.gray[50],
         },
+        cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
       }}
     >
       <Root.Screen name="root" component={MainRouter} />

@@ -34,8 +34,6 @@ const styles = StyleSheet.create({
   headerMenu: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
     marginTop: 8,
   },
 });
