@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight,
+  StyleSheet, SectionList, SectionListData, Text, View, TouchableHighlight, ScrollView,
 } from 'react-native';
 
 import { bestList, communityList, hobbyList, newsList, gameList } from 'config/BoardList';
@@ -95,18 +95,15 @@ export default function BoardList({ navigation }: Props) {
         <>
           <Title label="루리웹" />
           <SearchBar onChange={setSearch} />
-          <View style={styles.headerMenu}>
-            <Button color={theme.gray[300]} onPress={() => {}} disabled>
-              커밍순
-            </Button>
+          <ScrollView style={styles.headerMenu} horizontal>
             <Button
-              name="bookmark"
+              name="pin-drop"
               color={colors.green[600]}
               onPress={() => navigation.navigate('ward')}
             >
               와드
             </Button>
-          </View>
+          </ScrollView>
         </>
       )}
       renderSectionHeader={renderHeader}

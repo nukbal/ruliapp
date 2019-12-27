@@ -54,7 +54,6 @@ export default function Post({ route }: Props) {
         // @ts-ignore
         { key: 'comments', data: comments },
       ]}
-      ListHeaderComponent={ListHeaderComponent}
       renderItem={({ item, section }) => {
         if (section.key === 'contents') {
           return <Contents {...item} />;
@@ -65,7 +64,7 @@ export default function Post({ route }: Props) {
       keyExtractor={keyExtractor}
       renderSectionHeader={({ section }) => {
         if (section.key === 'comments') return ListFooter;
-        return null;
+        return ListHeaderComponent;
       }}
       stickySectionHeadersEnabled={false}
       refreshing={isCommentLoading}

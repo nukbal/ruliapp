@@ -1,14 +1,15 @@
 import { useEffect, useRef, useReducer, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { StatusBar, Platform } from 'react-native';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import qs from 'query-string';
 
 import parseBoardList, { IParseBoard } from 'utils/parseBoard';
 import { USER_AGENT, REQUEST_THROTTLE } from 'config/constants';
+import { updatePostFromBoard } from 'stores/post';
 
 const initialState = {
   page: 1,
-  maxPage: 1,
   pushing: false,
   appending: false,
   list: [] as string[],
@@ -19,10 +20,20 @@ const { reducer, actions } = createSlice({
   initialState,
   reducers: {
     setPostList(state, action: PayloadAction<PostItemRecord[]>) {
+      const heads = [];
       for (let i = 0; i < action.payload.length; i += 1) {
         const target = action.payload[i];
         state.data[target.url] = target;
-        if (state.list.indexOf(target.url) === -1) state.list.push(target.url);
+        if (state.list.indexOf(target.url) === -1) {
+          if (state.pushing) {
+            heads.push(target.url);
+          } else {
+            state.list.push(target.url);
+          }
+        }
+      }
+      if (heads.length) {
+        state.list = Array.from(new Set([...heads, ...state.list]));
       }
       state.pushing = false;
       state.appending = false;
@@ -35,13 +46,11 @@ const { reducer, actions } = createSlice({
     append(state) {
       if (!state.appending) {
         state.appending = true;
-        state.page = state.maxPage + 1;
-        state.maxPage = state.page;
+        state.page += 1;
       }
     },
     refresh(state) {
       if (!state.pushing) {
-        state.page = 1;
         state.pushing = true;
       }
     },
@@ -55,20 +64,30 @@ const { reducer, actions } = createSlice({
   },
 });
 
-export default function useBoard(key: string, str: string = 'subject') {
+interface BoardSearchParam {
+  page: number;
+  search_type: 'subject' | 'subject_content';
+  search_key?: string;
+}
+
+export default function useBoard(key: string, str?: string) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { page, pushing } = state;
+  const update = useDispatch();
+  const { page } = state;
   const lastRan = useRef<number | null>(null);
 
-  useEffect(() => {
+  const request = useCallback(async (isRefresh?: boolean) => {
     if (lastRan.current && (Date.now() - lastRan.current < REQUEST_THROTTLE)) {
       dispatch(actions.done());
       return;
     }
     lastRan.current = Date.now();
     let targetUrl = `https://m.ruliweb.com/${key}`;
+    const params = { search_type: 'subject', page } as BoardSearchParam;
+    if (str) params.search_key = str;
+    if (isRefresh) params.page = 1;
 
-    const query = qs.stringify({ page, search_key: str });
+    const query = qs.stringify(params);
     targetUrl += `?${query}`;
 
     const config: RequestInit = {
@@ -84,25 +103,30 @@ export default function useBoard(key: string, str: string = 'subject') {
         Referer: targetUrl,
       },
     };
-    async function request() {
-      if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
+    if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
 
-      try {
-        if (page === 1 && str !== 'subject') dispatch(actions.clearList());
+    try {
+      if (page === 1 && !isRefresh) dispatch(actions.clearList());
 
-        const response = await fetch(targetUrl, config);
-        const htmlString = await response.text();
-        const json: IParseBoard = parseBoardList(htmlString);
-        dispatch(actions.setPostList(json.rows));
-      } catch (e) {
-        console.error(e);
-      }
-      if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
+      const response = await fetch(targetUrl, config);
+      const htmlString = await response.text();
+      const json: IParseBoard = parseBoardList(htmlString);
+      dispatch(actions.setPostList(json.rows));
+      update(updatePostFromBoard(json.rows));
+    } catch (e) {
+      console.error(e);
     }
-    request();
-  }, [key, page, str, pushing]);
+    if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
+  }, [key, page, str, update]);
 
-  const onRefresh = useCallback(async () => dispatch(actions.refresh()), []);
+  useEffect(() => {
+    request();
+  }, [request]);
+
+  const onRefresh = useCallback(async () => {
+    dispatch(actions.refresh());
+    request(true);
+  }, [request]);
   const onEndReached = useCallback(async () => dispatch(actions.append()), []);
 
   return { ...state, onEndReached, onRefresh };

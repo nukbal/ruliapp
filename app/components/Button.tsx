@@ -30,11 +30,12 @@ export default function Button({ children, name, color, onPress, disabled }: Pro
 const styles = StyleSheet.create({
   button: {
     flex: 1,
+    minWidth: 175,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 6,
-    paddingVertical: 4,
+    paddingVertical: 6,
     margin: 8,
   },
   buttonText: {

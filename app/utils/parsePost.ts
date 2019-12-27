@@ -80,7 +80,10 @@ export function findContext(
       let style: StyleProp<TextStyle> | undefined;
       if (
         current.parent
-        && current.parent.tagName === 'b'
+        && (
+          current.parent.tagName === 'b'
+          || current.parent.tagName === 'strong'
+        )
       ) {
         style = { fontWeight: 'bold' };
       }

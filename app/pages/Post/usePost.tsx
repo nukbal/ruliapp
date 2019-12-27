@@ -21,7 +21,7 @@ export default function usePost(url: string, isBookmark?: boolean) {
       if (isBookmark) setReady(true);
       if (isDone || isBookmark) return;
       if (data.url) {
-        if (data.commentSize !== data.comments.length) {
+        if (data.commentSize && data.commentSize > data.comments.length) {
           loadComment();
         }
         setReady(true);
@@ -87,7 +87,10 @@ export default function usePost(url: string, isBookmark?: boolean) {
     const key = url.substring(idx + 6, url.length);
     let page = 1;
 
-    if (data.commentSize && data.commentSize > 100) {
+    if (
+      data.commentSize
+      && data.commentSize > 100
+    ) {
       page = 2;
     }
 
