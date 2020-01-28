@@ -8,7 +8,7 @@ import {
   getPost, setPost, setComments,
 } from 'stores/post';
 
-export default function usePost(url: string, isBookmark?: boolean) {
+export default function usePost(url: string, isWard?: boolean) {
   const dispatch = useDispatch();
   const data = useSelector(getPost(url));
   const [ready, setReady] = useState(false);
@@ -18,8 +18,8 @@ export default function usePost(url: string, isBookmark?: boolean) {
     let isDone = false;
     async function loadPost() {
       setReady(false);
-      if (isBookmark) setReady(true);
-      if (isDone || isBookmark) return;
+      if (isWard) setReady(true);
+      if (isDone || isWard) return;
       if (data.url) {
         if (data.commentSize && data.commentSize > data.comments.length) {
           loadComment();

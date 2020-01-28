@@ -22,11 +22,11 @@ function keyExtractor(item: CommentRecord | ContentRecord) {
 }
 
 export default function Post({ route }: Props) {
-  const { url, bookmark } = route.params;
+  const { url, ward } = route.params;
   const {
     subject, contents, comments, ready, isCommentLoading, loadComment,
     user, date, views, likes, dislikes, commentSize,
-  } = usePost(url, bookmark);
+  } = usePost(url, ward);
   const theme = useSelector(getTheme);
 
   const ListHeaderComponent = useMemo(() => (ready ? (
