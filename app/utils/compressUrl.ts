@@ -17,5 +17,5 @@ export default function compress(url: string) {
   return safeUrl
     .replace(/^(http|https)/g, '')
     .replace(/[^a-zA-Z0-9-_]/g, '')
-    .replace('ruliwebcom', '') + ext;
+    .replace('ruliweb', '') + ext;
 }
