@@ -438,4 +438,67 @@ describe('html parser', () => {
       user: {},
     });
 	});
+
+	it('pattern-8: bottom tag is in the view_content', () => {
+		const html = `
+		<title>test | ruliapp</title>
+<!-- board_main start -->
+<div class="board_main_top"></div>
+<div class="board_main_view">
+  <div class="view_content">
+    <div class="row">
+      <div>
+        <p style="text-align: center;">
+          <embed src="https://twitter.com/i/videos/tweet/1217008470907445249"
+            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen autostart="0" autoplay="0">
+          <br>
+        </p>
+        <p style="text-align: center;">
+          <span>some test</span>
+        </p>
+      </div>
+      <br>
+    </div>
+  </div>
+			<div class="board_main_bottom">
+				<div class="row">
+					<div class="share_wrapper row">
+						<ul>
+							<li class="col">
+								<div class="sns_desc">share</div>
+							</li>
+							<li class="col">
+								<div class="sns_desc">url copy</div>
+							</li>
+							<li class="col">
+								<div class="sns_desc">facebook</div>
+							</li>
+							<li class="col">
+								<div class="sns_desc">twitter</div>
+								</a>
+							</li>
+							<li class="col">
+								<div class="sns_desc">naver</div>
+							</li>
+							<li class="col">
+								<div class="sns_desc">kakao</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div><!-- board_main end --> 
+		`;
+    const data = parser(html, '');
+    expect(data).toEqual({
+			key: '',
+      comments: [],
+      contents: [
+        { type: 'text', key: '_0_0', content: 'some test' },
+			],
+      subject: 'test',
+      user: {},
+    });
+	})
 });

@@ -1,4 +1,3 @@
-import { StyleProp, TextStyle } from 'react-native';
 import loadHtml, { INode, querySelector } from './htmlParser';
 import parseComment from './parseComment';
 import formatText from './formatText';
@@ -44,6 +43,10 @@ export function rowSelector(root: INode, pattern: string[]): INode[] | undefined
   let res: INode[] = [];
 
   if (pattern.indexOf(root.tagName) > -1) return [root];
+  // break if current root is board_main_bottom (end of content)
+  if (root.attrs && root.attrs.class === 'board_main_bottom') {
+    return res;
+  }
   if (root.childNodes) {
     let cursor;
     for (let i = 0, len = root.childNodes.length; i < len; i += 1) {
@@ -73,11 +76,14 @@ export function findContext(
         && current.parent.attrs
         && current.parent.attrs.href
       ) {
-        const content = current.parent.attrs.href;
+        let content = current.parent.attrs.href;
+        if (content.indexOf('//web.ruliweb.com/link.php?ol=') !== -1) {
+          content = decodeURIComponent(content.replace('//web.ruliweb.com/link.php?ol=', ''));
+        }
         return { key, type: 'link', content };
       }
 
-      let style: StyleProp<TextStyle> | undefined;
+      const res = { key, type: 'text', content: value } as ContentRecord;
       if (
         current.parent
         && (
@@ -85,9 +91,9 @@ export function findContext(
           || current.parent.tagName === 'strong'
         )
       ) {
-        style = { fontWeight: 'bold' };
+        res.style = { fontWeight: 'bold' };
       }
-      return { key, type: 'text', content: value, style };
+      return res;
     }
     case 'img': {
       if (!current.attrs || !current.attrs.src) return;
@@ -211,7 +217,11 @@ export default function parsePost(htmlString: string, prefix: string = ''): Post
 
   const source = querySelector(mainNode, '.source_url a');
   if (source && source.attrs) {
-    res.contents.unshift({ key: 'source', type: 'reference', content: source.attrs.href });
+    let content = source.attrs.href;
+    if (content.indexOf('//web.ruliweb.com/link.php?ol=') !== -1) {
+      content = decodeURIComponent(content.replace('//web.ruliweb.com/link.php?ol=', ''));
+    }
+    res.contents.unshift({ key: 'source', type: 'reference', content });
   }
 
   const likesNode = querySelector(mainNode, '.like_value text');
