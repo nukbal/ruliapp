@@ -1,8 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import theme from '../styles';
+import darkTheme from '../styles/dark';
+import lightTheme from '../styles/light';
 import { RootState } from './index';
 
-type themeMode = 'black' | 'dark' | 'light' | 'white';
 interface ColorType {
   400: string;
   500: string;
@@ -22,15 +22,15 @@ interface GrayType extends ColorType {
 
 const themeSlice = createSlice({
   name: 'theme',
-  initialState: 'black' as themeMode,
+  initialState: false,
   reducers: {
-    setMode(_, action: PayloadAction<themeMode>) {
+    setDarkMode(_, action: PayloadAction<boolean>) {
       return action.payload;
     },
   },
 });
 export const getThemeMode = (state: RootState) => state.theme;
-export const getTheme = createSelector(getThemeMode, (mode) => theme[mode]);
+export const getTheme = createSelector(getThemeMode, (mode) => mode ? darkTheme : lightTheme);
 
-export const { setMode } = themeSlice.actions;
+export const { setDarkMode } = themeSlice.actions;
 export default themeSlice.reducer;

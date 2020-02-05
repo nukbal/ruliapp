@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Platform, StatusBar } from 'react-native';
-// import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
@@ -32,7 +32,6 @@ function BackButton({ tintColor }: { tintColor: string }) {
 }
 
 function ConfigRouter() {
-  const theme = useSelector(getTheme);
   return (
     <Config.Navigator
       initialRouteName="settings"
@@ -40,13 +39,7 @@ function ConfigRouter() {
         headerTitle: '',
         headerBackTitle: '',
         headerBackImage: BackButton,
-        headerStyle: {
-          backgroundColor: theme.gray[50],
-        },
         headerHideShadow: true,
-        contentStyle: {
-          backgroundColor: theme.gray[50],
-        },
         headerRight: () => (
           <HeaderRight
             name="close"
@@ -62,28 +55,20 @@ function ConfigRouter() {
 }
 
 function MainRouter() {
-  const theme = useSelector(getTheme);
-
   return (
     <Main.Navigator
       initialRouteName="main"
       screenOptions={{
         headerTitle: '',
         headerBackTitle: '',
-        headerStyle: {
-          backgroundColor: theme.gray[50],
-        },
-        headerTintColor: theme.gray[800],
         headerHideShadow: true,
-        contentStyle: {
-          backgroundColor: theme.gray[50],
-        },
       }}
     >
       <Main.Screen
         name="main"
         component={BoardList}
         options={({ navigation }) => ({
+          headerHideBackButton: true,
           headerRight: () => <HeaderRight name="tune" onPress={() => navigation.push('config')} />,
         })}
       />
@@ -107,24 +92,34 @@ export default function Router() {
   useEffect(() => {
     if (Platform.OS === 'ios') {
       StatusBar.setBarStyle(
-        ['black', 'dark'].indexOf(mode) !== -1 ? 'light-content' : 'dark-content',
+        mode ? 'light-content' : 'dark-content',
       );
     }
   }, [mode]);
 
+  const navTheme: typeof DefaultTheme = {
+    dark: mode,
+    colors: {
+      primary: theme.primary[600],
+      background: theme.gray[50],
+      card: theme.gray[50],
+      border: theme.gray[600],
+      text: theme.gray[800],
+    },
+  };
+
   return (
-    <Root.Navigator
-      initialRouteName="root"
-      screenOptions={{
-        headerShown: false,
-        stackPresentation: 'transparentModal',
-        contentStyle: {
-          backgroundColor: theme.gray[50],
-        },
-      }}
-    >
-      <Root.Screen name="root" component={MainRouter} />
-      <Root.Screen name="config" component={ConfigRouter} />
-    </Root.Navigator>
+    <NavigationContainer theme={navTheme}>
+      <Root.Navigator
+        initialRouteName="root"
+        screenOptions={{
+          headerShown: false,
+          stackPresentation: 'transparentModal',
+        }}
+      >
+        <Root.Screen name="root" component={MainRouter} />
+        <Root.Screen name="config" component={ConfigRouter} />
+      </Root.Navigator>
+    </NavigationContainer>
   );
 }

@@ -1,54 +1,32 @@
-import React, { useState, useMemo } from 'react';
-import { Text } from 'react-native';
+import React from 'react';
+import { Switch } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getTheme, getThemeMode, setMode } from 'stores/theme';
-import BottomSheet from 'components/BottomSheet';
-import ListItem, { listStyles } from 'components/ListItem';
-
-const icons = ['brightness-1', 'brightness-2', 'brightness-4', 'brightness-5'];
-function getLabelText(mode: string) {
-  if (mode === 'black') return '블랙';
-  if (mode === 'dark') return '다크';
-  if (mode === 'light') return '라이트';
-  return '화이트';
-}
+import { getTheme, getThemeMode, setDarkMode } from 'stores/theme';
+import ListItem from 'components/ListItem';
 
 export default function ThemeButton() {
   const dispatch = useDispatch();
   const mode = useSelector(getThemeMode);
   const theme = useSelector(getTheme);
-
-  const [show, setShow] = useState(false);
-  const toggleMenu = () => setShow(!show);
-  const currentMode = useMemo(() => getLabelText(mode), [mode]);
-
-  const onPress = (name: any) => () => {
-    dispatch(setMode(name));
-    setShow(false);
-  };
+  const onChange = (value: boolean) => dispatch(setDarkMode(value));
 
   return (
-    <>
-      <ListItem
-        name="filter-hdr"
-        onPress={toggleMenu}
-        right={<Text style={[listStyles.itemText, { color: theme.gray[800] }]}>{currentMode}</Text>}
-      >
-        테마
-      </ListItem>
-      <BottomSheet show={show} onClose={toggleMenu}>
-        {['black', 'dark', 'light', 'white'].map((name, i) => (
-          <ListItem
-            key={name}
-            name={icons[i]}
-            style={mode === name ? { backgroundColor: theme.gray[400] } : undefined}
-            onPress={onPress(name)}
-          >
-            {getLabelText(name)}
-          </ListItem>
-        ))}
-      </BottomSheet>
-    </>
+    <ListItem
+      name="filter-hdr"
+      right={(
+        <Switch
+          value={mode}
+          onValueChange={onChange}
+          trackColor={{
+            false: theme.gray[100],
+            true: theme.primary[700],
+          }}
+          accessibilityLabel={mode ? '다크' : '라이트'}
+        />
+      )}
+    >
+      다크모드
+    </ListItem>
   );
 }
