@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+// import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Icons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import { getTheme, getThemeMode } from 'stores/theme';
 
@@ -15,9 +17,19 @@ import WardList from './Ward';
 import Settings from './Settings/Settings';
 import Login from './Settings/Login';
 
-const Root = createStackNavigator();
-const Main = createStackNavigator();
-const Config = createStackNavigator();
+const Root = createNativeStackNavigator();
+const Main = createNativeStackNavigator();
+const Config = createNativeStackNavigator();
+
+function BackButton({ tintColor }: { tintColor: string }) {
+  return (
+    <Icons
+      name="navigate-before"
+      size={32}
+      color={tintColor}
+    />
+  );
+}
 
 function ConfigRouter() {
   const theme = useSelector(getTheme);
@@ -25,25 +37,22 @@ function ConfigRouter() {
     <Config.Navigator
       initialRouteName="settings"
       screenOptions={({ navigation }) => ({
-        headerHideShadow: true,
-        headerStyle: {
-          backgroundColor: Platform.OS === 'ios' ? 'transparent' : theme.gray[50],
-        },
         headerTitle: '',
         headerBackTitle: '',
-        cardStyle: {
+        headerBackImage: BackButton,
+        headerStyle: {
+          backgroundColor: theme.gray[50],
+        },
+        headerHideShadow: true,
+        contentStyle: {
           backgroundColor: theme.gray[50],
         },
         headerRight: () => (
           <HeaderRight
             name="close"
-            onPress={() => {
-              navigation.popToTop();
-              navigation.goBack(null);
-            }}
+            onPress={() => navigation.goBack()}
           />
         ),
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       })}
     >
       <Config.Screen name="settings" component={Settings} />
@@ -59,16 +68,16 @@ function MainRouter() {
     <Main.Navigator
       initialRouteName="main"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: Platform.OS === 'ios' ? 'transparent' : theme.gray[50],
-        },
         headerTitle: '',
         headerBackTitle: '',
-        headerTintColor: theme.gray[800],
-        cardStyle: {
+        headerStyle: {
           backgroundColor: theme.gray[50],
         },
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTintColor: theme.gray[800],
+        headerHideShadow: true,
+        contentStyle: {
+          backgroundColor: theme.gray[50],
+        },
       }}
     >
       <Main.Screen
@@ -106,13 +115,12 @@ export default function Router() {
   return (
     <Root.Navigator
       initialRouteName="root"
-      mode="modal"
       screenOptions={{
         headerShown: false,
-        cardStyle: {
+        stackPresentation: 'transparentModal',
+        contentStyle: {
           backgroundColor: theme.gray[50],
         },
-        cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
       }}
     >
       <Root.Screen name="root" component={MainRouter} />
