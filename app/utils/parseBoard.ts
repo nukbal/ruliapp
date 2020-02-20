@@ -122,8 +122,13 @@ export interface IParseBoard {
 
 export default function parseBoardList(htmlString: string): IParseBoard {
   const title = parseTitle(htmlString);
-  const startIndex = htmlString.indexOf('<!-- board_main start');
-  const endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
+  let startIndex = htmlString.indexOf('<!-- board_main start');
+  let endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
+  if (startIndex < 0) {
+    startIndex = htmlString.indexOf('<div id="board_list');
+    endIndex = htmlString.indexOf('<!-- board end', startIndex);
+  }
+
   const html = htmlString.substring(startIndex, endIndex);
   const Nodes = loadHtml(html);
 
