@@ -74,8 +74,6 @@ export default function Post({ route }: Props) {
         itemVisiblePercentThreshold: 25,
       }}
       style={{ backgroundColor: theme.gray[50] }}
-
-      removeClippedSubviews
       initialNumToRender={3}
       updateCellsBatchingPeriod={75}
       windowSize={3}

@@ -22,7 +22,7 @@ export default function ThemeButton() {
             false: theme.gray[100],
             true: theme.primary[700],
           }}
-          accessibilityLabel={mode ? '다크' : '라이트'}
+          accessibilityLabel="다크모드"
         />
       )}
     >

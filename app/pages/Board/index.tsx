@@ -4,6 +4,7 @@ import { FlatList, ListRenderItemInfo } from 'react-native';
 import Title from 'components/Title';
 import AppendLoading from 'components/AppendLoading';
 import SearchBar from 'components/SearchBar';
+import RefreshControl from 'components/RefreshControl';
 
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
@@ -58,9 +59,9 @@ export default function Board({ route, navigation }: Props) {
           <SearchBar onSubmit={setSearch} onCancel={() => setSearch('')} />
         </>
       )}
-      ListEmptyComponent={<Placeholder />}
       refreshing={pushing}
       onRefresh={onRefresh}
+      ListEmptyComponent={<Placeholder />}
       ListFooterComponent={appending ? <AppendLoading /> : undefined}
       getItemLayout={getItemLayout}
       initialNumToRender={8}

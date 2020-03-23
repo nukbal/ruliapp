@@ -78,7 +78,7 @@ function ShareCard({ uri }: Props) {
               image: json.embedPreview.thumbnailPreviewRenderer.defaultThumbnail.thumbnails[1],
               url,
             };
-            cache.set(videoId, targetData);
+            if (process.env.NODE_ENV !== 'test') cache.set(videoId, targetData);
             setData(targetData);
           } else {
             // youtube video is not available
@@ -128,7 +128,7 @@ function ShareCard({ uri }: Props) {
       onPress={onPress}
       activeOpacity={0.75}
     >
-      {data.image && <Image source={{ uri: data.image.url }} />}
+      {data.image && <Image testID="thumbnail" source={{ uri: data.image.url }} />}
       <View style={[styles.info, titleStyle]}>
         <Text numberOfLines={2} style={[styles.title, { color: theme.gray[800] }]}>{data.title}</Text>
         <Icon name="launch" size={16} color={theme.primary[600]} style={styles.icon} />

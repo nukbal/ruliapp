@@ -6,7 +6,7 @@ import Text from 'components/Text';
 import ShareCard from 'components/ShareCard';
 import LazyImage from 'components/LazyImage';
 import LazyVideo from 'components/LazyVideo';
-import Link from 'components/Link';
+import Link from './Link';
 
 export const styles = StyleSheet.create({
   media: {

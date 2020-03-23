@@ -10,6 +10,7 @@
 # Add any project specific keep options here:
 
 -keep class com.facebook.hermes.unicode.** { *; }
+-keep class com.facebook.jni.** { *; }
 -assumenosideeffects class android.util.Log {
     public static *** d(...);
     public static *** v(...);

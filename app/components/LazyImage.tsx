@@ -44,9 +44,10 @@ const styles = StyleSheet.create({
 
 interface Props {
   source: { uri: string };
+  testID?: string;
 }
 
-function LazyImage({ source }: Props) {
+function LazyImage({ source, testID }: Props) {
   const theme = useSelector(getTheme);
   const [uri, progress, error] = useCachedFile(source.uri);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -74,6 +75,7 @@ function LazyImage({ source }: Props) {
     <View
       style={[styles.ImageContent, { height, backgroundColor }]}
       onLayout={onLayout}
+      testID={testID}
     >
       {!!error && (
         <View style={styles.message}>

@@ -56,13 +56,13 @@ export function formatBoardRow(node: INode): PostItemRecord | undefined {
   cursor = querySelector(titleDiv, '.subject_link');
   if (cursor && cursor.attrs) {
     const { id, url } = parseBoardUrl(cursor.attrs.href!);
-    if (!id) return;
+    if (!id) throw new Error('board id not found');
     record.key = id;
     record.url = url;
 
     const text = querySelector(cursor, 'text');
     if (text) record.subject = text.value!;
-  } else return;
+  } else throw new Error('board subject not found');
 
   // board category
   // cursor = querySelector(titleDiv, 'a.cate_label text');
@@ -125,9 +125,11 @@ export default function parseBoardList(htmlString: string): IParseBoard {
   let startIndex = htmlString.indexOf('<!-- board_main start');
   let endIndex = htmlString.indexOf('<!-- board_main end', startIndex);
   if (startIndex < 0) {
-    startIndex = htmlString.indexOf('<div id="board_list');
-    endIndex = htmlString.indexOf('<!-- board end', startIndex);
+    startIndex = htmlString.indexOf('<table class="board_list_table');
+    endIndex = htmlString.indexOf('</table', startIndex) + 8;
   }
+
+  if (startIndex === -1 || endIndex === -1) throw new Error('failed to parse html');
 
   const html = htmlString.substring(startIndex, endIndex);
   const Nodes = loadHtml(html);
