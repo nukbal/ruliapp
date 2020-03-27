@@ -31,6 +31,7 @@ export const gameList = [
   { key: 'game/9995', title: '리그 오브 레전드' },
   { key: 'game/84766', title: '월드 오브 워크래프트' },
   { key: 'game/85237', title: '포켓몬스터' },
+  { key: 'nin/game/85109', title: '모여봐요! 동물의 숲' },
 ];
 
 export const hobbyList = [
