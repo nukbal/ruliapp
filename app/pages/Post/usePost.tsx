@@ -5,21 +5,24 @@ import parseComment from 'utils/parseComment';
 import { USER_AGENT } from 'config/constants';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  getPost, setPost, setComments,
+  getPost, setPost, setComments, getCurrentPostKey,
 } from 'stores/post';
 
-export default function usePost(url: string, isWard?: boolean) {
+export default function usePost() {
   const dispatch = useDispatch();
-  const data = useSelector(getPost(url));
+  const url = useSelector(getCurrentPostKey);
+  const data = useSelector(getPost);
   const [ready, setReady] = useState(false);
   const [isCommentLoading, setCommentLoading] = useState(false);
 
   useEffect(() => {
     let isDone = false;
+    if (!url) return;
     async function loadPost() {
       setReady(false);
-      if (isWard) setReady(true);
-      if (isDone || isWard) return;
+      // if (isWard) setReady(true);
+      // if (isDone || isWard) return;
+      if (isDone) return;
       if (data.url) {
         if (data.commentSize && data.commentSize > data.comments.length) {
           loadComment();
@@ -75,6 +78,7 @@ export default function usePost(url: string, isWard?: boolean) {
   }, [url]);
 
   const loadComment = useCallback(async () => {
+    if (!url) return;
     setCommentLoading(true);
 
     const idx = url.indexOf('/read/');
@@ -124,5 +128,5 @@ export default function usePost(url: string, isWard?: boolean) {
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
   }, [url, dispatch, data.commentSize]);
 
-  return { ...data, ready, loadComment, isCommentLoading };
+  return { ...data, url, ready, loadComment, isCommentLoading };
 }

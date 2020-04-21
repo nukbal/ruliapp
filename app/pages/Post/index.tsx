@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
-import { SectionList } from 'react-native';
+import React, { useMemo, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { SectionList, View } from 'react-native';
 
 import { getTheme } from 'stores/theme';
 import Title from 'components/Title';
+import Text from 'components/Text';
 
 import Footer from './Footer';
 import Contents from './Contents';
@@ -12,22 +13,24 @@ import Profile from './Profile';
 import usePost from './usePost';
 import Placeholder from './placeholder';
 
-interface Props {
-  route: any;
-  navigation: any;
-}
 
 function keyExtractor(item: CommentRecord | ContentRecord) {
   return item.key;
 }
 
-export default function Post({ route }: Props) {
-  const { url, ward } = route.params;
+export default function Post() {
   const {
-    subject, contents, comments, ready, isCommentLoading, loadComment,
+    url, subject, contents, comments, ready, isCommentLoading, loadComment,
     user, date, views, likes, dislikes, commentSize,
-  } = usePost(url, ward);
+  } = usePost();
+  const ref = useRef<SectionList<any> | null>(null);
   const theme = useSelector(getTheme);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollToLocation({ itemIndex: 0, sectionIndex: 0, animated: false });
+    }
+  }, [url]);
 
   const ListHeaderComponent = useMemo(() => (ready ? (
     <>
@@ -45,6 +48,14 @@ export default function Post({ route }: Props) {
     />
   ) : null), [ready, url, likes, dislikes, commentSize]);
 
+  if (!url) {
+    return (
+      <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: '80%' }}>
+        <Text size={1100}>🤔</Text>
+        <Text size={500}>선택된 게시물이 없습니다.</Text>
+      </View>
+    );
+  }
   if (!ready) return <Placeholder />;
 
   return (
@@ -66,6 +77,7 @@ export default function Post({ route }: Props) {
         if (section.key === 'comments') return ListFooter;
         return ListHeaderComponent;
       }}
+      ref={ref}
       stickySectionHeadersEnabled={false}
       refreshing={isCommentLoading}
       onRefresh={loadComment}
@@ -73,10 +85,11 @@ export default function Post({ route }: Props) {
         waitForInteraction: false,
         itemVisiblePercentThreshold: 25,
       }}
-      style={{ backgroundColor: theme.gray[50] }}
+      style={{ backgroundColor: theme.gray[50], marginBottom: 42 }}
       initialNumToRender={3}
       updateCellsBatchingPeriod={75}
       windowSize={3}
+      removeClippedSubviews
     />
   );
 }

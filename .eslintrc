@@ -24,6 +24,7 @@
     "react/jsx-filename-extension": "off",
     "consistent-return": "off",
     "jsx-a11y/label-has-for": [2, {"required": { "some": ["nesting", "id"] }}],
+    "jsx-a11y/accessible-emoji": "off",
     "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/explicit-function-return-type": "off",

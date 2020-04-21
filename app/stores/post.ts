@@ -13,54 +13,63 @@ const emptyPost: PostDetailRecord = {
 };
 
 interface PostState {
-  [url: string]: PostDetailRecord;
+  posts: {
+    [url: string]: PostDetailRecord;
+  };
+  url: string;
 }
 
-const initialState: PostState = {};
+const initialState: PostState = {
+  posts: {},
+  url: '',
+};
 
 const { reducer, actions } = createSlice({
   name: 'post',
   initialState,
   reducers: {
+    setCurrent(state, action: PayloadAction<{ url: string; ward?: boolean }>) {
+      state.url = action.payload.url;
+    },
     setPosts(state, action: PayloadAction<PostDetailRecord[]>) {
       const obj = arrayToObject(action.payload);
       return { ...state, ...obj };
     },
     setPost(state, action: PayloadAction<PostDetailRecord>) {
       const key = action.payload.url;
-      state[key] = action.payload;
+      state.posts[key] = action.payload;
     },
     updatePostFromBoard(state, action: PayloadAction<PostItemRecord[]>) {
       action.payload.forEach((item) => {
         const key = item.url;
-        if (state[key]) {
-          state[key].commentSize = item.commentSize;
-          state[key].views = item.views;
-          state[key].likes = item.likes;
-          state[key].date = item.date;
-          state[key].subject = item.subject;
+        if (state.posts[key]) {
+          state.posts[key].commentSize = item.commentSize;
+          state.posts[key].views = item.views;
+          state.posts[key].likes = item.likes;
+          state.posts[key].date = item.date;
+          state.posts[key].subject = item.subject;
         }
       });
     },
     setComments(state, action: PayloadAction<{ key: string, comments: PostDetailRecord['comments'] }>) {
       const { key, comments } = action.payload;
-      const old = state[key] ? state[key].comments : [];
+      const old = state.posts[key] ? state.posts[key].comments : [];
       const oldKeys = old.map((item) => item.key);
       const obj = { ...arrayToObject(old), ...arrayToObject(comments) };
       const keys = Array.from(new Set([...oldKeys, ...comments.map((item) => item.key)]));
 
-      state[key].comments = keys.map((k) => obj[k]);
-      state[key].commentSize = Math.max(state[key].commentSize || 0, state[key].comments.length);
+      state.posts[key].comments = keys.map((k) => obj[k]);
+      state.posts[key].commentSize = Math.max(state.posts[key].commentSize || 0, state.posts[key].comments.length);
     },
   },
 });
 
 export const getPostState = (state: RootState) => state.post;
-export const getPostKeys = createSelector(getPostState, (posts) => Object.keys(posts));
-export const getPost = (key: string) => createSelector(
-  getPostState,
-  (posts) => posts[key] || emptyPost,
+export const getCurrentPostKey = createSelector(getPostState, ({ url }) => url);
+export const getPost = createSelector(
+  getPostState, getCurrentPostKey,
+  ({ posts }, url) => posts[url] || emptyPost,
 );
 
-export const { setPost, setPosts, setComments, updatePostFromBoard } = actions;
+export const { setPost, setPosts, setComments, updatePostFromBoard, setCurrent } = actions;
 export default reducer;

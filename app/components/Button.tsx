@@ -1,5 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { BorderlessButton } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import * as colors from 'styles/static';
@@ -15,15 +16,21 @@ interface Props {
 
 export default function Button({ children, name, color, onPress, disabled }: Props) {
   return (
-    <TouchableOpacity
+    <BorderlessButton
       style={[styles.button, { backgroundColor: color }]}
       onPress={onPress}
-      disabled={disabled}
+      enabled={!disabled}
       activeOpacity={0.85}
+      accessibilityLabel={children}
+      hitSlop={{
+        horizontal: 2,
+        vertical: 2,
+      }}
+      exclusive
     >
       {name && <Icon name={name} style={styles.icon} size={colors.fontSize[600]} color={colors.white} />}
       <Text style={[styles.buttonText]}>{children}</Text>
-    </TouchableOpacity>
+    </BorderlessButton>
   );
 }
 

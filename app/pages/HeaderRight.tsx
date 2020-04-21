@@ -1,5 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
@@ -13,12 +14,17 @@ if (Platform.OS !== 'ios') {
 export default function HeaderRight({ onPress, name }: any) {
   const theme = useSelector(getTheme);
   return (
-    <Icons
+    <TouchableOpacity
       onPress={onPress}
       style={{ marginRight }}
-      name={name}
-      size={24}
-      color={theme.gray[800]}
-    />
+      accessible
+      accessibilityRole="imagebutton"
+    >
+      <Icons
+        name={name}
+        size={24}
+        color={theme.gray[800]}
+      />
+    </TouchableOpacity>
   );
 }

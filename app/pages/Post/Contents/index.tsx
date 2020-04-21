@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import Text from 'components/Text';
 
@@ -18,6 +18,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
+  container: {
+    width: '100%',
+    maxWidth: 650,
+    alignSelf: 'center',
+  },
 });
 
 function ContentItem({ type, content, style }: ContentRecord) {
@@ -29,24 +34,38 @@ function ContentItem({ type, content, style }: ContentRecord) {
     }
     case 'object': {
       return (
-        <ShareCard uri={content} />
+        <View style={styles.container}>
+          <ShareCard uri={content} />
+        </View>
       );
     }
     case 'image': {
       return (
-        <LazyImage source={{ uri: content }} />
+        <View style={styles.container}>
+          <LazyImage source={{ uri: content }} />
+        </View>
       );
     }
     case 'video': {
       return (
-        <LazyVideo source={{ uri: content }} />
+        <View style={styles.container}>
+          <LazyVideo source={{ uri: content }} />
+        </View>
       );
     }
     case 'link': {
       return <Link to={content} />;
     }
     default: {
-      return <Text style={[styles.text, style]}>{content}</Text>;
+      return (
+        <Text
+          style={[styles.text, style]}
+          accessible
+          selectable
+        >
+          {content}
+        </Text>
+      );
     }
   }
 }

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import { Platform, StatusBar } from 'react-native';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Icons from 'react-native-vector-icons/MaterialIcons';
+import { Platform, StatusBar, useWindowDimensions } from 'react-native';
+import { NavigationContainer, DefaultTheme, useTheme } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import { useSelector } from 'react-redux';
 import { getTheme, getThemeMode } from 'stores/theme';
 
 import HeaderRight from './HeaderRight';
-import PostRight from './PostRight';
+import PostHeader from './PostHeader';
 
 import BoardStack from './Board';
 import BoardList from './BoardList';
@@ -15,72 +15,81 @@ import PostScreen from './Post';
 import WardList from './Ward';
 
 import Settings from './Settings/Settings';
-import Login from './Settings/Login';
+// import Login from './Settings/Login';
 
 const Root = createNativeStackNavigator();
-const Main = createNativeStackNavigator();
-const Config = createNativeStackNavigator();
+const Main = createDrawerNavigator();
+const Board = createNativeStackNavigator();
+// const Config = createNativeStackNavigator();
 
-function BackButton({ tintColor }: { tintColor: string }) {
-  return (
-    <Icons
-      name="navigate-before"
-      size={32}
-      color={tintColor}
-    />
-  );
-}
+// function ConfigRouter() {
+//   return (
+//     <Config.Navigator
+//       initialRouteName="settings"
+//       screenOptions={({ navigation }) => ({
+//         headerTitle: '',
+//         headerBackTitleVisible: false,
+//         headerHideShadow: true,
+//         headerRight: () => (
+//           <HeaderRight
+//             name="close"
+//             onPress={() => navigation.goBack()}
+//           />
+//         ),
+//       })}
+//     >
+//       <Config.Screen name="settings" component={Settings} />
+//       <Config.Screen name="login" component={Login} options={{ headerBackTitle: '설정' }} />
+//     </Config.Navigator>
+//   );
+// }
 
-function ConfigRouter() {
+function BoardRouter() {
+  const { colors } = useTheme();
   return (
-    <Config.Navigator
-      initialRouteName="settings"
-      screenOptions={({ navigation }) => ({
-        headerTitle: '',
-        headerBackTitle: '',
-        headerBackImage: BackButton,
-        headerHideShadow: true,
-        headerRight: () => (
-          <HeaderRight
-            name="close"
-            onPress={() => navigation.goBack()}
-          />
-        ),
-      })}
-    >
-      <Config.Screen name="settings" component={Settings} />
-      <Config.Screen name="login" component={Login} options={{ headerBackTitle: '설정' }} />
-    </Config.Navigator>
-  );
-}
-
-function MainRouter() {
-  return (
-    <Main.Navigator
-      initialRouteName="main"
+    <Board.Navigator
+      initialRouteName="list"
       screenOptions={{
         headerTitle: '',
         headerBackTitle: '',
         headerHideShadow: true,
+        headerTintColor: colors.text,
       }}
     >
-      <Main.Screen
-        name="main"
+      <Board.Screen
+        name="list"
         component={BoardList}
         options={({ navigation }) => ({
           headerHideBackButton: true,
           headerRight: () => <HeaderRight name="tune" onPress={() => navigation.push('config')} />,
         })}
       />
-      <Main.Screen name="board" component={BoardStack} />
-      <Main.Screen name="ward" component={WardList} />
-      <Main.Screen
-        name="post"
-        component={PostScreen}
-        options={({ route, navigation }) => ({
-          headerRight: () => <PostRight route={route} navigation={navigation} />,
-        })}
-      />
+      <Board.Screen name="board" component={BoardStack} />
+      <Board.Screen name="ward" component={WardList} />
+    </Board.Navigator>
+  );
+}
+
+function MainRouter() {
+  const { width } = useWindowDimensions();
+  const isLargeScreen = width >= 735;
+
+  return (
+    <Main.Navigator
+      initialRouteName="main"
+      openByDefault={isLargeScreen}
+      drawerType={isLargeScreen ? 'permanent' : 'front'}
+      drawerStyle={{ width: isLargeScreen? '72.5%' : '100%' }}
+      overlayColor="transparent"
+      drawerPosition="right"
+      drawerContent={({ navigation }) => (
+        <>
+          <PostHeader navigation={navigation} />
+          <PostScreen />
+        </>
+      )}
+    >
+      <Main.Screen name="main" component={BoardRouter} />
     </Main.Navigator>
   );
 }
@@ -103,7 +112,7 @@ export default function Router() {
       primary: theme.primary[600],
       background: theme.gray[50],
       card: theme.gray[50],
-      border: theme.gray[600],
+      border: theme.gray[100],
       text: theme.gray[800],
     },
   };
@@ -114,11 +123,11 @@ export default function Router() {
         initialRouteName="root"
         screenOptions={{
           headerShown: false,
-          stackPresentation: 'transparentModal',
+          stackPresentation: 'modal',
         }}
       >
         <Root.Screen name="root" component={MainRouter} />
-        <Root.Screen name="config" component={ConfigRouter} />
+        <Root.Screen name="config" component={Settings} />
       </Root.Navigator>
     </NavigationContainer>
   );

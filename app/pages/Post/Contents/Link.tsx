@@ -20,5 +20,16 @@ export default function Link({ label, to }: any) {
       // navigation.navigate('board', {});
     }
   };
-  return <Text color="primary" shade={600} numberOfLines={1} onPress={onPress}>{to}</Text>;
+  return (
+    <Text
+      color="primary"
+      shade={600}
+      numberOfLines={1}
+      onPress={onPress}
+      accessible
+      accessibilityRole="link"
+    >
+      {to}
+    </Text>
+  );
 }

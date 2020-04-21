@@ -55,10 +55,19 @@ function Comment(
         <Text style={[styles.UserText]}>{user.name}</Text>
         {timeText && (<Text>{timeText}</Text>)}
       </View>
-      {image && <Media source={{ uri: image }} />}
-      <View style={[styles.UserContainer, { paddingVertical: 6 }]}>
-        <Text>{content || ''}</Text>
-      </View>
+      {image && (
+        <View style={{ width: '100%', maxWidth: 650 }}>
+          <Media source={{ uri: image }} />
+        </View>
+      )}
+      {!!content && (
+        <Text
+          style={[{ paddingVertical: 6 }]}
+          selectable
+        >
+          {content}
+        </Text>
+      )}
       <View style={styles.infoContainer}>
         {likes > 0 && (<Icon name="thumb-up" size={20} color={theme.gray[800]} />)}
         {likes > 0 && (<Text style={[styles.iconText]} color="primary" shade={600}>{likes}</Text>)}

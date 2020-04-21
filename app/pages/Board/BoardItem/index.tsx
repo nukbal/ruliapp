@@ -3,6 +3,7 @@ import { View, Text, TouchableHighlight } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { getTheme } from 'stores/theme';
+import { getCurrentPostKey } from 'stores/post';
 import format from 'utils/formatDate';
 
 import styles from './styles';
@@ -16,9 +17,11 @@ interface Props {
 }
 
 function BoardItem({ onPress, onShowUnderlay, onHideUnderlay, data }: Props) {
-  const { date, subject, user, commentSize, likes, views } = data;
+  const { date, subject, user, commentSize, likes, views, url } = data;
+  const selectedUrl = useSelector(getCurrentPostKey);
   const theme = useSelector(getTheme);
   const dateStr = useMemo(() => (date ? format(date) : ''), [date]);
+  const isSelected = selectedUrl === url;
 
   if (!subject) return <Placeholder />;
   return (
@@ -27,7 +30,10 @@ function BoardItem({ onPress, onShowUnderlay, onHideUnderlay, data }: Props) {
       onShowUnderlay={onShowUnderlay}
       onHideUnderlay={onHideUnderlay}
       underlayColor={theme.gray[100]}
-      style={[styles.container, { backgroundColor: theme.gray[50] }]}
+      style={[
+        styles.container,
+        { backgroundColor: theme.gray[isSelected ? 100 : 50] },
+      ]}
     >
       <>
         <View style={styles.info}>

@@ -6,9 +6,9 @@ import {
   Image,
   NativeSyntheticEvent,
   ImageLoadEventData,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import { useSelector } from 'react-redux';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Haptic from 'react-native-haptic-feedback';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -95,18 +95,20 @@ function LazyImage({ source, testID }: Props) {
         </View>
       )}
       {!!uri && (
-        <TouchableWithoutFeedback onLongPress={toggleMenu}>
-          <Image
-            style={{ height }}
-            source={{ uri: FILE_PREFIX + uri }}
-            onLoad={onLoad}
-          />
-        </TouchableWithoutFeedback>
-      )}
-      {!!uri && (
-        <BottomSheet show={show} onClose={toggleMenu}>
-          <ListItem name="archive" onPress={save}>저장하기</ListItem>
-        </BottomSheet>
+        <>
+          <TouchableWithoutFeedback
+            onLongPress={toggleMenu}
+          >
+            <Image
+              style={{ height }}
+              source={{ uri: FILE_PREFIX + uri }}
+              onLoad={onLoad}
+            />
+          </TouchableWithoutFeedback>
+          <BottomSheet show={show} onClose={toggleMenu}>
+            <ListItem name="archive" onPress={save}>저장하기</ListItem>
+          </BottomSheet>
+        </>
       )}
     </View>
   );

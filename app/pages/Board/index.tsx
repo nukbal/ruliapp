@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { FlatList, ListRenderItemInfo } from 'react-native';
+
+import { setCurrent } from 'stores/post';
 
 import Title from 'components/Title';
 import AppendLoading from 'components/AppendLoading';
 import SearchBar from 'components/SearchBar';
-import RefreshControl from 'components/RefreshControl';
+// import RefreshControl from 'components/RefreshControl';
 
 import BoardItem from './BoardItem';
 import Placeholder from './placeholder';
@@ -25,6 +28,7 @@ interface Props {
 
 export default function Board({ route, navigation }: Props) {
   const boardId = route.params ? route.params.key : '';
+  const dispatch = useDispatch();
   const [search, setSearch] = useState('');
   const {
     list, data, onRefresh, onEndReached, pushing, appending,
@@ -34,8 +38,9 @@ export default function Board({ route, navigation }: Props) {
     if (!item) return null;
 
     const onPress = () => {
-      const { navigate } = navigation;
-      navigate('post', { url: item });
+      const { openDrawer } = navigation;
+      dispatch(setCurrent({ url: item }));
+      openDrawer();
     };
 
     return (
