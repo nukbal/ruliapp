@@ -26,7 +26,7 @@ export default function Settings({ navigation }: { navigation: any }) {
 
       <View style={styles.divide} />
 
-      <ListItem name="bug-report" onPress={report}>
+      <ListItem name="life-buoy" onPress={report}>
         Report Issues
       </ListItem>
 

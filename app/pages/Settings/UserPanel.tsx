@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Alert, Text, StyleSheet, Image } from 'react-native';
-import Icons from 'react-native-vector-icons/MaterialIcons';
+import Icons from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getTheme } from 'stores/theme';
@@ -52,9 +52,9 @@ export default function UserPanel({ navigation }: { navigation: any }) {
   if (!isLogined) {
     return (
       <ListItem
-        name="account-circle"
+        name="user"
         onPress={login}
-        right={<Icons name="arrow-forward" size={20} color={theme.gray[800]} />}
+        right={<Icons name="chevron-right" size={20} color={theme.gray[800]} />}
       >
         로그인
       </ListItem>

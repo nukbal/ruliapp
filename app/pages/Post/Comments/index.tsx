@@ -1,6 +1,6 @@
 import React, { useMemo, memo } from 'react';
 import { View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Feather';
 import { useSelector } from 'react-redux';
 
 import { getTheme } from 'stores/theme';
@@ -47,7 +47,7 @@ function Comment(
     <View style={containerStyle}>
       {reply && (
         <View style={styles.replyContainer}>
-          <Icon name="insert-comment" size={12} color={theme.gray[700]} />
+          <Icon name="message-circle" size={12} color={theme.gray[700]} />
           <Text size={75} shade={700}>{reply}</Text>
         </View>
       )}
@@ -69,9 +69,9 @@ function Comment(
         </Text>
       )}
       <View style={styles.infoContainer}>
-        {likes > 0 && (<Icon name="thumb-up" size={20} color={theme.gray[800]} />)}
+        {likes > 0 && (<Icon name="thumbs-up" size={20} color={theme.gray[800]} />)}
         {likes > 0 && (<Text style={[styles.iconText]} color="primary" shade={600}>{likes}</Text>)}
-        {dislike > 0 && (<Icon name="thumb-down" size={20} color={theme.gray[800]} />)}
+        {dislike > 0 && (<Icon name="thumbs-down" size={20} color={theme.gray[800]} />)}
         {dislike > 0 && (<Text style={[styles.iconText]} color="red" shade={600}>{dislike}</Text>)}
       </View>
     </View>

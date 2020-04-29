@@ -3,49 +3,49 @@ import {
   View,
   Text,
   Linking,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useSelector } from 'react-redux';
-import { getTheme } from 'stores/theme';
+import { useTheme } from '@react-navigation/native';
+import Button from 'components/Button';
+
+function noop() {}
 
 export default function ContentFooter({
   url, likes, dislikes, commentSize,
 }: Pick<PostDetailRecord,'url'|'likes'|'dislikes'|'commentSize'>) {
-  const theme = useSelector(getTheme);
+  const { colors } = useTheme();
 
   const open = () => {
     const path = `https://m.ruliweb.com/${url}`;
     Linking.openURL(path).catch((err) => console.error('An error occurred', err));
   };
 
-  const color = theme.gray[800];
+  const color = colors.text;
   const textStyle = [styles.infoText, { color }];
 
   return (
-    <View style={[styles.infoPanel, { borderColor: theme.gray[300] }]}>
+    <View style={[styles.infoPanel, { borderColor: colors.border }]}>
       {likes !== undefined && (
         <View style={styles.infoItem}>
-          <Icon name="thumb-up" size={20} color={color} />
-          <Text style={textStyle}>{likes}</Text>
+          <Button name="thumbs-up" onPress={noop} pointerEnabled={false} size={400} />
+          <Text style={textStyle}>{dislikes}</Text>
         </View>
       )}
       {dislikes !== undefined && (
         <View style={styles.infoItem}>
-          <Icon name="thumb-down" size={20} color={color} />
+          <Button name="thumbs-down" onPress={noop} pointerEnabled={false} size={400} />
           <Text style={textStyle}>{dislikes}</Text>
         </View>
       )}
       {commentSize !== undefined && (
         <View style={styles.infoItem}>
-          <Icon name="message" size={20} color={color} />
+          <Button name="message-square" onPress={noop} pointerEnabled={false} size={400} />
           <Text style={textStyle}>{commentSize}</Text>
         </View>
       )}
-      <TouchableOpacity style={styles.infoItem} onPress={open}>
-        <Icon name="launch" size={20} color={color} />
-      </TouchableOpacity>
+      <View style={styles.infoItem}>
+        <Button name="share" onPress={open} size={400} />
+      </View>
     </View>
   );
 }

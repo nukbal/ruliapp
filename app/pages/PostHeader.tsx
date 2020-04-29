@@ -2,26 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { ToastAndroid, View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useTheme } from '@react-navigation/native';
 
 import BottomSheet from 'components/BottomSheet';
 import ListItem from 'components/ListItem';
+import Button from 'components/Button';
 import { IS_ANDROID } from 'config/constants';
 import { getPost, getCurrentPostKey, setCurrent } from 'stores/post';
 
-import HeaderRight from './HeaderRight';
-
 export default function PostHeader({ navigation }: any) {
+  const dispatch = useDispatch();
   const url = useSelector(getCurrentPostKey);
   const data = useSelector(getPost);
+  const { colors } = useTheme();
   const { width } = useWindowDimensions();
-  const isLargeScreen = width >= 735;
-  const dispatch = useDispatch();
-  const isExists = !!url;
-  const key = `ward:${url}`;
   const [show, setShow] = useState(false);
   const [warded, isWarded] = useState(false);
+
+  const isExists = !!url;
+  const key = `ward:${url}`;
+  const isLargeScreen = width >= 735;
+
   const onClose = () => setShow(false);
   const onPress = () => setShow(true);
+
   const toggleBookmark = () => {
     if (data && !warded) {
       AsyncStorage
@@ -42,7 +46,11 @@ export default function PostHeader({ navigation }: any) {
 
   const dismiss = () => {
     navigation.closeDrawer();
-    dispatch(setCurrent({ url: '' }));
+    if (isLargeScreen) {
+      dispatch(setCurrent({ url: '' }));
+    } else {
+      setTimeout(() => dispatch(setCurrent({ url: '' })), 250);
+    }
   };
 
   useEffect(() => {
@@ -52,18 +60,18 @@ export default function PostHeader({ navigation }: any) {
   }, [key]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { borderColor: colors.border }]}>
       {isExists && (
         <View>
-          <HeaderRight
-            name={isLargeScreen ? 'close' : 'chevron-left'}
+          <Button
+            name={isLargeScreen ? 'x' : 'chevron-left'}
             onPress={dismiss}
           />
         </View>
       )}
       {isExists && (
         <View>
-          <HeaderRight name="more-vert" onPress={onPress} />
+          <Button name="menu" onPress={onPress} />
           <BottomSheet show={show} onClose={onClose}>
             <ListItem name="bookmark" onPress={toggleBookmark}>
               {warded ? '와드 제거하기' : '와드 추가하기'}
@@ -77,11 +85,12 @@ export default function PostHeader({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    paddingHorizontal: 6,
     paddingTop: 24,
-    height: 75,
+    height: 68.5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderBottomWidth: 0.5,
   },
 });

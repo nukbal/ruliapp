@@ -1,9 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { StyleSheet, View, Text, Linking } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Feather';
 import ProgressBar from 'components/ProgressBar';
+import NativeButton from 'components/NativeButton';
 import { getTheme } from 'stores/theme';
 import { SHARE_CACHE as cache } from 'config/constants';
 import Image from './LazyImage';
@@ -123,17 +123,17 @@ function ShareCard({ uri }: Props) {
   const titleStyle = data.image ? { borderColor: theme.gray[300], borderTopWidth: 1, paddingTop: 6 } : {};
 
   return (
-    <TouchableOpacity
+    <NativeButton
       style={[styles.container, { backgroundColor, borderColor: theme.gray[300] }]}
       onPress={onPress}
-      activeOpacity={0.75}
+      pointerEnabled
     >
       {data.image && <Image testID="thumbnail" source={{ uri: data.image.url }} />}
       <View style={[styles.info, titleStyle]}>
         <Text numberOfLines={2} style={[styles.title, { color: theme.gray[800] }]}>{data.title}</Text>
-        <Icon name="launch" size={16} color={theme.primary[600]} style={styles.icon} />
+        <Icon name="external-link" size={16} color={theme.primary[600]} style={styles.icon} />
       </View>
-    </TouchableOpacity>
+    </NativeButton>
   );
 }
 

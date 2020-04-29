@@ -17,7 +17,7 @@ export default function Bookmark({ navigation }: any) {
   const [list, setList] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
   const store = useStore();
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
 
   useEffect(() => {
     AsyncStorage
@@ -26,6 +26,7 @@ export default function Bookmark({ navigation }: any) {
         const keylist = keys.filter((key) => key.indexOf('ward:') === 0);
         setList(keylist);
 
+        console.log(store.getState());
         const cachedKeys = getPostKeys(store.getState());
         const targetList = keylist.filter((key) => cachedKeys.indexOf(key) === -1);
         if (targetList.length > 0) {

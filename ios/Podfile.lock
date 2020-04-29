@@ -305,7 +305,7 @@ PODS:
     - React-jsi (= 0.63.0-rc.0)
   - RNCAsyncStorage (1.9.0):
     - React
-  - RNCMaskedView (0.1.9):
+  - RNCMaskedView (0.1.10):
     - React
   - RNFS (2.16.6):
     - React
@@ -315,7 +315,7 @@ PODS:
     - React
   - RNReanimated (1.8.0):
     - React
-  - RNScreens (2.5.0):
+  - RNScreens (2.7.0):
     - React
   - RNVectorIcons (6.6.0):
     - React
@@ -511,12 +511,12 @@ SPEC CHECKSUMS:
   React-RCTVibration: ab7fb7b10ca373d7e931b15e18b5f6d1663367ca
   ReactCommon: 14ae20c83bd846c1790e45ad95e0f0717dcd034f
   RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
-  RNCMaskedView: 71fc32d971f03b7f03d6ab6b86b730c4ee64f5b6
+  RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReactNativeHapticFeedback: 2566b468cc8d0e7bb2f84b23adc0f4614594d071
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
-  RNScreens: ac02d0e4529f08ced69f5580d416f968a6ec3a1d
+  RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 5ffb724bde6d20a1828a1dc9a368085f404a1203
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

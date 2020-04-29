@@ -85,11 +85,6 @@ export default function Post() {
         waitForInteraction: false,
         itemVisiblePercentThreshold: 25,
       }}
-      style={{ backgroundColor: theme.gray[50], marginBottom: 42 }}
-      initialNumToRender={3}
-      updateCellsBatchingPeriod={75}
-      windowSize={3}
-      removeClippedSubviews
     />
   );
 }

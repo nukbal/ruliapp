@@ -66,6 +66,7 @@ const { reducer, actions } = createSlice({
 
 export const getPostState = (state: RootState) => state.post;
 export const getCurrentPostKey = createSelector(getPostState, ({ url }) => url);
+export const getPostKeys = createSelector(getPostState, ({ posts }) => Object.keys(posts).sort());
 export const getPost = createSelector(
   getPostState, getCurrentPostKey,
   ({ posts }, url) => posts[url] || emptyPost,

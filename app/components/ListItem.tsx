@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import Icons from 'react-native-vector-icons/MaterialIcons';
+import Icons from 'react-native-vector-icons/Feather';
 
 import Text from 'components/Text';
 import { getTheme } from 'stores/theme';

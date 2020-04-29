@@ -44,7 +44,7 @@ export default function CachePanel() {
 
   return (
     <ListItem
-      name="sd-card"
+      name="image"
       onPress={onPress}
       right={<Text>{`${size}MB`}</Text>}
     >

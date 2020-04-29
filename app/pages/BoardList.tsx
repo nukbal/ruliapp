@@ -36,6 +36,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 8,
   },
+  button: {
+    flex: 1,
+    minWidth: 175,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 6,
+    paddingVertical: 6,
+    margin: 8,
+  },
 });
 
 interface Props {
@@ -95,8 +105,9 @@ export default function BoardList({ navigation }: Props) {
           <SearchBar onChange={setSearch} />
           <ScrollView style={styles.headerMenu} horizontal>
             <Button
-              name="pin-drop"
-              color={colors.green[600]}
+              name="anchor"
+              backgroundColor={colors.green[600]}
+              style={[{ minWidth: 175, margin: 8 }]}
               onPress={() => navigation.navigate('ward')}
             >
               와드

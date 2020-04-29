@@ -80,22 +80,7 @@ android {
             }
         }
     }
-
-    packagingOptions {
-        // pickFirst "lib/armeabi-v7a/libc++_shared.so"
-        // pickFirst "lib/arm64-v8a/libc++_shared.so"
-        // pickFirst "lib/x86/libc++_shared.so"
-        // pickFirst "lib/x86_64/libc++_shared.so"
-        pickFirst "lib/**/libc++_shared.so"
-    }
 }
-
-configurations.all {
-  resolutionStrategy {
-      force "com.facebook.fresco:frecso:2.2.0"
-  }
-}
-
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])

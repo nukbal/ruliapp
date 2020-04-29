@@ -9,7 +9,7 @@ import {
   Keyboard,
 } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Feather';
 
 import { useSelector } from 'react-redux';
 import { getTheme } from 'stores/theme';

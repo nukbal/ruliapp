@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Alert, View, Button, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { Alert, View, StyleSheet, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Title from 'components/Title';
+import Button from 'components/Button';
 import { getTheme } from 'stores/theme';
 import { login } from 'stores/user';
 import { USER_AGENT } from 'config/constants';
@@ -89,11 +89,12 @@ export default function Login({ navigation }: { navigation: any }) {
         style={[styles.input, { color: theme.gray[800] }]}
       />
       <Button
-        title="로그인"
         onPress={submit}
-        color={theme.primary[400]}
+        backgroundColor={theme.primary[400]}
         disabled={!userId || !pass}
-      />
+      >
+        로그인
+      </Button>
     </View>
   );
 }

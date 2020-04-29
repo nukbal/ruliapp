@@ -13,7 +13,7 @@ export default function ThemeButton() {
 
   return (
     <ListItem
-      name="filter-hdr"
+      name="moon"
       right={(
         <Switch
           value={mode}

@@ -1,53 +1,61 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { BorderlessButton } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTheme } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Feather';
 
-import * as colors from 'styles/static';
+import { fontSize } from 'styles/static';
+import NativeButton from './NativeButton';
 import Text from './Text';
 
 interface Props {
   name?: string;
-  color: string;
+  backgroundColor?: string;
   disabled?: boolean;
-  children: string;
+  children?: string | number;
+  style?: any[];
   onPress: () => void;
+  size?: keyof typeof fontSize;
+  pointerEnabled?: boolean;
 }
 
-export default function Button({ children, name, color, onPress, disabled }: Props) {
+export default function Button({
+  children, name, onPress, disabled,
+  backgroundColor = 'transparent', pointerEnabled = true, style = [],
+  size = 600,
+}: Props) {
+  const { colors } = useTheme();
   return (
-    <BorderlessButton
-      style={[styles.button, { backgroundColor: color }]}
+    <NativeButton
+      style={[
+        styles.button,
+        { backgroundColor: disabled ? colors.disabled : backgroundColor },
+        ...style,
+      ]}
+      disabled={disabled}
       onPress={onPress}
-      enabled={!disabled}
-      activeOpacity={0.85}
-      accessibilityLabel={children}
       hitSlop={{
-        horizontal: 2,
-        vertical: 2,
+        bottom: 2,
+        top: 2,
+        left: 2,
+        right: 2,
       }}
-      exclusive
+      pointerEnabled={pointerEnabled}
     >
-      {name && <Icon name={name} style={styles.icon} size={colors.fontSize[600]} color={colors.white} />}
-      <Text style={[styles.buttonText]}>{children}</Text>
-    </BorderlessButton>
+      {name && <Icon name={name} style={styles.icon} size={fontSize[size]} color={colors.text} />}
+      {children && <Text style={[styles.buttonText, { color: colors.text }]}>{children}</Text>}
+    </NativeButton>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
-    minWidth: 175,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 6,
-    paddingVertical: 6,
-    margin: 8,
+    padding: 6,
   },
   buttonText: {
-    color: colors.white,
-    fontSize: colors.fontSize[200],
     fontWeight: 'bold',
     paddingVertical: 8,
   },
