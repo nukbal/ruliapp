@@ -13,7 +13,7 @@ interface Props {
   disabled?: boolean;
   children?: string | number;
   style?: any[];
-  onPress: () => void;
+  onPress?: () => void;
   size?: keyof typeof fontSize;
   pointerEnabled?: boolean;
 }

@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect, useRef } from 'react';
 import {
   TextInput,
   View,
+  Text,
   StyleSheet,
   LayoutChangeEvent,
   Dimensions,
@@ -10,6 +11,8 @@ import {
 } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Feather';
+
+import NativeButton from 'components/NativeButton';
 
 import { useSelector } from 'react-redux';
 import { getTheme } from 'stores/theme';
@@ -46,7 +49,6 @@ function SearchBar({
 }: Props) {
   const theme = useSelector(getTheme);
   const [text, setText] = useState('');
-  const [focus, setFocus] = useState(false);
   const [width, setWidth] = useState(Dimensions.get('window').width);
   const ref = useRef<TextInput>(null);
   const [value] = useState(new Value(0));
@@ -72,12 +74,10 @@ function SearchBar({
 
   const handleFocus = () => {
     run(value, 1).start();
-    setFocus(true);
     if (onFocus) onFocus();
   };
 
   const handleBlur = () => {
-    setFocus(false);
     run(value, 0).start(({ finished }) => {
       if (finished) {
         if (onBlur) onBlur();
@@ -128,32 +128,21 @@ function SearchBar({
           returnKeyType={returnKeyType || 'search'}
           keyboardType={keyboardType || 'default'}
         />
-        {focus && !!text.length && (
-          <Icon
-            name="cancel"
-            size={fontSize[300]}
-            color={theme.gray[700]}
-            style={styles.clearIcon}
-          />
-        )}
       </Animated.View>
-      <Animated.Text
-        onPress={handleCancel}
-        style={[
-          styles.cancelText,
-          {
-            color: theme.primary[600],
-            transform: [{
-              translateX: value.interpolate({
-                inputRange: [0, 1],
-                outputRange: [BUTTON_WIDTH, 0],
-              }),
-            }],
-          },
-        ]}
+      <Animated.View
+        style={{
+          transform: [{
+            translateX: value.interpolate({
+              inputRange: [0, 1],
+              outputRange: [BUTTON_WIDTH, 0],
+            }),
+          }],
+        }}
       >
-        Cancel
-      </Animated.Text>
+        <NativeButton pointerEnabled onPress={handleCancel}>
+          <Text style={[styles.cancelText, { color: theme.primary[600] }]}>Cancel</Text>
+        </NativeButton>
+      </Animated.View>
     </View>
   );
 }
@@ -196,6 +185,8 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     width: BUTTON_WIDTH,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
     fontSize: fontSize[200],
     textAlign: 'center',
   },

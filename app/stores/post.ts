@@ -1,6 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import arrayToObject from 'utils/arrayToObject';
-import { RootState } from '.';
 
 const emptyPost: PostDetailRecord = {
   key: '',
@@ -64,7 +63,7 @@ const { reducer, actions } = createSlice({
   },
 });
 
-export const getPostState = (state: RootState) => state.post;
+export const getPostState = (state: any) => state.post as PostState;
 export const getCurrentPostKey = createSelector(getPostState, ({ url }) => url);
 export const getPostKeys = createSelector(getPostState, ({ posts }) => Object.keys(posts).sort());
 export const getPost = createSelector(

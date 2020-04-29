@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import { Platform, StatusBar, useWindowDimensions } from 'react-native';
+import {
+  Platform, StatusBar, useWindowDimensions,
+} from 'react-native';
 import { NavigationContainer, DefaultTheme, useTheme } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';

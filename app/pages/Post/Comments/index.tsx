@@ -47,7 +47,7 @@ function Comment(
     <View style={containerStyle}>
       {reply && (
         <View style={styles.replyContainer}>
-          <Icon name="message-circle" size={12} color={theme.gray[700]} />
+          <Icon name="corner-down-right" style={{ marginRight: 3 }} size={12} color={theme.gray[700]} />
           <Text size={75} shade={700}>{reply}</Text>
         </View>
       )}
