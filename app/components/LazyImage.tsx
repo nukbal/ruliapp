@@ -10,7 +10,7 @@ import {
 import { useSelector } from 'react-redux';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Haptic from 'react-native-haptic-feedback';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Feather';
 
 import setImageHeight from 'utils/setImageHeight';
 import { getTheme } from 'stores/theme';
@@ -79,7 +79,7 @@ function LazyImage({ source, testID }: Props) {
     >
       {!!error && (
         <View style={styles.message}>
-          <Icon name="broken-image" color={theme.primary[600]} size={24} />
+          <Icon name="alert-triangle" color={theme.primary[600]} size={24} />
           <Text color="primary">불러오기 실패</Text>
           <Text color="primary">{source.uri}</Text>
           <Text color="primary">{error}</Text>

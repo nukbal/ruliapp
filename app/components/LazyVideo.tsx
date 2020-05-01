@@ -5,7 +5,7 @@ import {
   View, StyleSheet,
   LayoutChangeEvent, TouchableWithoutFeedback,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Feather';
 import Haptic from 'react-native-haptic-feedback';
 
 import { getTheme } from 'stores/theme';
