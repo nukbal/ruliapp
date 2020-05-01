@@ -34,12 +34,9 @@ function ConfigRouter() {
         headerBackTitleVisible: false,
         headerHideShadow: true,
         headerLeft: ({ canGoBack, onPress }) => (
-          canGoBack ? <Button name="chevron-left" onPress={onPress} /> : null
-        ),
-        headerRight: () => (
           <Button
-            name="x"
-            onPress={() => navigation.goBack()}
+            name={canGoBack ? 'chevron-left' : 'x'}
+            onPress={canGoBack ? onPress : navigation.goBack}
           />
         ),
       })}
