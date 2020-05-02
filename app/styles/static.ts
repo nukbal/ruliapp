@@ -27,6 +27,7 @@ export const fontSize = {
   900: 36,
   1000: 40,
   1100: 45,
+  2000: 64,
 };
 
 export const white = '#ffffff';

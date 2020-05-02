@@ -3,6 +3,7 @@ import { ToastAndroid, View, StyleSheet, useWindowDimensions } from 'react-nativ
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useTheme } from '@react-navigation/native';
+import { useNavigation, DrawerActions } from '@react-navigation/core';
 
 import BottomSheet from 'components/BottomSheet';
 import ListItem from 'components/ListItem';
@@ -10,8 +11,9 @@ import Button from 'components/Button';
 import { IS_ANDROID } from 'config/constants';
 import { getPost, getCurrentPostKey, setCurrent } from 'stores/post';
 
-export default function PostHeader({ navigation }: any) {
+export default function PostHeader() {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const url = useSelector(getCurrentPostKey);
   const data = useSelector(getPost);
   const { colors } = useTheme();
@@ -41,11 +43,11 @@ export default function PostHeader({ navigation }: any) {
         });
     }
     setShow(false);
-    // if (bookmark) navigation.goBack();
+    if (warded) navigation.goBack();
   };
 
   const dismiss = () => {
-    navigation.closeDrawer();
+    navigation.dispatch(DrawerActions.closeDrawer());
     if (isLargeScreen) {
       dispatch(setCurrent({ url: '' }));
     } else {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { FlatList } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useNavigation, DrawerActions } from '@react-navigation/core';
 import { useStore } from 'react-redux';
 
 import { setCurrent, setPosts } from 'stores/post';
@@ -15,6 +16,7 @@ function extractKey(item: PostDetailRecord) {
 
 export default function Bookmark() {
   const store = useStore();
+  const navigation = useNavigation();
   const [list, setList] = useState<PostDetailRecord[]>([]);
   const [ready, setReady] = useState(false);
   const [search, setSearch] = useState('');
@@ -54,6 +56,7 @@ export default function Bookmark() {
 
         const onPress = () => {
           store.dispatch(setCurrent({ url: item.url, ward: true }));
+          navigation.dispatch(DrawerActions.openDrawer());
         };
 
         return (

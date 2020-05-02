@@ -1,10 +1,13 @@
 import React, { useMemo, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { SectionList, View } from 'react-native';
+import { SectionList, View, useWindowDimensions } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { useNavigation, DrawerActions } from '@react-navigation/core';
+import { useIsDrawerOpen } from '@react-navigation/drawer';
 
-import { getTheme } from 'stores/theme';
 import Title from 'components/Title';
 import Text from 'components/Text';
+
+import { setCurrent } from 'stores/post';
 
 import Footer from './Footer';
 import Contents from './Contents';
@@ -23,14 +26,29 @@ export default function Post() {
     url, subject, contents, comments, ready, isCommentLoading, loadComment,
     user, date, views, likes, dislikes, commentSize,
   } = usePost();
+  const { width } = useWindowDimensions();
+  const isOpen = useIsDrawerOpen();
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const ref = useRef<SectionList<any> | null>(null);
-  const theme = useSelector(getTheme);
+  const isLargeScreen = width >= 735;
 
   useEffect(() => {
     if (ref.current) {
       ref.current.scrollToLocation({ itemIndex: 0, sectionIndex: 0, animated: false });
     }
   }, [url]);
+
+  useEffect(() => {
+    if (!url && !isLargeScreen && isOpen) {
+      navigation.dispatch(DrawerActions.closeDrawer());
+    }
+    if (url && !isLargeScreen && !isOpen) {
+      const timeout = setTimeout(() => dispatch(setCurrent({ url: '' })), 250);
+      return () => clearTimeout(timeout);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, isOpen, isLargeScreen]);
 
   const ListHeaderComponent = useMemo(() => (ready ? (
     <>
@@ -51,7 +69,7 @@ export default function Post() {
   if (!url) {
     return (
       <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: '80%' }}>
-        <Text size={1100}>🤔</Text>
+        <Text size={2000}>🤔</Text>
         <Text size={500}>선택된 게시물이 없습니다.</Text>
       </View>
     );
@@ -78,6 +96,7 @@ export default function Post() {
         return ListHeaderComponent;
       }}
       ref={ref}
+      style={{ paddingTop: 12 }}
       stickySectionHeadersEnabled={false}
       refreshing={isCommentLoading}
       onRefresh={loadComment}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FlatList, ListRenderItemInfo } from 'react-native';
+import { DrawerActions } from '@react-navigation/core';
 
 import { setCurrent } from 'stores/post';
 
@@ -38,9 +39,8 @@ export default function Board({ route, navigation }: Props) {
     if (!item) return null;
 
     const onPress = () => {
-      const { openDrawer } = navigation;
       dispatch(setCurrent({ url: item }));
-      openDrawer();
+      navigation.dispatch(DrawerActions.openDrawer());
     };
 
     return (
