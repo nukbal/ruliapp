@@ -4,7 +4,7 @@ import formatText from './formatText';
 
 function formatComment(node: INode): CommentRecord | undefined {
   const record: CommentRecord = {
-    key: '', content: '', user: { id: '', name: '' }, likes: 0, dislike: 0,
+    key: '', content: [], user: { id: '', name: '' }, likes: 0, dislike: 0,
   };
 
   if (!node.attrs) return;
@@ -27,16 +27,26 @@ function formatComment(node: INode): CommentRecord | undefined {
   const textNode = querySelector(node, '.text_wrapper');
   if (!textNode) return;
 
-  cursor = querySelector(textNode, '.text');
-  // @ts-ignore
-  if (cursor && cursor.childNodes) record.content = formatText(cursor.childNodes[0] ? cursor.childNodes[0].value : '');
-
   cursor = querySelector(textNode, '.comment_img');
   if (!cursor) cursor = querySelector(textNode, 'video');
   if (cursor && cursor.attrs) {
     let url = cursor.attrs.src;
     if (url.indexOf('//') === 0) url = `https:${url}`;
-    record.image = url;
+    record.content.push({ type: 'image', value: url });
+  }
+
+  cursor = querySelector(textNode, '.text a');
+  if (cursor && cursor.attrs) {
+    if (cursor.attrs.href.indexOf('youtube.com') > -1) {
+      record.content.push({ type: 'video', value: cursor.attrs.href });
+    } else {
+      record.content.push({ type: 'link', value: cursor.attrs.href });
+    }
+  }
+
+  cursor = querySelector(textNode, '.text text');
+  if (cursor && cursor.parent && cursor.parent.tagName !== 'a') {
+    record.content.push({ type: 'text', value: formatText(cursor.value || '') });
   }
 
   const userInfo = querySelector(node, '.user');

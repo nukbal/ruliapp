@@ -9,6 +9,8 @@ import formatDate from 'utils/formatDate';
 
 import LazyImage from 'components/LazyImage';
 import LazyVideo from 'components/LazyVideo';
+import ShareCard from 'components/ShareCard';
+import Link from '../Contents/Link';
 import styles from './styles';
 
 interface Props extends CommentRecord {
@@ -18,7 +20,7 @@ interface Props extends CommentRecord {
 
 function Comment(
   {
-    user, content, time, likes = 0, dislike = 0, image, reply, isDeleted,
+    user, content = [], time, likes = 0, dislike = 0, reply, isDeleted,
   }: Props,
 ) {
   const theme = useSelector(getTheme);
@@ -41,8 +43,6 @@ function Comment(
     containerStyle.push({ paddingLeft: 28, paddingTop: 25 });
   }
 
-  const Media = ((image && image.indexOf('.mp4') !== -1) ? LazyVideo : LazyImage);
-
   return (
     <View style={containerStyle}>
       {reply && (
@@ -55,19 +55,40 @@ function Comment(
         <Text style={[styles.UserText]}>{user.name}</Text>
         {timeText && (<Text>{timeText}</Text>)}
       </View>
-      {image && (
-        <View style={{ width: '100%', maxWidth: 650 }}>
-          <Media source={{ uri: image }} />
-        </View>
-      )}
-      {!!content && (
-        <Text
-          style={[{ paddingVertical: 6 }]}
-          selectable
-        >
-          {content}
-        </Text>
-      )}
+      {content.map(({ type, value }) => {
+        switch (type) {
+          case 'image': {
+            const Media = ((value && value.indexOf('.mp4') !== -1) ? LazyVideo : LazyImage);
+            return (
+              <View key={value} style={{ width: '100%', maxWidth: 650 }}>
+                <Media source={{ uri: value }} />
+              </View>
+            );
+          }
+          case 'video': {
+            return (
+              <View key={value} style={{ width: '100%', maxWidth: 650 }}>
+                <ShareCard uri={value} />
+              </View>
+            );
+          }
+          case 'text': {
+            return (
+              <Text
+                key="comment_context"
+                style={[{ paddingVertical: 6 }]}
+                selectable
+              >
+                {value}
+              </Text>
+            );
+          }
+          case 'link': {
+            return <Link key="link" to={value} />;
+          }
+        }
+        return null;
+      })}
       <View style={styles.infoContainer}>
         {likes > 0 && (<Icon name="thumbs-up" size={20} color={theme.gray[800]} />)}
         {likes > 0 && (<Text style={[styles.iconText]} color="primary" shade={600}>{likes}</Text>)}

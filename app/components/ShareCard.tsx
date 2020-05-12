@@ -55,8 +55,20 @@ function ShareCard({ uri }: Props) {
 
   useEffect(() => {
     let isUnmount = false;
-    if (uri.indexOf('youtube.com/embed/') > -1) {
-      const videoId = uri.substring(uri.indexOf('/embed/') + 7, uri.length);
+    let path = uri;
+    if (uri.indexOf('youtube.com/') > -1) {
+      let videoId = '';
+      if (uri.indexOf('youtube.com/embed/') > -1) {
+        videoId = uri.substring(uri.indexOf('/embed/') + 7, uri.length);
+      } else {
+        const startIdx = uri.indexOf('?v=');
+        const endIdx = uri.indexOf('&', startIdx);
+        if (startIdx === -1) return;
+        videoId = uri.substring(uri.indexOf('?v=') + 3, endIdx !== -1 ? endIdx : uri.length);
+        path = `https://www.youtube.com/embed/${videoId}`;
+      }
+      if (!videoId) return;
+
       const url = `https://www.youtube.com/watch?v=${videoId}`;
       if (cache.has(videoId)) {
         setData(cache.get(videoId));
@@ -64,7 +76,7 @@ function ShareCard({ uri }: Props) {
         return;
       }
 
-      fetch(uri, { method: 'get' })
+      fetch(path, { method: 'get' })
         .then((res) => (isUnmount ? '' : res.text()))
         .then((html) => {
           if (isUnmount) return;
