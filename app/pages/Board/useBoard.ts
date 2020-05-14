@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import qs from 'query-string';
 
 import parseBoardList, { IParseBoard } from 'utils/parseBoard';
-import { USER_AGENT, REQUEST_THROTTLE } from 'config/constants';
+import { USER_AGENT, REQUEST_THROTTLE, BOARD_CACHE as cache } from 'config/constants';
 import { updatePostFromBoard } from 'stores/post';
 
 const initialState = {
@@ -113,6 +113,7 @@ export default function useBoard(key: string, str?: string) {
       const json: IParseBoard = parseBoardList(htmlString);
       dispatch(actions.setPostList(json.rows));
       update(updatePostFromBoard(json.rows));
+      if (page === 1) cache.set(key, json.rows);
     } catch (e) {
       console.error(e);
     }
@@ -120,8 +121,13 @@ export default function useBoard(key: string, str?: string) {
   }, [key, page, str, update]);
 
   useEffect(() => {
-    request();
-  }, [request]);
+    if (cache.has(key)) {
+      dispatch(actions.setPostList(cache.get(key)));
+      cache.remove(key);
+    } else {
+      request();
+    }
+  }, [request, key]);
 
   const onRefresh = useCallback(async () => {
     dispatch(actions.refresh());

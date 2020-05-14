@@ -27,3 +27,4 @@ export const FILE_PREFIX = IS_ANDROID ? 'file://' : '';
 // short-live in-memory caches
 export const PATH_CACHE = Cache<string>(50);
 export const SHARE_CACHE = Cache<any>(15);
+export const BOARD_CACHE = Cache<any>(3);
