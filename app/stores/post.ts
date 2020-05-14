@@ -15,12 +15,12 @@ interface PostState {
   posts: {
     [url: string]: PostDetailRecord;
   };
-  url: string;
+  url: { path: string, ward: boolean };
 }
 
 const initialState: PostState = {
   posts: {},
-  url: '',
+  url: { path: '', ward: false },
 };
 
 const { reducer, actions } = createSlice({
@@ -28,7 +28,8 @@ const { reducer, actions } = createSlice({
   initialState,
   reducers: {
     setCurrent(state, action: PayloadAction<{ url: string; ward?: boolean }>) {
-      state.url = action.payload.url;
+      state.url.path = action.payload.url;
+      state.url.ward = action.payload.ward || false;
     },
     setPosts(state, action: PayloadAction<PostDetailRecord[]>) {
       const obj = arrayToObject(action.payload);
@@ -68,7 +69,7 @@ export const getCurrentPostKey = createSelector(getPostState, ({ url }) => url);
 export const getPostKeys = createSelector(getPostState, ({ posts }) => Object.keys(posts).sort());
 export const getPost = createSelector(
   getPostState, getCurrentPostKey,
-  ({ posts }, url) => posts[url] || emptyPost,
+  ({ posts }, { path }) => posts[path] || emptyPost,
 );
 
 export const { setPost, setPosts, setComments, updatePostFromBoard, setCurrent } = actions;

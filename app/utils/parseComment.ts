@@ -37,11 +37,7 @@ function formatComment(node: INode): CommentRecord | undefined {
 
   cursor = querySelector(textNode, '.text a');
   if (cursor && cursor.attrs) {
-    if (cursor.attrs.href.indexOf('youtube.com') > -1) {
-      record.content.push({ type: 'video', value: cursor.attrs.href });
-    } else {
-      record.content.push({ type: 'link', value: cursor.attrs.href });
-    }
+    record.content.push({ type: 'share', value: cursor.attrs.href.trim() });
   }
 
   cursor = querySelector(textNode, '.text text');

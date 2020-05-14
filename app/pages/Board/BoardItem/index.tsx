@@ -18,10 +18,10 @@ interface Props {
 
 function BoardItem({ onPress, onShowUnderlay, onHideUnderlay, data }: Props) {
   const { date, subject, user, commentSize, likes, views, url } = data;
-  const selectedUrl = useSelector(getCurrentPostKey);
+  const { path } = useSelector(getCurrentPostKey);
   const theme = useSelector(getTheme);
   const dateStr = useMemo(() => (date ? format(date) : ''), [date]);
-  const isSelected = selectedUrl === url;
+  const isSelected = path === url;
 
   if (!subject) return <Placeholder />;
   return (

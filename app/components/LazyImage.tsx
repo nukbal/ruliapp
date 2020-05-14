@@ -44,10 +44,11 @@ const styles = StyleSheet.create({
 
 interface Props {
   source: { uri: string };
+  style?: any;
   testID?: string;
 }
 
-function LazyImage({ source, testID }: Props) {
+function LazyImage({ source, testID, style }: Props) {
   const theme = useSelector(getTheme);
   const [uri, progress, error] = useCachedFile(source.uri);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -100,7 +101,7 @@ function LazyImage({ source, testID }: Props) {
             onLongPress={toggleMenu}
           >
             <Image
-              style={{ height }}
+              style={[{ height }, style]}
               source={{ uri: FILE_PREFIX + uri }}
               onLoad={onLoad}
             />

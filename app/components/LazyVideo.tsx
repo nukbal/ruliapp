@@ -21,6 +21,7 @@ import ListItem from './ListItem';
 
 interface Props {
   source: any;
+  style?: any;
   viewable?: boolean;
 }
 
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function LazyVideo({ source }: Props) {
+function LazyVideo({ source, style }: Props) {
   const theme = useSelector(getTheme);
   const [uri, progress, error] = useCachedFile(source.uri);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -107,7 +108,7 @@ function LazyVideo({ source }: Props) {
           <Video
             source={{ uri: FILE_PREFIX + uri }}
             onLoad={onLoad}
-            style={{ height }}
+            style={[{ height }, style]}
             ignoreSilentSwitch="obey"
             resizeMode="cover"
             paused={pause}

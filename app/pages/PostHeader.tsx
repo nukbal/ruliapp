@@ -14,15 +14,15 @@ import { getPost, getCurrentPostKey, setCurrent } from 'stores/post';
 export default function PostHeader() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const url = useSelector(getCurrentPostKey);
+  const { path, ward } = useSelector(getCurrentPostKey);
   const data = useSelector(getPost);
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const [show, setShow] = useState(false);
   const [warded, isWarded] = useState(false);
 
-  const isExists = !!url;
-  const key = `ward:${url}`;
+  const isExists = !!path;
+  const key = `ward:${path}`;
   const isLargeScreen = width >= 735;
 
   const onClose = () => setShow(false);
@@ -56,10 +56,14 @@ export default function PostHeader() {
   };
 
   useEffect(() => {
+    if (!ward) {
+      isWarded(true);
+      return;
+    }
     AsyncStorage
       .getItem(key)
       .then((d) => isWarded(!!d));
-  }, [key]);
+  }, [key, ward]);
 
   return (
     <View style={[styles.container, { borderColor: colors.border }]}>

@@ -49,9 +49,10 @@ declare interface CommentRecord {
   child?: string;
   reply?: string;
   best?: boolean;
-  content: string;
+  content: Array<
+    { type: 'image' | 'share' | 'text', value: string }
+  >;
   user: UserRecord;
-  image?: string;
   time?: string;
   likes: number;
   dislike: number;

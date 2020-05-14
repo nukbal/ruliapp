@@ -33,7 +33,7 @@ function BoardRouter() {
         headerTintColor: colors.text,
         headerLeft: ({ canGoBack }) => (
           canGoBack
-            ? <Button name="chevron-left" onPress={() => navigation.goBack()} />
+            ? <Button name="chevron-left" onPress={navigation.goBack} />
             : null
         ),
         headerStyle: { backgroundColor: colors.background },
@@ -62,7 +62,7 @@ export default function Router() {
   const theme = useSelector(getTheme);
   const { width } = useWindowDimensions();
   const isLargeScreen = width >= 735;
-  const drawerStyle = { width: isLargeScreen ? '72.5%' : '100%' };
+  const drawerStyle = { width: isLargeScreen ? Math.round(width * 0.725) : width };
 
   useEffect(() => {
     if (Platform.OS === 'ios') {

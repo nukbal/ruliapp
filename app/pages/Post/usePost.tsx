@@ -10,21 +10,20 @@ import {
 
 export default function usePost() {
   const dispatch = useDispatch();
-  const url = useSelector(getCurrentPostKey);
+  const { path, ward } = useSelector(getCurrentPostKey);
   const data = useSelector(getPost);
   const [ready, setReady] = useState(false);
   const [isCommentLoading, setCommentLoading] = useState(false);
 
   useEffect(() => {
     let isDone = false;
-    if (!url) return;
+    if (!path) return;
     async function loadPost() {
       setReady(false);
-      // if (isWard) setReady(true);
-      // if (isDone || isWard) return;
-      if (isDone) return;
+      if (ward) setReady(true);
+      if (isDone || ward) return;
       if (data.url) {
-        if (data.commentSize && data.commentSize > data.comments.length) {
+        if (data.commentSize && data.commentSize !== data.comments.length) {
           loadComment();
         }
         setReady(true);
@@ -33,8 +32,8 @@ export default function usePost() {
 
       if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
       try {
-        const targetUrl = `https://m.ruliweb.com/${url}?search_type=name&search_key=%2F%2F%2F`;
-        const config = {
+        const targetUrl = `https://m.ruliweb.com/${path}`;
+        const config: RequestInit = {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -48,7 +47,6 @@ export default function usePost() {
           },
         };
 
-        // @ts-ignore
         const response = await fetch(targetUrl, config);
         if (isDone) return;
         if (!response.ok) throw new Error('request failed');
@@ -58,8 +56,8 @@ export default function usePost() {
 
         const json = parsePost(htmlString, '');
         if (!json) throw new Error('parse failed');
-        json.url = url;
-        json.key = url;
+        json.url = path;
+        json.key = path;
         dispatch(setPost(json));
       } catch (e) {
         if (isDone) return;
@@ -75,20 +73,20 @@ export default function usePost() {
       if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url]);
+  }, [path, ward]);
 
   const loadComment = useCallback(async () => {
-    if (!url) return;
+    if (!path) return;
     setCommentLoading(true);
 
-    const idx = url.indexOf('/read/');
+    const idx = path.indexOf('/read/');
     let boardId = '';
-    if (url.indexOf('board/') > -1) {
-      boardId = url.substring(url.indexOf('board/') + 6, idx);
+    if (path.indexOf('board/') > -1) {
+      boardId = path.substring(path.indexOf('board/') + 6, idx);
     } else {
-      boardId = url.substring(url.indexOf('/', 1) + 1, idx);
+      boardId = path.substring(path.indexOf('/', 1) + 1, idx);
     }
-    const key = url.substring(idx + 6, url.length);
+    const key = path.substring(idx + 6, path.length);
     let page = 1;
 
     if (
@@ -98,7 +96,7 @@ export default function usePost() {
       page = 2;
     }
 
-    const config = {
+    const config: RequestInit = {
       method: 'POST',
       body: `page=1&article_id=${key}&board_id=${boardId}&cmtimg=${page}`,
       credentials: 'include',
@@ -107,26 +105,25 @@ export default function usePost() {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Accept-Encoding': 'gzip, deflate',
         origin: 'https://m.ruliweb.com',
-        referer: `https://m.ruliweb.com/${url}`,
+        referer: `https://m.ruliweb.com/${path}`,
         'User-Agent': USER_AGENT,
       },
     };
 
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(true);
     try {
-      // @ts-ignore
       const response = await fetch('https://api.ruliweb.com/commentView', config);
       const json = await response.json();
       if (json.success) {
         const comments = parseComment(json.view);
-        dispatch(setComments({ key: url, comments }));
+        dispatch(setComments({ key: path, comments }));
       }
     } catch (e) {
       console.log(e.message);
     }
     setCommentLoading(false);
     if (Platform.OS === 'ios') StatusBar.setNetworkActivityIndicatorVisible(false);
-  }, [url, dispatch, data.commentSize]);
+  }, [path, dispatch, data.commentSize]);
 
-  return { ...data, url, ready, loadComment, isCommentLoading };
+  return { ...data, url: path, ready, loadComment, isCommentLoading };
 }

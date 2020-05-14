@@ -10,7 +10,6 @@ import formatDate from 'utils/formatDate';
 import LazyImage from 'components/LazyImage';
 import LazyVideo from 'components/LazyVideo';
 import ShareCard from 'components/ShareCard';
-import Link from '../Contents/Link';
 import styles from './styles';
 
 interface Props extends CommentRecord {
@@ -65,7 +64,7 @@ function Comment(
               </View>
             );
           }
-          case 'video': {
+          case 'share': {
             return (
               <View key={value} style={{ width: '100%', maxWidth: 650 }}>
                 <ShareCard uri={value} />
@@ -82,9 +81,6 @@ function Comment(
                 {value}
               </Text>
             );
-          }
-          case 'link': {
-            return <Link key="link" to={value} />;
           }
         }
         return null;

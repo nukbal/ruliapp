@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  requireNativeComponent, ViewProps,
-  Platform, TouchableWithoutFeedback, View, TouchableWithoutFeedbackProps,
+  requireNativeComponent, TouchableWithoutFeedback,
+  Platform, View, TouchableWithoutFeedbackProps,
 } from 'react-native';
 
-interface RNUIButtonProps extends ViewProps {
+interface RNUIButtonProps extends TouchableWithoutFeedbackProps {
   pointerEnabled?: boolean;
   disabled?: boolean;
   children?: any;
@@ -16,17 +16,15 @@ const Button = (
     : View
 );
 
-type Props = RNUIButtonProps & TouchableWithoutFeedbackProps;
-
-export default function NativeButton({ disabled, style, pointerEnabled, children, ...rest }: Props) {
+export default function NativeButton({ style, pointerEnabled, children, disabled, ...rest }: RNUIButtonProps) {
   return (
     <TouchableWithoutFeedback
-      {...rest}
       disabled={disabled}
+      {...rest}
     >
       <Button
-        disabled={disabled}
         style={style}
+        disabled={disabled}
         pointerEnabled={pointerEnabled}
       >
         {children}
