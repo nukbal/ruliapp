@@ -32,8 +32,12 @@ const { reducer, actions } = createSlice({
       state.url.ward = action.payload.ward || false;
     },
     setPosts(state, action: PayloadAction<PostDetailRecord[]>) {
-      const obj = arrayToObject(action.payload);
-      return { ...state, ...obj };
+      for (let i = 0, len = action.payload.length; i < len; i += 1) {
+        const target = action.payload[i];
+        if (!state.posts[target.url]) {
+          state.posts[target.url] = target;
+        }
+      }
     },
     setPost(state, action: PayloadAction<PostDetailRecord>) {
       const key = action.payload.url;

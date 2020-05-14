@@ -56,7 +56,7 @@ export default function PostHeader() {
   };
 
   useEffect(() => {
-    if (!ward) {
+    if (ward) {
       isWarded(true);
       return;
     }
