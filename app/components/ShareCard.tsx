@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     left: 6,
+    marginRight: 6,
     fontWeight: 'bold',
     padding: 6,
     backgroundColor: 'rgba(0,0,0,0.825)',
@@ -98,8 +99,8 @@ function ShareCard({ uri }: Props) {
         onPress={onPress}
         pointerEnabled
       >
-        {data.title && <Text>{data.title}</Text>}
-        <Link to={data.url} />
+        <Text>{data.title || ''}</Text>
+        <Link to={data.url || uri} />
       </NativeButton>
     );
   }
@@ -124,7 +125,7 @@ function ShareCard({ uri }: Props) {
         size={300}
         style={[styles.title]}
       >
-        {data.title}
+        {data.title || ''}
       </Text>
     </NativeButton>
   );
@@ -193,7 +194,15 @@ async function renderUnknown(uri: string) {
     image: null,
     url: uri,
   };
-  const res = await fetch(uri, { method: 'get' });
+  const res = await fetch(uri, {
+    method: 'get',
+    headers: {
+      Accept: 'text/html',
+      'Content-Type': 'text/html',
+      'Cache-Control': 'no-cache, no-store',
+      Pragma: 'no-cache',
+    },
+  });
   const html = await res.text();
 
   const titleIdx = html.indexOf('<title>');

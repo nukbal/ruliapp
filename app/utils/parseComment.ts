@@ -37,7 +37,17 @@ function formatComment(node: INode): CommentRecord | undefined {
 
   cursor = querySelector(textNode, '.text a');
   if (cursor && cursor.attrs) {
-    record.content.push({ type: 'share', value: cursor.attrs.href.trim() });
+    const path = cursor.attrs.href.trim();
+    if (
+      path.endsWith('.jpg')
+      || path.endsWith('.png')
+      || path.endsWith('.jpeg')
+      || path.endsWith('.webp')
+    ) {
+      record.content.push({ type: 'image', value: path });
+    } else {
+      record.content.push({ type: 'share', value: path });
+    }
   }
 
   cursor = querySelector(textNode, '.text text');

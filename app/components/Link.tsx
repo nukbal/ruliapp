@@ -1,6 +1,9 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { View, Linking, StyleSheet } from 'react-native';
 import Text from 'components/Text';
+
+import { setCurrent } from 'stores/post';
 
 interface Props {
   label?: string;
@@ -8,9 +11,16 @@ interface Props {
 }
 
 export default function Link({ label, to }: Props) {
+  const dispatch = useDispatch();
   const onPress = () => {
-    Linking.openURL(to).catch(() => {});
+    if (to.indexOf('ruliweb.com') > -1) {
+      dispatch(setCurrent({ url: to }));
+    } else {
+      Linking.openURL(to).catch(() => {});
+    }
   };
+
+  if (!to) return null;
 
   const LinkText = (
     <Text
