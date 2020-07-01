@@ -43,8 +43,11 @@ export function rowSelector(root: INode, pattern: string[]): INode[] | undefined
   let res: INode[] = [];
 
   if (pattern.indexOf(root.tagName) > -1) return [root];
-  // break if current root is board_main_bottom (end of content)
-  if (root.attrs && root.attrs.class === 'board_main_bottom') {
+  // break if current root is board_main_bottom or screen_out (end of content)
+  if (
+    (root.attrs && root.attrs.class === 'board_main_bottom')
+    || (root.attrs && root.attrs.class === 'screen_out')
+  ) {
     return res;
   }
   if (root.childNodes) {
